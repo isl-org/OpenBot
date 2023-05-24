@@ -41,8 +41,8 @@ jobs:
       - name: Upload OpenBot App
         uses: actions/upload-artifact@v2
         with:
-          name: openbot-debug.apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: robot-debug.apk
+          path: android/robot/build/outputs/apk/debug/robot-debug.apk
       - name: Upload Controller App
         uses: actions/upload-artifact@v2
         with:
