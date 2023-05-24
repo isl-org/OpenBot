@@ -33,6 +33,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     override func viewDidLoad() {
         super.viewDidLoad();
         createOverlayAlert();
+        setupNavigationBarItem();
         view.addSubview(scrollView);
         let contentHeight: CGFloat = currentOrientation == .portrait ? height * 0.6 : 1000;
         scrollView.contentSize = CGSize(width: width, height: contentHeight)
@@ -348,7 +349,17 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         alert.dismiss(animated: true);
     }
 
+    func setupNavigationBarItem() {
+        if UIImage(named: "back") != nil {
+            let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: "Edit Profile", target: self, action: #selector(FreeRoamController.back(sender:)), titleColor: Colors.navigationColor ?? .white)
+            navigationItem.leftBarButtonItem = newBackButton
+        }
+    }
 
+    @objc func back(sender: UIBarButtonItem) {
+        _ = navigationController?.popViewController(animated: true)
+    }
 
 }
 

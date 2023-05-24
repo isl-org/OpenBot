@@ -14,6 +14,7 @@ class BluetoothTable: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = false
+        setupNavigationBarItem();
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
     }
@@ -96,6 +97,18 @@ class BluetoothTable: UITableViewController {
             connectToBle(Btn: sender, index: sender.tag)
         }
         tableView.reloadData()
+    }
+
+    func setupNavigationBarItem() {
+        if UIImage(named: "back") != nil {
+            let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.bluetooth, target: self, action: #selector(FreeRoamController.back(sender:)), titleColor: Colors.navigationColor ?? .white)
+            navigationItem.leftBarButtonItem = newBackButton
+        }
+    }
+
+    @objc func back(sender: UIBarButtonItem) {
+        _ = navigationController?.popViewController(animated: true)
     }
 }
 

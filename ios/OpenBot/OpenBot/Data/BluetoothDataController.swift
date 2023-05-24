@@ -265,6 +265,10 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         //        tempCentralManager = CBCentralManager(delegate: self, queue: nil)
     }
 
+    /**
+     return integer value sonar
+     - Returns:
+     */
     func getSonar() -> Int {
         if sonarData != "" {
             let index = sonarData.index(after: sonarData.startIndex)
@@ -275,6 +279,10 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
 
     }
 
+    /**
+     return integer value speed sensors
+     - Returns:
+     */
     func getSpeed() -> Int {
         if speedometer != "" {
             let index_1 = speedometer.index(after: speedometer.startIndex)
@@ -288,6 +296,10 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         return 0;
     }
 
+    /**
+     return integer value voltage divider
+     - Returns:
+     */
     func getVoltage() -> Double {
         if voltageDivider != "" {
             let index = voltageDivider.index(after: voltageDivider.startIndex)
@@ -295,7 +307,6 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         }
         return 0.0;
     }
-
 
 }
 
