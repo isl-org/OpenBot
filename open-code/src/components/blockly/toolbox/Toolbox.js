@@ -16,6 +16,13 @@ export const Toolbox = (props) => {
         <>
             <Category name="Control" colour={"#567AE4"}>
                 <Label text="Control" web-class="Heading"></Label>
+
+                <Block type="start"/>
+                <Block type="forever"/>
+                <Block type="onBumper"/>
+
+                <Block type="wait"/>
+
                 <Block type="controls_if" gap="8">
                     <Value name="IF0">
                         <Shadow type="logic_boolean">
@@ -26,9 +33,7 @@ export const Toolbox = (props) => {
                 {controlBlocksType.map((type, index) => {
                     return controlsBlocks(type, index)
                 })}
-                <Block type="wait"/>
-                <Block type="start"/>
-                <Block type="forever"/>
+
                 <Block type="logic_compare" gap="8">
                     <Value name="A">
                         <Shadow type="math_number">

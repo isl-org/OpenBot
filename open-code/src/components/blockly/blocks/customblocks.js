@@ -454,6 +454,28 @@ Blockly.Blocks["forever"] = {
     }
 };
 
+Blockly.Blocks["onBumper"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "%1 %2",
+            "args0": [
+                {
+                    "type": "field_label_serializable",
+                    "name": "bumper",
+                    "text": "on bumper sensor"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "bumper_blocks"
+                }
+            ],
+            "colour": 210,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
 
 Blockly.Blocks["gyroscope_reading"] = {
     init: function () {

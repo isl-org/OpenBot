@@ -95,9 +95,9 @@ function BlocklyComponent(props) {
         }
     };
 
-    //handling duplicacy for start and forever
+    //handling duplicate for start and forever
     const handleDuplicateBlocks = useCallback((event) => {
-        const blockTypes = ["start", "forever"];
+        const blockTypes = ["start", "forever", "onBumper"];
         blockTypes.forEach((blockType) => {
             handlingBlocks(event, blockType);
         });

@@ -304,3 +304,11 @@ javascriptGenerator['brightnessHighOrLow'] = function (block) {
     code += "toggleLed(" + indicatorStatus() + ");\n";
     return code;
 };
+
+javascriptGenerator['onBumper'] = function (block) {
+    const statements_bumper_blocks = javascriptGenerator.statementToCode(block, 'bumper_blocks');
+    let code = "";
+    code += "function bumper(){\n" + statements_bumper_blocks + "}";
+    return code;
+};
+

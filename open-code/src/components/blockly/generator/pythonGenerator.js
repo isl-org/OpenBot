@@ -1,4 +1,5 @@
 import {pythonGenerator} from "blockly/python";
+import {javascriptGenerator} from "blockly/javascript";
 
 
 /**
@@ -283,3 +284,10 @@ pythonGenerator['brightnessHighOrLow'] = function (block) {
     return code;
 };
 
+
+pythonGenerator['onBumper'] = function (block) {
+    const statements_bumper_blocks = pythonGenerator.statementToCode(block, 'bumper_blocks');
+    let code = "";
+    code += "def bumper():\n" + statements_bumper_blocks;
+    return code;
+};
