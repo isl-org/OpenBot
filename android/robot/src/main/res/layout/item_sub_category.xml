@@ -15,7 +15,7 @@
         android:tint="@android:color/white"
         tools:background="@color/cardview_dark_background"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
-        tools:src="@drawable/ic_openbot" />
+        tools:src="@drawable/ic_openbot_space" />
 
     <TextView
         android:id="@+id/title"
