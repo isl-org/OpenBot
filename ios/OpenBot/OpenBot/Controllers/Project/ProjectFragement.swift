@@ -99,7 +99,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated);
         reloadProjects();
-
     }
 
     /**
