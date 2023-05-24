@@ -1,4 +1,5 @@
 import {pythonGenerator} from "blockly/python";
+import {javascriptGenerator} from "blockly/javascript";
 
 /**
  * code generation of blocks in python
@@ -282,6 +283,7 @@ pythonGenerator['brightnessHighOrLow'] = function (block) {
     return code;
 };
 
+
 pythonGenerator['followObjects'] = function(block) {
     let dropdown_follow_objects = block.getFieldValue('follow objects');
     let code = '';
@@ -311,3 +313,12 @@ pythonGenerator['navigateXAndY'] = function(block) {
     code+="reachPosition("+positionX+","+positionY+")\n";
     return code;
 };
+
+
+pythonGenerator['onBumper'] = function (block) {
+    const statements_bumper_blocks = pythonGenerator.statementToCode(block, 'bumper_blocks');
+    let code = "";
+    code += "def bumper():\n" + statements_bumper_blocks;
+    return code;
+};
+

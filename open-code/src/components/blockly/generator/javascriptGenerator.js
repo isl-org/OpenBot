@@ -305,6 +305,7 @@ javascriptGenerator['brightnessHighOrLow'] = function (block) {
     return code;
 };
 
+
 javascriptGenerator['followObjects'] = function(block) {
     let dropdown_follow_objects = block.getFieldValue('follow objects');
     let code = '';
@@ -334,3 +335,11 @@ javascriptGenerator['navigateXAndY'] = function(block) {
     code+="reachPosition("+positionX+","+positionY+");\n";
     return code;
 };
+
+javascriptGenerator['onBumper'] = function (block) {
+    const statements_bumper_blocks = javascriptGenerator.statementToCode(block, 'bumper_blocks');
+    let code = "";
+    code += "function bumper(){\n" + statements_bumper_blocks + "}";
+    return code;
+};
+
