@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -91,7 +91,6 @@
 		727D3E6881E8758C94FF74F4 /* GifLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A51A7A6155C22E62412 /* GifLoader.swift */; };
 		727D3E780CA6260A927019BD /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D368915F3602E605FEA51 /* Client.swift */; };
 		727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */; };
-		BF812E8828AE2C4200E0B682 /* modesCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF812E8628AE2C4200E0B682 /* modesCollectionViewCell.xib */; };
 		BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9BAED728AF94A800EF3E48 /* GameController.framework */; };
 		DB5B604C1844E78F9C021354 /* Pods_OpenBot_OpenBotUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */; };
 		FEC71CD19514A3FE19FEE5D1 /* Pods_OpenBotTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */; };
@@ -209,7 +208,6 @@
 		7D15502AB5B13CA6849277AC /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
 		9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBotTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A342C9A4C1417EB2B878B82D /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		BF812E8628AE2C4200E0B682 /* modesCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = modesCollectionViewCell.xib; sourceTree = "<group>"; };
 		BF9BAED728AF94A800EF3E48 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		CADB8D624A9E1D1494E9F87D /* Pods_OpenBot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBEAC972F15CC83E41C6AAA9 /* Pods-OpenBot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.debug.xcconfig"; sourceTree = "<group>"; };
@@ -375,7 +373,6 @@
 		4FEF4A57E56E4EAB1B479871 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				BF812E8628AE2C4200E0B682 /* modesCollectionViewCell.xib */,
 				4FEF4E0B9A9BAE2BD7321783 /* Main.storyboard */,
 				4FEF4EE1E197D3F52EFF3B88 /* Launch Screen.storyboard */,
 			);
@@ -650,7 +647,8 @@
 		4FEF44CF03B950ABA7A3C2A8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1400;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					4FEF4A2489AA3ABCE29B9356 = {
 						ProvisioningStyle = Automatic;
@@ -699,7 +697,6 @@
 				4FEF41E8F6D7496059371C24 /* Assets.xcassets in Resources */,
 				4FEF434E29022789D4FB8985 /* Main.storyboard in Resources */,
 				4FEF43565A0B8A9578E85B54 /* Launch Screen.storyboard in Resources */,
-				BF812E8828AE2C4200E0B682 /* modesCollectionViewCell.xib in Resources */,
 				4FEF4209E4568C06F71C8E86 /* config.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1005,7 +1002,10 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.robot.openbot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1045,7 +1045,10 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.robot.openbot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1185,7 +1188,8 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

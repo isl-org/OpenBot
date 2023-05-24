@@ -274,9 +274,9 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         blueToothIconRect.layer.borderColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white.cgColor : UIColor.black.cgColor;
         bluetoothIcon = UIImageView(frame: CGRect(x: 2 * blueToothIconRect.frame.size.width / 4 - 10, y: blueToothIconRect.frame.size.height / 4, width: 20, height: 20))
         if isBluetoothConnected {
-            bluetoothIcon.image = Images.bluetoothConnected
+            bluetoothIcon.image = Images.bluetoothConnected_v2
         } else {
-            bluetoothIcon.image = Images.bluetoothDisconnected
+            bluetoothIcon.image = Images.bluetoothDisconnected_v2
         }
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openBluetoothSettings(tapGestureRecognizer:)))
         blueToothIconRect.isUserInteractionEnabled = true
@@ -561,9 +561,9 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     /// update when decrease mode
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
-            bluetoothIcon.image = Images.bluetoothConnected
+            bluetoothIcon.image = Images.bluetoothConnected_v2
         } else {
-            bluetoothIcon.image = Images.bluetoothDisconnected
+            bluetoothIcon.image = Images.bluetoothDisconnected_v2
         }
     }
 

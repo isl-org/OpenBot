@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "baseline_cloud_download_black_48pt_1x 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -27,6 +28,7 @@
       "scale" : "1x"
     },
     {
+      "filename" : "baseline_cloud_download_black_48pt_2x 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -53,6 +55,7 @@
       "scale" : "2x"
     },
     {
+      "filename" : "baseline_cloud_download_black_48pt_3x 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     },

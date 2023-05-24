@@ -145,9 +145,9 @@ class RobotInfoFrame: UIViewController {
     func createBluetoothIcon() -> UIButton {
         let bleButton = UIButton()
         if isBluetoothConnected {
-            bleButton.setImage(Images.bluetoothConnected!, for: .normal)
+            bleButton.setImage(Images.bluetoothConnected_v2!, for: .normal)
         } else {
-            bleButton.setImage(Images.bluetoothDisconnected!, for: .normal)
+            bleButton.setImage(Images.bluetoothDisconnected_v2!, for: .normal)
         }
         bleButton.frame = CGRect(x: width - 60, y: topPadding + adapted(dimensionSize: 40, to: .height), width: 45, height: 45)
         view.addSubview(bleButton)
@@ -566,10 +566,10 @@ class RobotInfoFrame: UIViewController {
     /// function to update the status after connecting with the robot.
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
-            bluetoothIconButton.setImage(Images.bluetoothConnected, for: .normal)
+            bluetoothIconButton.setImage(Images.bluetoothConnected_v2, for: .normal)
             updateRobotInfo()
         } else {
-            bluetoothIconButton.setImage(Images.bluetoothDisconnected, for: .normal)
+            bluetoothIconButton.setImage(Images.bluetoothDisconnected_v2, for: .normal)
             updateScreenOnBluetoothDisconnection()
         }
     }

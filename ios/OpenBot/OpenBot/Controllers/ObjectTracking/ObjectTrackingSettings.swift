@@ -165,9 +165,9 @@ class ObjectTrackingSettings: UIView {
         bluetoothIconView.frame.size = CGSize(width: 40, height: 50);
         addSubview(bluetoothIconView);
         if (isBluetoothConnected) {
-            bluetoothIcon = createIcons(iconImg: Images.bluetoothConnected!, x: 5, y: 15, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+            bluetoothIcon = createIcons(iconImg: Images.bluetoothConnected_v2!, x: 5, y: 15, size: resized(size: Images.bluetoothConnected_v2!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         } else {
-            bluetoothIcon = createIcons(iconImg: Images.bluetoothDisconnected!, x: 5, y: 15, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
+            bluetoothIcon = createIcons(iconImg: Images.bluetoothDisconnected_v2!, x: 5, y: 15, size: resized(size: Images.bluetoothDisconnected_v2!.size, basedOn: Dimension.width), backgroundColor: Colors.title ?? .blue, action: #selector(ble(_:)))
         }
         bluetoothIconView.addSubview(bluetoothIcon);
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ble(_:)))
@@ -531,9 +531,9 @@ class ObjectTrackingSettings: UIView {
     /// Callback function to update the BLE connection status
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
-            bluetoothIcon.image = Images.bluetoothConnected
+            bluetoothIcon.image = Images.bluetoothConnected_v2
         } else {
-            bluetoothIcon.image = Images.bluetoothDisconnected
+            bluetoothIcon.image = Images.bluetoothDisconnected_v2
         }
     }
 

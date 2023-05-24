@@ -107,9 +107,9 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         bluetoothIcon.frame.size = CGSize(width: 30, height: 30)
         bluetoothIcon.translatesAutoresizingMaskIntoConstraints = false
         if isBluetoothConnected {
-            bluetoothIcon.image = Images.bluetoothConnected
+            bluetoothIcon.image = Images.bluetoothConnected_v2
         } else {
-            bluetoothIcon.image = Images.bluetoothDisconnected
+            bluetoothIcon.image = Images.bluetoothDisconnected_v2
         }
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ble(_:)))
         bluetoothIcon.isUserInteractionEnabled = true
@@ -330,7 +330,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         label.font = UIFont(name: "medium", size: adapted(dimensionSize: 30, to: .width))
         label.frame.size = CGSize(width: labelWidth, height: labelHeight)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .white
+        label.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
         label.font = label.font.withSize(15)
         addSubview(label)
         label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topAnchor).isActive = true
@@ -345,7 +345,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         label.font = UIFont(name: "medium", size: adapted(dimensionSize: 30, to: .width))
         label.frame.size = CGSize(width: labelWidth, height: labelHeight)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .white
+        label.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
         label.font = label.font.withSize(15)
         secondView.addSubview(label)
         label.topAnchor.constraint(equalTo: secondView.topAnchor, constant: topAnchor).isActive = true
@@ -394,7 +394,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     /// UI Function to create blur effect on view
     func applyBlurEffect() {
         let blurEffectView = UIView(frame: bounds);
-        blurEffectView.backgroundColor = UIColor(named: "darkBg");
+        blurEffectView.backgroundColor = UIColor(named: "dataCollectionBg");
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(blurEffectView)
     }

@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "closeIcon.png",
+      "filename" : "outline_cancel_black_24pt_1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,11 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "close_dark.png",
+      "filename" : "outline_cancel_white_24pt_1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "outline_cancel_black_24pt_2x 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -27,10 +28,12 @@
           "value" : "dark"
         }
       ],
+      "filename" : "outline_cancel_white_24pt_2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "outline_cancel_black_24pt_3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -41,6 +44,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "outline_cancel_white_24pt_3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

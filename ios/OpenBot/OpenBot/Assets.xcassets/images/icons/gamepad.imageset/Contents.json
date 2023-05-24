@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "gamepad_white 4.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -22,10 +23,12 @@
           "value" : "dark"
         }
       ],
+      "filename" : "cil_gamepad 7.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "gamepad_white 3.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -36,6 +39,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "cil_gamepad 4.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -46,6 +50,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "cil_gamepad 6.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -61,6 +66,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "cil_gamepad 5.svg",
       "idiom" : "universal",
       "scale" : "3x"
     },
