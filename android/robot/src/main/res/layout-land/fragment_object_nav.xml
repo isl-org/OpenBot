@@ -124,7 +124,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:paddingVertical="12dp"
+                    android:paddingVertical="8dp"
                     android:paddingStart="16dp"
                     android:text="@string/model"
                     android:textColor="@android:color/black" />
@@ -150,7 +150,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.7"
                     android:gravity="center_vertical"
-                    android:paddingVertical="12dp"
+                    android:paddingVertical="8dp"
                     android:paddingStart="16dp"
                     android:text="@string/inference"
                     android:textColor="@android:color/black" />
