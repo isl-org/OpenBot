@@ -11,7 +11,6 @@ import WebKit
 class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
     var webView: WKWebView!
     var newWebviewPopupWindow: WKWebView?
-    let authentication = Authentication.googleAuthentication
     /**
      Function to configure webview before its load
      */
@@ -22,6 +21,7 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
         webView.configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         webView.scrollView.panGestureRecognizer.isEnabled = false
         webView.scrollView.pinchGestureRecognizer?.isEnabled = false
+        webView.isOpaque = false
         webView.uiDelegate = self
         view = webView
         webView.configuration.userContentController.addUserScript(self.getZoomDisableScript())
@@ -120,35 +120,6 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
        - frame:
        - completionHandler:
      */
-    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo,
-                 completionHandler: @escaping () -> Void) {
-
-        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
-            completionHandler()
-        }))
-
-        present(alertController, animated: true, completion: nil)
-    }
-
-
-    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo,
-                 completionHandler: @escaping (Bool) -> Void) {
-
-        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
-
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
-            completionHandler(true)
-        }))
-
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
-            completionHandler(false)
-        }))
-
-        present(alertController, animated: true, completion: nil)
-    }
-
-
     func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo,
                  completionHandler: @escaping (String?) -> Void) {
         let alertController = UIAlertController(title: nil, message: prompt, preferredStyle: .alert)
