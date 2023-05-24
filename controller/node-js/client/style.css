@@ -81,25 +81,31 @@ video::-webkit-media-controls-timeline {
     background: rgba(0, 0, 0, 0.2);
 }
 
+
 /* Styles for controlls */
 #command-list li {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin: 5px 0;
+    gap: 15px;
+    margin: 12px 0;
 }
 
 .key-display {
-    border-radius: 5px;
-    padding: 5px;
-    background-color: rgba(0, 0, 0, .7);
-    outline: 3px solid rgba(255, 255, 255, 0.141);
-    border-right: 5px solid rgba(0, 0, 0, .3);
-    border-bottom: 5px solid rgba(0, 0, 0, .3);
-    border-left: 2px solid rgba(0, 0, 0, .3);
-    border-top: 2px solid rgba(0, 0, 0, .3);
+    min-height: 1.5rem;
+    min-width: 1.5rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    text-align: start;
+    border-radius: 0.2rem;
+    padding: 0.5rem;
+    padding-left: 0.25rem;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.825) 0%, rgba(0, 0, 0, 0.65) 100%);
     transition: all .1s ease;
     color: white;
+    box-shadow: 2px 3px 0 4px rgba(0, 0, 0, 0.8);
+    user-select: none;
 }
 
 .key-pressed p {
@@ -107,6 +113,15 @@ video::-webkit-media-controls-timeline {
 }
 
 .key-pressed .key-display {
-    transform: translate(2px, 2px);
-    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.2);
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0 3px rgba(0, 0, 0, 0.795);
+}
+
+.space-symbol {
+    min-width: 25px;
+    height: 1px;
+    background: white;
+    border-radius: 1rem;
+    margin: 0 5rem;
+    margin-top: 0.2rem;
 }
