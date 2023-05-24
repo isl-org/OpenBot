@@ -1,7 +1,43 @@
 body {
     background-color: #f0f8ff;
-    margin: 3%;
-    font-family: 'Roboto';
+    font-family: Gilroy-Regular, sans-serif;
+    background-color: #f8f9fb;
+    margin: 0;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Font */
+@font-face {
+    font-family: 'Gilroy';
+    src: url('font/Gilroy/Gilroy-Black.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Gilroy-Regular';
+    /*400*/
+    src: url('font/Gilroy/Gilroy-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Gilroy-Medium';
+    /*500*/
+    src: url('font/Gilroy/Gilroy-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Gilroy-SemiBold';
+    /*600*/
+    src: url('font/Gilroy/Gilroy-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Gilroy-Bold';
+    /*700*/
+    src: url('font/Gilroy/Gilroy-Bold.ttf') format('truetype');
 }
 
 /* Used to suppress error:
@@ -10,3 +46,82 @@ video::-webkit-media-controls-timeline {
     align-self: center;
     width: calc(100% - 64px);
   }
+
+.video-container {
+    height: calc(100% - 4rem);
+    width: calc(100% - 4rem); 
+    overflow: hidden;
+    border: 2px dashed #0071C5;
+    background-color: #0070c50d;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.video-container video {
+    height: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+.button {
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.button:active {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+
+/* Styles for controlls */
+#command-list li {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 12px 0;
+}
+
+.key-display {
+    min-height: 1.5rem;
+    min-width: 1.5rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    text-align: start;
+    border-radius: 0.2rem;
+    padding: 0.5rem;
+    padding-left: 0.25rem;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.825) 0%, rgba(0, 0, 0, 0.65) 100%);
+    transition: all .1s ease;
+    color: white;
+    box-shadow: 2px 3px 0 4px rgba(0, 0, 0, 0.8);
+    user-select: none;
+}
+
+.key-pressed p {
+    font-weight: bold;
+}
+
+.key-pressed .key-display {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0 3px rgba(0, 0, 0, 0.795);
+}
+
+.space-symbol {
+    min-width: 25px;
+    height: 1px;
+    background: white;
+    border-radius: 1rem;
+    margin: 0 5rem;
+    margin-top: 0.2rem;
+}
