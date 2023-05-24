@@ -1,10 +1,12 @@
 {
   "images" : [
     {
+      "filename" : "medium 4.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "medium 3.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
