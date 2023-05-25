@@ -51,7 +51,7 @@ function HelpDetails(params) {
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const isLandScape = window.matchMedia("(max-width: 767px) and (orientation: landscape)").matches
-    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
+    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
 
     return (
         <>

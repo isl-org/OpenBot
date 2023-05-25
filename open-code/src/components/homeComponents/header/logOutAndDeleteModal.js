@@ -20,7 +20,6 @@ export function PopUpModal(props) {
     const {setVariable, headerText, buttonText, containText, handleButtonClick, deleteLoader,inlineStyle} = props;
     const {isOnline} = useContext(StoreContext);
     const [open, setOpen] = useState(true);
-    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
 
     const handleClose = () => {
         setVariable(false);

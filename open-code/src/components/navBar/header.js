@@ -137,7 +137,8 @@ function RightSection(params) {
     const {setIsHelpCenterModal, toggleTheme, theme, setIsProfileModal, user, setUser, location} = params
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
-    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
+    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
+
     return (
         <>
             {/*help icon if screen is playground and device is not mobile*/}
