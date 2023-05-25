@@ -30,6 +30,7 @@ public class BarCodeScannerFragment extends CameraFragment {
   private boolean barCodeAccess = true;
   private boolean cameraToggle = false;
   public static String finalCode;
+  private String projectName;
 
   @Override
   public View onCreateView(
@@ -164,9 +165,7 @@ public class BarCodeScannerFragment extends CameraFragment {
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(qrCodeValue, JsonObject.class); // get json
         String linkCode = jsonObject.get("driveLink").getAsString(); // get as string
-        String projectName = jsonObject.get("projectName").getAsString(); // get as string
-        binding.qrMessage.setText(
-            projectName + " file detected. Start to execute the code on your OpenBot.");
+        projectName = jsonObject.get("projectName").getAsString(); // get as string
         extractFileID(linkCode);
       }
     }
@@ -219,6 +218,8 @@ public class BarCodeScannerFragment extends CameraFragment {
                 // Set the finalCode to the modified code and handle the bottom sheet with a success
                 // state.
                 finalCode = code;
+                requireActivity().runOnUiThread(() -> binding.qrMessage.setText(
+                        projectName + " file detected. Start to execute the code on your OpenBot."));
                 handleBottomSheet(true);
               }
 
