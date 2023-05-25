@@ -229,6 +229,13 @@
 }
 
 @media (max-width: 767px) {
+
+    .langIcon {
+        width: 20px;
+        height: 20px;
+        margin-left: 2px;
+    }
+
     .uploadCodeButton {
         height: 2.5rem;
         width: 55%;
@@ -377,9 +384,9 @@
     }
 
     .langOption{
-        height: 80px;
+        height: 90px;
         width: 160px;
-        top: -118px;
+        top: -130px;
         left: -14vw;
     }
 

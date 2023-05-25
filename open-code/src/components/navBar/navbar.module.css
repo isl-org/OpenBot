@@ -470,7 +470,16 @@
     padding-left: 5%;
 }
 
+.saveAndDownloadDivContent{
+    width: 70%;
+    padding-left: 5%;
+}
+
 @media (max-width: 767px) {
+
+    .saveAndDownloadDivContent{
+        width: 90%;
+    }
 
     .connectAndDriveDivPara{
         width: 90%;
@@ -721,6 +730,11 @@
 /*tablet portrait mode*/
 @media (min-width: 744px) and (max-width: 1024px) and (min-height: 650px) {
 
+
+    .buttonIcon {
+        font-size: 15px;
+    }
+
     .dragAndDropPara {
         margin-left: 6%;
         padding-top: 12%;
@@ -857,6 +871,7 @@
     }
 
     .saveAndDownloadDivContent {
+        width: 85%;
         padding-top: 8%;
     }
 
@@ -983,6 +998,8 @@
     .connectAndDriveDivPara{
         width: 90%;
     }
-
+    .saveAndDownloadDivContent{
+        width: 90%;
+    }
 
 }

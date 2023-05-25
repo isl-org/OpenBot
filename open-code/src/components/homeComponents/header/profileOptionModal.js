@@ -35,6 +35,7 @@ export function ProfileOptionModal(props) {
     const isSignedIn = localStorage.getItem("isSigIn") === "true";
     const isHomePage = location.pathname === PathName.home;
     const isOnPlaygroundPage = location.pathname === PathName.playGround;
+    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
 
     const handleClose = () => {
         setIsProfileModal(false)
@@ -74,13 +75,13 @@ export function ProfileOptionModal(props) {
                 }
                 {isOnPlaygroundPage && isMobile &&
                     <>
-                        <PopUpInRowText
+                        { !tabletQuery && <PopUpInRowText
                             onClick={() => {
                                 handleClose();
                                 toggleTheme(!theme)
                             }}
                             text={"Change Theme"}
-                            icon={theme === Themes.dark ? Images.lightThemeIcon : Images.blueTheme}/>
+                            icon={theme === Themes.dark ? Images.lightThemeIcon : Images.blueTheme}/>}
                         <PopUpInRowText onClick={() => handleOnclick(setIsHelpCenterModal)} text={"How To Upload"}
                                         icon={theme === Themes.dark ? Images.helpIcon : Images.infoLight}/>
                     </>

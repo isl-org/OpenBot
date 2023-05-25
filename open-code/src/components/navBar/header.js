@@ -69,10 +69,12 @@ export function Header() {
             {/*delete project modal*/}
             {deleteProject &&
                 <PopUpModal setVariable={setDeleteProject}
+                            inlineStyle={{backgroundColor:"#E03E1A"}}
                             headerText={"Delete this file?"}
                             containText={"You cannot restore this file later."}
                             buttonText={"Delete"}
                             deleteLoader={deleteLoader}
+                            setInlineStyling={true}
                             handleButtonClick={handleDeleteProject}/>
             }
 
@@ -134,11 +136,12 @@ export function Header() {
 function RightSection(params) {
     const {setIsHelpCenterModal, toggleTheme, theme, setIsProfileModal, user, setUser, location} = params
     const themes = useTheme();
-    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
+    const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
+    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
     return (
         <>
             {/*help icon if screen is playground and device is not mobile*/}
-            {location.pathname === PathName.playGround && !isMobile &&
+            {location.pathname === PathName.playGround && !isMobile && !tabletQuery &&
                 <img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon}
                      onClick={() => setIsHelpCenterModal(true)}
                      style={{height: 24}}/>
