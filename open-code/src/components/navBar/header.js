@@ -34,7 +34,6 @@ export function Header() {
     const[deleteLoader,setDeleteLoader]=useState(false);
     const location = useLocation();
     let navigate = useNavigate();
-    const[inlineStyling,setInlineStyling]=useState(false);
 
     useEffect(() => {
         auth.onAuthStateChanged(function (currentUser) {
