@@ -28,7 +28,7 @@ function CodeEditor(params) {
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));// Determine if the screen is a mobile device using useMediaQuery hook
     const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
     const {theme} = useContext(ThemeContext);
-    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
+    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
 
     useEffect(() => {
         const editor = ace.edit(editorRef.current);
