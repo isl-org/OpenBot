@@ -4,10 +4,10 @@ import BlueText from "../fonts/blueText";
 import WhiteText from "../fonts/whiteText";
 
 export default function BlueButton(props) {
-    const {buttonName, extraStyle, buttonType, onClick, buttonStyle} = props
+    const {buttonName, inlineStyle,extraStyle, buttonType, onClick, buttonStyle} = props
     return (
         buttonType === "contained" ?
-            <div onClick={onClick} className={styles.containedButton + " " + extraStyle}>
+            <div onClick={onClick} style={inlineStyle} className={styles.containedButton + " " + extraStyle}>
                 <WhiteText text={buttonName} extraStyle={buttonStyle}/>
             </div> :
             <div onClick={onClick} className={styles.normalButton + " " + extraStyle}>

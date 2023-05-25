@@ -41,7 +41,11 @@ import uploadIcon from "../assets/images/icon/upload-cloud.png";
 import rightSlider from "../assets/images/icon/right-slider.png";
 import rightSliderDark from "../assets/images/icon/right-slider-dark.png";
 import UpArrowIcon from "../assets/images/icon/up-arrow.png";
-import downArrowIcon from "../assets/images/icon/down-arrow.png"
+import downArrowIcon from "../assets/images/icon/down-arrow.png";
+import jsIconDarkTheme from "../assets/images/icon/js-icon-dark-theme.png";
+import jsIconLightTheme from "../assets/images/icon/js-con-light-theme.png";
+import pyIconDarkTheme from "../assets/images/icon/python-icon-dark-theme.png";
+import pyIconLightTheme from "../assets/images/icon/python-icon-light-theme.png"
 /**
  * Images used in opeBot-Playgorund is listed here
  * @type {{lightThemeIcon: *, darkPencilIcon: *, line: *, undoIcon: *, pencilIcon: *, profileImage: *, laptop: *, lightCrossIcon: *, login: *, gameIcon: *, joystickIcon: *, gamepadIcon: *, cloud: *, infoLight: *, logo: *, blueTheme: *, crossIcon: *, darkDots: *, phoneIcon: *, logoutIcon: *, Carousal2Dark: *, dots: *, uploadIcon: *, redoIcon: *, Carousal3Dark: *, avatar: *, darkThemeIcon: *, errorEmojiIcon: *, editProfileIcon: *, darkUserIcon: *, darkLogoutIcon: *, dualDriveIcon: *, dragDropWhite: *, dragDropDark: *, userIcon: *, darkCrossIcon: *, successfulEmojiIcon: *, helpIcon: *, Carousal3: *, Carousal2: *}}
@@ -90,5 +94,9 @@ export const Images = {
     redoIcon: redoIcon,
     uploadIcon: uploadIcon,
     UpArrowIcon:UpArrowIcon,
-    downArrowIcon:downArrowIcon
+    downArrowIcon:downArrowIcon,
+    jsIconDarkTheme:jsIconDarkTheme,
+    jsIconLightTheme:jsIconLightTheme,
+    pyIconDarkTheme:pyIconDarkTheme,
+    pyIconLightTheme:pyIconLightTheme
 }

@@ -33,7 +33,7 @@ export const HomeCarousel = () => {
 function CarousalComponent(params) {
     const {slide} = params
     const {theme} = useContext(ThemeContext)
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isIOS = /iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
 
     return (

@@ -51,6 +51,8 @@ function HelpDetails(params) {
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const isLandScape = window.matchMedia("(max-width: 767px) and (orientation: landscape)").matches
+    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
+
     return (
         <>
             <div
@@ -84,7 +86,7 @@ function HelpDetails(params) {
                     <div>
                         <BlackText text={2} extraStyle={styles.integerNumber}/>
                     </div>
-                    <div className={styles.saveAndDownloadDivContent} style={{width: isMobile ? "90%" : "70%", paddingLeft: "5%"}}>
+                    <div className={styles.saveAndDownloadDivContent}>
                         <BlackText
                             divStyle={{marginTop: "7%", marginBottom: "8%"}}
                             text={"Save and Download"}
@@ -97,7 +99,7 @@ function HelpDetails(params) {
                 </div>
                 <div className={styles.connectAndDriveDiv}>
                     <div>
-                        <BlackText text={3} divStyle={{paddingTop:"20px"}} extraStyle={styles.integerNumber}/>
+                        <BlackText text={3} divStyle={{paddingTop:"20px" && tabletQuery}} extraStyle={styles.integerNumber}/>
                     </div>
                     <div className={styles.connectAndDriveDivPara}>
                         <div style={{marginTop: "10%"}}>

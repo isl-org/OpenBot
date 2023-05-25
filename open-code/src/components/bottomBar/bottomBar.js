@@ -280,9 +280,10 @@ function GenerateCodeButton(params) {
                 setCategory(language);
             }
             } className={`${styles.uploadCodeButton}`} style={{marginLeft: "1rem"}}>
-                {isMobile || isMobileLandscape || tabletQuery.matches ? language === Constants.js ?
-                    <WhiteText text={"JS"} extraStyle={styles.pyFont}/> :
-                    <WhiteText text={"Py"} extraStyle={styles.pyFont}/> : <span
+                {language === Constants.js ?
+                    <img src={Images.jsIconDarkTheme} alt={"js"} style={{width: "1.5rem", height: "1.5rem"}}/> :
+                    <img src={Images.pyIconDarkTheme} alt={"py"} style={{width: "1.5rem", height: "1.5rem"}}/>}
+                {isMobile || isMobileLandscape || tabletQuery.matches ? "" : <span
                     className={styles.leftButton + " " + styles.iconMargin}>{language === Constants.js ? "Javascript" : "Python"}</span>}
                 <img ref={popUpRef}
                      onClick={handleClick}
@@ -299,7 +300,7 @@ function GenerateCodeButton(params) {
                          className={`${styles.langItem} ${styles.jsDivMargin}  ${(theme.theme === "dark" ? navbarStyle.darkItem : navbarStyle.lightItem)}`}
                     >
                         {!isMobile && <img alt="Icon" className={styles.langIcon}
-                                           src={theme.theme === "dark" ? renameIcon : Edit}/>}
+                                           src={theme.theme === "dark" ? Images.jsIconDarkTheme : Images.jsIconLightTheme}/>}
                         {theme.theme === "dark" ?
                             <WhiteText inlineStyle={{fontWeight: 400}} text={"Javascript"}/> :
                             <BlueText text={"Javascript"}/>
@@ -309,7 +310,7 @@ function GenerateCodeButton(params) {
                          className={`${styles.langItem} ${styles.pyDivMargin} ${(theme.theme === "dark" ? navbarStyle.darkItem : navbarStyle.lightItem)}`}
                     >
                         {!isMobile && <img alt="Icon" className={styles.langIcon}
-                                           src={theme.theme === "dark" ? deleteIcon : trash}/>}
+                                           src={theme.theme === "dark" ? Images.pyIconDarkTheme : Images.pyIconLightTheme}/>}
                         {theme.theme === "dark" ?
                             <WhiteText inlineStyle={{marginLeft: isMobile && "-24px"}} text={"Python"}/> :
                             <BlueText inlineStyle={{marginLeft: isMobile && "-24px"}} text={"Python"}/>

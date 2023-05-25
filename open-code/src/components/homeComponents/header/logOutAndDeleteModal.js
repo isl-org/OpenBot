@@ -17,10 +17,10 @@ import {Constants, errorToast} from "../../../utils/constants";
  */
 export function PopUpModal(props) {
     const {theme} = useContext(ThemeContext)
-    const {setVariable, headerText, buttonText, containText, handleButtonClick, deleteLoader} = props;
-    const {isOnline} = useContext(StoreContext)
+    const {setVariable, headerText, buttonText, containText, handleButtonClick, deleteLoader,inlineStyle} = props;
+    const {isOnline} = useContext(StoreContext);
     const [open, setOpen] = useState(true);
-
+    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
 
     const handleClose = () => {
         setVariable(false);
@@ -57,6 +57,7 @@ export function PopUpModal(props) {
                                         extraStyle={styles.logoutButtonsExtraStyle + " " + styles.cancelExtraStyle}/>
                             <BlueButton onClick={() => handleRightButton()} buttonType={"contained"}
                                         buttonName={buttonText}
+                                        inlineStyle={inlineStyle}
                                         buttonStyle={styles.buttonStyle}
                                         extraStyle={styles.logoutButtonsExtraStyle}/>
                         </div>

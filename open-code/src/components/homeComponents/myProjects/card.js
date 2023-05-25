@@ -115,6 +115,7 @@ function Card(props) {
     return (
         <div className={styles.cardContent}>
             {deleteProject && <PopUpModal setVariable={setDeleteProject}
+                                          inlineStyle={{backgroundColor:"#E03E1A"}}
                                           headerText={"Delete this file?"}
                                           containText={"You cannot restore this file later."}
                                           buttonText={"Delete"}

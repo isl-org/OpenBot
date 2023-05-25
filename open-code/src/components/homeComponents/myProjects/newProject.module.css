@@ -447,6 +447,7 @@
 
     .Button {
         width: 100%;
+        height: 140px;
     }
 
     .MessageIcon {
@@ -467,6 +468,7 @@
 
     .Card {
         width: 100%;
+        height: 140px;
     }
 
     .Content {
