@@ -218,8 +218,12 @@ public class BarCodeScannerFragment extends CameraFragment {
                 // Set the finalCode to the modified code and handle the bottom sheet with a success
                 // state.
                 finalCode = code;
-                requireActivity().runOnUiThread(() -> binding.qrMessage.setText(
-                        projectName + " file detected. Start to execute the code on your OpenBot."));
+                requireActivity()
+                    .runOnUiThread(
+                        () ->
+                            binding.qrMessage.setText(
+                                projectName
+                                    + " file detected. Start to execute the code on your OpenBot."));
                 handleBottomSheet(true);
               }
 

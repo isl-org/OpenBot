@@ -27,6 +27,7 @@ public class BotFunctionUtils {
     "indicatorReading",
     "noiseEnable",
     "playSoundSpeed",
+    "playSoundMode",
     "rightIndicatorOn",
     "leftIndicatorOn",
     "rightIndicatorOff",

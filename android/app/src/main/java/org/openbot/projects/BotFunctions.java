@@ -220,6 +220,17 @@ public class BotFunctions implements SensorEventListener {
   }
 
   @JavascriptInterface
+  public void playSoundMode(String driveMode) {
+    if (Objects.equals(driveMode, "dual drive")) {
+      audioPlayer.playDriveMode("matthew", Enums.DriveMode.DUAL);
+    } else if (Objects.equals(driveMode, "joystick control")) {
+      audioPlayer.playDriveMode("matthew", Enums.DriveMode.JOYSTICK);
+    } else if (Objects.equals(driveMode, "gamepad")) {
+      audioPlayer.playDriveMode("matthew", Enums.DriveMode.GAME);
+    }
+  }
+
+  @JavascriptInterface
   public void rightIndicatorOn() {
     vehicle.setIndicator(1);
   }

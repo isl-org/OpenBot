@@ -17,14 +17,17 @@ public class BlocklyExecutingFragment extends ControlsFragment {
   private WebView myWebView;
   private int previousSpeedMultiplier;
   private BarCodeScannerFragment barCodeScannerFragment;
-
   private SharedPreferencesManager sharedPreferencesManager;
+  private boolean isRunJSCommand = false;
 
   @Override
   public View onCreateView(
       @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     barCodeScannerFragment = new BarCodeScannerFragment();
     sharedPreferencesManager = new SharedPreferencesManager(requireContext());
+    if (savedInstanceState == null) {
+      isRunJSCommand = true;
+    }
     // Inflate the layout for Blocks code executing Fragment.
     binding = FragmentBlocklyExecutingBinding.inflate(inflater, container, false);
     return binding.getRoot();
@@ -38,7 +41,7 @@ public class BlocklyExecutingFragment extends ControlsFragment {
     // enable JavaScript in the web-view.
     myWebView.getSettings().setJavaScriptEnabled(true);
     // if string js code variable is not null execute js code when you navigate on this fragment.
-    if (barCodeScannerFragment.finalCode != null) {
+    if (barCodeScannerFragment.finalCode != null && isRunJSCommand) {
       runJSCommand(barCodeScannerFragment.finalCode);
     }
   }
