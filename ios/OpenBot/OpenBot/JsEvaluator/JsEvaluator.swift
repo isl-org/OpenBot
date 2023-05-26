@@ -332,7 +332,7 @@ class jsEvaluator {
         }
         print("inside wait", forTime);
         if forTime != 0.03 {
-//            NotificationCenter.default.post(name: .commandName, object: "wait for \(forTime)");
+            NotificationCenter.default.post(name: .commandName, object: "wait for \(forTime)");
         }
         DispatchQueue.global(qos: .background).async {
             let command = Control(left: 0, right: 0);

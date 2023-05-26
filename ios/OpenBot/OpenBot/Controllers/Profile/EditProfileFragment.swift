@@ -352,7 +352,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
-            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: "Edit Profile", target: self, action: #selector(FreeRoamController.back(sender:)), titleColor: Colors.navigationColor ?? .white)
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: "Edit Profile", target: self, action: #selector(back(sender:)), titleColor: Colors.navigationColor ?? .white)
             navigationItem.leftBarButtonItem = newBackButton
         }
     }

@@ -79,28 +79,43 @@
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your code is executing.." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HmK-zt-jbD">
-                                <rect key="frame" x="101" y="541.66666666666663" width="191" height="44"/>
+                                <rect key="frame" x="16" y="541.66666666666663" width="361" height="44"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="191" id="0YT-re-I9o"/>
+                                    <constraint firstAttribute="width" constant="361" id="0YT-re-I9o"/>
                                     <constraint firstAttribute="height" constant="44" id="Xno-yV-XP8"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gz8-dU-Lpa">
+                                <rect key="frame" x="90" y="594.66666666666663" width="213" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="213" id="DgB-la-8JV"/>
+                                    <constraint firstAttribute="height" constant="50" id="kIM-pD-q5o"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="BhC-0o-bFy"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <color key="tintColor" name="textColor"/>
                         <constraints>
+                            <constraint firstItem="gz8-dU-Lpa" firstAttribute="centerX" secondItem="u64-Zg-Hjz" secondAttribute="centerX" id="BYG-nD-Ju9"/>
+                            <constraint firstItem="gz8-dU-Lpa" firstAttribute="centerX" secondItem="u64-Zg-Hjz" secondAttribute="centerX" id="Fk6-iZ-jSi"/>
                             <constraint firstItem="HmK-zt-jbD" firstAttribute="top" secondItem="4Ws-oO-4cz" secondAttribute="bottom" constant="9" id="I3K-Ek-ujR"/>
+                            <constraint firstItem="gz8-dU-Lpa" firstAttribute="top" secondItem="HmK-zt-jbD" secondAttribute="bottom" constant="9" id="UMm-NH-fnf"/>
                             <constraint firstItem="4Ws-oO-4cz" firstAttribute="centerY" secondItem="u64-Zg-Hjz" secondAttribute="centerY" id="Vbw-2V-98U"/>
                             <constraint firstItem="HmK-zt-jbD" firstAttribute="centerX" secondItem="4Ws-oO-4cz" secondAttribute="centerX" id="hQ0-ZU-5kY"/>
+                            <constraint firstItem="gz8-dU-Lpa" firstAttribute="centerX" secondItem="u64-Zg-Hjz" secondAttribute="centerX" id="sfE-bM-KuD"/>
                             <constraint firstItem="4Ws-oO-4cz" firstAttribute="centerX" secondItem="u64-Zg-Hjz" secondAttribute="centerX" id="vNo-4m-smZ"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="commandMessage" destination="HmK-zt-jbD" id="T85-PS-Lyv"/>
+                        <outlet property="runRobotConstraints" destination="Vbw-2V-98U" id="Ba7-GN-Jn6"/>
+                        <outlet property="stopRobot" destination="gz8-dU-Lpa" id="unS-Pd-pt7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3kG-rd-Dqs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
