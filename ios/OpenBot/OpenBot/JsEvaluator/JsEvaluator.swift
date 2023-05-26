@@ -118,6 +118,7 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.setLedBrightness(factor: brightnessFactor);
                 }
                 let leftIndicatorOn: @convention(block) () -> Void = { () in
+
                     self.runOpenBotThreadClass?.setLeftIndicatorOn();
                 }
 
@@ -330,6 +331,9 @@ class jsEvaluator {
             return;
         }
         print("inside wait", forTime);
+        if forTime != 0.03 {
+//            NotificationCenter.default.post(name: .commandName, object: "wait for \(forTime)");
+        }
         DispatchQueue.global(qos: .background).async {
             let command = Control(left: 0, right: 0);
             self.sendControl(control: command);
@@ -411,6 +415,7 @@ class jsEvaluator {
                 return
             }
             print("inside move forward", speed)
+            NotificationCenter.default.post(name: .commandName, object: "move Forward \(speed)");
             let carControl = Control(left: speed, right: speed)
             sendControl(control: carControl);
         }
@@ -425,9 +430,9 @@ class jsEvaluator {
             print("inside move")
             if isCancelled {
                 sendControl(control: Control());
-
                 return
             }
+            NotificationCenter.default.post(name: .commandName, object: "move OponBot \(left) left and \(right) right");
             let carControl = Control(left: Float(left), right: Float(right));
             sendControl(control: carControl);
         }
@@ -454,6 +459,7 @@ class jsEvaluator {
                 return
             }
             print("inside stop robot")
+            NotificationCenter.default.post(name: .commandName, object: "Stop");
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
             while (bluetooth.peri != nil && bluetooth.speedometer != "w0.00,0.00") {
@@ -472,6 +478,7 @@ class jsEvaluator {
                 return
             }
             print("inside moveBackward", speed)
+            NotificationCenter.default.post(name: .commandName, object: "move Backward \(speed)");
             let carControl = Control(left: -speed, right: -speed);
             sendControl(control: carControl);
 
@@ -487,6 +494,7 @@ class jsEvaluator {
                 return
             }
             print("inside moveLeft", speed)
+            NotificationCenter.default.post(name: .commandName, object: "move Left \(speed)");
             let carControl = Control(left: 0, right: speed);
             sendControl(control: carControl);
         }
@@ -501,6 +509,7 @@ class jsEvaluator {
                 return
             }
             print("inside Right", speed)
+            NotificationCenter.default.post(name: .commandName, object: "move Right \(speed)");
             let carControl = Control(left: speed, right: 0);
             sendControl(control: carControl);
         }
@@ -516,6 +525,7 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
+            NotificationCenter.default.post(name: .commandName, object: "Play Sound \(speedMode)");
            switch speedMode {
            case "slow":
                audioPlayer.playSpeedMode(speedMode: .SLOW);
@@ -535,14 +545,16 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
+            print("playSoundMode \(driveMode)");
+            NotificationCenter.default.post(name: .commandName, object: "play Drive Mode \(driveMode)");
             switch driveMode {
-            case "dual":
+            case "dual drive":
                 audioPlayer.playDriveMode(driveMode: .DUAL);
                 break
-            case "joystick":
+            case "joystick control":
                 audioPlayer.playDriveMode(driveMode: .JOYSTICK);
                 break
-            case "game":
+            case "gamepad":
                 audioPlayer.playDriveMode(driveMode: .GAME);
                 break
             default:
@@ -558,6 +570,7 @@ class jsEvaluator {
                 sendControl(control: Control());
                 return
             }
+            NotificationCenter.default.post(name: .commandName, object: "Motor Backward ");
             let control = Control(left: -192, right: -192);
             sendControl(control: control);
         }
@@ -570,6 +583,7 @@ class jsEvaluator {
                 sendControl(control: Control());
                 return
             }
+            NotificationCenter.default.post(name: .commandName, object: "Motor Backward ");
             let control = Control(left: 192, right: 192);
             sendControl(control: control);
         }
@@ -582,6 +596,7 @@ class jsEvaluator {
                 sendControl(control: Control());
                 return
             }
+            NotificationCenter.default.post(name: .commandName, object: "Motor stop ");
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
         }
@@ -596,6 +611,7 @@ class jsEvaluator {
                 return
             }
             print("inside setLedBrightness");
+            NotificationCenter.default.post(name: .commandName, object: "Set Led BrightNess \(factor) ");
             let front = (factor * 255) / 100
             let back = ((factor * 255)) / 100
             bluetooth.sendData(payload: "l" + String(front) + "," + String(back) + "\n")
@@ -609,6 +625,7 @@ class jsEvaluator {
                 bluetooth.sendData(payload: "i0,0\n")
                 return
             }
+            NotificationCenter.default.post(name: .commandName, object: "Left Indicator On");
             print("inside setLeftIndicatorOn");
             let indicatorValues = "i1,0\n"
             bluetooth.sendData(payload: indicatorValues)
@@ -622,6 +639,7 @@ class jsEvaluator {
                 bluetooth.sendData(payload: "i0,0\n")
                 return
             }
+            NotificationCenter.default.post(name: .commandName, object: "Right Indicator On");
             print("inside setRightIndicatorOn");
             let indicatorValues = "i0,1\n"
             bluetooth.sendData(payload: indicatorValues)
@@ -634,7 +652,7 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
-            print("inside indicatorOff");
+            NotificationCenter.default.post(name: .commandName, object: "Indicator Off");
             let indicatorValues = "i0,0\n"
             bluetooth.sendData(payload: indicatorValues)
         }
@@ -647,6 +665,7 @@ class jsEvaluator {
             if isCancelled {
                 return 0
             }
+            NotificationCenter.default.post(name: .commandName, object: "Get Sonar Value");
             return bluetooth.getSonar();
         }
 
@@ -658,6 +677,7 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
+            NotificationCenter.default.post(name: .commandName, object: "Switch Drive Mode");
             switch driveMode {
             case "dual":
                 gameController.selectedDriveMode = .DUAL;
@@ -682,6 +702,7 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
+            NotificationCenter.default.post(name: .commandName, object: "Switch Controller");
             switch controller {
             case "phone":
                 gameController.selectedControlMode = .PHONE;
@@ -701,6 +722,7 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
+            NotificationCenter.default.post(name: .commandName, object: "Motor Backward ");
             print(bluetooth.bumperData.count)
         }
 
@@ -712,6 +734,7 @@ class jsEvaluator {
             if isCancelled {
                 return 0
             }
+            NotificationCenter.default.post(name: .commandName, object: "Get Speed reading");
             return bluetooth.getSpeed();
         }
 
@@ -723,6 +746,7 @@ class jsEvaluator {
             if isCancelled {
                 return 0;
             }
+            NotificationCenter.default.post(name: .commandName, object: "get voltage divider");
             return bluetooth.getVoltage();
         }
 

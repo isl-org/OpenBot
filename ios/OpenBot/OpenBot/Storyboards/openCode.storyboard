@@ -99,6 +99,9 @@
                             <constraint firstItem="4Ws-oO-4cz" firstAttribute="centerX" secondItem="u64-Zg-Hjz" secondAttribute="centerX" id="vNo-4m-smZ"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="commandMessage" destination="HmK-zt-jbD" id="T85-PS-Lyv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3kG-rd-Dqs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
