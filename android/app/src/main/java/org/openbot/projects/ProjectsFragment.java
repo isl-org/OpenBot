@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
@@ -34,8 +33,7 @@ public class ProjectsFragment extends Fragment {
   private DriveProjectsAdapter adapter;
   private BarCodeScannerFragment barCodeScannerFragment;
   private BottomSheetBehavior projectsBottomSheetBehavior;
-  private SwipeRefreshLayout swipeRefreshLayout;
-  private SparseArray<int[]> driveRes = new SparseArray<>();
+  private final SparseArray<int[]> driveRes = new SparseArray<>();
   private SharedPreferencesManager sharedPreferencesManager;
 
   @Override
@@ -55,7 +53,6 @@ public class ProjectsFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
     barCodeScannerFragment = new BarCodeScannerFragment();
     binding.signInButton.setOnClickListener(v -> signIn());
-    swipeRefreshLayout = requireView().findViewById(R.id.refreshLayout);
     projectsBottomSheetBehavior.addBottomSheetCallback(dpBottomSheetCallback);
     requireView()
         .findViewById(R.id.dp_start_btn)
@@ -69,14 +66,13 @@ public class ProjectsFragment extends Fragment {
             v -> projectsBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
 
     if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+      binding.signOutLayout.setVisibility(View.GONE);
       showProjectsRv();
+    } else {
+      binding.signOutLayout.setVisibility(View.VISIBLE);
     }
 
-    swipeRefreshLayout.setOnRefreshListener(
-        () -> {
-          showProjectsRv();
-          swipeRefreshLayout.setRefreshing(false);
-        });
+    binding.refreshLayout.setOnRefreshListener(this::showProjectsRv);
   }
 
   private void signIn() {
@@ -91,26 +87,22 @@ public class ProjectsFragment extends Fragment {
             Intent data = result.getData();
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             googleServices.handleSignInResult(task);
-            binding.signOutLayout.setVisibility(View.GONE);
-            showProjectsRv();
+            if (task.isSuccessful()) {
+              binding.signOutLayout.setVisibility(View.GONE);
+              showProjectsRv();
+            }
           });
 
-  private GoogleSignInCallback newGoogleServices =
+  private final GoogleSignInCallback newGoogleServices =
       new GoogleSignInCallback() {
         @Override
-        public void onSignInSuccess(FirebaseUser account) {
-          binding.signOutLayout.setVisibility(View.GONE);
-        }
+        public void onSignInSuccess(FirebaseUser account) {}
 
         @Override
-        public void onSignInFailed(Exception exception) {
-          binding.signOutLayout.setVisibility(View.VISIBLE);
-        }
+        public void onSignInFailed(Exception exception) {}
 
         @Override
-        public void onSignOutSuccess() {
-          binding.signOutLayout.setVisibility(View.VISIBLE);
-        }
+        public void onSignOutSuccess() {}
 
         @Override
         public void onSignOutFailed(Exception exception) {}
@@ -132,9 +124,7 @@ public class ProjectsFragment extends Fragment {
             onTapProjectItem(
                 googleServices.projectsList.get(position).getProjectCommands(),
                 googleServices.projectsList.get(position).getProjectName()));
-    if (googleServices.projectsList.size() <= 0) {
-      binding.projectsLoader.setVisibility(View.VISIBLE);
-    }
+    binding.projectsLoader.setVisibility(View.VISIBLE);
     googleServices.accessDriveFiles(adapter, binding);
     binding.projectsRv.setAdapter(adapter);
   }
@@ -150,6 +140,7 @@ public class ProjectsFragment extends Fragment {
   public void updateMessage(
       List<ProjectsDataInObject> driveFiles, FragmentProjectsBinding binding) {
     binding.projectsLoader.setVisibility(View.GONE);
+    binding.refreshLayout.setRefreshing(false);
     if (driveFiles.size() <= 0) {
       binding.noProjectsLayout.setVisibility(View.VISIBLE);
     }

@@ -15,8 +15,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import java.util.ArrayList;
 import org.openbot.R;
 import org.openbot.databinding.FragmentProfileBinding;
+import org.openbot.env.SharedPreferencesManager;
 import org.openbot.googleServices.GoogleServices;
 import org.openbot.projects.GoogleSignInCallback;
 
@@ -24,6 +26,7 @@ public class ProfileFragment extends Fragment {
 
   private FragmentProfileBinding binding;
   private GoogleServices googleServices;
+  private SharedPreferencesManager sharedPreferencesManager;
 
   @Override
   public View onCreateView(
@@ -37,6 +40,7 @@ public class ProfileFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    sharedPreferencesManager = new SharedPreferencesManager(requireContext());
     binding.signInButton.setOnClickListener(v -> signIn());
     binding.logoutBtn.setOnClickListener(v -> signOut());
     binding.editProfileBtn.setOnClickListener(
@@ -91,6 +95,7 @@ public class ProfileFragment extends Fragment {
         public void onSignOutSuccess() {
           binding.signOutScreen.setVisibility(View.VISIBLE);
           binding.profileSettings.setVisibility(View.GONE);
+          sharedPreferencesManager.setProjectLIst(new ArrayList<>());
         }
 
         @Override

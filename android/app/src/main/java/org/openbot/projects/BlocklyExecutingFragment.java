@@ -1,12 +1,14 @@
 package org.openbot.projects;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import org.openbot.common.ControlsFragment;
 import org.openbot.databinding.FragmentBlocklyExecutingBinding;
 import org.openbot.env.SharedPreferencesManager;
@@ -25,8 +27,18 @@ public class BlocklyExecutingFragment extends ControlsFragment {
       @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     barCodeScannerFragment = new BarCodeScannerFragment();
     sharedPreferencesManager = new SharedPreferencesManager(requireContext());
+    // initialise web view to execute javascript block codes.
+    myWebView = new WebView(getContext());
+    // enable JavaScript in the web-view.
+    myWebView.getSettings().setJavaScriptEnabled(true);
     if (savedInstanceState == null) {
       isRunJSCommand = true;
+    } else {
+      int orientation = getResources().getConfiguration().orientation;
+      if (orientation == Configuration.ORIENTATION_LANDSCAPE
+          || orientation == Configuration.ORIENTATION_PORTRAIT) {
+        showAlertDialog();
+      }
     }
     // Inflate the layout for Blocks code executing Fragment.
     binding = FragmentBlocklyExecutingBinding.inflate(inflater, container, false);
@@ -36,12 +48,28 @@ public class BlocklyExecutingFragment extends ControlsFragment {
   @Override
   public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    // initialise web view to execute javascript block codes.
-    myWebView = new WebView(getContext());
-    // enable JavaScript in the web-view.
-    myWebView.getSettings().setJavaScriptEnabled(true);
+    binding.stopCarBtn.setOnClickListener(
+        v -> {
+          myWebView.destroy();
+          binding.jsCommand.setText("Cancelled");
+        });
     // if string js code variable is not null execute js code when you navigate on this fragment.
     if (barCodeScannerFragment.finalCode != null && isRunJSCommand) {
+      runJSCommand(barCodeScannerFragment.finalCode);
+    }
+  }
+
+  private void showAlertDialog() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+    builder.setTitle("Rotate Screen");
+    builder.setPositiveButton("Yes", (dialog, id) -> restartJSCommand());
+    builder.setNegativeButton("Cancel", (dialog, id) -> requireActivity().onBackPressed());
+    AlertDialog dialog = builder.create();
+    dialog.show();
+  }
+
+  private void restartJSCommand() {
+    if (myWebView != null && barCodeScannerFragment.finalCode != null) {
       runJSCommand(barCodeScannerFragment.finalCode);
     }
   }
@@ -54,6 +82,7 @@ public class BlocklyExecutingFragment extends ControlsFragment {
   private void runJSCommand(String finalCode) {
     Activity activity = getActivity();
     if (activity != null) {
+
       activity.runOnUiThread(
           () -> {
             // store previous speed multiplier value.
@@ -62,7 +91,13 @@ public class BlocklyExecutingFragment extends ControlsFragment {
             vehicle.setSpeedMultiplier(255);
             // add a JavaScript interface to the web-view.
             myWebView.addJavascriptInterface(
-                new BotFunctions(vehicle, audioPlayer, sharedPreferencesManager, requireContext()),
+                new BotFunctions(
+                    vehicle,
+                    audioPlayer,
+                    sharedPreferencesManager,
+                    requireContext(),
+                    binding,
+                    requireActivity()),
                 "Android");
             // execute the JavaScript code in the web-view.
             myWebView.evaluateJavascript(finalCode, null);
