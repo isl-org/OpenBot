@@ -2,7 +2,6 @@ package org.openbot.playground;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import org.openbot.databinding.FragmentPlaygroundBinding;
+import timber.log.Timber;
 
 public class PlayGroundViewFragment extends Fragment {
   private FragmentPlaygroundBinding binding;
@@ -26,14 +26,15 @@ public class PlayGroundViewFragment extends Fragment {
     binding = FragmentPlaygroundBinding.inflate(inflater, container, false);
     playgroundView = (WebView) binding.playgroundWebView;
     playgroundView.setWebViewClient(new WebViewClient());
-    playgroundView.setWebChromeClient(new WebChromeClient(){
-      @Override
-      public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-        Log.d("WebViewConsole", consoleMessage.message() + ", "
-                + consoleMessage.sourceId());
-        return true;
-      }
-    });
+    playgroundView.setWebChromeClient(
+        new WebChromeClient() {
+          @Override
+          public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+            Timber.tag("WebViewConsole")
+                .d(consoleMessage.message() + ", " + consoleMessage.sourceId());
+            return true;
+          }
+        });
     return binding.getRoot();
   }
 
