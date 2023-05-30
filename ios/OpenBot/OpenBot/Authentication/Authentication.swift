@@ -27,7 +27,6 @@ class Authentication {
     }
 
     static func returnFileId(fileLink: String) -> String {
-        print(fileLink)
         if let startRange = fileLink.range(of: "/d/")?.upperBound,
            let endRange = fileLink.range(of: "/edit")?.lowerBound {
             let fileId = String(fileLink[startRange..<endRange])
@@ -62,44 +61,31 @@ class Authentication {
             let credential = GoogleAuthProvider.credential(withIDToken: idToken!,
                     accessToken: user?.accessToken.tokenString ?? "")
             Auth.auth().signIn(with: credential) { result, error in
-                print("hello result", result?.user.email)
+
             }
 
-            print("credential ", credential);
-            print("Google User ID: \(userId)")
             let userIdToken = user?.accessToken
-            print("Google ID Token: \(userIdToken?.tokenString)")
             self.userToken = userIdToken?.tokenString ?? ""
             let userFirstName = user?.profile?.givenName ?? ""
-            print("Google User First Name: \(userFirstName)")
 
             let userLastName = user?.profile?.familyName ?? ""
-            print("Google User Last Name: \(userLastName)")
             let userEmail = user?.profile?.email ?? ""
-            print("Google User Email: \(userEmail)")
             let googleProfilePicURL = user?.profile?.imageURL(withDimension: 150)?.absoluteString ?? ""
-            print("Google Profile Avatar URL: \(googleProfilePicURL)")
             let driveScope = "https://www.googleapis.com/auth/drive.readonly"
             let grantedScopes = user?.grantedScopes
-            print("grantedScopes ", grantedScopes);
             if grantedScopes == nil || !grantedScopes!.contains(driveScope) {
-                // Request additional Drive scope.
-//                user?.addScopes([driveScope], presenting: rootViewController)
             }
             self.service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
             self.getAllFoldersInDrive(accessToken: userIdToken?.tokenString ?? "") { files, error in
                 if let files = files {
-                    print("all folders are : ", files);
                     let folderId = files[0].identifier;
 //                    let folderId = "1eHMSMTSotwBlOZHTdDXj97BJmlJg9SFe"
                     self.getFilesInFolder(folderId: folderId ?? "") { files, error in
                         if let files = files {
-                            print("files are ", files);
                             for file in files {
                                 if let fileId = file.identifier {
                                     self.downloadFile(withId: fileId, accessToken: user?.accessToken.tokenString ?? "") { data, error in
                                         if let data = data {
-                                            print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: ""))
                                             return
                                         }
                                         if let error = error {
@@ -133,7 +119,6 @@ class Authentication {
     static func download(file: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let fileId = returnFileId(fileLink: file);
         let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
-        print("url is :", url)
         let service: GTLRDriveService = GTLRDriveService()
         let fetcher = service.fetcherService.fetcher(withURLString: url)
         fetcher.beginFetch(completionHandler: { data, error in
@@ -152,29 +137,13 @@ class Authentication {
         let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
         let service: GTLRDriveService = GTLRDriveService()
         let fetcher = service.fetcherService.fetcher(withURLString: url)
-
-        // Add retry logic with a delay
-        var retryCount = 0
-        let maxRetries = 3
-
         fetcher.beginFetch(completionHandler: { data, error in
             if let error = error {
-                    // Retry the request if it's a 403 error
-                    if retryCount < maxRetries {
-                        retryCount += 1
-                        let delayInSeconds = TimeInterval(retryCount * 5) // Increase delay for each retry
-                        DispatchQueue.main.asyncAfter(deadline: .now() + delayInSeconds) {
-                            download(fileId: fileId, completion: completion)
-                        }
-                        return
-                    }
-
-
-                // Handle other errors
-                print("Error: ", error.localizedDescription)
+                print("error is ", error.localizedDescription)
                 completion(nil, error)
+                return;
             }
-            else if let data = data {
+            if let data = data {
                 completion(data, nil)
             }
         })
@@ -184,15 +153,12 @@ class Authentication {
 
     func getAllFolders(completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         guard let accessToken = googleSignIn.currentUser?.accessToken.tokenString else {
-            print("Access token is nil")
             completion(nil, nil)
             return
         }
         let scopes = googleSignIn.currentUser?.grantedScopes
-        print("inside getFolder access are", scopes);
         self.getAllFoldersInDrive(accessToken: accessToken) { files, error in
             if let files = files {
-                print("files are ", files);
                 completion(files, nil)
             } else if let error = error {
                 print("error is ", error);
@@ -203,7 +169,6 @@ class Authentication {
 
 
     private func getAllFoldersInDrive(accessToken: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
-        print("access token is :", accessToken);
         let query = GTLRDriveQuery_FilesList.query()
         self.service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
         query.q = "mimeType='application/vnd.google-apps.folder' and trashed=false or name='Results'"
@@ -212,7 +177,6 @@ class Authentication {
         service.executeQuery(query) { (ticket, result, error) in
 
             if let error = error {
-
                 print("error in getting folder")
                 completion(nil, error)
                 return
@@ -235,7 +199,7 @@ class Authentication {
                 print("Error retrieving file name: \(error)")
             } else if let file = file as? GTLRDataObject {
                 if let fileName = file.json?["name"] as? String {
-                    print("File name: \(fileName)")
+
                 } else {
                     print("File name not found")
                 }

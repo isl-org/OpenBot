@@ -21,13 +21,13 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     private var whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds)
     private let signInView: UIView = UIView();
     private let noProjectMessageView: UIView = UIView();
-    private var allProjects: [ProjectItem] = [];
+    private var allProjects: [ProjectItem] = UserDefaults.getAllProjectFromUserDefault();
     private var tempAllProjects: [ProjectItem] = [];
     var vehicleControl = Control();
     @IBOutlet weak var openCodeWebView: UIView!
     private var command: String = ""
     private let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
-    private var allProjectCommands: [ProjectData] = [];
+    private var allProjectCommands: [ProjectData] = UserDefaults.getALlProjectsDataFromUserDefaults()
     private var myProjectLabel: CustomLabel = CustomLabel(frame: .zero)
 
     /**
@@ -70,8 +70,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         setupOpenCodeIcon();
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
-
-
     }
 
     /**
@@ -101,8 +99,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      */
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated);
+        hideAll();
         reloadProjects();
-        animateFloatingView();
     }
 
 
@@ -141,7 +139,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             signInView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
             noProjectMessageView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
         }
-        animateFloatingView()
     }
 
     /**
@@ -265,27 +262,32 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             let projectId = allProjects[indexPath.row].projectId;
             //find command of selected project
             command = returnCommandOfSelectedCell(projectId: projectId);
+            openBottomSheet(fileName: allProjects[indexPath.row].projectName)
         } else {
             createOverlayAlert();
             getCommandOfSelectedFile(project: allProjects[indexPath.row]) { result, error in
                 if let result = result {
                     self.alert.dismiss(animated: true);
                     self.command = result;
-                } else if error != nil {
+                    self.openBottomSheet(fileName: self.allProjects[indexPath.row].projectName)
+                }
+                if let  error  {
                     self.whiteSheet.removeFromSuperview();
                     self.alert.dismiss(animated: true);
-                    self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "");
-                    self.whiteSheet.scanQr.addTarget(self, action: #selector(self.scanQr), for: .touchUpInside);
-                    self.tabBarController?.view.addSubview(self.whiteSheet);
+                    self.openBottomSheet(fileName: "error")
+                    self.whiteSheet.cancelButton.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
                     return;
                 }
             }
         }
-        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: allProjects[indexPath.row].projectName);
+    }
+
+
+    private func openBottomSheet(fileName : String){
+        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: fileName);
         whiteSheet.startBtn.addTarget(self, action: #selector(start), for: .touchUpInside);
         whiteSheet.cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside);
         tabBarController?.view.addSubview(whiteSheet);
-
     }
 
     /**
@@ -334,7 +336,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      - Parameter notification:
      */
     @objc func googleSignIn(_ notification: Notification) {
-        allProjects = [];
         if GIDSignIn.sharedInstance.currentUser != nil {
             loadProjects();
         }
@@ -345,6 +346,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      function add commands to allProjectCommand variable
      */
     private func loadProjects() {
+        animateFloatingView();
         projectCollectionView.reloadData();
         authentication.getAllFolders { files, error in
             if let files = files {
@@ -372,13 +374,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                     } else if let error = error {
                         print("Error getting files in folder: ", error.localizedDescription)
                     }
-                    do {
-                        let encoder = JSONEncoder()
-                        let data = try encoder.encode(self.allProjects);
-                        UserDefaults.standard.set(data, forKey: "allProjects")
-                    } catch {
-                        print("Encoding error: \(error)")
-                    }
+                    UserDefaults.setAllProjectsToUserDefaults(allProjects: self.allProjects);
                 }
             } else if let error = error {
                 print("Error getting folders: ", error.localizedDescription)
@@ -413,9 +409,11 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         let id = project.projectId
         Authentication.download(fileId: id) { data, error in
             if let error = error {
+                print("error is", error)
                 completion(nil, error);
             }
             if let data = data {
+                print("data is ",data);
                 completion(String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? "", nil)
             }
         }
@@ -454,18 +452,19 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     @objc func refreshData() {
         reloadProjects()
         projectCollectionView.refreshControl?.endRefreshing();
+
     }
 
     /**
      function to reload all projects on viewWillAppear and refresh
      */
     private func reloadProjects() {
+        allProjects = UserDefaults.getAllProjectFromUserDefault()
         if GIDSignIn.sharedInstance.currentUser != nil {
             if Reachability.isConnectedToNetwork() {
                 tempAllProjects.removeAll()
                 loadProjects();
             } else {
-                allProjects = decodeProjectFromUserDefault()
                 allProjectCommands = decodeProjectDataFromUserDefault()
                 alert.dismiss(animated: true);
             }
@@ -484,18 +483,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
     }
 
-    private func decodeProjectFromUserDefault() -> [ProjectItem] {
-        if let data = UserDefaults.standard.data(forKey: "allProjects") {
-            do {
-                let decoder = JSONDecoder()
-                let projects = try decoder.decode([ProjectItem].self, from: data)
-                return projects
-            } catch {
-                print("Decoding error: \(error)")
-            }
-        }
-        return [];
-    }
+
 
     /**
      private function to decode the project data from user default
@@ -549,13 +537,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             }
         }
         group.notify(queue: .main) {
-            do {
-                let encoder = JSONEncoder()
-                let data = try encoder.encode(tempCommand);
-                UserDefaults.standard.set(data, forKey: "allProjectCommands")
-            } catch {
-                print("Encoding error: \(error)")
-            }
+            UserDefaults.setAllProjectDataToUserDefault(allProjectData: tempCommand);
             completion(tempCommand, nil) // Return the populated array when all operations are completed
         }
     }
@@ -571,7 +553,19 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                 return command.projectCommand
             }
         }
-        return "";
+        var cmd = ""
+         Authentication.download(fileId: projectId) { data, error in
+             if let error = error {
+//                 completion(nil, error);
+              cmd = ""
+             }
+             if let data = data {
+                 cmd = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? ""
+             }
+         };
+
+        return cmd;
+
     }
 
     private func removeExtraProjectsFromAllProjectData() {
@@ -582,13 +576,13 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             }
         }
     }
-    var isAnimating = false
+
+
     func animateFloatingView() {
         stopAnimation();
         baseView.backgroundColor = .gray;
         let animationDuration: TimeInterval = 1.25
         let animationDelay: TimeInterval = 0.5
-        isAnimating = true
         UIView.animate(withDuration: animationDuration, delay: animationDelay, options: [.curveEaseInOut, .repeat], animations: {
             // Expand animation
             UIView.animate(withDuration: animationDuration / 2, delay: 0, options: [.curveEaseInOut, .repeat], animations: {
@@ -598,18 +592,71 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                 self.animationView.transform = CGAffineTransform(translationX: 0, y: 0)
                 self.animationView.frame.size.width = 0
             })
-        }, completion: { _ in
-       self.isAnimating = false
-        })
+        }, completion: nil)
     }
+
     func stopAnimation() {
         animationView.layer.removeAllAnimations()
         baseView.backgroundColor = traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white;
-        isAnimating = false
     }
 
+    private func hideAll() {
+        signInView.isHidden = true;
+        noProjectMessageView.isHidden = true;
+        projectCollectionView.isHidden = true;
+        if allProjects.count != 0 {
+            projectCollectionView.isHidden = false;
+        }
+        stopAnimation();
+    }
+}
 
+extension UserDefaults{
 
+    static  func getAllProjectFromUserDefault() -> [ProjectItem] {
+        if let data = UserDefaults.standard.data(forKey: "allProjects") {
+            do {
+                let decoder = JSONDecoder()
+                let projects = try decoder.decode([ProjectItem].self, from: data)
+                return projects
+            } catch {
+                print("Decoding error: \(error)")
+            }
+        }
+        return [];
+    }
 
+    static func setAllProjectsToUserDefaults(allProjects : [ProjectItem]){
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(allProjects);
+            UserDefaults.standard.set(data, forKey: "allProjects")
+        } catch {
+            print("Encoding error: \(error)")
+        }
+    }
+
+    static func setAllProjectDataToUserDefault(allProjectData : [ProjectData]){
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(allProjectData);
+            UserDefaults.standard.set(data, forKey: "allProjectCommands")
+        } catch {
+            print("Encoding error: \(error)")
+        }
+    }
+
+    static func getALlProjectsDataFromUserDefaults()->[ProjectData]{
+        if let data = UserDefaults.standard.data(forKey: "allProjectCommands") {
+            do {
+                let decoder = JSONDecoder()
+                let projectsData = try decoder.decode([ProjectData].self, from: data)
+                return projectsData
+            } catch {
+                print("Decoding error: \(error)")
+            }
+        }
+        return [];
+    }
 }
 

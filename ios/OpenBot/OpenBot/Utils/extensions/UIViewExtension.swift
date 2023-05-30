@@ -161,7 +161,9 @@ class openCodeRunBottomSheet: UIView {
     let startBtn = UIButton(frame: CGRect(x: 19, y: 120, width: 120, height: 40));
     let bottomSheet = BottomSheetView(frame: .zero);
     let cancelBtn = UIButton(frame: CGRect(x: 160, y: 120, width: 120, height: 40));
-    let scanQr = UIButton(frame: CGRect(x: 19, y: 120, width: 120, height: 40));
+//    let scanQr = UIButton(frame: CGRect(x: 19, y: 120, width: 120, height: 40));
+    let cancelButton = UIButton(frame: CGRect(x: 19, y: 120, width: 120, height: 40));
+
     var fileName: String = "";
 
     override init(frame: CGRect) {
@@ -183,7 +185,17 @@ class openCodeRunBottomSheet: UIView {
         addGestureRecognizer(swipeUp);
         setup();
         createBottomSheet()
-        fileName == "" ? createErrorUI() : createSuccessUI();
+        switch fileName {
+        case "" :
+            createErrorUI(fileName : fileName)
+            break;
+        case "error" :
+            createErrorUI(fileName : fileName)
+            break;
+        default :
+            createSuccessUI()
+            break;
+        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -214,11 +226,12 @@ class openCodeRunBottomSheet: UIView {
     /**
      Creating Bottom sheet for QR scan Error
      */
-    private func createErrorUI() {
+    private func createErrorUI(fileName : String) {
         DispatchQueue.main.async {
             self.createErrorHeading()
             self.createErrorMsg()
-            self.createScanQrBtn()
+            fileName == "" ?  self.createCancel(btnName: "Scan Qr") : self.createCancel(btnName: "Cancel")
+
         }
 
     }
@@ -332,13 +345,13 @@ class openCodeRunBottomSheet: UIView {
     /**
      Function to create Scan Qr Button
      */
-    private func createScanQrBtn() {
 
-        scanQr.backgroundColor = Colors.title;
-        scanQr.setTitle("Scan QR", for: .normal);
-        scanQr.addTarget(nil, action: #selector(scan), for: .touchUpInside);
-        scanQr.layer.cornerRadius = 10;
-        bottomSheet.addSubview(scanQr);
+    private func createCancel(btnName : String) {
+        cancelButton.backgroundColor = Colors.title;
+        cancelButton.setTitle(btnName, for: .normal);
+        cancelButton.addTarget(nil, action: #selector(scan), for: .touchUpInside);
+        cancelButton.layer.cornerRadius = 10;
+        bottomSheet.addSubview(cancelButton);
     }
 
     @objc private func scan() {

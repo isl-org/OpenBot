@@ -219,7 +219,7 @@ class scannerFragment: CameraController {
      */
     private func createErrorUI() {
         whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: String());
-        whiteSheet.scanQr.addTarget(self, action: #selector(self.scan), for: .touchUpInside);
+        whiteSheet.cancelButton.addTarget(self, action: #selector(self.scan), for: .touchUpInside);
         view.addSubview(whiteSheet);
     }
 

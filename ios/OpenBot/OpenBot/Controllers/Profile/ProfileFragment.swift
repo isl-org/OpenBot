@@ -174,7 +174,6 @@ class profileFragment: UIViewController {
      Function for logout from google
      */
     @objc func logoutHandler() {
-        print("inside logoutHandler")
         createShadowSheet();
     }
 
