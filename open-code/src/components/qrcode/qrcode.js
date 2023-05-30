@@ -16,7 +16,6 @@ const QrCode = () => {
 
     useEffect(() => {
         const qrCodeEncoder = () => {
-            console.log("code for qr", code)
             setBlockCode(JSON.stringify(code));
         };
         qrCodeEncoder();

@@ -42,7 +42,6 @@ function App() {
     useEffect(() => {
         auth.getRedirectResult().then(async function (result) {
             if (result.credential) {
-                console.log("result",result.credential)
                 localStorage.setItem(localStorageKeys.accessToken, result.credential.accessToken);
                 localStorage.setItem("isSigIn", "true");
                 setUser({
@@ -50,10 +49,9 @@ function App() {
                     displayName: result.user?.displayName,
                     email: result.user?.email,
                 });
-
             }
         });
-    },[])
+    }, [])
 
     //session time out function.
     useEffect(() => {
@@ -111,7 +109,7 @@ function App() {
 
     return (
         <ThemeContext.Provider value={{theme, toggleTheme}}>
-            <StoreProvider isOnline={internetOn} user={user} setUser={setUser} >
+            <StoreProvider isOnline={internetOn} user={user} setUser={setUser}>
                 <div id={theme}>
                     <RouterComponent/>
                 </div>

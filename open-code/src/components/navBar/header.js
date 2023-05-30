@@ -31,7 +31,7 @@ export function Header() {
     const [isEditProfileModal, setIsEditProfileModal] = useState(false);
     const [isLogoutModal, setIsLogoutModal] = useState(false);
     const [open, setOpen] = useState(false);
-    const[deleteLoader,setDeleteLoader]=useState(false);
+    const [deleteLoader, setDeleteLoader] = useState(false);
     const location = useLocation();
     let navigate = useNavigate();
 
@@ -69,7 +69,7 @@ export function Header() {
             {/*delete project modal*/}
             {deleteProject &&
                 <PopUpModal setVariable={setDeleteProject}
-                            inlineStyle={{backgroundColor:"#E03E1A"}}
+                            inlineStyle={{backgroundColor: "#E03E1A"}}
                             headerText={"Delete this file?"}
                             containText={"You cannot restore this file later."}
                             buttonText={"Delete"}
