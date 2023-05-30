@@ -111,7 +111,6 @@ function BlocklyComponent(props) {
                     let fileExistWithFileID = await checkFileExistsInFolder(folderId, getCurrentProject().projectName, 'js')
                     if (fileExistWithFileID.exists) {
                         let QrLink = await getShareableLink(fileExistWithFileID.fileId, folderId)
-                        console.log(QrLink)
                         let linkCode = {
                             driveLink: QrLink,
                             projectName: getCurrentProject().projectName

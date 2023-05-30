@@ -19,10 +19,6 @@ import {motion, AnimatePresence} from "framer-motion";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {getAllLocalProjects, getCurrentProject} from "../../services/workspace";
-import renameIcon from "../../assets/images/icon/rename-icon.png";
-import Edit from "../../assets/images/icon/edit.png";
-import deleteIcon from "../../assets/images/icon/delete-icon.png";
-import trash from "../../assets/images/icon/trash.png";
 import navbarStyle from "../navBar/navbar.module.css"
 import BlueText from "../fonts/blueText";
 
@@ -76,7 +72,6 @@ export const BottomBar = () => {
                     setGenerateCode(!generate);
                     console.log(code);
                     uploadToGoogleDrive(code, "js").then((res) => {
-                            console.log("res::", res)
                             let linkCode = {
                                 driveLink: res,
                                 projectName: getCurrentProject().projectName
@@ -260,7 +255,7 @@ function GenerateCodeButton(params) {
 
     return (
         <div className={styles.iconMargin + " " + styles.noSpace}
-             style={{width: isMobile ? "23%" : "31%"}}>
+             style={{width: isMobile ? "23%" : isMobileLandscape ? "25%" : "31%"}}>
             {/*generate QR code*/}
             <button
                 className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
@@ -279,18 +274,27 @@ function GenerateCodeButton(params) {
                 setDrawer(true);
                 setCategory(language);
             }
-            } className={`${styles.uploadCodeButton}`} style={{marginLeft: "1rem"}}>
-                {language === Constants.js ?
-                    <img src={Images.jsIconDarkTheme} alt={"js"} style={{width: "1.5rem", height: "1.5rem"}}/> :
-                    <img src={Images.pyIconDarkTheme} alt={"py"} style={{width: "1.5rem", height: "1.5rem"}}/>}
-                {isMobile || isMobileLandscape || tabletQuery.matches ? "" : <span
-                    className={styles.leftButton + " " + styles.iconMargin}>{language === Constants.js ? "Javascript" : "Python"}</span>}
+            } className={`${styles.uploadCodeButton}`} style={{width: isMobile && "70px", marginLeft: "1rem"}}>
+                {!isMobile && !isMobileLandscape && !tabletQuery.matches &&
+                    <img src={language === Constants.js ? Images.jsIconDarkTheme : Images.pyIconDarkTheme} alt={"lang"}
+                         style={{width: "1.5rem", height: "1.5rem"}}/>
+                }
+                {isMobile || isMobileLandscape || tabletQuery.matches ? <span
+                        className={styles.leftButton + " " + styles.iconMargin}>{language === Constants.js ? "JS" : "Py"}</span> :
+                    <span
+                        className={styles.leftButton + " " + styles.iconMargin}>{language === Constants.js ? "Javascript" : "Python"}</span>}
                 <img ref={popUpRef}
                      onClick={handleClick}
                      src={openPopupArrow ? Images.downArrowIcon : Images.UpArrowIcon}
-                     style={{margin: "2px", height: "1.5rem", width: "1.5rem", cursor: "pointer"}}
+                     style={{
+                         height: "1.2rem",
+                         width: "1.2rem",
+                         cursor: "pointer",
+                         paddingRight: isMobile ? "4px" : isMobileLandscape ? "8px" : ""
+                     }}
                      alt={"arrow"}/>
             </div>
+
             <Popper ref={popUpRef} id={id} open={openPopupArrow} anchorEl={anchorEl}>
                 <div
                     className={`${styles.langOption} ${(theme.theme === "dark" ? styles.darkTitleModel : styles.lightTitleModel)}`}>
@@ -299,8 +303,8 @@ function GenerateCodeButton(params) {
                     }}
                          className={`${styles.langItem} ${styles.jsDivMargin}  ${(theme.theme === "dark" ? navbarStyle.darkItem : navbarStyle.lightItem)}`}
                     >
-                        {!isMobile && <img alt="Icon" className={styles.langIcon}
-                                           src={theme.theme === "dark" ? Images.jsIconDarkTheme : Images.jsIconLightTheme}/>}
+                        <img alt="Icon" className={styles.langIcon}
+                             src={theme.theme === "dark" ? Images.jsIconDarkTheme : Images.jsIconLightTheme}/>
                         {theme.theme === "dark" ?
                             <WhiteText inlineStyle={{fontWeight: 400}} text={"Javascript"}/> :
                             <BlueText text={"Javascript"}/>
@@ -309,11 +313,11 @@ function GenerateCodeButton(params) {
                     <div onClick={(event) => handleLanguageDropDown(Constants.py, event)}
                          className={`${styles.langItem} ${styles.pyDivMargin} ${(theme.theme === "dark" ? navbarStyle.darkItem : navbarStyle.lightItem)}`}
                     >
-                        {!isMobile && <img alt="Icon" className={styles.langIcon}
-                                           src={theme.theme === "dark" ? Images.pyIconDarkTheme : Images.pyIconLightTheme}/>}
+                        <img alt="Icon" className={styles.langIcon}
+                             src={theme.theme === "dark" ? Images.pyIconDarkTheme : Images.pyIconLightTheme}/>
                         {theme.theme === "dark" ?
-                            <WhiteText inlineStyle={{marginLeft: isMobile && "-24px"}} text={"Python"}/> :
-                            <BlueText inlineStyle={{marginLeft: isMobile && "-24px"}} text={"Python"}/>
+                            <WhiteText extraStyle={styles.pyText} text={"Python"}/> :
+                            <BlueText extraStyle={styles.pyText} text={"Python"}/>
                         }
                     </div>
                 </div>

@@ -2,7 +2,7 @@ import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
 import {createContext, useEffect, useState} from "react";
-import {Themes} from "./utils/constants";
+import {localStorageKeys, Themes} from "./utils/constants";
 import {auth, googleSignOut} from "./services/firebase";
 import {ToastContainer} from "react-toastify";
 
@@ -18,7 +18,7 @@ function App() {
     let onPageLoad = localStorage.getItem("theme") || ""
     const [theme, setTheme] = useState(onPageLoad);
     const [internetOn, setInternetOn] = useState(window.navigator.onLine);
-
+    const [user, setUser] = useState();
 
     useEffect(() => {
         window.addEventListener('online', handleOnline);
@@ -38,6 +38,20 @@ function App() {
         let darkElement = document.body;
         theme === Themes.dark ? darkElement.classList.add("dark-mode") : darkElement.classList.remove("dark-mode");
     }, [theme]);
+
+    useEffect(() => {
+        auth.getRedirectResult().then(async function (result) {
+            if (result.credential) {
+                localStorage.setItem(localStorageKeys.accessToken, result.credential.accessToken);
+                localStorage.setItem("isSigIn", "true");
+                setUser({
+                    photoURL: result.user?.photoURL,
+                    displayName: result.user?.displayName,
+                    email: result.user?.email,
+                });
+            }
+        });
+    }, [])
 
     //session time out function.
     useEffect(() => {
@@ -95,7 +109,7 @@ function App() {
 
     return (
         <ThemeContext.Provider value={{theme, toggleTheme}}>
-            <StoreProvider isOnline={internetOn}>
+            <StoreProvider isOnline={internetOn} user={user} setUser={setUser}>
                 <div id={theme}>
                     <RouterComponent/>
                 </div>
