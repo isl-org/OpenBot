@@ -2,9 +2,12 @@ package org.openbot.playground;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ConsoleMessage;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -22,7 +25,15 @@ public class PlayGroundViewFragment extends Fragment {
     // Inflate the layout for this fragment
     binding = FragmentPlaygroundBinding.inflate(inflater, container, false);
     playgroundView = (WebView) binding.playgroundWebView;
-    playgroundView.setWebViewClient(new MyWebViewClient(container));
+    playgroundView.setWebViewClient(new WebViewClient());
+    playgroundView.setWebChromeClient(new WebChromeClient(){
+      @Override
+      public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+        Log.d("WebViewConsole", consoleMessage.message() + ", "
+                + consoleMessage.sourceId());
+        return true;
+      }
+    });
     return binding.getRoot();
   }
 
@@ -36,54 +47,5 @@ public class PlayGroundViewFragment extends Fragment {
     webSettings.setUserAgentString(
         "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36");
     playgroundView.loadUrl("https://www.openbot.itinker.io");
-  }
-
-  private class MyWebViewClient extends WebViewClient {
-
-    private WebView newWebViewPopupWindow;
-    private ViewGroup viewGroup;
-
-    public MyWebViewClient(ViewGroup viewGroup) {
-      this.viewGroup = viewGroup;
-    }
-
-    String JAVASCRIPT_LOCAL_STORAGE_LOOKUP = "javascript:window.localStorage.getItem('theme');";
-
-    //        @Override
-    //        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-    //          ViewGroup parent = (ViewGroup) view.getParent();
-    //
-    //          // Remove existing WebView if present
-    //          if (parent != null) {
-    //            parent.removeView(view);
-    //          }
-    //
-    //            newWebViewPopupWindow = new WebView(view.getContext());
-    //            newWebViewPopupWindow.setLayoutParams(new
-    // RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-    // ViewGroup.LayoutParams.MATCH_PARENT));
-    //            newWebViewPopupWindow.setBackgroundColor(0x00000000); // Set background color to
-    // transparent
-    //            newWebViewPopupWindow.setWebChromeClient(new WebChromeClient());
-    //            newWebViewPopupWindow.setWebViewClient(new WebViewClient());
-    //
-    //          if (parent != null) {
-    //            System.out.println("sanjeev parent added");
-    //            parent.addView(newWebViewPopupWindow);
-    //          }
-    //
-    //          newWebViewPopupWindow.loadUrl(url);
-    //            return true;
-    //        }
-    @Override
-    public void onPageFinished(WebView view, String url) {
-      super.onPageFinished(view, url);
-      System.out.println("finished == " + url);
-      view.evaluateJavascript(
-          JAVASCRIPT_LOCAL_STORAGE_LOOKUP,
-          value -> {
-            System.out.println("hello " + value);
-          });
-    }
   }
 }
