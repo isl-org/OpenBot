@@ -37,6 +37,7 @@ public class BlocklyExecutingFragment extends ControlsFragment {
       int orientation = getResources().getConfiguration().orientation;
       if (orientation == Configuration.ORIENTATION_LANDSCAPE
           || orientation == Configuration.ORIENTATION_PORTRAIT) {
+        myWebView.destroy();
         showAlertDialog();
       }
     }
@@ -61,7 +62,7 @@ public class BlocklyExecutingFragment extends ControlsFragment {
 
   private void showAlertDialog() {
     AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-    builder.setTitle("Rotate Screen");
+    builder.setTitle("Rotation Detected").setMessage("Do you want to restart Blockly command?");
     builder.setPositiveButton("Yes", (dialog, id) -> restartJSCommand());
     builder.setNegativeButton("Cancel", (dialog, id) -> requireActivity().onBackPressed());
     AlertDialog dialog = builder.create();
@@ -69,6 +70,10 @@ public class BlocklyExecutingFragment extends ControlsFragment {
   }
 
   private void restartJSCommand() {
+    // initialise web view to execute javascript block codes.
+    myWebView = new WebView(getContext());
+    // enable JavaScript in the web-view.
+    myWebView.getSettings().setJavaScriptEnabled(true);
     if (myWebView != null && barCodeScannerFragment.finalCode != null) {
       runJSCommand(barCodeScannerFragment.finalCode);
     }
@@ -82,7 +87,6 @@ public class BlocklyExecutingFragment extends ControlsFragment {
   private void runJSCommand(String finalCode) {
     Activity activity = getActivity();
     if (activity != null) {
-
       activity.runOnUiThread(
           () -> {
             // store previous speed multiplier value.
