@@ -6,6 +6,7 @@ import Foundation
 import UIKit
 
 class RobotInfoFrame: UIViewController {
+
     var topPadding: CGFloat = 0
     var robotType = UILabel()
     var robotName = UILabel()

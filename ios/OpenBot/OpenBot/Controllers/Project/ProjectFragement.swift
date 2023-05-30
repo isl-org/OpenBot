@@ -9,6 +9,9 @@ import GoogleAPIClientForREST
 import GTMSessionFetcher
 
 class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+
+    @IBOutlet weak var baseView: UIView!
+    var animationView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4));
     @IBOutlet weak var qrScannerIcon: UIView!
     let bluetooth = bluetoothDataController.shared
     @IBOutlet weak var bluetoothIcon: UIImageView!
@@ -32,10 +35,12 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     */
     override func viewDidLoad() {
         super.viewDidLoad()
+        baseView.addSubview(animationView);
+        animationView.backgroundColor = Colors.title
         view.addSubview(signInView);
         signInView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: width, height: height / 2)
                 : CGRect(x: height / 2 - width / 2, y: 0, width: width, height: height / 2);
-        noProjectMessageView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: width, height: height / 2)
+        noProjectMessageView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: height, height: height / 2)
                 : CGRect(x: height / 2 - 200, y: width / 2 - 100, width: width, height: height / 2);
         view.addSubview(noProjectMessageView);
         createMyProjectLabel();
@@ -65,9 +70,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         setupOpenCodeIcon();
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
-        if authentication.googleSignIn.currentUser != nil {
-            createOverlayAlert();
-        }
+
 
     }
 
@@ -99,7 +102,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated);
         reloadProjects();
+        animateFloatingView();
     }
+
 
     /**
      function call after view did appear
@@ -136,6 +141,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             signInView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
             noProjectMessageView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
         }
+        animateFloatingView()
     }
 
     /**
@@ -353,6 +359,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                             }
                         }
                         self.allProjects = self.tempAllProjects
+                        self.stopAnimation();
                         self.projectCollectionView.reloadData();
                         self.removeExtraProjectsFromAllProjectData();
                         self.loadAllProjectData { data, error in
@@ -361,7 +368,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                             }
                         }
                         self.projectCollectionView.reloadData();
-                        self.alert.dismiss(animated: true);
                         self.updateViewsVisibility()
                     } else if let error = error {
                         print("Error getting files in folder: ", error.localizedDescription)
@@ -576,6 +582,34 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             }
         }
     }
+    var isAnimating = false
+    func animateFloatingView() {
+        stopAnimation();
+        baseView.backgroundColor = .gray;
+        let animationDuration: TimeInterval = 1.25
+        let animationDelay: TimeInterval = 0.5
+        isAnimating = true
+        UIView.animate(withDuration: animationDuration, delay: animationDelay, options: [.curveEaseInOut, .repeat], animations: {
+            // Expand animation
+            UIView.animate(withDuration: animationDuration / 2, delay: 0, options: [.curveEaseInOut, .repeat], animations: {
+                self.animationView.frame.size.width = self.baseView.frame.width
+            }, completion: { _ in
+                // Reset transform and size
+                self.animationView.transform = CGAffineTransform(translationX: 0, y: 0)
+                self.animationView.frame.size.width = 0
+            })
+        }, completion: { _ in
+       self.isAnimating = false
+        })
+    }
+    func stopAnimation() {
+        animationView.layer.removeAllAnimations()
+        baseView.backgroundColor = traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white;
+        isAnimating = false
+    }
+
+
+
 
 }
 

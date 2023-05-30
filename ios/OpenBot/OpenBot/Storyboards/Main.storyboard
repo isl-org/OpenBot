@@ -190,7 +190,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="639-3i-D7K">
-                                <rect key="frame" x="20" y="151" width="374" height="662"/>
+                                <rect key="frame" x="20" y="165" width="374" height="648"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="waT-zc-zDE">
                                     <size key="itemSize" width="128" height="128"/>
@@ -232,7 +232,7 @@
                                 <rect key="frame" x="280" y="92" width="45" height="45"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bluetoothConnected" translatesAutoresizingMaskIntoConstraints="NO" id="yiM-4h-xvS">
-                                        <rect key="frame" x="11" y="0.0" width="24" height="24"/>
+                                        <rect key="frame" x="10" y="10" width="25" height="25"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="24" id="J8P-QY-cgP"/>
                                             <constraint firstAttribute="height" constant="24" id="Jkp-rt-DBD"/>
@@ -268,18 +268,28 @@
                                     <constraint firstItem="2Yn-pg-8UX" firstAttribute="leading" secondItem="RaB-F3-Tl8" secondAttribute="leading" constant="7.5" id="lML-8C-CyM"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HzD-dI-3W4">
+                                <rect key="frame" x="0.0" y="142" width="414" height="4"/>
+                                <color key="backgroundColor" systemColor="systemGrayColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="4" id="VGp-HA-dva"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="2DM-aV-cMO"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="HzD-dI-3W4" firstAttribute="top" secondItem="8lJ-h5-vjt" secondAttribute="bottom" constant="5" id="4EC-rp-p8c"/>
                             <constraint firstItem="8lJ-h5-vjt" firstAttribute="leading" secondItem="kGN-Gy-879" secondAttribute="trailing" constant="20" id="5N0-iu-hwQ"/>
                             <constraint firstItem="639-3i-D7K" firstAttribute="bottom" secondItem="2DM-aV-cMO" secondAttribute="bottom" id="Ed7-ps-e6O"/>
+                            <constraint firstItem="HzD-dI-3W4" firstAttribute="trailing" secondItem="639-3i-D7K" secondAttribute="trailing" constant="20" id="Fdo-n7-pWF"/>
                             <constraint firstItem="2DM-aV-cMO" firstAttribute="trailing" secondItem="8lJ-h5-vjt" secondAttribute="trailing" constant="24" id="O2y-PW-NNV"/>
+                            <constraint firstItem="HzD-dI-3W4" firstAttribute="leading" secondItem="639-3i-D7K" secondAttribute="leading" constant="-20" id="Rt1-S7-qUr"/>
                             <constraint firstItem="kGN-Gy-879" firstAttribute="top" secondItem="2DM-aV-cMO" secondAttribute="top" id="WQz-5J-Tfy"/>
                             <constraint firstItem="639-3i-D7K" firstAttribute="trailing" secondItem="Cg0-nA-jin" secondAttribute="trailingMargin" id="XmB-C8-KZH"/>
                             <constraint firstItem="RaB-F3-Tl8" firstAttribute="top" secondItem="2DM-aV-cMO" secondAttribute="top" id="YYm-dQ-N1E"/>
                             <constraint firstItem="639-3i-D7K" firstAttribute="centerX" secondItem="Cg0-nA-jin" secondAttribute="centerX" id="Yh7-4f-07C"/>
-                            <constraint firstItem="639-3i-D7K" firstAttribute="top" secondItem="8lJ-h5-vjt" secondAttribute="bottom" constant="14" id="fWO-U5-jRO"/>
+                            <constraint firstItem="639-3i-D7K" firstAttribute="top" secondItem="HzD-dI-3W4" secondAttribute="bottom" constant="19" id="gtQ-e7-4P4"/>
                             <constraint firstItem="kGN-Gy-879" firstAttribute="leading" secondItem="RaB-F3-Tl8" secondAttribute="trailing" constant="20" id="n9S-vQ-qmF"/>
                             <constraint firstItem="8lJ-h5-vjt" firstAttribute="top" secondItem="2DM-aV-cMO" secondAttribute="top" id="tjy-Rj-BJV"/>
                         </constraints>
@@ -290,6 +300,7 @@
                         <outlet property="openCodeWebView" destination="RaB-F3-Tl8" id="Rbp-eN-YKD"/>
                         <outlet property="projectCollectionView" destination="639-3i-D7K" id="lXM-eK-fcd"/>
                         <outlet property="qrScannerIcon" destination="8lJ-h5-vjt" id="YnU-Rb-x8q"/>
+                        <outlet property="baseView" destination="HzD-dI-3W4" id="F1B-56-vH7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HHR-1M-DEf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -669,8 +680,11 @@
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
+        <systemColor name="systemGrayColor">
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.69803921568627447" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
