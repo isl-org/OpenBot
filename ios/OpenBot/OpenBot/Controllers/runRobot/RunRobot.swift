@@ -16,6 +16,7 @@ class runRobot : UIViewController {
         stopRobot.layer.cornerRadius = 10;
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandMsg), name: .commandName, object: nil);
         setupNavigationBarItem()
+        updateConstraints();
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -44,12 +45,7 @@ class runRobot : UIViewController {
     let factor = 0.8;
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        if currentOrientation == .portrait{
-            runRobotConstraints.constant = 0;
-        }
-        else{
-            runRobotConstraints.constant = -60;
-        }
+       updateConstraints();
     }
 
     @objc func cancel(){
@@ -69,6 +65,14 @@ class runRobot : UIViewController {
         _ = navigationController?.popViewController(animated: true)
     }
 
+    fileprivate func updateConstraints(){
+        if currentOrientation == .portrait{
+            runRobotConstraints.constant = 0;
+        }
+        else{
+            runRobotConstraints.constant = -60;
+        }
+    }
 
 
 }
