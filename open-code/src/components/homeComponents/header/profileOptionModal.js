@@ -36,6 +36,7 @@ export function ProfileOptionModal(props) {
     const isHomePage = location.pathname === PathName.home;
     const isOnPlaygroundPage = location.pathname === PathName.playGround;
     const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
+    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
 
     const handleClose = () => {
         setIsProfileModal(false)
@@ -73,7 +74,7 @@ export function ProfileOptionModal(props) {
                     <PopUpInRowText onClick={() => handleOnclick(setIsEditProfileModal)} text={"Edit Profile"}
                                     icon={theme === Themes.dark ? Images.darkUserIcon : Images.userIcon}/>
                 }
-                {isOnPlaygroundPage && isMobile &&
+                {isOnPlaygroundPage && isMobile && !isMobileLandscape &&
                     <>
                         { !tabletQuery && <PopUpInRowText
                             onClick={() => {
@@ -82,9 +83,11 @@ export function ProfileOptionModal(props) {
                             }}
                             text={"Change Theme"}
                             icon={theme === Themes.dark ? Images.lightThemeIcon : Images.blueTheme}/>}
-                        <PopUpInRowText onClick={() => handleOnclick(setIsHelpCenterModal)} text={"How To Upload"}
-                                        icon={theme === Themes.dark ? Images.helpIcon : Images.infoLight}/>
                     </>
+                }
+                {(isOnPlaygroundPage && isMobile) &&
+                    <PopUpInRowText onClick={() => handleOnclick(setIsHelpCenterModal)} text={"How To Upload"}
+                                    icon={theme === Themes.dark ? Images.helpIcon : Images.infoLight}/>
                 }
                 {((isHomePage) || (isOnPlaygroundPage && isSignedIn)) &&
                     <PopUpInRowText onClick={() => handleOnclick(setIsLogoutModal)} text={"Logout"}

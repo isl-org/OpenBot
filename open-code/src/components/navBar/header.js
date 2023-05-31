@@ -138,17 +138,18 @@ function RightSection(params) {
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
+    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
 
     return (
         <>
             {/*help icon if screen is playground and device is not mobile*/}
-            {location.pathname === PathName.playGround && !isMobile && !tabletQuery &&
+            {location.pathname === PathName.playGround && !isMobile && !tabletQuery && !isMobileLandscape &&
                 <img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon}
                      onClick={() => setIsHelpCenterModal(true)}
                      style={{height: 24}}/>
             }
             {/*if screen is playground, and it's mobile than do not show change theme icon and divider*/}
-            {!(location.pathname === PathName.playGround && isMobile) &&
+            {!(location.pathname === PathName.playGround && isMobile )  &&
                 <>
                     {/*change theme icon*/}
                     <img alt="icon" onClick={() => toggleTheme(!theme)}
