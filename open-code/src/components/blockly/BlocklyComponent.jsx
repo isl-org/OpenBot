@@ -63,8 +63,7 @@ function BlocklyComponent(props) {
 
     // Save workspace code to local storage when workspace changes
     const handleWorkspaceChange = useCallback(() => {
-
-        if(category === Constants.qr){
+        if (category === Constants.xml) {
             setDrawer(false);
         }
         setIsError(false);
@@ -127,7 +126,7 @@ function BlocklyComponent(props) {
                             driveLink: QrLink,
                             projectName: getCurrentProject().projectName
                         }
-                        setCategory(category === "" && Constants.qr);
+                        category === "" && setCategory(Constants.qr);
                         setCode(linkCode);
                     }
                 }
@@ -135,11 +134,12 @@ function BlocklyComponent(props) {
                 errorToast("Please Check your internet connection.")
             }
         } else {
-            setCategory(category === Constants.py ? Constants.py : Constants.js);
+            // setCategory(category === Constants.py ? Constants.py : Constants.js);
         }
     }
 
     useEffect(() => {
+        setCategory(Constants.js);
         checkQRCode().catch(err => {
             console.log(err);
         });

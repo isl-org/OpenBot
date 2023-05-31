@@ -4,7 +4,7 @@ import {Constants, localStorageKeys} from "../utils/constants";
 
 export const StoreContext = createContext(null)
 
-export default ({children, isOnline, user, setUser}) => {
+export default ({children, isOnline,user,setUser,}) => {
     let savedProjectName = null
     let savedProjectId = null
     let savedProjectXml = null
@@ -27,7 +27,7 @@ export default ({children, isOnline, user, setUser}) => {
     const [currentProjectXml, setCurrentProjectXml] = useState(savedProjectXml);
     const [fileId, setFileId] = useState(savedFileId);
     const [folderId, setFolderId] = useState(savedFolderId);
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState(Constants.qr);
     const [workspace, setWorkspace] = useState();
     const [isError, setIsError] = useState(false);
 
