@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import ace from 'ace-builds';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/mode-python';
@@ -26,9 +26,18 @@ function CodeEditor(params) {
     const {workspace, currentProjectXml, category, drawer} = useContext(StoreContext);
     const themes = useTheme();// Get the current theme breakpoints using useTheme hook
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));// Determine if the screen is a mobile device using useMediaQuery hook
-    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
     const {theme} = useContext(ThemeContext);
     const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
+    const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
+
+    useEffect(() => {
+        const handleOrientationChange = () => {
+            setIsLandscape(
+                window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches
+            );
+        };
+        window.addEventListener("resize", handleOrientationChange);
+    }, []);
 
     useEffect(() => {
         const editor = ace.edit(editorRef.current);
@@ -61,7 +70,7 @@ function CodeEditor(params) {
     }, [workspace, currentProjectXml, category, drawer, theme]);
 
     return (<div>
-        <div style={{zIndex: 2, position: "absolute", marginTop: isMobile ? "200px" : "300px"}}><RightSlider/></div>
+        <div style={{zIndex: 2, position: "absolute", marginTop: isMobile ? "200px":isLandscape?"190px":"300px"}}><RightSlider/></div>
         <div ref={editorRef} style={{
             position: "absolute",
             zIndex: 1,

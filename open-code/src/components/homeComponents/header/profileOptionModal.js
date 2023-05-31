@@ -112,6 +112,7 @@ export function ProfileOptionModal(props) {
 function PopUpInRowText(params) {
     const theme = useContext(ThemeContext);
     const {onClick, text, icon} = params
+
     return (
         <div onClick={onClick}
              className={`${styles.item} ${styles.editProfileMargin}  ${(theme.theme === Themes.dark ? styles.darkItem : styles.lightItem)}`}>

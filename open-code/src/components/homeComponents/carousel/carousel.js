@@ -1,5 +1,5 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import styles from "./carousel.module.css";
 import {ThemeContext} from "../../../App";
 import {Carousal} from "../../../utils/constants";
@@ -34,17 +34,26 @@ function CarousalComponent(params) {
     const {slide} = params
     const {theme} = useContext(ThemeContext)
     const isIOS = /iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
+    const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
+
+    useEffect(() => {
+        const handleOrientationChange = () => {
+            setIsLandscape(
+                window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches
+            );
+        };
+        window.addEventListener("resize", handleOrientationChange);
+    }, []);
 
     return (
         <div className={styles.Content + " " + (theme === "dark" ? styles.darkBg : styles.lightBg)}>
             <div className={styles.HeadingContent}>
-                <div style={{fontSize: isIOS && isMobileLandscape && "18px"}}
+                <div style={{fontSize: isIOS && isLandscape && "18px"}}
                      className={styles.DragAndDropHeading + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>{slide.carousalHeader}
                 </div>
                 <div style={{
-                    fontSize: isIOS && isMobileLandscape && "10px",
-                    lineHeight: isIOS && isMobileLandscape && "14px"
+                    fontSize: isIOS && isLandscape && "10px",
+                    lineHeight: isIOS && isLandscape && "14px"
                 }}
                      className={styles.DragAndDropContent + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
                     {slide.carousalLine1}<br/>{slide.carousalLine2}

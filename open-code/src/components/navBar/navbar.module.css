@@ -145,7 +145,6 @@
     border-style: none none none solid;
 }
 
-
 .icon {
     width: 24px;
     height: 24px;
@@ -539,7 +538,7 @@
     .item {
         padding: 0rem 1rem 0.5rem 1rem;
         justify-content: space-between;
-        width: 100%;
+        width: 80%;
     }
 
     .inRowText {
@@ -699,7 +698,7 @@
     }
 
     .helpCenterPara {
-        font-size: 0.7rem !important;
+        font-size: 0.6rem !important;
     }
 
     .helpDetailsModelDiv {
