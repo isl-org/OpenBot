@@ -25,7 +25,6 @@ export const NewProject = () => {
     const location = useLocation();
 
     useEffect(() => {
-
         // Fetch projects from the API and update state
         setProjects(undefined);
         setCode(undefined);
@@ -34,7 +33,6 @@ export const NewProject = () => {
                 setProjects(filterProject);
             });
         }
-
     }, [user, deleteLoader, location]);
 
     return (
