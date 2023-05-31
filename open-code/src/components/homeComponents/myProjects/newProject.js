@@ -20,12 +20,11 @@ import {useLocation} from "react-router-dom";
 export const NewProject = () => {
     const [projects, setProjects] = useState(undefined);
     const {theme} = useContext(ThemeContext);
-    const {user, setCode} = useContext(StoreContext);
+    const {user,setCode} = useContext(StoreContext);
     const [deleteLoader, setDeleteLoader] = useState(false);
     const location = useLocation();
 
     useEffect(() => {
-
         // Fetch projects from the API and update state
         setProjects(undefined);
         setCode(undefined);
@@ -34,7 +33,6 @@ export const NewProject = () => {
                 setProjects(filterProject);
             });
         }
-
     }, [user, deleteLoader, location]);
 
     return (

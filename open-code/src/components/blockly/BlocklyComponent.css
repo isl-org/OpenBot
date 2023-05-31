@@ -71,7 +71,7 @@
     .blocklyToolboxContents {
         padding-top: 3rem;
         border-right: 0.5px solid black;
-        height: 100%;
+        height: 140%;
         position: relative;
         left: 0;
         bottom: 10px;
@@ -114,7 +114,7 @@
     .blocklyToolboxContents {
         padding-top: 2rem;
         padding-bottom: 2rem;
-        height: 200%;
+        height: 250%;
     }
 }
 
@@ -126,13 +126,17 @@
     }
 
     .blocklyTreeRow {
-        height: 75px;
-        line-height: 75px;
-        padding-right: 2.5rem;
+        height: 4rem;
+        line-height: 4rem;
+        padding-right: 2rem;
     }
 
     .blocklyTreeRowContentContainer{
         padding-left: 0.5rem;
+    }
+
+    .blocklyToolboxContents {
+        height: 140%;
     }
 }
 

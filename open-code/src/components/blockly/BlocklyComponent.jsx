@@ -1,5 +1,5 @@
 import './BlocklyComponent.css';
-import React, {useCallback, useContext, useEffect, useRef} from 'react';
+import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import Blockly from 'blockly/core';
 import locale from 'blockly/msg/en';
 import 'blockly/blocks';
@@ -30,8 +30,17 @@ function BlocklyComponent(props) {
     const blocklyDiv = useRef();
     const toolbox = useRef();
     const primaryWorkspace = useRef();
-    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
     const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
+    const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
+
+    useEffect(() => {
+        const handleOrientationChange = () => {
+            setIsLandscape(
+                window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches
+            );
+        };
+        window.addEventListener("resize", handleOrientationChange);
+    }, []);
 
     // Get context values from the store
     const {theme} = useContext(ThemeContext);
@@ -46,6 +55,7 @@ function BlocklyComponent(props) {
         setCurrentProjectXml,
         isOnline,
         setCode,
+        setCategory,
         category,
     } = useContext(StoreContext);
     const themes = useTheme();
@@ -104,6 +114,7 @@ function BlocklyComponent(props) {
     }, []);
 
     const checkQRCode = async () => {
+
         if (localStorage.getItem("isSigIn") === "true") {
             if (isOnline) {
                 let folderId = await getFolderId();
@@ -111,23 +122,24 @@ function BlocklyComponent(props) {
                     let fileExistWithFileID = await checkFileExistsInFolder(folderId, getCurrentProject().projectName, 'js')
                     if (fileExistWithFileID.exists) {
                         let QrLink = await getShareableLink(fileExistWithFileID.fileId, folderId)
-                        console.log(QrLink)
                         let linkCode = {
                             driveLink: QrLink,
                             projectName: getCurrentProject().projectName
                         }
-
+                        category === "" && setCategory(Constants.qr);
                         setCode(linkCode);
                     }
                 }
             } else {
                 errorToast("Please Check your internet connection.")
             }
+        } else {
+            // setCategory(category === Constants.py ? Constants.py : Constants.js);
         }
     }
 
     useEffect(() => {
-
+        setCategory(Constants.js);
         checkQRCode().catch(err => {
             console.log(err);
         });
@@ -199,7 +211,7 @@ function BlocklyComponent(props) {
             <div
                 ref={blocklyDiv}
                 id="blocklyDiv"
-                style={{width: "100%", height: isMobileLandscape ? "66%" : tabletQuery ? "83.7%" : "81.3%"}}
+                style={{width: "100%", height: isLandscape ? "66%" : tabletQuery ? "83.7%" : "81.3%"}}
             />
             <div style={{display: "none"}} ref={toolbox}>
                 {children}

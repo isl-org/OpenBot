@@ -145,7 +145,6 @@
     border-style: none none none solid;
 }
 
-
 .icon {
     width: 24px;
     height: 24px;
@@ -470,7 +469,16 @@
     padding-left: 5%;
 }
 
+.saveAndDownloadDivContent{
+    width: 70%;
+    padding-left: 5%;
+}
+
 @media (max-width: 767px) {
+
+    .saveAndDownloadDivContent{
+        width: 90%;
+    }
 
     .connectAndDriveDivPara{
         width: 90%;
@@ -530,7 +538,7 @@
     .item {
         padding: 0rem 1rem 0.5rem 1rem;
         justify-content: space-between;
-        width: 100%;
+        width: 80%;
     }
 
     .inRowText {
@@ -569,7 +577,7 @@
     }
 
     .inputExtraStyle {
-        width: 40%;
+        width: 34.5%;
         height: 50%;
         /*margin: 20px 10px 20px 10px;*/
     }
@@ -690,7 +698,7 @@
     }
 
     .helpCenterPara {
-        font-size: 0.8rem !important;
+        font-size: 0.6rem !important;
     }
 
     .helpDetailsModelDiv {
@@ -720,6 +728,14 @@
 
 /*tablet portrait mode*/
 @media (min-width: 744px) and (max-width: 1024px) and (min-height: 650px) {
+
+    .inputExtraStyle {
+        width: 37.5% !important;
+    }
+
+    .buttonIcon {
+        font-size: 15px;
+    }
 
     .dragAndDropPara {
         margin-left: 6%;
@@ -857,6 +873,7 @@
     }
 
     .saveAndDownloadDivContent {
+        width: 85%;
         padding-top: 8%;
     }
 
@@ -877,6 +894,10 @@
 
     .navbarDiv {
         height: 4rem;
+    }
+
+    .lineIcon {
+        width: 0.7%;
     }
 
     .mainTitle {
@@ -984,5 +1005,27 @@
         width: 90%;
     }
 
+
+    .saveAndDownloadDivContent{
+        width: 90%;
+    }
+
+    .darkThemeIcon {
+        height: 20px;
+        width: 20px;
+    }
+
+    .lightThemeIcon {
+        height: 20px;
+        width: 20px;
+    }
+
+    .editProfileMargin {
+        padding-right: 0;
+    }
+
+    .inputExtraStyle {
+        width: 24.4%;
+    }
 
 }

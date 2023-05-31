@@ -97,8 +97,6 @@ const uploadFileToFolder = async (accessToken, data, folderId, fileType) => {
     let res;
 
     // Check if a file with the specified fileId exists
-    // let fileExistWithFileID = await checkFileExistsInFolder(folderId, fileType === Constants.xml ? data.projectName : getCurrentProject()?.projectName, fileType === Constants.xml ?? Constants.js)
-    // console.log("fileExistWithFileID", fileExistWithFileID);
     if (fileType === Constants.xml) {
         // Check if a file with the specified fileId exists
         let fileExistWithFileID = await checkFileExistsInFolder(folderId, data.projectName, 'xml')
@@ -392,23 +390,18 @@ export async function getShareableLink(fileId, folderId) {
  * @returns {Promise<void>}
  */
 export async function fileRename(newFileName, oldName, fileType) {
-    console.log("newFileName, oldName, fileType,newFileName, oldName, fileType", newFileName, oldName, fileType)
     const folderId = await getFolderId();
     const accessToken = getAccessToken();
     let fileId = undefined;
     let body;
     if (fileType === Constants.xml) {
         fileId = await checkFileExistsInFolder(folderId, oldName, Constants.xml); //check according to file type
-        console.log("fileId", fileId)
         body = {"name": newFileName + `.${Constants.xml}`} //add name with extension according to fileType
-        console.log("body::", body)
     } else {
         fileId = await checkFileExistsInFolder(folderId, oldName, Constants.js); //check according to file type
-        console.log("fileId", fileId)
         body = {"name": newFileName + `.${Constants.js}`} //add name with extension according to fileType
-        console.log("body::", body)
     }
-    console.log("folderId:", folderId, fileId.fileId)
+
     await fetch(`https://www.googleapis.com/drive/v3/files/${fileId.fileId}?parents=${folderId}&fields=name`, {
         method: 'PATCH',
         headers: {

@@ -281,7 +281,7 @@ export async function renameProject(projectName, oldName, screen) {
             // Add project name to data object for updating project in Google Drive
             data = Object.assign(data, {projectName: projectName});
             // Update current project in Google Drive if it has the old project name
-            if (oldName === getCurrentProject().projectName) {
+            if (oldName === getCurrentProject()?.projectName) {
                 updateCurrentProject(projectName, data.xmlValue)
             }
             // Check if XML and JS files for the project exist and rename them if necessary

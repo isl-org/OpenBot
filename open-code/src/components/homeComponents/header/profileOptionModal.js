@@ -35,6 +35,8 @@ export function ProfileOptionModal(props) {
     const isSignedIn = localStorage.getItem("isSigIn") === "true";
     const isHomePage = location.pathname === PathName.home;
     const isOnPlaygroundPage = location.pathname === PathName.playGround;
+    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
+    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
 
     const handleClose = () => {
         setIsProfileModal(false)
@@ -72,18 +74,20 @@ export function ProfileOptionModal(props) {
                     <PopUpInRowText onClick={() => handleOnclick(setIsEditProfileModal)} text={"Edit Profile"}
                                     icon={theme === Themes.dark ? Images.darkUserIcon : Images.userIcon}/>
                 }
-                {isOnPlaygroundPage && isMobile &&
+                {isOnPlaygroundPage && isMobile && !isMobileLandscape &&
                     <>
-                        <PopUpInRowText
+                        { !tabletQuery && <PopUpInRowText
                             onClick={() => {
                                 handleClose();
                                 toggleTheme(!theme)
                             }}
                             text={"Change Theme"}
-                            icon={theme === Themes.dark ? Images.lightThemeIcon : Images.blueTheme}/>
-                        <PopUpInRowText onClick={() => handleOnclick(setIsHelpCenterModal)} text={"How To Upload"}
-                                        icon={theme === Themes.dark ? Images.helpIcon : Images.infoLight}/>
+                            icon={theme === Themes.dark ? Images.lightThemeIcon : Images.blueTheme}/>}
                     </>
+                }
+                {(isOnPlaygroundPage && isMobile) &&
+                    <PopUpInRowText onClick={() => handleOnclick(setIsHelpCenterModal)} text={"How To Upload"}
+                                    icon={theme === Themes.dark ? Images.helpIcon : Images.infoLight}/>
                 }
                 {((isHomePage) || (isOnPlaygroundPage && isSignedIn)) &&
                     <PopUpInRowText onClick={() => handleOnclick(setIsLogoutModal)} text={"Logout"}
@@ -108,6 +112,7 @@ export function ProfileOptionModal(props) {
 function PopUpInRowText(params) {
     const theme = useContext(ThemeContext);
     const {onClick, text, icon} = params
+
     return (
         <div onClick={onClick}
              className={`${styles.item} ${styles.editProfileMargin}  ${(theme.theme === Themes.dark ? styles.darkItem : styles.lightItem)}`}>

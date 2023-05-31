@@ -31,8 +31,6 @@ function Card(props) {
         setFileId,
         setDrawer,
         setIsError,
-        setCode,
-        isOnline,
     } = useContext(StoreContext);
     const {projectData, setDeleteLoader,} = props
     const [openPopUp, setOpenPopUp] = useState(false);
@@ -86,13 +84,12 @@ function Card(props) {
 
     // Handle click event for renaming a project
     const handleClickBlur = async () => {
-
-        if (!reNameProject || reNameProject <= 0) {
+        if (!reNameProject || reNameProject.length <= 0) {
             setReNameProject(projectData.projectName)
         }
         setRename(false)
         setDeleteLoader(true);
-        if (reNameProject !== projectData.projectName) {
+        if (reNameProject !== projectData.projectName && !reNameProject.length <= 0) {
             await handleRename(reNameProject, projectData.projectName, setReNameProject).then(async (updatedProjectName) => {
                 await renameProject(updatedProjectName, projectData.projectName, PathName.home).then(() => {
                         setDeleteLoader(false);
@@ -100,6 +97,7 @@ function Card(props) {
                 )
             });
         }
+        setDeleteLoader(false);
     }
 
     const handleDeleteProject = () => {
@@ -115,6 +113,7 @@ function Card(props) {
     return (
         <div className={styles.cardContent}>
             {deleteProject && <PopUpModal setVariable={setDeleteProject}
+                                          inlineStyle={{backgroundColor: "#E03E1A"}}
                                           headerText={"Delete this file?"}
                                           containText={"You cannot restore this file later."}
                                           buttonText={"Delete"}

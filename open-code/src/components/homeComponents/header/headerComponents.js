@@ -118,10 +118,10 @@ export function ProjectNamePopUp(params) {
     // Handle a blur event on the input element
     const handleClickBlur = async () => {
         setRename(false);
-        if (!reNameProject || reNameProject <= 0) {
+        if (!reNameProject || reNameProject.length <= 0) {
             setRenameProject(projectName);
         }
-        if (reNameProject !== projectName) {
+        if (reNameProject !== projectName && !reNameProject.length <= 0) {
             await handleRename(reNameProject, projectName, setRenameProject).then(
                 async (updatedProjectName) => {
                     setProjectName(updatedProjectName);
@@ -312,6 +312,7 @@ function ImageWithArrow(params) {
     const {setIsProfileModal, user, isMobile, signIn} = params
     return (
         <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
+
             {/*image display*/}
             {signIn ? user?.photoURL ?
                     <img alt="Profile Icon" src={user.photoURL}
@@ -323,8 +324,10 @@ function ImageWithArrow(params) {
                 <img alt="Profile Icon" src={Images.avatar}
                      style={{height: 28, width: 28, borderRadius: 90,}}/>
             }
+
             {/*name*/}
             {!isMobile && <WhiteText extraStyle={styles.extraStyles} text={user?.displayName.split(" ")[0]}/>}
+
             {/*dropdown arrow*/}
             <img alt="arrow button" className={styles.icon} src={Images.downArrowIcon}
                  style={{height: isMobile ? 25 : 20, width: isMobile ? 25 : 20}}/>
