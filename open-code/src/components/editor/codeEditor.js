@@ -34,12 +34,11 @@ function CodeEditor(params) {
         const editor = ace.edit(editorRef.current);
         let code;
         let mode;
-
         if (category === Constants.py) {
             code = pythonGenerator.workspaceToCode(workspace);
             mode = "ace/mode/python";
 
-        } else {
+        } else if (category === Constants.js) {
             code = javascriptGenerator.workspaceToCode(workspace);
             mode = "ace/mode/javascript";
         }
@@ -62,14 +61,14 @@ function CodeEditor(params) {
     }, [workspace, currentProjectXml, category, drawer, theme]);
 
     return (<div>
-        <div style={{zIndex: 2, position: "absolute", marginTop: isMobile ? "200px":"300px"}}><RightSlider/></div>
+        <div style={{zIndex: 2, position: "absolute", marginTop: isMobile ? "200px" : "300px"}}><RightSlider/></div>
         <div ref={editorRef} style={{
             position: "absolute",
             zIndex: 1,
             height: '100%',
             width: '100%',
             backgroundColor: theme === "dark" ? "#202020" : '#FFFFFF',
-            fontSize:isMobile?"13px":tabletQuery?"19px":"15px"
+            fontSize: isMobile ? "13px" : tabletQuery ? "19px" : "15px"
         }}/>
     </div>)
 }

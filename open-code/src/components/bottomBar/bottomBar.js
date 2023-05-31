@@ -215,7 +215,7 @@ function GenerateCodeButton(params) {
     const {category, setCategory, drawer} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
-    const [language, setLanguage] = useState(category === Constants.qr ? Constants.js : category);
+    const [language, setLanguage] = useState(category === Constants.py ? Constants.py : Constants.js);
     const theme = useContext(ThemeContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [openPopupArrow, setOpenPopupArrow] = useState(false);

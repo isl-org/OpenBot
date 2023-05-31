@@ -20,7 +20,7 @@ import {useLocation} from "react-router-dom";
 export const NewProject = () => {
     const [projects, setProjects] = useState(undefined);
     const {theme} = useContext(ThemeContext);
-    const {user, setCode} = useContext(StoreContext);
+    const {user,setCode} = useContext(StoreContext);
     const [deleteLoader, setDeleteLoader] = useState(false);
     const location = useLocation();
 

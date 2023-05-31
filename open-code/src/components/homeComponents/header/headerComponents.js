@@ -312,6 +312,7 @@ function ImageWithArrow(params) {
     const {setIsProfileModal, user, isMobile, signIn} = params
     return (
         <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
+
             {/*image display*/}
             {signIn ? user?.photoURL ?
                     <img alt="Profile Icon" src={user.photoURL}
@@ -323,8 +324,10 @@ function ImageWithArrow(params) {
                 <img alt="Profile Icon" src={Images.avatar}
                      style={{height: 28, width: 28, borderRadius: 90,}}/>
             }
+
             {/*name*/}
             {!isMobile && <WhiteText extraStyle={styles.extraStyles} text={user?.displayName.split(" ")[0]}/>}
+
             {/*dropdown arrow*/}
             <img alt="arrow button" className={styles.icon} src={Images.downArrowIcon}
                  style={{height: isMobile ? 25 : 20, width: isMobile ? 25 : 20}}/>

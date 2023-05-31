@@ -14,7 +14,7 @@ function Home() {
 
     useEffect(() => {
         //update local projects if there is any change.
-        updateLocalProjects()
+        updateLocalProjects();
     }, [])
 
     return (
