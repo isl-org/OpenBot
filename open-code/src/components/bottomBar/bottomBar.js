@@ -78,8 +78,9 @@ export const BottomBar = () => {
                             }
                             setCode(linkCode);
                             setIsLoader(false);
-                            setDrawer(true);
                             setCategory(Constants.qr);
+                            setDrawer(true);
+
                         }
                     ).catch((err) => {
                         console.log("err::", err)
@@ -210,9 +211,9 @@ export const BottomBar = () => {
  * @constructor
  */
 function GenerateCodeButton(params) {
-    const {generateCode, buttonSelected, clickedButton, buttonActive, setDrawer} = params
+    const {generateCode, buttonSelected, buttonActive, setDrawer} = params
     const themes = useTheme();
-    const {category, setCategory, drawer} = useContext(StoreContext);
+    const {category, setCategory } = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
     const [language, setLanguage] = useState(category === Constants.py ? Constants.py : Constants.js);
@@ -271,8 +272,8 @@ function GenerateCodeButton(params) {
 
             {/*dropdown language selection*/}
             <div onClick={() => {
-                setDrawer(true);
                 setCategory(language);
+                setDrawer(true);
             }
             } className={`${styles.uploadCodeButton}`} style={{width: isMobile && "70px", marginLeft: "1rem"}}>
                 {!isMobile && !isMobileLandscape && !tabletQuery.matches &&
