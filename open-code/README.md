@@ -219,6 +219,10 @@ view their code snippets in the side window. They can toggle between JavaScript 
 the side window simultaneously. The options to choose a language enable users to examine and evaluate the
 correctness of the blocks.
 
+<p align="left">
+       <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_code_editor.png" alt="Playground code editor" width="50%" height="50%" />
+</p>
+
 - #### Upload in Drive
 
 Cloud icon upload xml file of current project block to google drive.
