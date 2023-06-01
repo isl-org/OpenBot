@@ -9,7 +9,7 @@ import GoogleAPIClientForREST
 import GTMSessionFetcher
 
 class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
-
+    let shadowSheet = UIView(frame: UIScreen.main.bounds);
     @IBOutlet weak var baseView: UIView!
     var animationView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4));
     @IBOutlet weak var qrScannerIcon: UIView!
@@ -29,6 +29,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     private let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
     private var allProjectCommands: [ProjectData] = UserDefaults.getALlProjectsDataFromUserDefaults()
     private var myProjectLabel: CustomLabel = CustomLabel(frame: .zero)
+     var deleteProjectView : deleteProjectView!
 
     /**
        Function calls after view will loaded.
@@ -38,6 +39,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         baseView.addSubview(animationView);
         animationView.backgroundColor = Colors.title
         view.addSubview(signInView);
+        deleteProjectView = OpenBot.deleteProjectView()
         signInView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: width, height: height / 2)
                 : CGRect(x: height / 2 - width / 2, y: 0, width: width, height: height / 2);
         noProjectMessageView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: height, height: height / 2)
@@ -48,6 +50,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         createNoProjectMessage();
         createSignInBtn();
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadProject), name: .projectDeleted, object: nil)
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
         layout.collectionView?.layer.shadowOpacity = 1
@@ -70,6 +73,13 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         setupOpenCodeIcon();
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(hideDeletePopUp))
+        shadowSheet.addGestureRecognizer(tap)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated);
+        NotificationCenter.default.removeObserver(self);
     }
 
     /**
@@ -139,6 +149,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             signInView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
             noProjectMessageView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
         }
+
+        animateFloatingView()
+        updateUIConstraints()
     }
 
     /**
@@ -246,6 +259,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         cell.layer.cornerRadius = adapted(dimensionSize: 10, to: .height)
         cell.translatesAutoresizingMaskIntoConstraints = true
         leadingConstraint = cell.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
+        cell.longPressAction = {
+            self.createShadowSheet(index: indexPath.row);
+        }
         return cell
     }
 
@@ -271,7 +287,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                     self.command = result;
                     self.openBottomSheet(fileName: self.allProjects[indexPath.row].projectName)
                 }
-                if let  error  {
+                if let error {
                     self.whiteSheet.removeFromSuperview();
                     self.alert.dismiss(animated: true);
                     self.openBottomSheet(fileName: "error")
@@ -283,7 +299,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     }
 
 
-    private func openBottomSheet(fileName : String){
+    private func openBottomSheet(fileName: String) {
         whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: fileName);
         whiteSheet.startBtn.addTarget(self, action: #selector(start), for: .touchUpInside);
         whiteSheet.cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside);
@@ -413,7 +429,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                 completion(nil, error);
             }
             if let data = data {
-                print("data is ",data);
+                print("data is ", data);
                 completion(String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? "", nil)
             }
         }
@@ -471,6 +487,16 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
     }
 
+    @objc func reloadProject(_ notification: Notification) {
+        let shouldReloadProject = notification.object as! Bool;
+        shadowSheet.removeFromSuperview();
+        if shouldReloadProject {
+            reloadProjects()
+        }
+
+
+    }
+
 
     /// function to change the icon of bluetooth when bluetooth is connected or disconnected
     ///
@@ -482,7 +508,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             bluetoothIcon.image = Images.bluetoothDisconnected
         }
     }
-
 
 
     /**
@@ -554,15 +579,15 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             }
         }
         var cmd = ""
-         Authentication.download(fileId: projectId) { data, error in
-             if let error = error {
+        Authentication.download(fileId: projectId) { data, error in
+            if let error = error {
 //                 completion(nil, error);
-              cmd = ""
-             }
-             if let data = data {
-                 cmd = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? ""
-             }
-         };
+                cmd = ""
+            }
+            if let data = data {
+                cmd = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? ""
+            }
+        };
 
         return cmd;
 
@@ -609,11 +634,43 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
         stopAnimation();
     }
+
+    @objc private func hideDeletePopUp() {
+        shadowSheet.removeFromSuperview();
+    }
+
+    /**
+     Function to create shadow sheet which will load on logout popup.
+     */
+    private func createShadowSheet(index : Int) {
+        shadowSheet.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        tabBarController?.view.addSubview(shadowSheet)
+        createDeletePopup(index: index)
+    }
+
+    private func createDeletePopup(index : Int){
+        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        self.deleteProjectView = OpenBot.deleteProjectView(fileId: self.allProjects[index].projectId, fileName: self.allProjects[index].projectName);
+        self.shadowSheet.addSubview(self.deleteProjectView);
+    }
+
+    private func updateUIConstraints(){
+        if currentOrientation == .portrait{
+            shadowSheet.frame = UIScreen.main.bounds
+            deleteProjectView.frame = CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 84, width: width * 0.90, height: 168)
+        }
+        else{
+            shadowSheet.frame = CGRect(x: 0, y: 0, width: height, height: width);
+            deleteProjectView.frame = CGRect(x: height/2 - 160, y: width/2 -  84, width: width * 0.90, height: 168);
+        }
+    }
+
+
 }
 
-extension UserDefaults{
+extension UserDefaults {
 
-    static  func getAllProjectFromUserDefault() -> [ProjectItem] {
+    static func getAllProjectFromUserDefault() -> [ProjectItem] {
         if let data = UserDefaults.standard.data(forKey: "allProjects") {
             do {
                 let decoder = JSONDecoder()
@@ -626,7 +683,7 @@ extension UserDefaults{
         return [];
     }
 
-    static func setAllProjectsToUserDefaults(allProjects : [ProjectItem]){
+    static func setAllProjectsToUserDefaults(allProjects: [ProjectItem]) {
         do {
             let encoder = JSONEncoder()
             let data = try encoder.encode(allProjects);
@@ -636,7 +693,7 @@ extension UserDefaults{
         }
     }
 
-    static func setAllProjectDataToUserDefault(allProjectData : [ProjectData]){
+    static func setAllProjectDataToUserDefault(allProjectData: [ProjectData]) {
         do {
             let encoder = JSONEncoder()
             let data = try encoder.encode(allProjectData);
@@ -646,7 +703,7 @@ extension UserDefaults{
         }
     }
 
-    static func getALlProjectsDataFromUserDefaults()->[ProjectData]{
+    static func getALlProjectsDataFromUserDefaults() -> [ProjectData] {
         if let data = UserDefaults.standard.data(forKey: "allProjectCommands") {
             do {
                 let decoder = JSONDecoder()
@@ -658,5 +715,9 @@ extension UserDefaults{
         }
         return [];
     }
+
+
+
+
 }
 

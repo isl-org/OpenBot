@@ -12,9 +12,25 @@ class projectCollectionViewCell : UICollectionViewCell{
     @IBOutlet weak var projectDate: UILabel!
     @IBOutlet weak var projectName: UILabel!
     static var identifier = "projectCollectionViewCell"
+    var longPressAction: (() -> Void)? // Define a closure to handle the long press action
     override func awakeFromNib() {
         super.awakeFromNib()
+        setupLongPressGesture()
     }
+
+    private func setupLongPressGesture() {
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        addGestureRecognizer(longPressGesture)
+    }
+
+
+    @objc private func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        if gestureRecognizer.state == .began {
+            // Execute the long press action closure if it's set
+            longPressAction?()
+        }
+    }
+
     /**
      Function to configure cells for their name and date
      - Parameter gridItem:

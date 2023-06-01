@@ -60,6 +60,7 @@ class profileFragment: UIViewController {
             editProfileLabel.frame.origin.x = userImgView.right + 20;
             logoutLabel.frame.origin.x = editProfileLabel.left;
         }
+        updateUIConstraints();
     }
 
     /**
@@ -137,7 +138,8 @@ class profileFragment: UIViewController {
      Function to create logout popup
      */
     private func createLogoutPopup() {
-        logoutView = UIView(frame: CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 20, width: width * 0.90, height: 168));
+        logoutView.frame =  currentOrientation == .portrait ? CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 84, width: width * 0.90, height: 168):
+                   CGRect(x: height/2 - 160, y: width/2 -  84, width: width * 0.90, height: 168);
         shadowSheet.addSubview(logoutView);
         logoutView.backgroundColor = Colors.lightBlack;
         let confirmLogoutLabel = CustomLabel(text: "Confirm Logout", fontSize: 18, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 24, y: 22, width: 150, height: 40));
@@ -179,6 +181,7 @@ class profileFragment: UIViewController {
 
     @objc func cancel(_ sender: UIButton) {
         shadowSheet.removeFromSuperview();
+        logoutView.removeFromSuperview();
     }
 
     /**
@@ -186,6 +189,7 @@ class profileFragment: UIViewController {
      */
     @objc func logout(_ sender: UIButton) {
         shadowSheet.removeFromSuperview();
+        logoutView.removeFromSuperview();
         GIDSignIn.sharedInstance.signOut()
         updateViewsVisibility()
     }
@@ -226,6 +230,17 @@ class profileFragment: UIViewController {
         loadingIndicator.style = UIActivityIndicatorView.Style.medium
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
+    }
+
+    private func updateUIConstraints(){
+        if currentOrientation == .portrait{
+            shadowSheet.frame = UIScreen.main.bounds
+            logoutView.frame = CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 84, width: width * 0.90, height: 168)
+        }
+        else{
+            shadowSheet.frame = CGRect(x: 0, y: 0, width: height, height: width);
+            logoutView.frame = CGRect(x: height/2 - 160, y: width/2 -  84, width: width * 0.90, height: 168);
+        }
     }
 
 

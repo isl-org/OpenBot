@@ -79,7 +79,6 @@ class Authentication {
             self.getAllFoldersInDrive(accessToken: userIdToken?.tokenString ?? "") { files, error in
                 if let files = files {
                     let folderId = files[0].identifier;
-//                    let folderId = "1eHMSMTSotwBlOZHTdDXj97BJmlJg9SFe"
                     self.getFilesInFolder(folderId: folderId ?? "") { files, error in
                         if let files = files {
                             for file in files {
@@ -150,7 +149,6 @@ class Authentication {
     }
 
 
-
     func getAllFolders(completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         guard let accessToken = googleSignIn.currentUser?.accessToken.tokenString else {
             completion(nil, nil)
@@ -183,6 +181,7 @@ class Authentication {
             }
 
             if let files = (result as? GTLRDrive_FileList)?.files {
+                print(files);
                 completion(files, nil)
             } else {
                 completion(nil, nil)
@@ -246,7 +245,45 @@ class Authentication {
     static func returnFileName(name: String) -> String {
         let fileName = name.components(separatedBy: ".js");
         return fileName.first ?? "Unknown";
-
     }
+
+    func deleteFile(fileId: String, completion: @escaping (Error?) -> Void) {
+        let query = GTLRDriveQuery_FilesDelete.query(withFileId: fileId)
+        service.executeQuery(query) { (ticket, result, error) in
+            if let error = error {
+                completion(error)
+                print("Error deleting file: \(error)")
+                return
+            }
+
+            completion(nil)
+        }
+    }
+
+    func getIdOfXmlFile(name: String, completion: @escaping (String?, Error?) -> Void) {
+        Authentication.googleAuthentication.getAllFolders { files, error in
+            if let files = files {
+                Authentication.googleAuthentication.getFilesInFolder(folderId: files[0].identifier ?? "") { files, error in
+                    if let error = error {
+                        completion(nil, error)
+                        return
+                    }
+                    if let files = files {
+                        for file in files {
+                            if file.mimeType == "text/xml" && file.name == "\(name).xml" {
+                                completion(file.identifier, nil)
+                                return
+                            }
+                        }
+                    }
+                    completion(nil, nil) // File not found
+                }
+            } else if let error = error {
+                completion(nil, error)
+            }
+        }
+    }
+
+
 
 }
