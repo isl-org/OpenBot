@@ -83,12 +83,12 @@ function Card(props) {
 
     // Handle click event for renaming a project
     const handleClickBlur = async () => {
-        if (!reNameProject || reNameProject.length <= 0) {
+        if (!reNameProject || reNameProject.trim().length <= 0 || reNameProject <= 0) {
             setReNameProject(projectData.projectName)
         }
         setRename(false)
         setDeleteLoader(true);
-        if (reNameProject !== projectData.projectName && !reNameProject.length <= 0) {
+        if (reNameProject !== projectData.projectName && !reNameProject.trim().length <= 0 ) {
             await handleRename(reNameProject, projectData.projectName, setReNameProject).then(async (updatedProjectName) => {
                 await renameProject(updatedProjectName, projectData.projectName, PathName.home).then(() => {
                         setDeleteLoader(false);
