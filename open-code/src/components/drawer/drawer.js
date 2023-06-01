@@ -29,12 +29,11 @@ export function RightDrawer() {
 
     useEffect(() => {
         const handleOrientationChange = () => {
-            setIsLandscape(
-                window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches
-            );
+            setIsLandscape(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
         };
         window.addEventListener("resize", handleOrientationChange);
     }, []);
+
     return (
         <>
             {(code || category !== Constants.qr) &&
@@ -45,7 +44,7 @@ export function RightDrawer() {
                             width: 0,
                             flexShrink: 0,
                             '& .MuiDrawer-paper': {
-                                width: drawer ? category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' :  '45%' : isMobile ? isLandscape ? '3%' : '6%' : '2%',
+                                width: drawer ? category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' : isLandscape? '50%': '25%' : isMobile ? isLandscape ? '3%' : '6%' : '2%',
                                 height: isMobile ? '79%' : isLandscape ? '59.5%' : '81.3%',
                                 marginTop: isMobile ? '5rem' : isLandscape ? '4rem' : tabletQuery ? '6rem' : '5rem',
                                 borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",

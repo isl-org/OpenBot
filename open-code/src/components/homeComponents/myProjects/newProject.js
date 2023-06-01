@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react';
-import moment from 'moment';
 import Triangle from '../../../assets/images/icon/triangle.png';
 import DarkTriangle from '../../../assets/images/icon/dark-triangle.png';
 import {ThemeContext} from '../../../App';
@@ -45,6 +44,7 @@ export const NewProject = () => {
 
                     {/* Render the new project button if there are existing projects */}
                     <NewProjectButton isProject={projects?.length}/>
+
                     {/* Sort the projects based on the last updated date and time */}
                     {projects?.length > 0 ?
                         projects?.map((project, key) => <Card key={key} projectData={project}
@@ -59,9 +59,7 @@ export const NewProject = () => {
                 <div className={styles.loaderStyle}>
                     <LoaderComponent/>
                 </div>
-
             }
-
         </div>
     );
 };
