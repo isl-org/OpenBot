@@ -162,14 +162,9 @@ class profileFragment: UIViewController {
      Function that will add edit profile view controller to navigation controller
      */
     @objc func editProfileHandler() {
-        createOverlayAlert()
         let storyboard = UIStoryboard(name: "openCode", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "editProfile")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.navigationController?.pushViewController(viewController, animated: true)
-            self.alert.dismiss(animated: true, completion: nil)
-
-        }
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
 
     /**

@@ -11,7 +11,7 @@ import FirebaseStorage
 /***
  class for fragment of edit profile section
  */
-class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate {
+class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate, UITextFieldDelegate {
 /**
  Outlets for the user interface elements used in this view controller.
 */
@@ -26,13 +26,14 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     private var lastNameField: UITextField!
     let imagePickerVC = UIImagePickerController()
     private var scrollView = UIScrollView();
+    var saveChangesBtn = CustomButton();
 
 /**
     Method calls after view loaded
  */
     override func viewDidLoad() {
         super.viewDidLoad();
-        createOverlayAlert();
+//        createOverlayAlert();
         setupNavigationBarItem();
         view.addSubview(scrollView);
         let contentHeight: CGFloat = currentOrientation == .portrait ? height * 0.6 : 1000;
@@ -42,10 +43,13 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         scrollView.frame =  currentOrientation == .portrait ?CGRect(x: 0, y: profileIcon.bottom + adapted(dimensionSize: 40, to: .height), width: width, height: height) :  CGRect(x: height - width - safeAreaLayoutValue.bottom, y: profileIcon.top , width: width, height: height);
         createLabels();
         createTextFields();
+        firstNameField.delegate = self;
+        lastNameField.delegate = self;
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         createButtons();
         automaticallyAdjustsScrollViewInsets = false
+
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -141,6 +145,18 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         textField.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
     }
 
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
+        print(newText, newText?.count)
+        if newText?.count == 0 {
+            saveChangesBtn.isEnabled = false;
+        }
+        else{
+            saveChangesBtn.isEnabled = true;
+        }
+        return true
+    }
+
     /**
      Function to get first name of user from Full name
      - Parameter name:
@@ -211,7 +227,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         let cancelBtn = CustomButton(text: "Cancel", frame: CGRect(x: 17, y: email.bottom  +   adapted(dimensionSize: 60, to: .height), width: 147, height: 47), selector: #selector(cancel))
         scrollView.addSubview(cancelBtn);
         print(cancelBtn.frame.origin)
-        let saveChangesBtn = CustomButton(text: "Save Changes", frame: CGRect(x: cancelBtn.frame.origin.x + 194.0, y: cancelBtn.frame.origin.y, width: 147, height: 47), selector: #selector(saveChanges))
+        saveChangesBtn = CustomButton(text: "Save Changes", frame: CGRect(x: cancelBtn.frame.origin.x + 194.0, y: cancelBtn.frame.origin.y, width: 147, height: 47), selector: #selector(saveChanges))
         scrollView.addSubview(saveChangesBtn)
         saveChangesBtn.backgroundColor = Colors.title
     }

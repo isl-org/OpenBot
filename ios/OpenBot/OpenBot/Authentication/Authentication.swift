@@ -61,7 +61,6 @@ class Authentication {
             let credential = GoogleAuthProvider.credential(withIDToken: idToken!,
                     accessToken: user?.accessToken.tokenString ?? "")
             Auth.auth().signIn(with: credential) { result, error in
-
             }
 
             let userIdToken = user?.accessToken
@@ -71,6 +70,7 @@ class Authentication {
             let userLastName = user?.profile?.familyName ?? ""
             let userEmail = user?.profile?.email ?? ""
             let googleProfilePicURL = user?.profile?.imageURL(withDimension: 150)?.absoluteString ?? ""
+            let imgUrl = Auth.auth().currentUser?.photoURL;
             let driveScope = "https://www.googleapis.com/auth/drive.readonly"
             let grantedScopes = user?.grantedScopes
             if grantedScopes == nil || !grantedScopes!.contains(driveScope) {

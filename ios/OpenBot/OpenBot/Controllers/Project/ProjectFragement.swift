@@ -29,8 +29,10 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     private let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
     private var allProjectCommands: [ProjectData] = UserDefaults.getALlProjectsDataFromUserDefaults()
     private var myProjectLabel: CustomLabel = CustomLabel(frame: .zero)
-     var deleteProjectView : deleteProjectView!
-
+    var deleteProjectView = UIView();
+    var fileName: String = String()
+    var projectId: String = String()
+    var  isLoading : Bool = false
     /**
        Function calls after view will loaded.
     */
@@ -39,7 +41,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         baseView.addSubview(animationView);
         animationView.backgroundColor = Colors.title
         view.addSubview(signInView);
-        deleteProjectView = OpenBot.deleteProjectView()
         signInView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: width, height: height / 2)
                 : CGRect(x: height / 2 - width / 2, y: 0, width: width, height: height / 2);
         noProjectMessageView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: height, height: height / 2)
@@ -50,7 +51,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         createNoProjectMessage();
         createSignInBtn();
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadProject), name: .projectDeleted, object: nil)
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
         layout.collectionView?.layer.shadowOpacity = 1
@@ -149,7 +149,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             signInView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
             noProjectMessageView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
         }
-
         animateFloatingView()
         updateUIConstraints()
     }
@@ -260,7 +259,10 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         cell.translatesAutoresizingMaskIntoConstraints = true
         leadingConstraint = cell.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
         cell.longPressAction = {
+            self.fileName = self.allProjects[indexPath.row].projectName;
+            self.projectId = self.allProjects[indexPath.row].projectId
             self.createShadowSheet(index: indexPath.row);
+
         }
         return cell
     }
@@ -358,10 +360,13 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     }
 
+
+
     /**
      function add commands to allProjectCommand variable
      */
     private func loadProjects() {
+        isLoading = true;
         animateFloatingView();
         projectCollectionView.reloadData();
         authentication.getAllFolders { files, error in
@@ -391,6 +396,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                         print("Error getting files in folder: ", error.localizedDescription)
                     }
                     UserDefaults.setAllProjectsToUserDefaults(allProjects: self.allProjects);
+                    self.isLoading = false;
                 }
             } else if let error = error {
                 print("Error getting folders: ", error.localizedDescription)
@@ -485,16 +491,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                 alert.dismiss(animated: true);
             }
         }
-    }
-
-    @objc func reloadProject(_ notification: Notification) {
-        let shouldReloadProject = notification.object as! Bool;
-        shadowSheet.removeFromSuperview();
-        if shouldReloadProject {
-            reloadProjects()
-        }
-
-
     }
 
 
@@ -604,20 +600,25 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
 
     func animateFloatingView() {
-        stopAnimation();
-        baseView.backgroundColor = .gray;
-        let animationDuration: TimeInterval = 1.25
-        let animationDelay: TimeInterval = 0.5
-        UIView.animate(withDuration: animationDuration, delay: animationDelay, options: [.curveEaseInOut, .repeat], animations: {
-            // Expand animation
-            UIView.animate(withDuration: animationDuration / 2, delay: 0, options: [.curveEaseInOut, .repeat], animations: {
-                self.animationView.frame.size.width = self.baseView.frame.width
-            }, completion: { _ in
-                // Reset transform and size
-                self.animationView.transform = CGAffineTransform(translationX: 0, y: 0)
-                self.animationView.frame.size.width = 0
-            })
-        }, completion: nil)
+        if isLoading {
+            baseView.backgroundColor = .gray;
+            let animationDuration: TimeInterval = 1.25
+            let animationDelay: TimeInterval = 0.5
+            UIView.animate(withDuration: animationDuration, delay: animationDelay, options: [.curveEaseInOut, .repeat], animations: {
+                // Expand animation
+                UIView.animate(withDuration: animationDuration / 2, delay: 0, options: [.curveEaseInOut, .repeat], animations: {
+                    self.animationView.frame.size.width = self.baseView.frame.width
+                }, completion: { _ in
+                    // Reset transform and size
+                    self.animationView.transform = CGAffineTransform(translationX: 0, y: 0)
+                    self.animationView.frame.size.width = 0
+                })
+            }, completion: nil)
+        }
+       else{
+           stopAnimation();
+       }
+
     }
 
     func stopAnimation() {
@@ -642,26 +643,104 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     /**
      Function to create shadow sheet which will load on logout popup.
      */
-    private func createShadowSheet(index : Int) {
+    private func createShadowSheet(index: Int) {
         shadowSheet.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         tabBarController?.view.addSubview(shadowSheet)
-        createDeletePopup(index: index)
+        createDeleteProject()
+        shadowSheet.addSubview(deleteProjectView);
     }
 
-    private func createDeletePopup(index : Int){
-        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        self.deleteProjectView = OpenBot.deleteProjectView(fileId: self.allProjects[index].projectId, fileName: self.allProjects[index].projectName);
-        self.shadowSheet.addSubview(self.deleteProjectView);
-    }
 
-    private func updateUIConstraints(){
-        if currentOrientation == .portrait{
+    private func updateUIConstraints() {
+        if currentOrientation == .portrait {
             shadowSheet.frame = UIScreen.main.bounds
             deleteProjectView.frame = CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 84, width: width * 0.90, height: 168)
-        }
-        else{
+        } else {
             shadowSheet.frame = CGRect(x: 0, y: 0, width: height, height: width);
-            deleteProjectView.frame = CGRect(x: height/2 - 160, y: width/2 -  84, width: width * 0.90, height: 168);
+            deleteProjectView.frame = CGRect(x: height / 2 - 160, y: width / 2 - 84, width: width * 0.90, height: 168);
+        }
+    }
+
+    private func createDeleteProject() {
+        if currentOrientation == .portrait {
+            deleteProjectView.frame = CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 84, width: width * 0.90, height: 168);
+        } else {
+            deleteProjectView.frame = CGRect(x: height / 2 - 160, y: width / 2 - 84, width: width * 0.90, height: 168);
+        }
+        deleteProjectView.backgroundColor = Colors.lightBlack;
+        let deleteThisFileLabel = CustomLabel(text: "Delete this file?", fontSize: 18, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 24, y: 22, width: 150, height: 40));
+        let msg = CustomLabel(text: "You cannot restore this file later.\n", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 24, y: deleteThisFileLabel.frame.origin.y + 35, width: width, height: 40));
+        let cancelBtn = UIButton(frame: CGRect(x: 80, y: msg.frame.origin.y + 50, width: 100, height: 35));
+        cancelBtn.setTitle("CANCEL", for: .normal);
+        cancelBtn.addTarget(self, action: #selector(cancelDeletePopup), for: .touchUpInside)
+        cancelBtn.setTitleColor(Colors.title, for: .normal)
+        deleteProjectView.addSubview(deleteThisFileLabel);
+        deleteProjectView.addSubview(msg);
+        deleteProjectView.addSubview(cancelBtn);
+        let deleteBtn = UIButton(frame: CGRect(x: cancelBtn.frame.origin.x + 130, y: cancelBtn.frame.origin.y, width: 100, height: 35))
+        deleteBtn.setTitle("DELETE", for: .normal);
+        deleteBtn.setTitleColor(Colors.title, for: .normal)
+        deleteBtn.addTarget(self, action: #selector(deleteFile), for: .touchUpInside)
+        deleteProjectView.addSubview(deleteBtn);
+    }
+
+    @objc func cancelDeletePopup(_ sender: UIButton) {
+        shadowSheet.removeFromSuperview();
+    }
+
+    @objc func deleteFile(_ sender: UIButton) {
+        self.shadowSheet.removeFromSuperview()
+        self.deleteProject(projectName: fileName, projectId: self.projectId) { error, deleteCount in
+            if deleteCount != 0 {
+                self.reloadProjects();
+            }
+
+        }
+    }
+
+    private func deleteProject(projectName: String, projectId: String, completion: @escaping (Error?, Int) -> Void) {
+        var deletionError: Error? = nil
+        let dispatchGroup = DispatchGroup()
+        var deleteCount: Int = 0;
+        dispatchGroup.enter()
+        self.authentication.getIdOfXmlFile(name: projectName) { fileId, error in
+            if let error = error {
+                print("Error while deleting file", error)
+            }
+            if let fileId = fileId {
+                self.authentication.deleteFile(fileId: fileId) { error in
+                    if let error = error {
+                        // Handle the deletion error
+                        deletionError = error
+                        print("Error deleting file: \(error)")
+                    } else {
+                        // File deleted successfully
+                        print("File deleted")
+                        deleteCount = deleteCount + 1;
+                    }
+                    dispatchGroup.leave()
+                }
+            } else {
+                dispatchGroup.leave()
+            }
+        }
+
+        dispatchGroup.enter()
+        self.authentication.deleteFile(fileId: projectId) { error in
+            if let error = error {
+                // Handle the deletion error
+                deletionError = error
+                print("Error deleting file: \(error)")
+            } else {
+                // File deleted successfully
+                print("File deleted")
+                deleteCount = deleteCount + 1;
+            }
+            dispatchGroup.leave()
+        }
+
+        dispatchGroup.notify(queue: .main) {
+            completion(deletionError, deleteCount)
         }
     }
 
@@ -715,8 +794,6 @@ extension UserDefaults {
         }
         return [];
     }
-
-
 
 
 }
