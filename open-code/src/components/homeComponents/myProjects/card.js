@@ -7,7 +7,7 @@ import BlackText from "../../fonts/blackText";
 import WhiteText from "../../fonts/whiteText";
 import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
-import {deleteProjectFromStorage, getAllLocalProjects, renameProject} from "../../../services/workspace";
+import {deleteProjectFromStorage, FormatDate, getAllLocalProjects, renameProject} from "../../../services/workspace";
 import {localStorageKeys, PathName, Themes} from "../../../utils/constants";
 import {EditProjectPopUp} from "../header/headerComponents";
 import {PopUpModal} from "../header/logOutAndDeleteModal";
@@ -40,7 +40,6 @@ function Card(props) {
     const inputRef = useRef(null);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
-    const isMobileLandscape = window.matchMedia("(max-width: 1000px) and (orientation: landscape)").matches
 
     let navigate = useNavigate();
     const openExistingProject = () => {
@@ -57,7 +56,16 @@ function Card(props) {
      * @returns {Promise<void>}
      */
     const handleOpenProject = async (projectData) => {
-        localStorage.setItem(localStorageKeys.currentProject, "");
+        const project = {
+            storage: "local",
+            projectName: projectData.projectName,
+            xmlValue: projectData.projectName,
+            updatedDate: FormatDate().currentDate,
+            time: FormatDate().currentTime,
+            updatedTime: new Date(),
+        }
+        //current project will first get store in current
+        localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
         setDrawer(false);
         setIsError(false);
         try {
@@ -88,7 +96,7 @@ function Card(props) {
         }
         setRename(false)
         setDeleteLoader(true);
-        if (reNameProject !== projectData.projectName && !reNameProject.trim().length <= 0 ) {
+        if (reNameProject !== projectData.projectName && !reNameProject.trim().length <= 0) {
             await handleRename(reNameProject, projectData.projectName, setReNameProject).then(async (updatedProjectName) => {
                 await renameProject(updatedProjectName, projectData.projectName, PathName.home).then(() => {
                         setDeleteLoader(false);
