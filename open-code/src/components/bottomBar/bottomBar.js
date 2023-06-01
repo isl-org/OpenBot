@@ -213,7 +213,7 @@ export const BottomBar = () => {
 function GenerateCodeButton(params) {
     const {generateCode, buttonSelected, buttonActive, setDrawer} = params
     const themes = useTheme();
-    const {category, setCategory } = useContext(StoreContext);
+    const {category, setCategory} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
     const [language, setLanguage] = useState(category === Constants.py ? Constants.py : Constants.js);
@@ -241,18 +241,22 @@ function GenerateCodeButton(params) {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (popUpRef.current && !popUpRef.current.contains(event.target) && !arrowClick) {
-
+            if (popUpRef.current && !popUpRef.current.contains(event.target)) {
                 setOpenPopupArrow(false);
                 setAnchorEl(null);
             }
-            setArrowClicked(false); // Reset arrowClicked back to false
         };
-        document.addEventListener("pointerup", handleClickOutside, {passive: true});
+        const handleMouseDown = (event) => {
+            if (popUpRef.current && !popUpRef.current.contains(event.target)) {
+                setArrowClicked(false); // Reset arrowClicked back to false
+            }
+        };
+        document.addEventListener("mousedown", handleMouseDown, {passive: true});
+        document.addEventListener("click", handleClickOutside, {passive: true});
         return () => {
-            document.removeEventListener("pointerup", handleClickOutside);
+            document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [popUpRef, arrowClick,]);
+    }, [popUpRef, arrowClick]);
 
     return (
         <div className={styles.iconMargin + " " + styles.noSpace}
@@ -288,10 +292,11 @@ function GenerateCodeButton(params) {
                      onClick={handleClick}
                      src={openPopupArrow ? Images.downArrowIcon : Images.UpArrowIcon}
                      style={{
-                         height: "1.2rem",
-                         width: "1.2rem",
+                         height: "1.3rem",
+                         width: "1.3rem",
                          cursor: "pointer",
-                         paddingRight: isMobile ? "4px" : isMobileLandscape ? "8px" : ""
+                         paddingRight: isMobile ? "5px" : isMobileLandscape ? "8px" : "",
+                         zIndex:"1"
                      }}
                      alt={"arrow"}/>
             </div>

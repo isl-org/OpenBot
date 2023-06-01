@@ -211,7 +211,11 @@ function BlocklyComponent(props) {
             <div
                 ref={blocklyDiv}
                 id="blocklyDiv"
-                style={{width: "100%", height: isLandscape ? "66%" : tabletQuery ? "83.7%" : "81.3%"}}
+                style={{
+                    width: "100%",
+                    height: isLandscape ? "66%" : tabletQuery ? "83.7%" : "81.3%",
+                    backgroundColor: theme === "dark" ? "#202020" : "#FFFFFF"
+                }}
             />
             <div style={{display: "none"}} ref={toolbox}>
                 {children}
