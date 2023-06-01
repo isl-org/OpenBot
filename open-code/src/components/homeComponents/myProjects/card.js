@@ -7,15 +7,14 @@ import BlackText from "../../fonts/blackText";
 import WhiteText from "../../fonts/whiteText";
 import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
-import {
-    deleteProjectFromStorage, getAllLocalProjects, renameProject
-} from "../../../services/workspace";
-import {errorToast, localStorageKeys, PathName, Themes} from "../../../utils/constants";
+import {deleteProjectFromStorage, getAllLocalProjects, renameProject} from "../../../services/workspace";
+import {localStorageKeys, PathName, Themes} from "../../../utils/constants";
 import {EditProjectPopUp} from "../header/headerComponents";
 import {PopUpModal} from "../header/logOutAndDeleteModal";
 import {handleUniqueName} from "./newProjectButton";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@mui/material";
+
 
 /**
  * Card

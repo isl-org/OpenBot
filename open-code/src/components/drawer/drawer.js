@@ -24,9 +24,9 @@ export function RightDrawer() {
     const {drawer, code, category} = useContext(StoreContext)  // Retrieve the drawer state from the StoreContext
     const themes = useTheme();// Get the current theme breakpoints using useTheme hook
     const isMobile = useMediaQuery(themes.breakpoints.down("sm"));// Determine if the screen is a mobile device using useMediaQuery hook
-    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
+    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) and (pointer: coarse)").matches;
     const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
-
+    console.log("ismobile :: is tablet", isLandscape, isMobile)
     useEffect(() => {
         const handleOrientationChange = () => {
             setIsLandscape(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
@@ -44,7 +44,7 @@ export function RightDrawer() {
                             width: 0,
                             flexShrink: 0,
                             '& .MuiDrawer-paper': {
-                                width: drawer ? category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' : isLandscape? '50%': '25%' : isMobile ? isLandscape ? '3%' : '6%' : '2%',
+                                width: drawer ? category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' : isLandscape ? '50%' : tabletQuery ? '45%' : '25%' : isMobile ? isLandscape ? '3%' : '6%' : '2%',
                                 height: isMobile ? '79%' : isLandscape ? '59.5%' : '81.3%',
                                 marginTop: isMobile ? '5rem' : isLandscape ? '4rem' : tabletQuery ? '6rem' : '5rem',
                                 borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
