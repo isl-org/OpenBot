@@ -26,7 +26,7 @@ export function RightDrawer() {
     const isMobile = useMediaQuery(themes.breakpoints.down("sm"));// Determine if the screen is a mobile device using useMediaQuery hook
     const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) and (pointer: coarse)").matches;
     const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
-    console.log("ismobile :: is tablet", isLandscape, isMobile)
+
     useEffect(() => {
         const handleOrientationChange = () => {
             setIsLandscape(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);

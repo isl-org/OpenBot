@@ -51,7 +51,16 @@ export async function uploadProfilePic(file, fileName) {
  * @returns {Promise<firebase.auth.UserCredential>}
  */
 export async function googleSigIn() {
-    await auth.signInWithRedirect(provider)
+    let isAndroid = /Android/i.test(navigator.userAgent);
+    if(isAndroid){
+        await auth.signInWithRedirect(provider)
+    }else{
+        const signIn = await auth.signInWithPopup(provider)
+        localStorage.setItem("isSigIn", "true");
+        localStorage.setItem(localStorageKeys.accessToken, signIn.credential?.accessToken);
+        return signIn
+    }
+
 }
 
 /**
