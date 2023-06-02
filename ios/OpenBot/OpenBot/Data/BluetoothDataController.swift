@@ -212,11 +212,9 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
     func sendData(payload: String) {
 
         let dataToSend: Data? = payload.data(using: String.Encoding.utf8)
-        print("sending payload inside bluetooth ", payload, dataToSend, discoveredPeripheral);
 
         if (dataToSend != nil && discoveredPeripheral != nil && discoveredPeripheral.canSendWriteWithoutResponse) {
             if let writeCharacteristics {
-                print("writing to peripherals")
                 discoveredPeripheral.writeValue(dataToSend!, for: writeCharacteristics, type: CBCharacteristicWriteType.withoutResponse)
             }
         }

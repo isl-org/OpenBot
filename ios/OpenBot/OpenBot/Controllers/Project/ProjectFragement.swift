@@ -572,7 +572,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      */
     func returnCommandOfSelectedCell(projectId: String) -> String {
         for command in allProjectCommands {
-            if command.projectId == projectId {
+            if command.projectId == projectId && command.projectCommand != ""  {
                 return command.projectCommand
             }
         }
