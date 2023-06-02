@@ -289,7 +289,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                     self.command = result;
                     self.openBottomSheet(fileName: self.allProjects[indexPath.row].projectName)
                 }
-                if let error {
+                if error != nil {
                     self.whiteSheet.removeFromSuperview();
                     self.alert.dismiss(animated: true);
                     self.openBottomSheet(fileName: "error")
@@ -355,6 +355,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      */
     @objc func googleSignIn(_ notification: Notification) {
         if GIDSignIn.sharedInstance.currentUser != nil {
+            isLoading = true;
+            animateFloatingView();
             loadProjects();
         }
 
@@ -366,8 +368,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      function add commands to allProjectCommand variable
      */
     private func loadProjects() {
-        isLoading = true;
-        animateFloatingView();
         projectCollectionView.reloadData();
         authentication.getAllFolders { files, error in
             if let files = files {
@@ -485,6 +485,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         if GIDSignIn.sharedInstance.currentUser != nil {
             if Reachability.isConnectedToNetwork() {
                 tempAllProjects.removeAll()
+                isLoading = true;
+                animateFloatingView();
                 loadProjects();
             } else {
                 allProjectCommands = decodeProjectDataFromUserDefault()
@@ -689,12 +691,15 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     }
 
     @objc func deleteFile(_ sender: UIButton) {
-        self.shadowSheet.removeFromSuperview()
-        self.deleteProject(projectName: fileName, projectId: self.projectId) { error, deleteCount in
+        shadowSheet.removeFromSuperview()
+        isLoading = true;
+        animateFloatingView();
+        deleteProject(projectName: fileName, projectId: self.projectId) { error, deleteCount in
             if deleteCount != 0 {
+                self.stopAnimation();
                 self.reloadProjects();
-            }
 
+            }
         }
     }
 

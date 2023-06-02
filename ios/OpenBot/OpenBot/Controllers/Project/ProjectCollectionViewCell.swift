@@ -37,7 +37,7 @@ class projectCollectionViewCell : UICollectionViewCell{
      */
     public func configure(with gridItem: ProjectItem) {
         projectName.text = gridItem.projectName;
-        projectName.font = HelveticaNeue.bold(size: 15);
+        projectName.font = HelveticaNeue.regular(size: 15);
         projectDate.text = dateFormatter(isoDate: gridItem.projectDate);
         projectDate.font = HelveticaNeue.regular(size: 10);
     }

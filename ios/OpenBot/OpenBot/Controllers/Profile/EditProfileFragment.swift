@@ -110,11 +110,11 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     private func createTextFields() {
         firstNameField = CustomTextField(frame: CGRect(x: 17, y: firstName.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
         view.addSubview(firstNameField);
-        setTextField(textField: firstNameField, value: getFirstName(name: Auth.auth().currentUser?.displayName ?? ""));
+        setTextField(textField: firstNameField, value: getFirstName(name: Auth.auth().currentUser?.displayName ?? "Unknown"));
         lastNameField = CustomTextField(frame: CGRect(x: 17, y: lastName.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
         setTextField(textField: lastNameField, value: getLastName(name: Auth.auth().currentUser?.displayName ?? ""));
         let dobField = CustomTextField(frame: CGRect(x: 17, y: dob.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
-        setTextField(textField: dobField, value: "19/09/2000");
+        setTextField(textField: dobField, value: Date.getCurrentDate());
         dobField.isEnabled = false
         let img = UIImageView(frame: CGRect(x: dobField.frame.size.width - 40, y: 15, width: 20, height: 20));
         img.image = UIImage(named: "calendar");
@@ -179,11 +179,15 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
      - Returns:
      */
     private func getLastName(name: String) -> String {
-        let indexOfSpace = name.firstIndex(of: " ");
+        let indexOfSpace = name.lastIndex(of: " ");
         if indexOfSpace == nil {
-            return name;
+            return "";
         }
-        return String(name[indexOfSpace!...])
+        else{
+            let index = name.index(after: indexOfSpace!);
+            return String(name[index...])
+        }
+
     }
 
     /**
@@ -229,7 +233,6 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     private func createButtons() {
         let cancelBtn = CustomButton(text: "Cancel", frame: CGRect(x: 17, y: email.bottom  +   adapted(dimensionSize: 60, to: .height), width: 147, height: 47), selector: #selector(cancel))
         scrollView.addSubview(cancelBtn);
-        print(cancelBtn.frame.origin)
         saveChangesBtn = CustomButton(text: "Save Changes", frame: CGRect(x: cancelBtn.frame.origin.x + 194.0, y: cancelBtn.frame.origin.y, width: 147, height: 47), selector: #selector(saveChanges))
         scrollView.addSubview(saveChangesBtn)
         saveChangesBtn.backgroundColor = Colors.title
@@ -248,18 +251,19 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
      - Parameter sender:
      */
     @objc func saveChanges(_ sender: UIButton) {
-        createOverlayAlert()
+        createOverlayAlert();
         let credential = GoogleAuthProvider.credential(withIDToken: (authentication.googleSignIn.currentUser?.idToken!.tokenString)!, accessToken: (authentication.googleSignIn.currentUser?.accessToken.tokenString)!)
         Auth.auth().signIn(with: credential) { result, error in
             if let user = result?.user {
                 let changeRequest = user.createProfileChangeRequest()
-                changeRequest.displayName = (self.firstNameField.text ?? "")  + (self.lastNameField.text ?? "");
+                let firstName = self.firstNameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                let lastName = self.lastNameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                changeRequest.displayName = firstName + " " + lastName
                 self.uploadImage();
                 changeRequest.commitChanges { error in
                     if let error = error {
                         print("Error updating profile: \(error.localizedDescription)")
                     } else {
-                        print("Profile updated successfully")
                         self.alert.dismiss(animated: true);
                         self.showToast("Profile Updated Successfully", icon: UIImage(named: "check")!);
                     }
@@ -381,4 +385,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     }
 
 }
+
+
+
 

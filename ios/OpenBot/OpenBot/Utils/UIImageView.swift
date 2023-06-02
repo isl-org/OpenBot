@@ -16,9 +16,14 @@ extension UIImageView {
         activityIndicator.startAnimating()
 
         DispatchQueue.global().async { [weak self] in
-            if let data = try? Data(contentsOf: url) {
-                print(data)
-                if let image = UIImage(data: data) {
+             var data = try? Data(contentsOf: url);
+            if data == nil{
+                if let profileUrl = Authentication.googleAuthentication.googleSignIn.currentUser?.profile?.imageURL(withDimension: 100){
+                    data = try? Data(contentsOf:profileUrl );
+                }
+
+            }
+                if let image = UIImage(data: data!) {
                     DispatchQueue.main.async {
                         self?.image = image
                         // Hide the activity indicator once the image is loaded
@@ -26,7 +31,7 @@ extension UIImageView {
                         activityIndicator.removeFromSuperview()
                     }
                 }
-            }
+
         }
     }
 }

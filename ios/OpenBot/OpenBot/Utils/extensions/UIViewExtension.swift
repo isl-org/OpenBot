@@ -259,7 +259,7 @@ class openCodeRunBottomSheet: UIView {
     private func createBottomSheetMsg(fileName: String) {
         let firstMsg = CustomLabel(text: "\(fileName) file detected. Start to execute the code",
                 fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 19, y: 57, width: 320, height: 40));
-        let secondMsg = CustomLabel(text: "your OpenBot.",
+        let secondMsg = CustomLabel(text: "on your OpenBot.",
                 fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 19, y: 77, width: 100, height: 40))
         bottomSheet.addSubview(firstMsg);
         bottomSheet.addSubview(secondMsg);
