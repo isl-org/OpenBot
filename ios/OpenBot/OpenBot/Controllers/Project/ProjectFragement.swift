@@ -275,9 +275,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      */
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        if allProjectCommands.count != 0 {
+        let projectId = allProjects[indexPath.row].projectId;
+        if allProjectCommands.count != 0 && returnCommandOfSelectedCell(projectId: projectId) != "" {
             //find project id of selected item;
-            let projectId = allProjects[indexPath.row].projectId;
             //find command of selected project
             command = returnCommandOfSelectedCell(projectId: projectId);
             openBottomSheet(fileName: allProjects[indexPath.row].projectName)
@@ -572,9 +572,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      */
     func returnCommandOfSelectedCell(projectId: String) -> String {
         for command in allProjectCommands {
-            if command.projectId == projectId && command.projectCommand != ""  {
-                return command.projectCommand
-            }
+                if command.projectId == projectId && command.projectCommand != ""  {
+                    return command.projectCommand
+                }
         }
         var cmd = ""
         Authentication.download(fileId: projectId) { data, error in

@@ -35,6 +35,10 @@ class Authentication {
         return ""
     }
 
+    /**
+     method to sign in through google
+     - Parameter clientId:
+     */
     private func googleSignInFunc(clientId: String) {
         if GIDSignIn.sharedInstance.hasPreviousSignIn() {
             let user = GIDSignIn.sharedInstance.currentUser;
@@ -114,7 +118,12 @@ class Authentication {
             // Show the sign-out button and hide the GIDSignInButton
         }
     }
-
+    /**
+     static method to download a file
+     - Parameters:
+       - file:
+       - completion:
+     */
     static func download(file: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let fileId = returnFileId(fileLink: file);
         let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
@@ -131,6 +140,12 @@ class Authentication {
             }
         })
     }
+    /**
+     Static method to download a file
+     - Parameters:
+       - fileId:
+       - completion:
+     */
 
     static func download(fileId: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
@@ -148,7 +163,10 @@ class Authentication {
         })
     }
 
+    /**
 
+     - Parameter completion:
+     */
     func getAllFolders(completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         guard let accessToken = googleSignIn.currentUser?.accessToken.tokenString else {
             completion(nil, nil)
@@ -165,7 +183,12 @@ class Authentication {
         }
     }
 
-
+    /**
+     function to get all folders of drive
+     - Parameters:
+       - accessToken:
+       - completion:
+     */
     private func getAllFoldersInDrive(accessToken: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         let query = GTLRDriveQuery_FilesList.query()
         self.service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
@@ -189,6 +212,10 @@ class Authentication {
         }
     }
 
+    /**
+     function to return file name from link on QR scan
+     - Parameter url:
+     */
     static func getFileNameFromPublicURL(url: String) {
         let fileId = returnFileId(fileLink: url);
         let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: fileId)
@@ -207,7 +234,12 @@ class Authentication {
 
     }
 
-
+/**
+    function to return all files from openBot-openCode folder
+ - Parameters:
+   - folderId:
+   - completion:
+ */
     func getFilesInFolder(folderId: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         let query = GTLRDriveQuery_FilesList.query()
         query.q = "'\(folderId)' in parents"
@@ -227,6 +259,13 @@ class Authentication {
         }
     }
 
+    /**
+     Function to download a file
+     - Parameters:
+       - fileId:
+       - accessToken:
+       - completion:
+     */
     func downloadFile(withId fileId: String, accessToken: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: fileId)
         service.executeQuery(query) { (ticket, result, error) in
@@ -242,11 +281,22 @@ class Authentication {
         }
     }
 
+    /**
+    Function to return file name
+     - Parameter name:
+     - Returns:
+     */
     static func returnFileName(name: String) -> String {
         let fileName = name.components(separatedBy: ".js");
         return fileName.first ?? "Unknown";
     }
 
+    /**
+     Function to delete file from user drive
+     - Parameters:
+       - fileId:
+       - completion:
+     */
     func deleteFile(fileId: String, completion: @escaping (Error?) -> Void) {
         let query = GTLRDriveQuery_FilesDelete.query(withFileId: fileId)
         service.executeQuery(query) { (ticket, result, error) in
@@ -260,6 +310,12 @@ class Authentication {
         }
     }
 
+    /**
+     function returns xml file id.
+     - Parameters:
+       - name:
+       - completion:
+     */
     func getIdOfXmlFile(name: String, completion: @escaping (String?, Error?) -> Void) {
         Authentication.googleAuthentication.getAllFolders { files, error in
             if let files = files {
