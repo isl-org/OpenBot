@@ -9,7 +9,6 @@ import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
 import {
     deleteProjectFromStorage,
-    FormatDate,
     getAllLocalProjects,
     getCurrentProject,
     renameProject

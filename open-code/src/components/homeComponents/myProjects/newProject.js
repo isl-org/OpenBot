@@ -25,9 +25,9 @@ export const NewProject = () => {
     const [loader, setLoader] = useState(false);
 
     useEffect(() => {
+        setProjects(undefined);
         setLoader(true);
         // Fetch projects from the API and update state
-        setProjects(undefined);
         setCode(undefined);
         if (!deleteLoader) {
             getFilterProjects().then((filterProject) => {
@@ -49,7 +49,7 @@ export const NewProject = () => {
                     <NewProjectButton isProject={projects?.length}/>
 
                     {/* Sort the projects based on the last updated date and time */}
-                    {projects?.length > 0 ?
+                    {projects && projects?.length > 0 ?
                         projects?.map((project, key) => <Card key={key} projectData={project}
                                                               setDeleteLoader={setDeleteLoader}/>)
                         :
