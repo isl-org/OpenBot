@@ -72,11 +72,15 @@ export function EditProfileModal(props) {
 
     //handle name change
     function handleNameChange(name) {
-        setFullName(name)
-        setUserDetail({
-            ...userDetails,
-            displayName: name,
-        })
+        if (!(name.trim.length <= 0)) {
+            setFullName(name);
+            setUserDetail({
+                ...userDetails,
+                displayName: name,
+            })
+        } else {
+            setFullName(user?.displayName)
+        }
     }
 
     const handleSubmit = async () => {

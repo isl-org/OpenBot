@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react';
-import moment from 'moment';
 import Triangle from '../../../assets/images/icon/triangle.png';
 import DarkTriangle from '../../../assets/images/icon/dark-triangle.png';
 import {ThemeContext} from '../../../App';
@@ -20,11 +19,13 @@ import {useLocation} from "react-router-dom";
 export const NewProject = () => {
     const [projects, setProjects] = useState(undefined);
     const {theme} = useContext(ThemeContext);
-    const {user,setCode} = useContext(StoreContext);
+    const {user, setCode} = useContext(StoreContext);
     const [deleteLoader, setDeleteLoader] = useState(false);
     const location = useLocation();
+    const [loader, setLoader] = useState(false);
 
     useEffect(() => {
+        setLoader(true);
         // Fetch projects from the API and update state
         setProjects(undefined);
         setCode(undefined);
@@ -33,6 +34,7 @@ export const NewProject = () => {
                 setProjects(filterProject);
             });
         }
+        setLoader(false);
     }, [user, deleteLoader, location]);
 
     return (
@@ -40,11 +42,12 @@ export const NewProject = () => {
             <div className={`${styles.Heading} ${theme === 'dark' ? styles.MainDark : styles.MainLight}`}>
                 My Projects
             </div>
-            {projects && !deleteLoader ?
+            {loader || projects && !deleteLoader ?
                 <div className={styles.ButtonsMessage}>
 
                     {/* Render the new project button if there are existing projects */}
                     <NewProjectButton isProject={projects?.length}/>
+
                     {/* Sort the projects based on the last updated date and time */}
                     {projects?.length > 0 ?
                         projects?.map((project, key) => <Card key={key} projectData={project}
@@ -59,9 +62,7 @@ export const NewProject = () => {
                 <div className={styles.loaderStyle}>
                     <LoaderComponent/>
                 </div>
-
             }
-
         </div>
     );
 };

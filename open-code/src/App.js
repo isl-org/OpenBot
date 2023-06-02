@@ -19,6 +19,7 @@ function App() {
     const [theme, setTheme] = useState(onPageLoad);
     const [internetOn, setInternetOn] = useState(window.navigator.onLine);
     const [user, setUser] = useState();
+    let isAndroid = /Android/i.test(navigator.userAgent);
 
     useEffect(() => {
         window.addEventListener('online', handleOnline);
@@ -40,17 +41,19 @@ function App() {
     }, [theme]);
 
     useEffect(() => {
-        auth.getRedirectResult().then(async function (result) {
-            if (result.credential) {
-                localStorage.setItem(localStorageKeys.accessToken, result.credential.accessToken);
-                localStorage.setItem("isSigIn", "true");
-                setUser({
-                    photoURL: result.user?.photoURL,
-                    displayName: result.user?.displayName,
-                    email: result.user?.email,
-                });
-            }
-        });
+        if(isAndroid) {
+            auth.getRedirectResult().then(async function (result) {
+                if (result.credential) {
+                    localStorage.setItem(localStorageKeys.accessToken, result.credential.accessToken);
+                    localStorage.setItem("isSigIn", "true");
+                    setUser({
+                        photoURL: result.user?.photoURL,
+                        displayName: result.user?.displayName,
+                        email: result.user?.email,
+                    });
+                }
+            });
+        }
     }, [])
 
     //session time out function.
