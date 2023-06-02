@@ -44,7 +44,6 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         createLabels();
         createTextFields();
         firstNameField.delegate = self;
-        lastNameField.delegate = self;
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         createButtons();
@@ -145,14 +144,18 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         textField.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
     }
 
+
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
-        print(newText, newText?.count)
         if newText?.count == 0 {
+            textField.layer.borderColor = UIColor.red.cgColor
             saveChangesBtn.isEnabled = false;
         }
         else{
             saveChangesBtn.isEnabled = true;
+            DispatchQueue.main.async {
+                textField.layer.borderColor = UIColor(red: 0 / 255, green: 113 / 255, blue: 197 / 255, alpha: 0.4).cgColor
+            }
         }
         return true
     }
