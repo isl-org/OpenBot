@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import styles from "./newProject.module.css"
 import style from "../../../components/navBar/navbar.module.css"
 import {Images} from "../../../utils/images";
@@ -7,7 +7,13 @@ import BlackText from "../../fonts/blackText";
 import WhiteText from "../../fonts/whiteText";
 import {StoreContext} from "../../../context/context";
 import {useNavigate} from "react-router-dom";
-import {deleteProjectFromStorage, FormatDate, getAllLocalProjects, renameProject} from "../../../services/workspace";
+import {
+    deleteProjectFromStorage,
+    FormatDate,
+    getAllLocalProjects,
+    getCurrentProject,
+    renameProject
+} from "../../../services/workspace";
 import {localStorageKeys, PathName, Themes} from "../../../utils/constants";
 import {EditProjectPopUp} from "../header/headerComponents";
 import {PopUpModal} from "../header/logOutAndDeleteModal";
@@ -41,6 +47,7 @@ function Card(props) {
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
 
+
     let navigate = useNavigate();
     const openExistingProject = () => {
         navigate(`playground`);
@@ -56,16 +63,11 @@ function Card(props) {
      * @returns {Promise<void>}
      */
     const handleOpenProject = async (projectData) => {
-        const project = {
-            storage: "local",
-            projectName: projectData.projectName,
-            xmlValue: projectData.projectName,
-            updatedDate: FormatDate().currentDate,
-            time: FormatDate().currentTime,
-            updatedTime: new Date(),
+        if( !(projectData.projectName === getCurrentProject().projectName)) {
+            //current project will first get store in current
+            localStorage.setItem(localStorageKeys.currentProject,"")
         }
-        //current project will first get store in current
-        localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
+
         setDrawer(false);
         setIsError(false);
         try {
@@ -96,7 +98,7 @@ function Card(props) {
         }
         setRename(false)
         setDeleteLoader(true);
-        if (reNameProject !== projectData.projectName && !reNameProject.trim().length <= 0) {
+        if (reNameProject !== projectData?.projectName && !reNameProject?.trim().length <= 0) {
             await handleRename(reNameProject, projectData.projectName, setReNameProject).then(async (updatedProjectName) => {
                 await renameProject(updatedProjectName, projectData.projectName, PathName.home).then(() => {
                         setDeleteLoader(false);

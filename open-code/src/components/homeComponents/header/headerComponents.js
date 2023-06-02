@@ -121,7 +121,7 @@ export function ProjectNamePopUp(params) {
         if (!reNameProject || reNameProject.length <= 0) {
             setRenameProject(projectName);
         }
-        if (reNameProject !== projectName && !reNameProject.length <= 0) {
+        if (reNameProject !== projectName && !reNameProject?.trim().length <= 0) {
             await handleRename(reNameProject, projectName, setRenameProject).then(
                 async (updatedProjectName) => {
                     setProjectName(updatedProjectName);
