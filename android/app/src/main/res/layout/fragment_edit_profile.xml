@@ -88,10 +88,14 @@
             android:textSize="18sp" />
 
         <EditText
+            android:id="@+id/date_of_birth"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/border_radius_input_text"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
             android:inputType="date"
             android:maxLines="1"
             android:paddingHorizontal="10dp" />
