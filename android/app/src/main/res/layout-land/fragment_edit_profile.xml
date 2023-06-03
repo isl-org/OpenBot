@@ -88,6 +88,7 @@
                 android:textSize="18sp" />
 
             <EditText
+                android:id="@+id/date_of_birth"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginBottom="15dp"

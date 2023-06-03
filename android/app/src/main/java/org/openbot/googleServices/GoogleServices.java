@@ -28,6 +28,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.openbot.databinding.FragmentProjectsBinding;
 import org.openbot.env.SharedPreferencesManager;
 import org.openbot.projects.DriveProjectsAdapter;
@@ -265,6 +267,11 @@ public class GoogleServices {
                     // log any errors that occur and set page token to null to exit the loop.
                     e.printStackTrace();
                     pageToken = null;
+                    mActivity.runOnUiThread(
+                        () -> {
+                          adapter.notifyDataSetChanged();
+                          projectsFragment.updateMessage(projectsList, binding);
+                        });
                   }
                   // continue querying for files while there is a valid page token.
                 } while (pageToken != null);
@@ -327,18 +334,79 @@ public class GoogleServices {
    *
    * @param fileId fileId the ID of the file to delete.
    */
-  public void deleteFile(String fileId) {
-    Drive googleDriveService = getDriveService();
-    if (googleDriveService != null) {
+  public void deleteFile(
+      String fileId,
+      String projectName,
+      DriveProjectsAdapter adapter,
+      FragmentProjectsBinding binding) {
+    // Create an ExecutorService with a single thread
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    executor.execute(
+        () -> {
+          Drive googleDriveService = getDriveService();
+          if (googleDriveService != null) {
+            try {
+              // Get the XML file ID associated with the project name
+              String xmlFileId = getXmlFileId(projectName, googleDriveService);
+              // Delete the file with the given ID
+              googleDriveService.files().delete(fileId).execute();
+              // If XML file ID exists, delete the XML file as well
+              if (xmlFileId != null) {
+                googleDriveService.files().delete(xmlFileId).execute();
+              }
+              // Access Drive files again to update the adapter and binding
+              accessDriveFiles(adapter, binding);
+              Timber.tag("Google Drive File").d("File deleted successfully");
+            } catch (IOException error) {
+              // log any errors that occur when deleting the file.
+              error.printStackTrace();
+              Timber.tag("Google Drive File").e(error);
+            }
+          }
+        });
+  }
+
+  /**
+   * This method queries Google Drive for files that are not in the trash folder and have a .js
+   * extension. It iterates through the files to find the one whose name matches the provided
+   * projectName with the .xml extension. The corresponding XML file ID is returned if found.
+   *
+   * @param projectName
+   * @param googleDriveService
+   * @return
+   */
+  private String getXmlFileId(String projectName, Drive googleDriveService) {
+    String pageToken = null;
+    String xmlProjectId = null;
+    do {
       try {
-        // Delete the file with the given ID
-        googleDriveService.files().delete(fileId).execute();
-        Timber.tag("Google Drive File").d("File deleted successfully");
+        // query for files on Google Drive that are not in the trash folder and have a
+        // ".js" extension.
+        FileList result =
+            googleDriveService
+                .files()
+                .list()
+                .setSpaces("drive")
+                .setFields("nextPageToken, files(id, name, createdTime, modifiedTime)")
+                .setPageToken(pageToken)
+                .setQ("trashed = false")
+                .execute();
+        List<File> driveProjectFiles = result.getFiles();
+        // Iterate through the files and check for the XML file associated with the project name
+        for (File file : driveProjectFiles) {
+          if ((projectName.replace(".js", ".xml")).equals(file.getName())) {
+            xmlProjectId = file.getId();
+          }
+        }
+        // update page token to get the next set of files if available.
+        pageToken = result.getNextPageToken();
       } catch (IOException e) {
-        // log any errors that occur when deleting the file.
+        // log any errors that occur and set page token to null to exit the loop.
         e.printStackTrace();
-        Timber.tag("Google Drive File").e("Error deleting file");
+        pageToken = null;
       }
-    }
+      // continue querying for files while there is a valid page token.
+    } while (pageToken != null);
+    return xmlProjectId;
   }
 }

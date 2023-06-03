@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -123,7 +124,11 @@ public class ProjectsFragment extends Fragment {
         (itemView, position) ->
             onTapProjectItem(
                 googleServices.projectsList.get(position).getProjectCommands(),
-                googleServices.projectsList.get(position).getProjectName()));
+                googleServices.projectsList.get(position).getProjectName()),
+        ((itemView, position) ->
+            onLongTapProjectItem(
+                googleServices.projectsList.get(position).getProjectName(),
+                googleServices.projectsList.get(position).getProjectId())));
     binding.projectsLoader.setVisibility(View.VISIBLE);
     googleServices.accessDriveFiles(adapter, binding);
     binding.projectsRv.setAdapter(adapter);
@@ -131,9 +136,11 @@ public class ProjectsFragment extends Fragment {
 
   private void setScanDeviceAdapter(
       DriveProjectsAdapter adapter,
-      @NonNull CommonRecyclerViewAdapter.OnItemClickListener onItemClickListener) {
+      @NonNull CommonRecyclerViewAdapter.OnItemClickListener onItemClickListener,
+      CommonRecyclerViewAdapter.OnItemLongClickListener onItemLongClickListener) {
     this.adapter = adapter;
     adapter.setOnItemClickListener(onItemClickListener);
+    adapter.setOnItemLongClickListener(onItemLongClickListener);
   }
 
   /** update projects screen when there is 0 projects on google drive account. */
@@ -146,6 +153,12 @@ public class ProjectsFragment extends Fragment {
     }
   }
 
+  /**
+   * This method is called when a project item is tapped. It performs to run project's command.
+   *
+   * @param fileContents
+   * @param projectName
+   */
   @SuppressLint("SetTextI18n")
   private void onTapProjectItem(String fileContents, String projectName) {
     String code = fileContents;
@@ -157,8 +170,30 @@ public class ProjectsFragment extends Fragment {
     barCodeScannerFragment.finalCode = code;
     binding.dpMessage.setText(
         projectName.replace(".js", "")
-            + " file detected.Start to execute the code on your OpenBot.");
+            + " file detected. Start to execute the code on your OpenBot.");
     projectsBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+  }
+
+  /**
+   * This method is triggered when a long tap is performed on a project item. It displays an
+   * AlertDialog with a confirmation message to delete the project.
+   *
+   * @param projectName
+   * @param projectId
+   */
+  private void onLongTapProjectItem(String projectName, String projectId) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+    builder.setTitle("Delete this file ?").setMessage("You cannot restore this file later.");
+    builder.setPositiveButton(
+        "Yes",
+        (dialog, id) -> {
+          // Perform the file deletion using googleServices.deleteFile() method
+          googleServices.deleteFile(projectId, projectName, adapter, binding);
+          binding.projectsLoader.setVisibility(View.VISIBLE);
+        });
+    builder.setNegativeButton("No", (dialog, id) -> dialog.cancel());
+    AlertDialog dialog = builder.create();
+    dialog.show();
   }
 
   private BottomSheetBehavior.BottomSheetCallback dpBottomSheetCallback =

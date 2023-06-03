@@ -34,6 +34,7 @@ public class BotFunctionUtils {
     "leftIndicatorOff",
     "ledBrightness",
     "switchDriveMode",
+    "setSpeed",
     "switchController",
     "navigationModel",
     "reachGoal",

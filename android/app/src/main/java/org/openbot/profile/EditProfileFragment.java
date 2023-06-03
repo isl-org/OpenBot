@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
 import org.openbot.R;
 import org.openbot.databinding.FragmentEditProfileBinding;
 
@@ -67,10 +66,12 @@ public class EditProfileFragment extends Fragment {
     binding.saveChanges.setOnClickListener(
         v -> {
           // Check if the firstName EditText is not empty.
-          if(!binding.firstName.getText().toString().isBlank()){
+          if (!binding.firstName.getText().toString().isBlank()) {
             // Get the user's first name and last name
             String userName =
-                    binding.firstName.getText().toString() + " " + binding.lastName.getText().toString();
+                binding.firstName.getText().toString()
+                    + " "
+                    + binding.lastName.getText().toString();
             // Call the updateProfile method with the selected image URI and the user's name
             updateProfile(selectedImageUri, userName);
           }
@@ -88,27 +89,31 @@ public class EditProfileFragment extends Fragment {
     launchImagePickerActivity.launch(i);
   }
 
-  TextWatcher firstNameTextWatcher = new TextWatcher() {
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+  TextWatcher firstNameTextWatcher =
+      new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-      // This method is called when the text is being changed.
-      // If the text becomes blank (empty), set a red border radius background.
-      // Otherwise, set a default border radius background.
-      if(s.toString().isBlank()){
-        Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.red_border_radius_input_text);
-        binding.firstName.setBackground(drawable);
-      } else {
-        Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.border_radius_input_text);
-        binding.firstName.setBackground(drawable);
-      }
-    }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+          // This method is called when the text is being changed.
+          // If the text becomes blank (empty), set a red border radius background.
+          // Otherwise, set a default border radius background.
+          if (s.toString().isBlank()) {
+            Drawable drawable =
+                ContextCompat.getDrawable(
+                    requireContext(), R.drawable.red_border_radius_input_text);
+            binding.firstName.setBackground(drawable);
+          } else {
+            Drawable drawable =
+                ContextCompat.getDrawable(requireContext(), R.drawable.border_radius_input_text);
+            binding.firstName.setBackground(drawable);
+          }
+        }
 
-    @Override
-    public void afterTextChanged(Editable s) {}
-  };
+        @Override
+        public void afterTextChanged(Editable s) {}
+      };
 
   /** Register for activity result using the ActivityResultLauncher. */
   ActivityResultLauncher<Intent> launchImagePickerActivity =
@@ -239,7 +244,6 @@ public class EditProfileFragment extends Fragment {
     binding.firstName.setText(firstName);
     binding.lastName.setText(lastName);
     binding.emailAddress.setText(user.getEmail());
-    assert binding.dateOfBirth != null;
     binding.dateOfBirth.setText(dateFormat.format(new Date()));
   }
 
