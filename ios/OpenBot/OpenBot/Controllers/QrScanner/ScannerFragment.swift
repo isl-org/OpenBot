@@ -154,7 +154,7 @@ class scannerFragment: CameraController {
                     createOverlayAlert();
                     Authentication.download(file: qrResult) { data, error in
                         self.alert.dismiss(animated: true);
-                        if let error = error {
+                        if error != nil {
                             self.hasSuccessfulScan = false
                             self.createErrorUI()
                             return;
@@ -170,7 +170,7 @@ class scannerFragment: CameraController {
                 } catch {
                     print("Error decoding JSON: \(error)")
                     createErrorUI();
-                    self.hasSuccessfulScan = true
+                    hasSuccessfulScan = true
                     return;
                 }
             }
@@ -208,18 +208,18 @@ class scannerFragment: CameraController {
      Creating Bottom sheet for QR scan Successful
      */
     private func createSuccessUI() {
-        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: projectName);
-        whiteSheet.startBtn.addTarget(self, action: #selector(self.start), for: .touchUpInside);
-        whiteSheet.cancelBtn.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
-        view.addSubview(self.whiteSheet);
+        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: projectName,isScannerFragment: true);
+        whiteSheet.startBtn.addTarget(self, action: #selector(start), for: .touchUpInside);
+        whiteSheet.cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside);
+        view.addSubview(whiteSheet);
     }
 
     /**
      Creating Bottom sheet for QR scan Error
      */
     private func createErrorUI() {
-        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: String());
-        whiteSheet.cancelButton.addTarget(self, action: #selector(self.scan), for: .touchUpInside);
+        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: String(),isScannerFragment: true);
+        whiteSheet.cancelButton.addTarget(self, action: #selector(scan), for: .touchUpInside);
         view.addSubview(whiteSheet);
     }
 
@@ -232,7 +232,7 @@ class scannerFragment: CameraController {
         let viewController = (storyboard.instantiateViewController(withIdentifier: "runOpenBot"));
         navigationController?.pushViewController(viewController, animated: true);
         whiteSheet.removeFromSuperview();
-        jsEvaluator(jsCode: commands);
+        _ = jsEvaluator(jsCode: commands);
     }
 
     /**

@@ -47,8 +47,8 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         createButtons();
-        automaticallyAdjustsScrollViewInsets = false
-
+//        automaticallyAdjustsScrollViewInsets = false
+        scrollView.contentInsetAdjustmentBehavior = .never
     }
 
     /**
@@ -242,7 +242,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     }
 
     /**
-     Function to create button named cancle and done.
+     Function to create button named cancel and done.
      */
     private func createButtons() {
         let cancelBtn = CustomButton(text: "Cancel", frame: CGRect(x: 17, y: email.bottom  +   adapted(dimensionSize: 60, to: .height), width: 147, height: 47), selector: #selector(cancel))
@@ -304,8 +304,8 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         }
 
         let maxSize: CGFloat = 1024 // maximum size of the image
-        var actualHeight = image.size.height
-        var actualWidth = image.size.width
+        let actualHeight = image.size.height
+        let actualWidth = image.size.width
         var maxHeight = maxSize
         var maxWidth = maxSize
 
@@ -328,7 +328,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         let compressedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 
-        guard let compressedImageData = compressedImage?.jpegData(compressionQuality: 0.5) else {
+        guard (compressedImage?.jpegData(compressionQuality: 0.5)) != nil else {
             print("Error compressing image")
             return
         }

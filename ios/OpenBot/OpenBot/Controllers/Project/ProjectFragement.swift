@@ -10,7 +10,7 @@ import GTMSessionFetcher
 
 class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     let shadowSheet = UIView(frame: UIScreen.main.bounds);
-    @IBOutlet weak var baseView =  UIView()
+    @IBOutlet weak var baseView = UIView()
     var animationView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4));
     @IBOutlet weak var qrScannerIcon: UIView!
     let bluetooth = bluetoothDataController.shared
@@ -32,7 +32,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     var deleteProjectView = UIView();
     var fileName: String = String()
     var projectId: String = String()
-    var  isLoading : Bool = false
+    var isLoading: Bool = false
+
     /**
        Function calls after view will loaded.
     */
@@ -309,7 +310,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      - Parameter fileName:
      */
     private func openBottomSheet(fileName: String) {
-        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: fileName);
+        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: fileName, isScannerFragment: false);
         whiteSheet.startBtn.addTarget(self, action: #selector(start), for: .touchUpInside);
         whiteSheet.cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside);
         tabBarController?.view.addSubview(whiteSheet);
@@ -371,7 +372,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
 
     }
-
 
 
     /**
@@ -582,9 +582,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
      */
     func returnCommandOfSelectedCell(projectId: String) -> String {
         for command in allProjectCommands {
-                if command.projectId == projectId && command.projectCommand != ""  {
-                    return command.projectCommand
-                }
+            if command.projectId == projectId && command.projectCommand != "" {
+                return command.projectCommand
+            }
         }
         var cmd = ""
         Authentication.download(fileId: projectId) { data, error in
@@ -632,10 +632,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                     self.animationView.frame.size.width = 0
                 })
             }, completion: nil)
+        } else {
+            stopAnimation();
         }
-       else{
-           stopAnimation();
-       }
 
     }
 

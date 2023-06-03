@@ -70,9 +70,9 @@ extension UIView {
 class BottomSheetView: UIView {
 
     override init(frame: CGRect) {
-        let newFrame = currentOrientation == .portrait ? CGRect(x: safeAreaLayoutValue.left, y: height - 200, width: width - safeAreaLayoutValue.left, height: 200) :
-                currentOrientation == .landscapeLeft ? CGRect(x: safeAreaLayoutValue.top, y: width - 200, width: height - safeAreaLayoutValue.top, height: 200) :
-                CGRect(x: safeAreaLayoutValue.bottom, y: width - 200, width: height - safeAreaLayoutValue.top - safeAreaLayoutValue.bottom, height: 200);
+        let newFrame = currentOrientation == .portrait ? CGRect(x: safeAreaLayoutValue.left, y: height - 250 , width: width - safeAreaLayoutValue.left, height: 250) :
+                currentOrientation == .landscapeLeft ? CGRect(x: safeAreaLayoutValue.top, y: width - 250, width: height - safeAreaLayoutValue.top, height: 250) :
+                CGRect(x: safeAreaLayoutValue.bottom, y: width - 250, width: height - safeAreaLayoutValue.top - safeAreaLayoutValue.bottom, height: 250);
         super.init(frame: newFrame)
         setup()
         NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
@@ -89,7 +89,7 @@ class BottomSheetView: UIView {
 
 
     private func setup() {
-        self.backgroundColor = Colors.bdColor;
+        backgroundColor = Colors.bdColor;
         layer.cornerRadius = 30;
         layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
     }
@@ -99,10 +99,10 @@ class BottomSheetView: UIView {
         super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection != nil && previousTraitCollection!.verticalSizeClass != traitCollection.verticalSizeClass {
             if traitCollection.verticalSizeClass == .compact {
-                frame = currentOrientation == .landscapeLeft ? CGRect(x: safeAreaLayoutValue.top, y: width - 200, width: height - safeAreaLayoutValue.top, height: 200) :
-                        CGRect(x: safeAreaLayoutValue.bottom, y: width - 200, width: height - safeAreaLayoutValue.top - safeAreaLayoutValue.bottom, height: 200);
+                frame = currentOrientation == .landscapeLeft ? CGRect(x: safeAreaLayoutValue.top, y: width - 250, width: height - safeAreaLayoutValue.top, height: 250) :
+                        CGRect(x: safeAreaLayoutValue.bottom, y: width - 250, width: height - safeAreaLayoutValue.top - safeAreaLayoutValue.bottom, height: 250);
             } else {
-                frame = CGRect(x: safeAreaLayoutValue.left, y: height - 200, width: width - safeAreaLayoutValue.left, height: 200)
+                frame = CGRect(x: safeAreaLayoutValue.left, y: height - 250, width: width - safeAreaLayoutValue.left, height: 250)
             }
         }
     }
@@ -112,13 +112,11 @@ class BottomSheetView: UIView {
             if oldValue == .landscapeLeft && orientationDidChanged == .landscapeRight {
                 // The device orientation has changed from landscape left to landscape right
                 // Do something here
-                frame = CGRect(x: safeAreaLayoutValue.bottom, y: width - 200, width: height - safeAreaLayoutValue.top - safeAreaLayoutValue.bottom, height: 200)
-
+                frame = CGRect(x: safeAreaLayoutValue.bottom, y: width - 250, width: height - safeAreaLayoutValue.top - safeAreaLayoutValue.bottom, height: 250)
             }
             if oldValue == .landscapeRight && orientationDidChanged == .landscapeLeft {
-
                 // The device orientation has changed from landscape right to landscape left
-                frame = CGRect(x: safeAreaLayoutValue.top, y: width - 200, width: height - safeAreaLayoutValue.top, height: 200)
+                frame = CGRect(x: safeAreaLayoutValue.top, y: width - 250, width: height - safeAreaLayoutValue.top, height: 250)
 
             }
         }
@@ -158,11 +156,10 @@ class CustomView: UIView {
 }
 
 class openCodeRunBottomSheet: UIView {
-    let startBtn = UIButton(frame: CGRect(x: 19, y: 120, width: 120, height: 40));
+    let startBtn = UIButton(frame: CGRect(x: 19, y: 150, width: 120, height: 40));
     let bottomSheet = BottomSheetView(frame: .zero);
-    let cancelBtn = UIButton(frame: CGRect(x: 160, y: 120, width: 120, height: 40));
-//    let scanQr = UIButton(frame: CGRect(x: 19, y: 120, width: 120, height: 40));
-    let cancelButton = UIButton(frame: CGRect(x: 19, y: 120, width: 120, height: 40));
+    let cancelBtn = UIButton(frame: CGRect(x: 160, y: 150, width: 120, height: 40));
+    let cancelButton = UIButton(frame: CGRect(x: 19, y: 150, width: 120, height: 40));
 
     var fileName: String = "";
 
@@ -174,7 +171,7 @@ class openCodeRunBottomSheet: UIView {
         super.init(coder: aDecoder)
     }
 
-    convenience init(frame: CGRect, fileName: String) {
+    convenience init(frame: CGRect, fileName: String,isScannerFragment : Bool) {
         self.init(frame: frame);
         self.fileName = fileName;
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
@@ -193,7 +190,7 @@ class openCodeRunBottomSheet: UIView {
             createErrorUI(fileName : fileName)
             break;
         default :
-            createSuccessUI()
+            createSuccessUI(isScannerFragment: isScannerFragment)
             break;
         }
     }
@@ -216,7 +213,7 @@ class openCodeRunBottomSheet: UIView {
     }
 
     private func setup() {
-        self.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        backgroundColor = UIColor.black.withAlphaComponent(0.6)
     }
 
     private func createBottomSheet() {
@@ -239,30 +236,41 @@ class openCodeRunBottomSheet: UIView {
     /**
      Creating Bottom sheet for QR scan Successful
      */
-    private func createSuccessUI() {
+    private func createSuccessUI(isScannerFragment : Bool) {
         DispatchQueue.main.async {
-            self.createBottomSheetHeading()
-            self.createBottomSheetMsg(fileName: self.fileName);
+            if isScannerFragment {
+                self.createBottomSheetHeading()
+            }
+            self.createBottomSheetMsg(fileName: self.fileName,isScannerFragment : isScannerFragment);
             self.createStartBtn()
             self.createCancelBtn();
+
+
         }
 
     }
 
     private func createBottomSheetHeading() {
         let heading = CustomLabel(text: "QR scanned successfully",
-                fontSize: 18, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 19, y: 23, width: 290, height: 40));
+                fontSize: 18, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 19, y: 33, width: 290, height: 40));
         heading.font = HelveticaNeue.bold(size: 15);
         bottomSheet.addSubview(heading);
     }
 
-    private func createBottomSheetMsg(fileName: String) {
-        let firstMsg = CustomLabel(text: "\(fileName) file detected. Start to execute the code",
-                fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 19, y: 57, width: 320, height: 40));
-        let secondMsg = CustomLabel(text: "on your OpenBot.",
-                fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 19, y: 77, width: 100, height: 40))
-        bottomSheet.addSubview(firstMsg);
-        bottomSheet.addSubview(secondMsg);
+    private func createBottomSheetMsg(fileName: String,isScannerFragment : Bool) {
+        let message = "\(fileName) file detected. Start to execute the code on your OpenBot"
+        let font = UIFont(name: "HelveticaNeue", size: 16)!
+        _ = (message as NSString).boundingRect(with: CGSize(width: 320, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
+        let msg =   isScannerFragment == true ? CustomLabel(text: message, fontSize: 15,
+                fontColor: Colors.textColor ?? .black,
+                frame:CGRect(x: 19, y: 87, width: 320, height: 40)) :
+                CustomLabel(text: message, fontSize: 15,
+                        fontColor: Colors.textColor ?? .black,
+                        frame:CGRect(x: 19, y: 33, width: 320, height: 40));
+        bottomSheet.addSubview(msg);
+        msg.numberOfLines = 2
+        msg.textAlignment = .left
+        msg.font = font
     }
 
     /**
