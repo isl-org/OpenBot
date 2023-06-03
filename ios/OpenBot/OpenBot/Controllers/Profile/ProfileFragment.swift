@@ -45,6 +45,12 @@ class profileFragment: UIViewController {
 
     }
 
+    /**
+     Override function calls when orientation of phone changes
+     - Parameters:
+       - size:
+       - coordinator:
+     */
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if currentOrientation == .portrait {
@@ -174,6 +180,10 @@ class profileFragment: UIViewController {
         createShadowSheet();
     }
 
+    /**
+     handler function on cancel button of log out popup pressed
+     - Parameter sender:
+     */
     @objc func cancel(_ sender: UIButton) {
         shadowSheet.removeFromSuperview();
         logoutView.removeFromSuperview();
@@ -211,6 +221,10 @@ class profileFragment: UIViewController {
         Authentication();
     }
 
+    /**
+     notification handler on google sign in
+     - Parameter notification:
+     */
     @objc func googleSignIn(_ notification: Notification) {
         updateViewsVisibility()
     }
@@ -227,6 +241,10 @@ class profileFragment: UIViewController {
         present(alert, animated: true, completion: nil)
     }
 
+
+    /**
+     function to update the UI positions in landscape and portrait mode
+     */
     private func updateUIConstraints(){
         if currentOrientation == .portrait{
             shadowSheet.frame = UIScreen.main.bounds

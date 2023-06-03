@@ -18,12 +18,18 @@ class projectCollectionViewCell : UICollectionViewCell{
         setupLongPressGesture()
     }
 
+    /**
+     Function to setup long press gesture
+     */
     private func setupLongPressGesture() {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
         addGestureRecognizer(longPressGesture)
     }
 
-
+    /**
+     Function calls on long press of cell
+     - Parameter gestureRecognizer:
+     */
     @objc private func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if gestureRecognizer.state == .began {
             // Execute the long press action closure if it's set
@@ -48,6 +54,12 @@ class projectCollectionViewCell : UICollectionViewCell{
     static func nib() -> UINib {
         UINib(nibName: "projectCollectionViewCell", bundle: nil);
     }
+
+    /**
+     private function to formate the date into yyyy-MM-dd'T'HH:mm:ss.SSSZ formate
+     - Parameter isoDate:
+     - Returns:
+     */
     private func dateFormatter(isoDate : String)->String{
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")

@@ -56,6 +56,13 @@ class BluetoothTable: UITableViewController {
         return 44
     }
 
+    /**
+     Delegate to setup each cell of table
+     - Parameters:
+       - tableView:
+       - indexPath:
+     - Returns:
+     */
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath) as! BluetoothTableViewCell
         let peripheral = bluetooth.peripherals[indexPath.row]
@@ -86,6 +93,10 @@ class BluetoothTable: UITableViewController {
         tableView.reloadData()
     }
 
+    /**
+     Handler function of connect button
+     - Parameter sender:
+     */
     @objc func connect(sender: UIButton) {
 
         if isBluetoothConnected {
@@ -99,6 +110,9 @@ class BluetoothTable: UITableViewController {
         tableView.reloadData()
     }
 
+    /**
+     Function to customise the navigation bar
+     */
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
@@ -107,6 +121,10 @@ class BluetoothTable: UITableViewController {
         }
     }
 
+    /**
+        function remove current view controller from the navigation controller
+     - Parameter sender:
+     */
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }

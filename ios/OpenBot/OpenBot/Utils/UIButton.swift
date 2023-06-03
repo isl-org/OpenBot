@@ -20,6 +20,9 @@ extension UIButton {
     }
 }
 
+/**
+ Created class of button used inside the project
+ */
 class CustomButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)

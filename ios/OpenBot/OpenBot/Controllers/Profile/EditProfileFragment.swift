@@ -51,6 +51,12 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
 
     }
 
+    /**
+     override function calls on rotation of phone changes, this method is used to update the UI in landscape as well as portrait mode
+     - Parameters:
+       - size:
+       - coordinator:
+     */
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
@@ -144,7 +150,15 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         textField.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
     }
 
-
+    /**
+     Delegate method called when character in an UITextField changes. Here, this method is checking whether first name
+     of user is empty or not
+     - Parameters:
+       - textField:
+       - range:
+       - string:
+     - Returns:
+     */
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
         if newText?.count == 0 {
@@ -367,11 +381,17 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         alert.dismiss(animated: true);
     }
 
+    /**
+     Toast message on error while loading profile picture
+     */
     func imageLoadFailed() {
         showToast("Error while loading profile picture",icon: UIImage(named: "check")!);
         alert.dismiss(animated: true);
     }
 
+    /**
+     Function to customize navigation bar
+     */
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
@@ -380,6 +400,10 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         }
     }
 
+    /**
+     Function calls on back button pressed
+     - Parameter sender:
+     */
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }

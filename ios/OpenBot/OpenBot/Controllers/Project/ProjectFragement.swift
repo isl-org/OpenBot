@@ -10,7 +10,7 @@ import GTMSessionFetcher
 
 class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     let shadowSheet = UIView(frame: UIScreen.main.bounds);
-    @IBOutlet weak var baseView: UIView!
+    @IBOutlet weak var baseView =  UIView()
     var animationView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4));
     @IBOutlet weak var qrScannerIcon: UIView!
     let bluetooth = bluetoothDataController.shared
@@ -38,7 +38,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     */
     override func viewDidLoad() {
         super.viewDidLoad()
-        baseView.addSubview(animationView);
+        baseView?.addSubview(animationView);
         animationView.backgroundColor = Colors.title
         view.addSubview(signInView);
         signInView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: width, height: height / 2)
@@ -225,6 +225,10 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         navigationController?.pushViewController(viewController, animated: true);
     }
 
+    /**
+     Function to handle and open webview controller on webview tap
+     - Parameter sender:
+     */
     @objc func loadWebView(_ sender: Any) {
         let storyboard = UIStoryboard(name: "openCode", bundle: nil)
         let viewController = (storyboard.instantiateViewController(withIdentifier: "webView"))
@@ -300,7 +304,10 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
     }
 
-
+    /**
+     Function to open open bottom sheet popup
+     - Parameter fileName:
+     */
     private func openBottomSheet(fileName: String) {
         whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: fileName);
         whiteSheet.startBtn.addTarget(self, action: #selector(start), for: .touchUpInside);
@@ -328,8 +335,11 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
     }
 
+    /**
+     function to handle sign in and calling authentication class constructor
+     */
     @objc func signIn() {
-        Authentication.init()
+        _ = Authentication.init()
     }
 
     /**
@@ -376,7 +386,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                         for file in files {
                             if file.mimeType == "text/javascript" {
                                 let project = ProjectItem(projectName: Authentication.returnFileName(name: file.name ?? "Unknown"), projectDate: file.modifiedTime?.stringValue ?? "", projectId: file.identifier ?? "")
-                                if !self.tempAllProjects.contains { $0.projectId == project.projectId } {
+                                if !self.tempAllProjects.contains(where: { $0.projectId == project.projectId }) {
                                     self.tempAllProjects.append(project);
                                 }
                             }
@@ -451,7 +461,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         let viewController = (storyboard.instantiateViewController(withIdentifier: "runOpenBot"));
         navigationController?.pushViewController(viewController, animated: true);
         bottomSheet.removeFromSuperview();
-        jsEvaluator(jsCode: command);
+        _ = jsEvaluator(jsCode: command);
     }
 
     /**
@@ -578,7 +588,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
         var cmd = ""
         Authentication.download(fileId: projectId) { data, error in
-            if let error = error {
+            if error != nil {
 //                 completion(nil, error);
                 cmd = ""
             }
@@ -591,6 +601,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     }
 
+    /**
+     Function to remove a project which are not on the drive from allProjects
+     */
     private func removeExtraProjectsFromAllProjectData() {
         for i in stride(from: allProjectCommands.count - 1, through: 0, by: -1) {
             let itemID = allProjectCommands[i].projectId
@@ -601,15 +614,18 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     }
 
 
+    /**
+     Function to start the loader
+     */
     func animateFloatingView() {
         if isLoading {
-            baseView.backgroundColor = .gray;
+            baseView?.backgroundColor = .gray;
             let animationDuration: TimeInterval = 1.25
             let animationDelay: TimeInterval = 0.5
             UIView.animate(withDuration: animationDuration, delay: animationDelay, options: [.curveEaseInOut, .repeat], animations: {
                 // Expand animation
                 UIView.animate(withDuration: animationDuration / 2, delay: 0, options: [.curveEaseInOut, .repeat], animations: {
-                    self.animationView.frame.size.width = self.baseView.frame.width
+                    self.animationView.frame.size.width = self.baseView?.frame.width ?? width
                 }, completion: { _ in
                     // Reset transform and size
                     self.animationView.transform = CGAffineTransform(translationX: 0, y: 0)
@@ -623,11 +639,17 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     }
 
+    /**
+     Function to stop the loader
+     */
     func stopAnimation() {
         animationView.layer.removeAllAnimations()
-        baseView.backgroundColor = traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white;
+        baseView?.backgroundColor = traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white;
     }
 
+    /**
+     Function to hide all UI views
+     */
     private func hideAll() {
         signInView.isHidden = true;
         noProjectMessageView.isHidden = true;
@@ -652,7 +674,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         shadowSheet.addSubview(deleteProjectView);
     }
 
-
+    /**
+     function to update the UI of shadow sheet and delete project popup
+     */
     private func updateUIConstraints() {
         if currentOrientation == .portrait {
             shadowSheet.frame = UIScreen.main.bounds
@@ -663,6 +687,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
     }
 
+    /***
+     Function to create ui of delete project popup
+     */
     private func createDeleteProject() {
         if currentOrientation == .portrait {
             deleteProjectView.frame = CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 84, width: width * 0.90, height: 168);
@@ -686,15 +713,23 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         deleteProjectView.addSubview(deleteBtn);
     }
 
+    /**
+     function calls after tap on cancel button of delete project popup
+     - Parameter sender:
+     */
     @objc func cancelDeletePopup(_ sender: UIButton) {
         shadowSheet.removeFromSuperview();
     }
 
+    /**
+
+     - Parameter sender:
+     */
     @objc func deleteFile(_ sender: UIButton) {
         shadowSheet.removeFromSuperview()
         isLoading = true;
         animateFloatingView();
-        deleteProject(projectName: fileName, projectId: self.projectId) { error, deleteCount in
+        deleteProject(projectName: fileName, projectId: projectId) { error, deleteCount in
             if deleteCount != 0 {
                 self.stopAnimation();
                 self.reloadProjects();
@@ -703,12 +738,19 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
     }
 
+    /**
+     Function to handle deletion of a project from google drive
+     - Parameters:
+       - projectName:
+       - projectId:
+       - completion: returns
+     */
     private func deleteProject(projectName: String, projectId: String, completion: @escaping (Error?, Int) -> Void) {
         var deletionError: Error? = nil
         let dispatchGroup = DispatchGroup()
         var deleteCount: Int = 0;
         dispatchGroup.enter()
-        self.authentication.getIdOfXmlFile(name: projectName) { fileId, error in
+        authentication.getIdOfXmlFile(name: projectName) { fileId, error in
             if let error = error {
                 print("Error while deleting file", error)
             }
@@ -731,7 +773,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         }
 
         dispatchGroup.enter()
-        self.authentication.deleteFile(fileId: projectId) { error in
+        authentication.deleteFile(fileId: projectId) { error in
             if let error = error {
                 // Handle the deletion error
                 deletionError = error
@@ -754,6 +796,10 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
 extension UserDefaults {
 
+    /**
+     Static method to get all projects from user defaults
+     - Returns:
+     */
     static func getAllProjectFromUserDefault() -> [ProjectItem] {
         if let data = UserDefaults.standard.data(forKey: "allProjects") {
             do {
@@ -767,6 +813,10 @@ extension UserDefaults {
         return [];
     }
 
+    /**
+     Static method to set all projects to user defaults
+     - Parameter allProjects:
+     */
     static func setAllProjectsToUserDefaults(allProjects: [ProjectItem]) {
         do {
             let encoder = JSONEncoder()
@@ -777,6 +827,10 @@ extension UserDefaults {
         }
     }
 
+    /**
+     Static function to set all projects data to user defaults
+     - Parameter allProjectData:
+     */
     static func setAllProjectDataToUserDefault(allProjectData: [ProjectData]) {
         do {
             let encoder = JSONEncoder()
@@ -787,6 +841,10 @@ extension UserDefaults {
         }
     }
 
+    /**
+     Static function to return all projects from user defaults
+     - Returns:
+     */
     static func getALlProjectsDataFromUserDefaults() -> [ProjectData] {
         if let data = UserDefaults.standard.data(forKey: "allProjectCommands") {
             do {

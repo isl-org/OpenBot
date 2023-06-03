@@ -8,6 +8,10 @@ class runRobot : UIViewController {
     @IBOutlet weak var stopRobot: UIButton!
     @IBOutlet weak var commandMessage: UILabel!
     let bluetooth = bluetoothDataController.shared
+
+    /**
+      override function calls when view of controller loaded
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
         stopRobot.backgroundColor = Colors.title;
@@ -23,6 +27,12 @@ class runRobot : UIViewController {
         super.viewDidAppear(animated)
     }
 
+    /**
+     override function calls after current controller view disappear
+     Here we stopping the car, removing all notifications
+
+     - Parameter animated:
+     */
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         NotificationCenter.default.post(name: .cancelThread, object: nil)
@@ -30,7 +40,10 @@ class runRobot : UIViewController {
         NotificationCenter.default.removeObserver(self);
     }
 
-
+    /**
+     updating current commands
+     - Parameter notification:
+     */
     @objc func updateCommandMsg(_ notification: Notification) {
         DispatchQueue.main.async {
             let message = notification.object as! String
@@ -43,16 +56,28 @@ class runRobot : UIViewController {
 
     @IBOutlet weak var runRobotConstraints: NSLayoutConstraint!
     let factor = 0.8;
+    /**
+     override function calls when the current orientation changed
+     - Parameters:
+       - size:
+       - coordinator:
+     */
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
        updateConstraints();
     }
 
+    /**
+     Function calls on cancel button of screen tapped. This stop the execution of blockly code
+     */
     @objc func cancel(){
         NotificationCenter.default.post(name: .cancelThread, object: nil);
         NotificationCenter.default.post(name: .commandName, object: "\(Strings.cancel)ed");
     }
 
+    /**
+     Function to setup the navigation bar
+     */
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
@@ -61,10 +86,17 @@ class runRobot : UIViewController {
         }
     }
 
+    /**
+     Function to remove current viewController from navigation stack
+     - Parameter sender:
+     */
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
 
+    /**
+     Function to update the constraints of image
+     */
     fileprivate func updateConstraints(){
         if currentOrientation == .portrait{
             runRobotConstraints.constant = 0;

@@ -5,7 +5,9 @@
 import Foundation
 import UIKit
 
-
+/**
+    structure of different modes of openBot
+ */
 public struct ModeItem {
     var label: String;
     var icon: UIImage;
