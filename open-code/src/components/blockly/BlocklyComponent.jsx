@@ -195,8 +195,10 @@ function BlocklyComponent(props) {
         // Load XML code into the workspace if it exists, otherwise load initial XML code
         if (currentProjectXml) {
             Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(currentProjectXml), primaryWorkspace.current);
+            Blockly.getMainWorkspace().clearUndo() //to clear undoStack on loading blocks
         } else {
             Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(initialXml), primaryWorkspace.current);
+            Blockly.getMainWorkspace().clearUndo() //to clear undoStack on loading blocks
         }
 
         // Clean up the workspace when the component unmounts

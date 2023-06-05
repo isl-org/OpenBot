@@ -103,13 +103,44 @@ export const BottomBar = () => {
         const {name} = e.target;
         setButtonSelected(name);
 
+        //to verify if undoStack has items, or if both undo and redo are empty (first Project)
+        const isUndo = () => {
+            const workspace = Blockly.getMainWorkspace();
+            if (workspace) {
+                return workspace.undoStack_.length !== 0 ||
+                    (workspace.undoStack_.length === 0 && workspace.redoStack_.length === 0);
+            }
+            return false;
+        };
+
+        //to verify if redoStack has items
+        const isRedo = () => {
+            const workspace = Blockly.getMainWorkspace();
+            if (workspace) {
+                return workspace.redoStack_.length !== 0;
+            }
+            return false;
+        };
+
         switch (name) {
             case "redo": {
-                Blockly.getMainWorkspace().undo(true);
+                const workspace = Blockly.getMainWorkspace();
+                if (!workspace) {
+                    return;
+                }
+                if (isRedo()) {
+                    workspace.undo(true);
+                }
                 break;
             }
             case "undo": {
-                Blockly.getMainWorkspace().undo(false);
+                if (isUndo()) {
+                    const workspace = Blockly.getMainWorkspace();
+                    if (workspace && workspace.getUndoStack().length === 0) {
+                        return;
+                    }
+                    workspace.undo(false);
+                }
                 break;
             }
             case "minus": {
@@ -296,7 +327,7 @@ function GenerateCodeButton(params) {
                          width: "1.3rem",
                          cursor: "pointer",
                          paddingRight: isMobile ? "5px" : isMobileLandscape ? "8px" : "",
-                         zIndex:"1"
+                         zIndex: "1"
                      }}
                      alt={"arrow"}/>
             </div>

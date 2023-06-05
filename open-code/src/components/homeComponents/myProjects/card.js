@@ -66,7 +66,6 @@ function Card(props) {
             //current project will first get store in current
             localStorage.setItem(localStorageKeys.currentProject,"")
         }
-
         setDrawer(false);
         setIsError(false);
         try {
