@@ -55,6 +55,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
         layout.collectionView?.layer.shadowOpacity = 1
+        projectCollectionView.showsVerticalScrollIndicator = false
         if currentOrientation == .portrait {
             layout.itemSize = resized(size: CGSize(width: width * 0.42, height: width * 0.42), basedOn: dimension)
         } else {
@@ -695,7 +696,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         } else {
             deleteProjectView.frame = CGRect(x: height / 2 - 160, y: width / 2 - 84, width: width * 0.90, height: 168);
         }
-        deleteProjectView.backgroundColor = Colors.lightBlack;
+        deleteProjectView.backgroundColor =  traitCollection.userInterfaceStyle == .dark ? Colors.lightBlack : .white;
         let deleteThisFileLabel = CustomLabel(text: "Delete this file?", fontSize: 18, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 24, y: 22, width: 150, height: 40));
         let msg = CustomLabel(text: "You cannot restore this file later.\n", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 24, y: deleteThisFileLabel.frame.origin.y + 35, width: width, height: 40));
         let cancelBtn = UIButton(frame: CGRect(x: 80, y: msg.frame.origin.y + 50, width: 100, height: 35));

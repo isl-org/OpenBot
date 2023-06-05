@@ -67,7 +67,7 @@ class projectCollectionViewCell : UICollectionViewCell{
         let date = dateFormatter.date(from: isoDate)
 
         let dateFormatterOutput = DateFormatter()
-        dateFormatterOutput.dateFormat = "dd MMMM yyyy"
+        dateFormatterOutput.dateFormat = "MMMM, dd yyyy"
         let formattedDate = dateFormatterOutput.string(from: date!)
       return formattedDate
     }

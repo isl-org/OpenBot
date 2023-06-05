@@ -258,7 +258,7 @@ class openCodeRunBottomSheet: UIView {
     }
 
     private func createBottomSheetMsg(fileName: String,isScannerFragment : Bool) {
-        let message = "\(fileName) file detected. Start to execute the code on your OpenBot"
+        let message = "\(fileName) file detected. Start to execute the code on your OpenBot."
         let font = UIFont(name: "HelveticaNeue", size: 16)!
         _ = (message as NSString).boundingRect(with: CGSize(width: 320, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
         let msg =   isScannerFragment == true ? CustomLabel(text: message, fontSize: 15,
@@ -288,8 +288,11 @@ class openCodeRunBottomSheet: UIView {
      Method to create Cancel button and reload the Scanner
      */
     private func createCancelBtn() {
-        cancelBtn.backgroundColor = Colors.title;
         cancelBtn.setTitle("Cancel", for: .normal);
+        cancelBtn.layer.borderWidth = 1;
+        cancelBtn.layer.borderColor = Colors.title?.cgColor;
+        cancelBtn.clipsToBounds = true;
+        cancelButton.setTitleColor(traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, for: .normal)
         cancelBtn.addTarget(nil, action: #selector(cancel), for: .touchUpInside)
         cancelBtn.layer.cornerRadius = 10;
         bottomSheet.addSubview(cancelBtn);
@@ -355,7 +358,7 @@ class openCodeRunBottomSheet: UIView {
      */
 
     private func createCancel(btnName : String) {
-        cancelButton.backgroundColor = Colors.title;
+//        cancelButton.backgroundColor = Colors.title;
         cancelButton.setTitle(btnName, for: .normal);
         cancelButton.addTarget(nil, action: #selector(scan), for: .touchUpInside);
         cancelButton.layer.cornerRadius = 10;
