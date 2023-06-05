@@ -10,6 +10,7 @@ import BlueButton from "../../buttonComponent/blueButtonComponent";
 import {Constants, errorToast, Themes} from "../../../utils/constants";
 import Compressor from 'compressorjs';
 import {StoreContext} from "../../../context/context";
+import heic2any from "heic2any";
 
 
 /**
@@ -47,15 +48,35 @@ export function EditProfileModal(props) {
 
 
     //compressing the profile image
-    function handleCompressFile(e) {
+    async function handleCompressFile(e) {
         const file = e.target.files[0];
-        new Compressor(file, {
+        let convertedFile = file;
+        console.log("filetype::", file);
+
+        if (file.type === 'image/heic' || file.type === 'image/heif') {
+            try {
+                const convertedImage = await heic2any({
+                    blob: file,
+                    toType: 'image/jpeg', // Convert HEIC to JPEG
+                });
+
+                convertedFile = new File([convertedImage], 'converted.jpg', { type: 'image/jpeg' });
+
+                console.log("convertedimg", convertedFile);
+            } catch (error) {
+                // Handle conversion error
+                console.error('Error converting HEIC image:', error);
+                return;
+            }
+        }
+
+        new Compressor(convertedFile, {
             quality: 0.2, // Set the compression quality (0 to 1)
             success(result) {
-                setFile(result)
+                setFile(result);
             },
             error(err) {
-                errorToast(err.message);
+                setFile(convertedFile);
                 console.log(err.message);
             },
         });
@@ -63,11 +84,13 @@ export function EditProfileModal(props) {
 
     //handle image change
     function handleChange(e) {
-        handleCompressFile(e);
-        setUserDetail({
-            ...userDetails,
-            photoUrl: URL.createObjectURL(e.target.files[0])
-        })
+        handleCompressFile(e).then(() =>
+            setUserDetail({
+                ...userDetails,
+                photoUrl: URL.createObjectURL(e.target.files[0])
+            })
+        );
+
     }
 
     //handle name change
@@ -131,7 +154,8 @@ export function EditProfileModal(props) {
                     {isLoader ?
                         <LoaderComponent color="blue" height="20" width="20"/> :
                         <>
-                            <input ref={inputRef} style={{display: "none",}} type="file" onChange={handleChange}/>
+                            <input ref={inputRef} style={{display: "none",}} type="file" accept="image/*,.heic,.heif"
+                                   onChange={handleChange}/>
                             <img onClick={() => inputRef.current?.click()} alt={"edit profile icon"}
                                  className={styles.editProfileIcon} src={Images.editProfileIcon}/>
                         </>

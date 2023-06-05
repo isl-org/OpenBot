@@ -205,7 +205,6 @@ export function EditProjectPopUp(params) {
     const popUpRef = useRef(null);// Create a reference to the popup element for detecting clicks outside the popup.
     const location = useLocation();
 
-
     // Use the useEffect hook to detect clicks outside the popup.
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -326,7 +325,7 @@ function ImageWithArrow(params) {
             }
 
             {/*name*/}
-            {!isMobile && <WhiteText extraStyle={styles.extraStyles} text={user?.displayName.split(" ")[0]}/>}
+            {!isMobile && <WhiteText extraStyle={styles.extraStyles} text={user?.displayName?.split(" ")[0]}/>}
 
             {/*dropdown arrow*/}
             <img alt="arrow button" className={styles.icon} src={Images.downArrowIcon}
