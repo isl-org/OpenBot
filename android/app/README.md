@@ -12,9 +12,9 @@ The app starts with a Home screen that shows all available screens to control yo
 
 <p align="left">
 <img style="padding-right: 2%;" src="../../docs/images/screen_main.gif" alt="Main Menu" width="24.5%"/>
-<img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="24.5%"/>
-<img src="../../docs/images/dialog_stream_mode.jpg" alt="Settings Menu" width="24.5%"/>
-<img src="../../docs/images/dialog_connectivity_mode.jpg" alt="Settings Menu" width="24.5%"/>
+<img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="24%"/>
+<img src="../../docs/images/dialog_stream_mode.jpg" alt="Settings Menu" width="24%"/>
+<img src="../../docs/images/dialog_connectivity_mode.jpg" alt="Settings Menu" width="24%"/>
 </p>
 
 ### Settings Menu
@@ -373,9 +373,12 @@ If a model is active, the inference speed in [ms] will be displayed next to the 
 ### Projects Screen
 
 The Projects Screen displays a list of your OpenBot Playground projects if you are signed in with your Google account. You can execute these projects to connect with your OpenBot, or scan their QR codes by clicking the scanner icon in the top right corner. If you are not signed in, the screen will display a Google Sign-In button, but you can still scan your project's QR code without signing in. If you get the message `Oops, no project found` on the screen after signing in, make sure that the account has projects stored on Google Drive.
+
+If you don't see your latest projects in the project list, you can reload them by pulling down on the project screen.
 <p align="left">
 <img src="../../docs/images/projects_tab_screen.gif" alt="Project Screen" width="25%"/>
-<img src="../../docs/images/no_projects_found.jpg" alt="No project screen" width="25%"/>
+<img src="../../docs/images/no_projects_found.jpg" alt="No project screen" width="26.5%"/>
+<img src="../../docs/images/reload_projects.gif" alt="Reload project screen" width="25%"/>
 </p>
 
 - **Google Drive projects**: To run a Google Drive project, tap on the project you want to execute and wait for the contents of the project file to be read. If the file is successfully retrieved without any errors, a pop-up will appear with two buttons: `Start` and `Cancel`. The pop-up will also display the name of the project you are about to run. To execute the project, click on the Start button. If you want to stop the activity, click on the Cancel button. If you receive a pop-up message stating `Something went wrong`, there may be an error with the Google Drive file. To resolve this issue, refresh the project screen by pulling down and then repeating the same process.
@@ -384,11 +387,15 @@ The Projects Screen displays a list of your OpenBot Playground projects if you a
 - **Qr code scanner**: To scan the QR code of a Playground project, click on the QR code icon located in the top right corner of the screen. Grant camera access to the app so that it can scan the QR code. Once the code is scanned, wait for the contents of the file to be read. If the file is retrieved successfully without any errors, a pop-up will appear with two buttons: `Start` and `Cancel`. The pop-up will also display the name of the project you are about to run. To execute the project, click on the Start button. If you want to stop the activity, click on the Cancel button. If you receive a pop-up message stating `Something went wrong`, there may be an error with the Google Drive file. To resolve this issue, generate a new QR code in Playground and repeat the process.
 
 
-- **Executing Project**: If your OpenBot Playground project runs successfully, a screen with the message `Your code is executing...` will appear.
+- **Executing Project**: If your OpenBot Playground project runs successfully, the screen will display the names of code blocks along with a stop button that can be used to stop the execution of playground block commands.
+
+
+- **Delete Project**: To delete a project, long-press on the project you wish to delete. This will bring up a popup screen asking to confirm the deletion. Tap on 'Yes' to delete the project.
 
 <p align="left">
 <img src="../../docs/images/google_drive_projects_execute.gif" alt="Google Drive project execute" width="25%"/>
 <img src="../../docs/images/qr_code_scanner_projects_execute.gif" alt="Qr code scanner project execute" width="25%"/>
+<img src="../../docs/images/delete_project.jpg" alt="Delete Project" width="26.5%"/>
 </p>
 
 ### Profile Screen
@@ -409,6 +416,15 @@ If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edi
 <p>
 <img src="../../docs/images/edit_profile_screen.jpg" alt="Edit profile screen" width="25%"/>
 <img src="../../docs/images/logout_dialog_box.jpg" alt="Logout dialog box" width="25%"/>
+</p>
+
+### OpenBot PlayGround Screen
+
+To access OpenBot Playground services, click on the OpenBot Playground icon located at the top of the screen in the toolbar options. If you want to learn more about OpenBot Playground, [click here](https://github.com/3dwesupport/OpenBot/blob/react-blockly/open-code/README.md).
+
+<p>
+<img src="../../docs/images/playground_sign-in.gif" alt="openBot playground Sign-in" width="25%"/>
+<img src="../../docs/images/playground_services.gif" alt="openBot playground Sign-in" width="25%"/>
 </p>
 ## Add your own fragment
 
