@@ -220,6 +220,20 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.follow(object:object);
                 }
 
+                let toggleLed : @convention(block) (String) -> Void = {(status) in
+                    switch status {
+                    case "ON" :
+                        self.runOpenBotThreadClass?.setLedBrightness(factor: 100);
+                        break;
+                    case "OFF" :
+                        self.runOpenBotThreadClass?.setLedBrightness(factor: 0);
+                        break;
+                    default :
+                        self.runOpenBotThreadClass?.setLedBrightness(factor: 100);
+                    }
+
+                }
+
 
 
                 context.setObject(moveForward,
@@ -308,6 +322,8 @@ class jsEvaluator {
                         forKeyedSubscript: "reachGoal" as NSString)
                 context.setObject(follow,
                         forKeyedSubscript: "follow" as NSString);
+                context.setObject(toggleLed,
+                        forKeyedSubscript: "toggleLed" as NSString);
                 context.setObject(reachPosition,
                         forKeyedSubscript: "reachPosition" as NSString);
                 /// evaluateScript should be called below of setObject
