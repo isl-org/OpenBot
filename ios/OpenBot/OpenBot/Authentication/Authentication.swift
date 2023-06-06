@@ -27,7 +27,6 @@ class Authentication {
     }
 
     static func returnFileId(fileLink: String) -> String {
-        print(fileLink)
         if let startRange = fileLink.range(of: "/d/")?.upperBound,
            let endRange = fileLink.range(of: "/edit")?.lowerBound {
             let fileId = String(fileLink[startRange..<endRange])
@@ -36,11 +35,13 @@ class Authentication {
         return ""
     }
 
+    /**
+     method to sign in through google
+     - Parameter clientId:
+     */
     private func googleSignInFunc(clientId: String) {
-// Create Google Sign In configuration object.
         if GIDSignIn.sharedInstance.hasPreviousSignIn() {
             let user = GIDSignIn.sharedInstance.currentUser;
-            print("inside previous signin ", user)
             NotificationCenter.default.post(name: .googleSignIn, object: nil);
             return
         }
@@ -56,53 +57,36 @@ class Authentication {
             guard error == nil else {
                 return
             }
-            NotificationCenter.default.post(name: .googleSignIn, object: nil);
             self.signIn(signIn: self.googleSignIn, didSignInForUser: self.googleSignIn.currentUser, withError: error as NSError?)
             let user = signInResult?.user
-//             If sign in succeeded, display the app's main content View.
             let userId = user?.userID ?? ""
             let idToken = user?.idToken?.tokenString
             let credential = GoogleAuthProvider.credential(withIDToken: idToken!,
                     accessToken: user?.accessToken.tokenString ?? "")
             Auth.auth().signIn(with: credential) { result, error in
-                print("hello result", result?.user.email)
             }
-
-            print("credential ", credential);
-            print("Google User ID: \(userId)")
+            NotificationCenter.default.post(name: .googleSignIn, object: nil);
             let userIdToken = user?.accessToken
-            print("Google ID Token: \(userIdToken?.tokenString)")
             self.userToken = userIdToken?.tokenString ?? ""
             let userFirstName = user?.profile?.givenName ?? ""
-            print("Google User First Name: \(userFirstName)")
-
             let userLastName = user?.profile?.familyName ?? ""
-            print("Google User Last Name: \(userLastName)")
             let userEmail = user?.profile?.email ?? ""
-            print("Google User Email: \(userEmail)")
             let googleProfilePicURL = user?.profile?.imageURL(withDimension: 150)?.absoluteString ?? ""
-            print("Google Profile Avatar URL: \(googleProfilePicURL)")
+            let imgUrl = Auth.auth().currentUser?.photoURL;
             let driveScope = "https://www.googleapis.com/auth/drive.readonly"
             let grantedScopes = user?.grantedScopes
-            print("grantedScopes ", grantedScopes);
             if grantedScopes == nil || !grantedScopes!.contains(driveScope) {
-                // Request additional Drive scope.
-//                user?.addScopes([driveScope], presenting: rootViewController)
             }
             self.service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
             self.getAllFoldersInDrive(accessToken: userIdToken?.tokenString ?? "") { files, error in
                 if let files = files {
-                    print("all folders are : ", files);
                     let folderId = files[0].identifier;
-//                    let folderId = "1eHMSMTSotwBlOZHTdDXj97BJmlJg9SFe"
                     self.getFilesInFolder(folderId: folderId ?? "") { files, error in
                         if let files = files {
-                            print("files are ", files);
                             for file in files {
                                 if let fileId = file.identifier {
                                     self.downloadFile(withId: fileId, accessToken: user?.accessToken.tokenString ?? "") { data, error in
                                         if let data = data {
-                                            print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: ""))
                                             return
                                         }
                                         if let error = error {
@@ -132,11 +116,15 @@ class Authentication {
             // Show the sign-out button and hide the GIDSignInButton
         }
     }
-
+    /**
+     static method to download a file
+     - Parameters:
+       - file:
+       - completion:
+     */
     static func download(file: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let fileId = returnFileId(fileLink: file);
         let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
-        print("url is :", url)
         let service: GTLRDriveService = GTLRDriveService()
         let fetcher = service.fetcherService.fetcher(withURLString: url)
         fetcher.beginFetch(completionHandler: { data, error in
@@ -150,6 +138,12 @@ class Authentication {
             }
         })
     }
+    /**
+     Static method to download a file
+     - Parameters:
+       - fileId:
+       - completion:
+     */
 
     static func download(fileId: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
@@ -167,18 +161,18 @@ class Authentication {
         })
     }
 
+    /**
 
+     - Parameter completion:
+     */
     func getAllFolders(completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         guard let accessToken = googleSignIn.currentUser?.accessToken.tokenString else {
-            print("Access token is nil")
             completion(nil, nil)
             return
         }
         let scopes = googleSignIn.currentUser?.grantedScopes
-        print("inside getFolder access are", scopes);
         self.getAllFoldersInDrive(accessToken: accessToken) { files, error in
             if let files = files {
-                print("files are ", files);
                 completion(files, nil)
             } else if let error = error {
                 print("error is ", error);
@@ -187,25 +181,28 @@ class Authentication {
         }
     }
 
-
+    /**
+     function to get all folders of drive
+     - Parameters:
+       - accessToken:
+       - completion:
+     */
     private func getAllFoldersInDrive(accessToken: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
-        print("access token is :", accessToken);
         let query = GTLRDriveQuery_FilesList.query()
         self.service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
         query.q = "mimeType='application/vnd.google-apps.folder' and trashed=false or name='Results'"
         query.fields = "nextPageToken, files(id, name, createdTime)"
         query.spaces = "drive"
-        print("services  is :", service)
         service.executeQuery(query) { (ticket, result, error) in
 
             if let error = error {
-
                 print("error in getting folder")
                 completion(nil, error)
                 return
             }
 
             if let files = (result as? GTLRDrive_FileList)?.files {
+                print(files);
                 completion(files, nil)
             } else {
                 completion(nil, nil)
@@ -213,17 +210,20 @@ class Authentication {
         }
     }
 
+    /**
+     function to return file name from link on QR scan
+     - Parameter url:
+     */
     static func getFileNameFromPublicURL(url: String) {
         let fileId = returnFileId(fileLink: url);
         let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: fileId)
         let service: GTLRDriveService = GTLRDriveService()
-//        service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
         service.executeQuery(query) { (ticket, file, error) in
             if let error = error {
                 print("Error retrieving file name: \(error)")
             } else if let file = file as? GTLRDataObject {
                 if let fileName = file.json?["name"] as? String {
-                    print("File name: \(fileName)")
+
                 } else {
                     print("File name not found")
                 }
@@ -232,7 +232,12 @@ class Authentication {
 
     }
 
-
+/**
+    function to return all files from openBot-openCode folder
+ - Parameters:
+   - folderId:
+   - completion:
+ */
     func getFilesInFolder(folderId: String, completion: @escaping ([GTLRDrive_File]?, Error?) -> Void) {
         let query = GTLRDriveQuery_FilesList.query()
         query.q = "'\(folderId)' in parents"
@@ -252,6 +257,13 @@ class Authentication {
         }
     }
 
+    /**
+     Function to download a file
+     - Parameters:
+       - fileId:
+       - accessToken:
+       - completion:
+     */
     func downloadFile(withId fileId: String, accessToken: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: fileId)
         service.executeQuery(query) { (ticket, result, error) in
@@ -267,10 +279,65 @@ class Authentication {
         }
     }
 
+    /**
+    Function to return file name
+     - Parameter name:
+     - Returns:
+     */
     static func returnFileName(name: String) -> String {
         let fileName = name.components(separatedBy: ".js");
         return fileName.first ?? "Unknown";
-
     }
+
+    /**
+     Function to delete file from user drive
+     - Parameters:
+       - fileId:
+       - completion:
+     */
+    func deleteFile(fileId: String, completion: @escaping (Error?) -> Void) {
+        let query = GTLRDriveQuery_FilesDelete.query(withFileId: fileId)
+        service.executeQuery(query) { (ticket, result, error) in
+            if let error = error {
+                completion(error)
+                print("Error deleting file: \(error)")
+                return
+            }
+
+            completion(nil)
+        }
+    }
+
+    /**
+     function returns xml file id.
+     - Parameters:
+       - name:
+       - completion:
+     */
+    func getIdOfXmlFile(name: String, completion: @escaping (String?, Error?) -> Void) {
+        Authentication.googleAuthentication.getAllFolders { files, error in
+            if let files = files {
+                Authentication.googleAuthentication.getFilesInFolder(folderId: files[0].identifier ?? "") { files, error in
+                    if let error = error {
+                        completion(nil, error)
+                        return
+                    }
+                    if let files = files {
+                        for file in files {
+                            if file.mimeType == "text/xml" && file.name == "\(name).xml" {
+                                completion(file.identifier, nil)
+                                return
+                            }
+                        }
+                    }
+                    completion(nil, nil) // File not found
+                }
+            } else if let error = error {
+                completion(nil, error)
+            }
+        }
+    }
+
+
 
 }

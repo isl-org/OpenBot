@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -39,7 +39,7 @@
                                 <size key="shadowOffset" width="0.0" height="0.0"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow" translatesAutoresizingMaskIntoConstraints="NO" id="2Jo-YL-qNy">
-                                <rect key="frame" x="117.5" y="165" width="65.5" height="12"/>
+                                <rect key="frame" x="139.5" y="169" width="43.5" height="8"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" name="gridItemColor"/>
@@ -62,13 +62,13 @@
                 <outlet property="icon" destination="s9m-L1-6qy" id="p90-d8-Tlw"/>
                 <outlet property="title" destination="3Sy-Pu-Yu8" id="7sP-md-qAo"/>
             </connections>
-            <point key="canvasLocation" x="190.57971014492756" y="-22.433035714285712"/>
+            <point key="canvasLocation" x="67" y="-75"/>
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="arrow" width="65.5" height="12"/>
+        <image name="arrow" width="43.666667938232422" height="8"/>
         <namedColor name="gridItemColor">
-            <color red="0.0" green="0.0" blue="0.0" alpha="0.15000000059604646" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.15000000596046448" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="listItemColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -11,7 +11,7 @@ import FirebaseStorage
 /***
  class for fragment of edit profile section
  */
-class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIScrollViewDelegate, UITextFieldDelegate {
 /**
  Outlets for the user interface elements used in this view controller.
 */
@@ -25,20 +25,54 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     private var firstNameField: UITextField!
     private var lastNameField: UITextField!
     let imagePickerVC = UIImagePickerController()
+    private var scrollView = UIScrollView();
+    var saveChangesBtn = CustomButton();
 
 /**
     Method calls after view loaded
  */
     override func viewDidLoad() {
         super.viewDidLoad();
-        createOverlayAlert();
+//        createOverlayAlert();
+        setupNavigationBarItem();
+        view.addSubview(scrollView);
+        let contentHeight: CGFloat = currentOrientation == .portrait ? height * 0.6 : 1000;
+        scrollView.contentSize = CGSize(width: width, height: contentHeight)
         imagePickerVC.delegate = self;
         createUserProfileImageView()
+        scrollView.frame =  currentOrientation == .portrait ?CGRect(x: 0, y: profileIcon.bottom + adapted(dimensionSize: 40, to: .height), width: width, height: height) :  CGRect(x: height - width - safeAreaLayoutValue.bottom, y: profileIcon.top , width: width, height: height);
         createLabels();
         createTextFields();
+        firstNameField.delegate = self;
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         createButtons();
+//        automaticallyAdjustsScrollViewInsets = false
+        scrollView.contentInsetAdjustmentBehavior = .never
+    }
+
+    /**
+     override function calls on rotation of phone changes, this method is used to update the UI in landscape as well as portrait mode
+     - Parameters:
+       - size:
+       - coordinator:
+     */
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
+        if currentOrientation == .portrait{
+            scrollView.isScrollEnabled = false
+            scrollView.contentSize = CGSize(width: width, height: 800);
+            scrollView.frame =  CGRect(x: 0, y: profileIcon.bottom + adapted(dimensionSize: 40, to: .height), width: width, height: height)
+            scrollView.contentInset.bottom = 0
+        }
+        else{
+            scrollView.frame =  CGRect(x: height - width - safeAreaLayoutValue.bottom, y: profileIcon.top , width: width, height: height);
+            scrollView.contentSize = CGSize(width: width, height: 1000);
+            scrollView.isScrollEnabled = true
+            scrollView.contentInset.bottom = view.safeAreaInsets.bottom
+            scrollView.contentOffset.y += view.safeAreaInsets.bottom
+        }
     }
 
     /**
@@ -66,14 +100,14 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
      This function creates the labels for the text fields.
      */
     private func createLabels() {
-        firstName = CustomLabel(text: "First Name", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (profileIcon.frame.origin.y + profileIcon.frame.width + adapted(dimensionSize: 40, to: .height)), width: 150, height: 40))
+        firstName = CustomLabel(text: "First Name", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: 0, width: 150, height: 40))
         lastName = CustomLabel(text: "Last Name", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (firstName.frame.origin.y + 100.0), width: 150, height: 40))
         dob = CustomLabel(text: "Date Of Birth", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (lastName.frame.origin.y + 100.0), width: 150, height: 40))
         email = CustomLabel(text: "Email", fontSize: 16, fontColor: traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, frame: CGRect(x: 26, y: (dob.frame.origin.y + 100.0), width: 150, height: 40))
-        view.addSubview(firstName);
-        view.addSubview(lastName);
-        view.addSubview(dob);
-        view.addSubview(email);
+        scrollView.addSubview(firstName);
+        scrollView.addSubview(lastName);
+        scrollView.addSubview(dob);
+        scrollView.addSubview(email);
     }
 
     /**
@@ -82,18 +116,12 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     private func createTextFields() {
         firstNameField = CustomTextField(frame: CGRect(x: 17, y: firstName.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
         view.addSubview(firstNameField);
-        setTextField(textField: firstNameField, value: getFirstName(name: Auth.auth().currentUser?.displayName ?? ""));
+        setTextField(textField: firstNameField, value: getFirstName(name: Auth.auth().currentUser?.displayName ?? "Unknown"));
         lastNameField = CustomTextField(frame: CGRect(x: 17, y: lastName.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
         setTextField(textField: lastNameField, value: getLastName(name: Auth.auth().currentUser?.displayName ?? ""));
         let dobField = CustomTextField(frame: CGRect(x: 17, y: dob.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
-        setTextField(textField: dobField, value: "19/09/2000");
-        let datePicker = UIDatePicker()
-        datePicker.datePickerMode = .date
-        dobField.inputView = datePicker
-        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTapped))
-        toolbar.items = [UIBarButtonItem.flexibleSpace(), doneButton]
-        dobField.inputAccessoryView = toolbar
+        setTextField(textField: dobField, value: Date.getCurrentDate());
+        dobField.isEnabled = false
         let img = UIImageView(frame: CGRect(x: dobField.frame.size.width - 40, y: 15, width: 20, height: 20));
         img.image = UIImage(named: "calendar");
         dobField.addSubview(img)
@@ -101,10 +129,10 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         setTextField(textField: emailField, value: authentication.googleSignIn.currentUser?.profile?.email ?? "");
         emailField.isEnabled = false
         emailField.textColor = traitCollection.userInterfaceStyle == .dark ? Colors.lightBlack: UIColor.lightGray;
-        view.addSubview(firstNameField);
-        view.addSubview(lastNameField);
-        view.addSubview(dobField);
-        view.addSubview(emailField);
+        scrollView.addSubview(firstNameField);
+        scrollView.addSubview(lastNameField);
+        scrollView.addSubview(dobField);
+        scrollView.addSubview(emailField);
     }
 
     /**
@@ -120,6 +148,30 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         textField.layer.cornerRadius = 8;
         textField.text = value;
         textField.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
+    }
+
+    /**
+     Delegate method called when character in an UITextField changes. Here, this method is checking whether first name
+     of user is empty or not
+     - Parameters:
+       - textField:
+       - range:
+       - string:
+     - Returns:
+     */
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
+        if newText?.count == 0 {
+            textField.layer.borderColor = UIColor.red.cgColor
+            saveChangesBtn.isEnabled = false;
+        }
+        else{
+            saveChangesBtn.isEnabled = true;
+            DispatchQueue.main.async {
+                textField.layer.borderColor = UIColor(red: 0 / 255, green: 113 / 255, blue: 197 / 255, alpha: 0.4).cgColor
+            }
+        }
+        return true
     }
 
     /**
@@ -141,11 +193,15 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
      - Returns:
      */
     private func getLastName(name: String) -> String {
-        let indexOfSpace = name.firstIndex(of: " ");
+        let indexOfSpace = name.lastIndex(of: " ");
         if indexOfSpace == nil {
-            return name;
+            return "";
         }
-        return String(name[indexOfSpace!...])
+        else{
+            let index = name.index(after: indexOfSpace!);
+            return String(name[index...])
+        }
+
     }
 
     /**
@@ -186,13 +242,13 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     }
 
     /**
-     Function to create button named cancle and done.
+     Function to create button named cancel and done.
      */
     private func createButtons() {
-        let cancelBtn = CustomButton(text: "Cancel", frame: CGRect(x: 17, y: height - safeAreaLayoutValue.bottom - adapted(dimensionSize: 47, to: .height), width: 147, height: 47), selector: #selector(cancel))
-        view.addSubview(cancelBtn);
-        let saveChangesBtn = CustomButton(text: "Save Changes", frame: CGRect(x: cancelBtn.frame.origin.x + 194.0, y: cancelBtn.frame.origin.y, width: 147, height: 47), selector: #selector(saveChanges))
-        view.addSubview(saveChangesBtn)
+        let cancelBtn = CustomButton(text: "Cancel", frame: CGRect(x: 17, y: email.bottom  +   adapted(dimensionSize: 60, to: .height), width: 147, height: 47), selector: #selector(cancel))
+        scrollView.addSubview(cancelBtn);
+        saveChangesBtn = CustomButton(text: "Save Changes", frame: CGRect(x: cancelBtn.frame.origin.x + 194.0, y: cancelBtn.frame.origin.y, width: 147, height: 47), selector: #selector(saveChanges))
+        scrollView.addSubview(saveChangesBtn)
         saveChangesBtn.backgroundColor = Colors.title
     }
 
@@ -209,18 +265,19 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
      - Parameter sender:
      */
     @objc func saveChanges(_ sender: UIButton) {
-        createOverlayAlert()
+        createOverlayAlert();
         let credential = GoogleAuthProvider.credential(withIDToken: (authentication.googleSignIn.currentUser?.idToken!.tokenString)!, accessToken: (authentication.googleSignIn.currentUser?.accessToken.tokenString)!)
         Auth.auth().signIn(with: credential) { result, error in
             if let user = result?.user {
                 let changeRequest = user.createProfileChangeRequest()
-                changeRequest.displayName = (self.firstNameField.text ?? "")  + (self.lastNameField.text ?? "");
+                let firstName = self.firstNameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                let lastName = self.lastNameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                changeRequest.displayName = firstName + " " + lastName
                 self.uploadImage();
                 changeRequest.commitChanges { error in
                     if let error = error {
                         print("Error updating profile: \(error.localizedDescription)")
                     } else {
-                        print("Profile updated successfully")
                         self.alert.dismiss(animated: true);
                         self.showToast("Profile Updated Successfully", icon: UIImage(named: "check")!);
                     }
@@ -247,8 +304,8 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         }
 
         let maxSize: CGFloat = 1024 // maximum size of the image
-        var actualHeight = image.size.height
-        var actualWidth = image.size.width
+        let actualHeight = image.size.height
+        let actualWidth = image.size.width
         var maxHeight = maxSize
         var maxWidth = maxSize
 
@@ -271,7 +328,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         let compressedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 
-        guard let compressedImageData = compressedImage?.jpegData(compressionQuality: 0.5) else {
+        guard (compressedImage?.jpegData(compressionQuality: 0.5)) != nil else {
             print("Error compressing image")
             return
         }
@@ -324,10 +381,35 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         alert.dismiss(animated: true);
     }
 
+    /**
+     Toast message on error while loading profile picture
+     */
     func imageLoadFailed() {
         showToast("Error while loading profile picture",icon: UIImage(named: "check")!);
         alert.dismiss(animated: true);
-//
+    }
+
+    /**
+     Function to customize navigation bar
+     */
+    func setupNavigationBarItem() {
+        if UIImage(named: "back") != nil {
+            let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: "Edit Profile", target: self, action: #selector(back(sender:)), titleColor: Colors.navigationColor ?? .white)
+            navigationItem.leftBarButtonItem = newBackButton
+        }
+    }
+
+    /**
+     Function calls on back button pressed
+     - Parameter sender:
+     */
+    @objc func back(sender: UIBarButtonItem) {
+        _ = navigationController?.popViewController(animated: true)
     }
 
 }
+
+
+
+

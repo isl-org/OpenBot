@@ -123,6 +123,7 @@ PODS:
     - nanopb/encode (= 2.30909.0)
   - nanopb/decode (2.30909.0)
   - nanopb/encode (2.30909.0)
+  - NicoProgress (0.4.0)
   - PromisesObjC (2.1.1)
   - Starscream (3.0.6)
   - TensorFlowLiteC (0.0.1-nightly.20221227):
@@ -150,6 +151,7 @@ DEPENDENCIES:
   - GoogleSignIn
   - GoogleSignInSwiftSupport
   - GoogleWebRTC
+  - NicoProgress
   - Starscream (~> 3.0.1)
   - TensorFlowLiteSwift/CoreML (~> 0.0.1-nightly)
   - TensorFlowLiteSwift/Metal (~> 0.0.1-nightly)
@@ -177,6 +179,7 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - nanopb
+    - NicoProgress
     - PromisesObjC
     - Starscream
     - TensorFlowLiteC
@@ -204,11 +207,12 @@ SPEC CHECKSUMS:
   GTMAppAuth: 99fb010047ba3973b7026e45393f51f27ab965ae
   GTMSessionFetcher: c9e714f7eec91a55641e2bab9f45fd83a219b882
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
+  NicoProgress: 8e26d401623a1ba9456748b04b30183d5e212d25
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
   TensorFlowLiteC: e1bb000be1bc8e93172becb0d3ac6c55b46f7ff9
   TensorFlowLiteSwift: c2f36a053eaf7b786d3b960f5dcfac069c7e94ea
 
-PODFILE CHECKSUM: 90537192bbbcc10692bce02f19420e9d63b16d34
+PODFILE CHECKSUM: 4b7357ae3ff265f87af70288de4785c50d521b4d
 
 COCOAPODS: 1.10.2

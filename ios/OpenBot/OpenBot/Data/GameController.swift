@@ -66,6 +66,7 @@ class GameController: GCPhysicalInputProfile {
         switch (mode) {
         case .DUAL:
             return convertDualToControl(leftStick: gamepad.leftThumbstick.yAxis.value, rightStick: gamepad.rightThumbstick.yAxis.value)
+
         case .GAME:
             let rightTrigger = gamepad.rightTrigger.value
             let leftTrigger = gamepad.leftTrigger.value
@@ -78,6 +79,7 @@ class GameController: GCPhysicalInputProfile {
             }
             return convertGameToControl(leftTrigger: leftTrigger, rightTrigger: rightTrigger, steeringOffset: steeringOffset)
         case .JOYSTICK:
+
             var yAxis: Float = gamepad.leftThumbstick.yAxis.value
             if (yAxis == 0) {
                 yAxis = gamepad.dpad.yAxis.value

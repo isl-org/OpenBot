@@ -41,6 +41,11 @@
 	</array>
 	<key>GCSupportsControllerUserInteraction</key>
 	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>http</string>
+		<string>https</string>
+	</array>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_openbot._tcp.</string>
@@ -94,5 +99,7 @@
 			</dict>
 		</dict>
 	</array>
+	<key>kTCCServiceMediaLibrary</key>
+	<string>Allow Audio Player for sound mode</string>
 </dict>
 </plist>

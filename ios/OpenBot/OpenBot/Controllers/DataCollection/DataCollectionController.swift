@@ -36,6 +36,13 @@ class DataCollectionController: CameraController {
         dataLogger.reset()
     }
 
+    /**
+     Removing all notifications
+     */
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()

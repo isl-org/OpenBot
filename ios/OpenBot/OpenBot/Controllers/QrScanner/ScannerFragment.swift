@@ -10,16 +10,19 @@ import AVFoundation
  class for qrScanner
  */
 class scannerFragment: CameraController {
+    var previewLayer = AVCaptureVideoPreviewLayer();
     var whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds)
+    @IBOutlet weak var cancelBtn: UIView!
     let alert = UIAlertController(title: "Loading", message: "Please wait while we load data...", preferredStyle: .alert)
     var userToken: String = ""
     private var commands: String = ""
     private var projectFileId: String = "";
     var qrResult: String = "";
-    var firstMsg = CustomLabel(frame: .zero);
-    var secondMsg = CustomLabel(frame: .zero);
+    var msg = CustomLabel(frame: .zero);
     var heading = CustomLabel(frame: .zero);
     var border = UIImageView();
+    let firstHalfView = UIView();
+    var projectName: String = "";
 
 /**
     Method calls after view will load and initialize the UI and camera
@@ -29,25 +32,40 @@ class scannerFragment: CameraController {
         createScanHeading()
         createScanMessage()
         createScannerBorder()
-        cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: height - 223 , y: 95, width: 230, height: 230)
+        firstHalfView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: safeAreaLayoutValue.top + 100, width: width, height: height / 2 - 100) : CGRect(x: safeAreaLayoutValue.top, y: 130, width: width, height: height / 2 - 100);
+        view.addSubview(firstHalfView);
+        cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: width + safeAreaLayoutValue.top + 22, y: 95, width: 230, height: 230)
         initializeCamera()
         view.addSubview(cameraView);
+        cancelBtn.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(removeFragment(_:)))
+        cancelBtn.addGestureRecognizer(tap)
+        NotificationCenter.default.addObserver(self, selector: #selector(reInitializeCamera), name: .reInitializeCamera, object: nil);
+
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated);
+        NotificationCenter.default.removeObserver(self);
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator);
-        cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: height  - 318, y: 90, width: 230, height: 230)
-        border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) : CGRect(x: height  - 340, y: 70, width: 268, height: 273)
-        if currentOrientation == .portrait {
-            heading.frame.origin = CGPoint(x: width / 2 - 65, y: 145);
-            firstMsg.frame.origin = CGPoint(x: width / 2 - 160, y: 185);
-            secondMsg.frame.origin = CGPoint(x: height / 2  - 115, y: 210)
+        firstHalfView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: safeAreaLayoutValue.top + 100, width: width, height: height / 2 - 100) : CGRect(x: safeAreaLayoutValue.top, y: 130, width: width, height: height / 2 - 100);
+        border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) : CGRect(x: firstHalfView.right, y: 70, width: 268, height: 273)
+        cameraView.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 115, y: 320, width: 230, height: 230) : CGRect(x: border.left + 22, y: 90, width: 230, height: 230)
+        var orientation = AVCaptureVideoOrientation(rawValue: 1);
+        switch currentOrientation {
+        case .portrait:
+            orientation = AVCaptureVideoOrientation.portrait
+        case .landscapeLeft:
+            orientation = AVCaptureVideoOrientation.landscapeRight
+        case .landscapeRight:
+            orientation = AVCaptureVideoOrientation.landscapeLeft;
+        default:
+            orientation = AVCaptureVideoOrientation.portrait
         }
-        else{
-            heading.frame.origin = CGPoint(x: 155, y: 159);
-            firstMsg.frame.origin = CGPoint(x: 96, y: 210);
-            secondMsg.frame.origin = CGPoint(x: 141, y: 230);
-        }
+        previewLayer.connection?.videoOrientation = orientation ?? .portrait
     }
 
     /**
@@ -62,45 +80,42 @@ class scannerFragment: CameraController {
      Remove current Fragment
      - Parameter sender:
      */
-    @IBAction func removeScanner(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
+
 
     /**
      Create Heading of Fragment
      */
     private func createScanHeading() {
-        if currentOrientation == .portrait {
-            heading = CustomLabel.init(text: "Scan Qr Code", fontSize: 20, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 65, y: 145, width: 130, height: 40))
-        } else {
-            heading = CustomLabel.init(text: "Scan Qr Code", fontSize: 20, fontColor: Colors.textColor ?? .black, frame: CGRect(x: height / 2 - safeAreaLayoutValue.top - 65, y: 145, width: 130, height: 40))
-        }
-        view.addSubview(heading);
+        heading = CustomLabel.init(text: "Scan Qr Code", fontSize: 22, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 65, y: 20, width: 145, height: 40))
+        heading.textAlignment = .center;
+        firstHalfView.addSubview(heading);
     }
 
     /**
      Create Message of Fragment
      */
     private func createScanMessage() {
+        let message = "Place qr code inside the frame to scan. Please avoid shake to get results quickly."
+        let font = UIFont(name: "HelveticaNeue", size: 15)!
+        let messageSize = (message as NSString).boundingRect(with: CGSize(width: 320, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
+        let messageHeight = ceil(messageSize.height)
 
-        if currentOrientation == .portrait{
-            firstMsg = CustomLabel.init(text: "Place qr code inside the frame to scan. Please", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 160, y: 185, width: 320, height: 40))
-            secondMsg = CustomLabel.init(text: "void shake to get results quickly.", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: width / 2 - 115, y: 210, width: 230, height: 40))
-        }
-        else{
-            firstMsg = CustomLabel.init(text: "Place qr code inside the frame to scan. Please", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 96, y: 210, width: 320, height: 40))
-            secondMsg = CustomLabel.init(text: "void shake to get results quickly.", fontSize: 15, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 51, y: 230, width: 230, height: 40))
-        }
-        view.addSubview(firstMsg);
-        view.addSubview(secondMsg)
+        msg = CustomLabel(text: message, fontSize: 15, fontColor: Colors.textColor ?? .black, frame:
+        CGRect(x: width / 2 - 160, y: heading.bottom + 15, width: 320, height: messageHeight))
+        msg.numberOfLines = 0
+        msg.lineBreakMode = .byWordWrapping
+        msg.textAlignment = .center
+        msg.font = font
+        firstHalfView.addSubview(msg)
     }
+
 
     /**
      Create border for Scanner view
      */
     private func createScannerBorder() {
         border.image = UIImage(named: "scanner-boundary");
-        border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) : CGRect(x: height / 2 - 300, y: 95, width: 268, height: 273)
+        border.frame = currentOrientation == .portrait ? CGRect(x: width / 2 - 134, y: 300, width: 268, height: 273) : CGRect(x: width + safeAreaLayoutValue.top, y: 70, width: 268, height: 273)
         view.addSubview(border);
     }
 
@@ -114,7 +129,6 @@ class scannerFragment: CameraController {
        - connection:
      */
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-
         if hasSuccessfulScan {
             // Ignore any further metadata objects if a successful scan has occurred
             return
@@ -127,24 +141,37 @@ class scannerFragment: CameraController {
             }
             if let qrCodeString = qrCodeObject.stringValue {
                 // Handle the QR code data here
-                print("QR code data: \(qrCodeString)")
-                qrResult = qrCodeString;
-                captureSession.stopRunning();
-                hasSuccessfulScan = true
-                createOverlayAlert();
-                Authentication.download(file: qrResult) { data, error in
-                    self.alert.dismiss(animated: true);
-                    if let error = error {
-                        self.createErrorUI()
-                        return;
+                do {
+                    guard let jsonData = qrCodeString.data(using: .utf8) else {
+                        return
                     }
-                    if let data = data {
-                        print(self.qrResult);
-                        self.createSuccessUI();
-                        print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") as Any)
-                        self.commands = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? ""
-                        return;
+                    let qrCodeData = try JSONDecoder().decode(QrData.self, from: jsonData)
+                    qrResult = qrCodeData.driveLink
+                    projectName = qrCodeData.projectName
+                    print("QRResult", qrResult)
+                    captureSession.stopRunning();
+                    hasSuccessfulScan = true
+                    createOverlayAlert();
+                    Authentication.download(file: qrResult) { data, error in
+                        self.alert.dismiss(animated: true);
+                        if error != nil {
+                            self.hasSuccessfulScan = false
+                            self.createErrorUI()
+                            return;
+                        }
+                        if let data = data {
+                            print(self.qrResult);
+                            self.createSuccessUI();
+                            print("data is ", String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") as Any)
+                            self.commands = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\n", with: "") ?? ""
+                            return;
+                        }
                     }
+                } catch {
+                    print("Error decoding JSON: \(error)")
+                    createErrorUI();
+                    hasSuccessfulScan = true
+                    return;
                 }
             }
         }
@@ -169,31 +196,30 @@ class scannerFragment: CameraController {
         captureSession.addOutput(output);
         output.setMetadataObjectsDelegate(self, queue: DispatchQueue.main);
         output.metadataObjectTypes = [.qr] // specify the types of metadata to capture (in this case, only QR codes)
-        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.videoGravity = .resizeAspectFill
         previewLayer.frame = cameraView.layer.bounds
         cameraView.layer.addSublayer(previewLayer)
+        previewLayer.connection?.videoOrientation = AVCaptureVideoOrientation(rawValue: currentOrientation.rawValue) ?? .portrait;
         captureSession.startRunning()
-
     }
 
     /**
      Creating Bottom sheet for QR scan Successful
      */
     private func createSuccessUI() {
-        self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "temp");
-        self.whiteSheet.startBtn.addTarget(self, action: #selector(self.start), for: .touchUpInside);
-        self.whiteSheet.cancelBtn.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
-        view.addSubview(self.whiteSheet);
+        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: projectName,isScannerFragment: true);
+        whiteSheet.startBtn.addTarget(self, action: #selector(start), for: .touchUpInside);
+        whiteSheet.cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside);
+        view.addSubview(whiteSheet);
     }
 
     /**
      Creating Bottom sheet for QR scan Error
      */
     private func createErrorUI() {
-        print("inside error ");
-        self.whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: "");
-        self.whiteSheet.scanQr.addTarget(self, action: #selector(self.scan), for: .touchUpInside);
+        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: String(),isScannerFragment: true);
+        whiteSheet.cancelButton.addTarget(self, action: #selector(scan), for: .touchUpInside);
         view.addSubview(whiteSheet);
     }
 
@@ -206,7 +232,7 @@ class scannerFragment: CameraController {
         let viewController = (storyboard.instantiateViewController(withIdentifier: "runOpenBot"));
         navigationController?.pushViewController(viewController, animated: true);
         whiteSheet.removeFromSuperview();
-        jsEvaluator(jsCode: commands);
+        _ = jsEvaluator(jsCode: commands);
     }
 
     /**
@@ -255,6 +281,10 @@ class scannerFragment: CameraController {
         initializeCamera();
     }
 
+    @objc func removeFragment(_ sender: UIView) {
+        navigationController?.popViewController(animated: true);
+    }
+
     /**
      Function to create loader
      */
@@ -265,6 +295,10 @@ class scannerFragment: CameraController {
         loadingIndicator.style = UIActivityIndicatorView.Style.medium
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
+    }
+
+    @objc func reInitializeCamera() {
+        initializeCamera()
     }
 
 
