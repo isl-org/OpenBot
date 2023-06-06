@@ -403,7 +403,7 @@ The Profile Screen in the app provides different options based on whether the us
 If the user is not signed in, a `Google Sign-in` button will appear, prompting the user to sign in their Google account. Once signed in, the user will be able to access their profile and other features.
 If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edit Profile` and `Logout`.
 
-<p>
+<p align="left">
 <img src="../../docs/images/logged_out_profile_screen.jpg" alt="Logged out profile screen" width="25%"/>
 <img src="../../docs/images/logged_in_profile_screen.jpg" alt="Logged in profile screen" width="25%"/>
 </p>
@@ -413,7 +413,7 @@ If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edi
 
 - **Logout**: This button allows the user to log out of their account. Tapping on this button will log the user out and return them to the login screen.
 
-<p>
+<p align="left">
 <img src="../../docs/images/edit_profile_screen.jpg" alt="Edit profile screen" width="25%"/>
 <img src="../../docs/images/logout_dialog_box.jpg" alt="Logout dialog box" width="25%"/>
 </p>
@@ -422,9 +422,9 @@ If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edi
 
 To access OpenBot Playground services, click on the OpenBot Playground icon located at the top of the screen in the toolbar options. If you want to learn more about OpenBot Playground, [click here](https://github.com/3dwesupport/OpenBot/blob/react-blockly/open-code/README.md).
 
-<p>
+<p align="left">
 <img src="../../docs/images/playground_sign-in.gif" alt="openBot playground Sign-in" width="25%"/>
-<img src="../../docs/images/playground_services.gif" alt="openBot playground Sign-in" width="25%"/>
+<img src="../../docs/images/playground_services.gif" alt="openBot playground Services" width="25%"/>
 </p>
 ## Add your own fragment
 
