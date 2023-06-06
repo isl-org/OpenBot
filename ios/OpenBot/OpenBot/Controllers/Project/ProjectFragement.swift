@@ -788,8 +788,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             completion(deletionError, deleteCount)
         }
     }
-
-
 }
 
 extension UserDefaults {
@@ -856,6 +854,15 @@ extension UserDefaults {
         return [];
     }
 
+    /**
+     Static method to delete all projects from user default
 
+     */
+    static  func deleteAllProjectsFromUserDefaults() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "allProjects");
+        defaults.removeObject(forKey: "allProjectCommands");
+        defaults.synchronize()
+    }
 }
 

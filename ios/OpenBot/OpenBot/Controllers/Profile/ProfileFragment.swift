@@ -195,6 +195,7 @@ class profileFragment: UIViewController {
         shadowSheet.removeFromSuperview();
         logoutView.removeFromSuperview();
         GIDSignIn.sharedInstance.signOut()
+        UserDefaults.deleteAllProjectsFromUserDefaults();
         updateViewsVisibility()
     }
 
