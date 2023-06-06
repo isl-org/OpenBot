@@ -42,7 +42,6 @@ class profileFragment: UIViewController {
         createSignInBtn();
         updateViewsVisibility()
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
-
     }
 
     /**

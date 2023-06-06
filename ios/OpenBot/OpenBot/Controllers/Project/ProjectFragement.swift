@@ -51,7 +51,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         createPleaseSignInLabel();
         createNoProjectMessage();
         createSignInBtn();
-        NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
         let layout = UICollectionViewFlowLayout();
         layout.collectionView?.layer.shadowColor = Colors.gridShadowColor?.cgColor
         layout.collectionView?.layer.shadowOpacity = 1
@@ -77,11 +76,12 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideDeletePopUp))
         shadowSheet.addGestureRecognizer(tap)
+        NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated);
-        NotificationCenter.default.removeObserver(self);
+//        NotificationCenter.default.removeObserver(self);
     }
 
     /**
@@ -235,9 +235,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         let storyboard = UIStoryboard(name: "openCode", bundle: nil)
         let viewController = (storyboard.instantiateViewController(withIdentifier: "webView"))
         navigationController?.pushViewController(viewController, animated: true);
-//        if let url = URL(string: "https://www.openbot.itinker.io/") {
-//            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-//        }
     }
 
     /**
@@ -370,6 +367,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             isLoading = true;
             animateFloatingView();
             loadProjects();
+            updateViewsVisibility();
         }
 
     }

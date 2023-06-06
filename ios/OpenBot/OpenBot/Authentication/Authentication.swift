@@ -57,7 +57,6 @@ class Authentication {
             guard error == nil else {
                 return
             }
-            NotificationCenter.default.post(name: .googleSignIn, object: nil);
             self.signIn(signIn: self.googleSignIn, didSignInForUser: self.googleSignIn.currentUser, withError: error as NSError?)
             let user = signInResult?.user
             let userId = user?.userID ?? ""
@@ -66,11 +65,10 @@ class Authentication {
                     accessToken: user?.accessToken.tokenString ?? "")
             Auth.auth().signIn(with: credential) { result, error in
             }
-
+            NotificationCenter.default.post(name: .googleSignIn, object: nil);
             let userIdToken = user?.accessToken
             self.userToken = userIdToken?.tokenString ?? ""
             let userFirstName = user?.profile?.givenName ?? ""
-
             let userLastName = user?.profile?.familyName ?? ""
             let userEmail = user?.profile?.email ?? ""
             let googleProfilePicURL = user?.profile?.imageURL(withDimension: 150)?.absoluteString ?? ""
