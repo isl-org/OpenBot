@@ -24,12 +24,12 @@ export function RightDrawer() {
     const {drawer, code, category} = useContext(StoreContext)  // Retrieve the drawer state from the StoreContext
     const themes = useTheme();// Get the current theme breakpoints using useTheme hook
     const isMobile = useMediaQuery(themes.breakpoints.down("sm"));// Determine if the screen is a mobile device using useMediaQuery hook
-    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) and (pointer: coarse)").matches;
-    const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
-
+    const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 450px) and (max-width: 1000px) and (orientation: landscape)").matches);
+    const [isTabletQuery, setIsTabletQuery] = useState(window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches);
     useEffect(() => {
         const handleOrientationChange = () => {
             setIsLandscape(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
+            setIsTabletQuery(window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches);
         };
         window.addEventListener("resize", handleOrientationChange);
     }, []);
@@ -44,12 +44,12 @@ export function RightDrawer() {
                             width: 0,
                             flexShrink: 0,
                             '& .MuiDrawer-paper': {
-                                width: drawer ? category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' : isLandscape ? '50%' : tabletQuery ? '45%' : '25%' : isMobile ? isLandscape ? '3%' : '6%' : '2%',
-                                height: isMobile ? '79%' : isLandscape ? '59.5%' : '81.3%',
-                                marginTop: isMobile ? '5rem' : isLandscape ? '4rem' : tabletQuery ? '6rem' : '5rem',
+                                width: drawer ? category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' : isLandscape ? '50%' : isTabletQuery ? '45%' : '25%' : isMobile ? isLandscape ? '3%' : '6%' : '2%',
                                 borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
                                 backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
                                 color: theme === "dark" ? colors.whiteFont : colors.blackFont,
+                                top: isLandscape ? "4rem" : isTabletQuery ? "6rem" : "5rem",
+                                bottom: isMobile ? "9%" : isLandscape ? "18%" : isTabletQuery ? "4.4rem" : "4.4rem"
                             },
                         }}
                         // Drawer is always visible and can only be closed programmatically
@@ -65,7 +65,6 @@ export function RightDrawer() {
                                     <DrawerBody isMobile={isMobile}/>
                                 </div>
                             </> :
-
                             <div style={{display: "flex", height: "100%", position: "relative", overflow: "scroll"}}>
                                 <CodeEditor/>
                             </div>

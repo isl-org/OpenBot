@@ -4,13 +4,15 @@ import Blockly from 'blockly/core';
 import locale from 'blockly/msg/en';
 import 'blockly/blocks';
 import {ThemeContext} from "../../App";
-import {Constants, DarkTheme, errorToast, LightTheme} from "../../utils/constants";
+import {Constants, DarkTheme, errorToast, LightTheme, PathName} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
 import {getCurrentProject, updateCurrentProject} from "../../services/workspace";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {checkFileExistsInFolder, getFolderId, getShareableLink} from "../../services/googleDrive";
+import {RightDrawer} from "../drawer/drawer";
+import {useLocation} from "react-router-dom";
 
 
 Blockly.setLocale(locale);
@@ -49,6 +51,7 @@ function BlocklyComponent(props) {
     } = useContext(StoreContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
+    const location = useLocation();
 
     // Save workspace code to local storage when workspace changes
     const handleWorkspaceChange = useCallback(() => {
@@ -199,14 +202,14 @@ function BlocklyComponent(props) {
     // Return the blockly div and hidden toolbox
     return (
         <React.Fragment>
-            <div
-                ref={blocklyDiv}
-                id="blocklyDiv"
-                style={{
-                    width: "100%",
-                    backgroundColor: theme === "dark" ? "#202020" : "#FFFFFF",
-                }}
-            />
+            <div ref={blocklyDiv}
+                 id="blocklyDiv"
+                 style={{
+                     width: "100%",
+                     backgroundColor: theme === "dark" ? "#202020" : "#FFFFFF",
+                 }}>
+                {location.pathname === PathName.playGround ? <RightDrawer/> : ""}
+            </div>
             <div style={{display: "none"}} ref={toolbox}>
                 {children}
             </div>
