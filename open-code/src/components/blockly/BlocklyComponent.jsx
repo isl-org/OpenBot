@@ -30,17 +30,6 @@ function BlocklyComponent(props) {
     const blocklyDiv = useRef();
     const toolbox = useRef();
     const primaryWorkspace = useRef();
-    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
-    const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
-
-    useEffect(() => {
-        const handleOrientationChange = () => {
-            setIsLandscape(
-                window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches
-            );
-        };
-        window.addEventListener("resize", handleOrientationChange);
-    }, []);
 
     // Get context values from the store
     const {theme} = useContext(ThemeContext);
@@ -215,8 +204,7 @@ function BlocklyComponent(props) {
                 id="blocklyDiv"
                 style={{
                     width: "100%",
-                    height: isLandscape ? "66%" : tabletQuery ? "83.7%" : "81.3%",
-                    backgroundColor: theme === "dark" ? "#202020" : "#FFFFFF"
+                    backgroundColor: theme === "dark" ? "#202020" : "#FFFFFF",
                 }}
             />
             <div style={{display: "none"}} ref={toolbox}>

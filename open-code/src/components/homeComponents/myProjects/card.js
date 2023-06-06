@@ -62,9 +62,9 @@ function Card(props) {
      * @returns {Promise<void>}
      */
     const handleOpenProject = async (projectData) => {
-        if( !(projectData.projectName === getCurrentProject().projectName)) {
+        if (!(projectData.projectName === getCurrentProject()?.projectName)) {
             //current project will first get store in current
-            localStorage.setItem(localStorageKeys.currentProject,"")
+            localStorage.setItem(localStorageKeys.currentProject, "")
         }
         setDrawer(false);
         setIsError(false);

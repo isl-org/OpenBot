@@ -34,7 +34,8 @@ export const BottomBar = () => {
     const {theme} = useContext(ThemeContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
-    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches;
+    const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
+    const isDesktopSmallerScreen = useMediaQuery(themes.breakpoints.down('md'));
 
     const {
         isOnline,
@@ -97,6 +98,14 @@ export const BottomBar = () => {
         }
     };
 
+    useEffect(() => {
+        const handleOrientationChange = () => {
+            setIsLandscape(
+                window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches
+            );
+        };
+        window.addEventListener("resize", handleOrientationChange);
+    }, []);
 
     //handle click  on bottom bar button event which affect workspace
     const clickedButton = (e) => {
@@ -225,7 +234,7 @@ export const BottomBar = () => {
                     <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
                               buttonActive={buttonActive}/>
                     {/*zoom in out*/}
-                    {isMobile || isMobileLandscape ? "" :
+                    {isMobile || isLandscape || isDesktopSmallerScreen ? "" :
                         <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
                                    buttonActive={buttonActive}/>}
 
@@ -246,14 +255,15 @@ function GenerateCodeButton(params) {
     const themes = useTheme();
     const {category, setCategory} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
-    const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
     const [language, setLanguage] = useState(category === Constants.py ? Constants.py : Constants.js);
     const theme = useContext(ThemeContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [openPopupArrow, setOpenPopupArrow] = useState(false);
     const [arrowClick, setArrowClicked] = useState(false);
-    const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)");
+    const [isTabletQuery, setIsTabletQuery] = useState(window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches);
     const popUpRef = useRef(null);// Create a reference to the popup element for detecting clicks outside the popup.
+    const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
+    const isDesktopSmallerScreen = useMediaQuery(themes.breakpoints.down('md'));
     const handleClick = (event) => {
         event.stopPropagation();
         setOpenPopupArrow(!openPopupArrow);
@@ -269,6 +279,18 @@ function GenerateCodeButton(params) {
         setAnchorEl(null);
         setOpenPopupArrow(!openPopupArrow);
     }
+
+    useEffect(() => {
+        const handleOrientationChange = () => {
+            setIsLandscape(
+                window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches
+            );
+            setIsTabletQuery(
+                window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches
+            );
+        };
+        window.addEventListener("resize", handleOrientationChange);
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -291,14 +313,14 @@ function GenerateCodeButton(params) {
 
     return (
         <div className={styles.iconMargin + " " + styles.noSpace}
-             style={{width: isMobile ? "23%" : isMobileLandscape ? "25%" : "31%"}}>
+             style={{width: isMobile ? "23%" : isLandscape ? "25%" : "31%"}}>
             {/*generate QR code*/}
             <button
                 className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
                 name={"uploadCode"} onClick={generateCode}>
                 <img alt={""}
                      className={styles.iconDiv} src={Images.uploadIcon}/>
-                {isMobile || isMobileLandscape || tabletQuery.matches ? (
+                {isMobile || isLandscape || isTabletQuery.matches || isDesktopSmallerScreen ? (
                     ""
                 ) : (
                     <span className={styles.leftButton + " " + styles.iconMargin}>Generate QR </span>
@@ -311,11 +333,11 @@ function GenerateCodeButton(params) {
                 setDrawer(true);
             }
             } className={`${styles.uploadCodeButton}`} style={{width: isMobile && "70px", marginLeft: "1rem"}}>
-                {!isMobile && !isMobileLandscape && !tabletQuery.matches &&
+                {!isMobile && !isLandscape && !isTabletQuery.matches && !isDesktopSmallerScreen &&
                     <img src={language === Constants.js ? Images.jsIconDarkTheme : Images.pyIconDarkTheme} alt={"lang"}
                          style={{width: "1.5rem", height: "1.5rem"}}/>
                 }
-                {isMobile || isMobileLandscape || tabletQuery.matches ? <span
+                {isMobile || isLandscape || isTabletQuery.matches || isDesktopSmallerScreen ? <span
                         className={styles.leftButton + " " + styles.iconMargin}>{language === Constants.js ? "JS" : "Py"}</span> :
                     <span
                         className={styles.leftButton + " " + styles.iconMargin}>{language === Constants.js ? "Javascript" : "Python"}</span>}
@@ -326,7 +348,7 @@ function GenerateCodeButton(params) {
                          height: "1.3rem",
                          width: "1.3rem",
                          cursor: "pointer",
-                         paddingRight: isMobile ? "5px" : isMobileLandscape ? "8px" : "",
+                         paddingRight: isMobile ? "5px" : isLandscape ? "8px" : "",
                          zIndex: "1"
                      }}
                      alt={"arrow"}/>
