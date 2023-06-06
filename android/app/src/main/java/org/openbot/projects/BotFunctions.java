@@ -303,6 +303,16 @@ public class BotFunctions implements SensorEventListener {
   }
 
   @JavascriptInterface
+  public void toggleLed(String value) {
+    mActivity.runOnUiThread(() -> binding.jsCommand.setText("Toggle Led " + value));
+    if (Objects.equals(value, "ON")) {
+      vehicle.sendLightIntensity(100, 100);
+    } else if (Objects.equals(value, "OFF")) {
+      vehicle.sendLightIntensity(0, 0);
+    }
+  }
+
+  @JavascriptInterface
   public void switchController(String controllerMode) {
     if (Objects.equals(controllerMode, "gamepad")) {
       mActivity.runOnUiThread(
