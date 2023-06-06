@@ -248,45 +248,65 @@ Note that this feature uses `ARKit`, a framework developed by Apple for augmente
 </p>
 
 
-### Projects
+### Projects Screen
 
-The Projects section of the application features a `My Projects` section with a `QR Scanner` icon at the top. When the user taps on QR Scanner, a new fragment will open with a camera view of the QR Scanner. If the user scans the Qr code of the Openbot project link successfully, a popup of the project will open, allowing the user to run the project. If there are any issues during the scan, an error message will be displayed.
+The Projects Screen displays a list of your OpenBot Playground projects if you are signed in with your Google account. You can execute these projects to connect with your OpenBot, or scan their QR codes by clicking the scanner icon in the top right corner. If you are not signed in, the screen will display a Google Sign-In button, but you can still scan your project's QR code without signing in. If you get the message `Oops, no project found` on the screen after signing in, make sure that the account has projects stored on Google Drive.
 
-If the user is signed in, all of their projects from Google Drive will be listed here. Otherwise, a message and a sign-in button will appear.
-
-- `QR Scanner` The QR Scanner icon is located at the top of the Projects tab. Tapping on it opens a new screen with a camera view, which allows the user to scan the QR Code of the project link. After a successful scan, a popup will appear asking the user if they want to run OpenBot. Upon tapping Run, a new screen will load with the OpenBot and the project will start running.
-
-
-- `Projects` If the user is signed in to their Google account and has projects in the Google Drive folder named openBot-openCode, all projects will be listed in the Projects tab along with their corresponding title and creation date. Tapping on a project will bring up a bottom sheet asking the user if they want to run the current project.
-
-If the user is not signed in, a Google Sign-in button will appear on the screen, prompting the user to sign in before accessing their projects.
+If you don't see your latest projects in the project list, you can reload them by pulling down on the project screen.
 
 <p align="left">
-<img src="../../docs/images/ios_project_screen.jpeg" alt="Project Screen" width="25%" />
-<img src="../../docs/images/ios_no_signin.jpeg" alt="Project Screen" width="25%" />
-<img src="../../docs/images/ios_qr_scan.gif" alt="Project Screen" width="25%" />
+<img src="../../docs/images/projects_tab_screen_ios.gif" alt="Project Screen" width="25%"/>
+<img src="../../docs/images/no_projects_found_ios.jpeg" alt="No project screen" width="26.5%"/>
+<img src="../../docs/images/reload_projects_ios.gif" alt="Reload project screen" width="25%"/>
+</p>
+
+- **Google Drive projects**: To run a Google Drive project, tap on the project you want to execute and wait for the contents of the project file to be read. If the file is successfully retrieved without any errors, a pop-up will appear with two buttons: `Start` and `Cancel`. The pop-up will also display the name of the project you are about to run. To execute the project, click on the Start button. If you want to stop the activity, click on the Cancel button. If you receive a pop-up message stating `Something went wrong`, there may be an error with the Google Drive file. To resolve this issue, refresh the project screen by pulling down and then repeating the same process.
+
+
+- **Qr code scanner**: To scan the QR code of a Playground project, click on the QR code icon located in the top right corner of the screen. Grant camera access to the app so that it can scan the QR code. Once the code is scanned, wait for the contents of the file to be read. If the file is retrieved successfully without any errors, a pop-up will appear with two buttons: `Start` and `Cancel`. The pop-up will also display the name of the project you are about to run. To execute the project, click on the Start button. If you want to stop the activity, click on the Cancel button. If you receive a pop-up message stating `Something went wrong`, there may be an error with the Google Drive file. To resolve this issue, generate a new QR code in Playground and repeat the process.
+
+
+- **Executing Project**: If your OpenBot Playground project runs successfully, the screen will display the names of code blocks along with a stop button that can be used to stop the execution of playground block commands.
+
+
+- **Delete Project**: To delete a project, long-press on the project you wish to delete. This will bring up a popup screen asking to confirm the deletion. Tap on 'Yes' to delete the project.
+
+<p align="left">
+<img src="../../docs/images/google_drive_projects_execute_ios.gif" alt="Google Drive project execute" width="25%" />
+<img src="../../docs/images/ios_qr_scan.gif" alt="Qr code scanner project execute" width="25%" />
+<img src="../../docs/images/delete_project_ios.jpeg" alt="Delete project popup" width="26%" />
 </p>
 
 
-### Profile
-
-The `Profile` tab in the app provides different options based on whether the user is signed in or not.
-
-If the user is not signed in, a `Google Sign-in` button will appear, prompting the user to sign in to their Google account. Once signed in, the user will be able to access their profile and other features.
-
+### Profile Screen
+The Profile Screen in the app provides different options based on whether the user is signed in or not.
+If the user is not signed in, a `Google Sign-in` button will appear, prompting the user to sign in their Google account. Once signed in, the user will be able to access their profile and other features.
 If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edit Profile` and `Logout`.
 
--  `Edit Profile`  button: This button allows the user to edit their profile information, such as their name, profile picture, and other details. Tapping on this button will open a new screen where the user can update their profile information.
-
-- `Logout` button: This button allows the user to log out of their account. Tapping on this button will log the user out and return them to the login screen.
-
-Note that the Profile tab is only available to signed-in users. If a user is not signed in, they will not be able to access the Profile tab or its features.
-
 <p align="left">
-<img src="../../docs/images/ios_profile_screen.jpeg" alt="Project Screen" width="25%" />
-<img src="../../docs/images/ios_edit_profile_screen.jpeg" alt="Project Screen" width="25%" />
+<img src="../../docs/images/logged_out_profile_screen_ios.jpeg" alt="Logged out profile screen" width="25%"/>
+<img src="../../docs/images/logged_in_profile_screen_ios.jpeg" alt="Logged in profile screen" width="25%"/>
 </p>
 
+- **Edit Profile**: Tapping on this button will open a new screen where the user can update their profile information, such as their name and profile picture.
+
+
+- **Logout**: This button allows the user to log out of their account. Tapping on this button will log the user out and return them to the login screen.
+
+<p align="left">
+<img src="../../docs/images/ios_edit_profile_screen.jpeg" alt="Edit profile screen" width="25%"/>
+<img src="../../docs/images/logout_dialog_box_ios.jpeg" alt="Logout dialog box" width="25%"/>
+</p>
+
+
+### OpenBot PlayGround Screen
+
+To access OpenBot Playground services, click on the OpenBot Playground icon located at the top of the screen in project's screen toolbar options. If you want to learn more about OpenBot Playground, [click here](https://github.com/3dwesupport/OpenBot/blob/react-blockly/open-code/README.md).
+
+<p align="left">
+<img src="../../docs/images/playground_services_ios.gif" alt="Playground Services" width="25%" />
+<img src="../../docs/images/playground_sign-in_ios.gif" alt="Playground sign-in" width="25%" />
+</p>
 
 ## Code Structure
 
