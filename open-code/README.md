@@ -182,7 +182,6 @@ JavaScript and Python.
   code.
 - Users can restore a deleted block from the trash by clicking on it, which will display a list of deleted blocks.
   They can then drag and drop the desired block from the trash back into the workspace.
-
 <p align="left">
   <img style="padding-right: 2%;" src="../docs/images/playground_workspace.gif" alt="Create New Project" width="50%"/>
 </p>
@@ -213,10 +212,10 @@ and access the code on mobile devices adds another level of convenience and acce
 
 - #### Code Editor
 
-Code editor button on right side of QR button, opens a side window displaying block code in a scripting language. The
+Code editor button on right side of generate QR button, opens a side window displaying block code in a scripting language. The
 button provides options to choose between two languages, either JavaScript or Python, and once selected, users can only
 view their code snippets in the side window. They can toggle between JavaScript and Python to see the corresponding code in
-the side window simultaneously. The options to choose a language enable users to examine and evaluate the
+the side window simultaneously. The options to choose a language enables you to examine and evaluate the
 correctness of the blocks.
 
 <p align="left">
