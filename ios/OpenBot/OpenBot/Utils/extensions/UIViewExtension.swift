@@ -292,7 +292,7 @@ class openCodeRunBottomSheet: UIView {
         cancelBtn.layer.borderWidth = 1;
         cancelBtn.layer.borderColor = Colors.title?.cgColor;
         cancelBtn.clipsToBounds = true;
-        cancelBt.setTitleColor(traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, for: .normal)
+        cancelBtn.setTitleColor(traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, for: .normal)
         cancelButton.setTitleColor(traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, for: .normal)
         cancelBtn.addTarget(nil, action: #selector(cancel), for: .touchUpInside)
         cancelBtn.layer.cornerRadius = 10;
