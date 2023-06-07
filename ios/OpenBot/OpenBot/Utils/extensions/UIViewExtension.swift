@@ -71,7 +71,7 @@ class BottomSheetView: UIView {
 
     override init(frame: CGRect) {
         let newFrame = currentOrientation == .portrait ? CGRect(x: safeAreaLayoutValue.left, y: height - 250 , width: width - safeAreaLayoutValue.left, height: 250) :
-                currentOrientation == .landscapeLeft ? CGRect(x: safeAreaLayoutValue.top, y: width - 250, width: height - safeAreaLayoutValue.top, height: 250) :
+                currentOrientation == .landscapeLeft ? CGRect(x: safeAreaLayoutValue.top, y: width - 250, width: height - safeAreaLayoutValue.top-safeAreaLayoutValue.bottom, height: 250) :
                 CGRect(x: safeAreaLayoutValue.bottom, y: width - 250, width: height - safeAreaLayoutValue.top - safeAreaLayoutValue.bottom, height: 250);
         super.init(frame: newFrame)
         setup()
@@ -99,7 +99,7 @@ class BottomSheetView: UIView {
         super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection != nil && previousTraitCollection!.verticalSizeClass != traitCollection.verticalSizeClass {
             if traitCollection.verticalSizeClass == .compact {
-                frame = currentOrientation == .landscapeLeft ? CGRect(x: safeAreaLayoutValue.top, y: width - 250, width: height - safeAreaLayoutValue.top, height: 250) :
+                frame = currentOrientation == .landscapeLeft ? CGRect(x: safeAreaLayoutValue.top, y: width - 250, width: height - safeAreaLayoutValue.top - safeAreaLayoutValue.bottom, height: 250) :
                         CGRect(x: safeAreaLayoutValue.bottom, y: width - 250, width: height - safeAreaLayoutValue.top - safeAreaLayoutValue.bottom, height: 250);
             } else {
                 frame = CGRect(x: safeAreaLayoutValue.left, y: height - 250, width: width - safeAreaLayoutValue.left, height: 250)
@@ -358,8 +358,8 @@ class openCodeRunBottomSheet: UIView {
      */
 
     private func createCancel(btnName : String) {
-//        cancelButton.backgroundColor = Colors.title;
         cancelButton.setTitle(btnName, for: .normal);
+        cancelButton.backgroundColor = Colors.title;
         cancelButton.addTarget(nil, action: #selector(scan), for: .touchUpInside);
         cancelButton.layer.cornerRadius = 10;
         bottomSheet.addSubview(cancelButton);
