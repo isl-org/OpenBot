@@ -23,6 +23,7 @@ export default function SimpleInputComponent(props) {
         headStyle,
         value,
         extraInputStyle,
+        inlineStyle,
         OpenNewProjectHandle = () => {
         }
     } = props
@@ -32,7 +33,7 @@ export default function SimpleInputComponent(props) {
     let currentDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
 
     function handleChange(e) {
-        setInputValue(e.target.value)
+        setInputValue(e.target.value);
         onDataChange(e.target.value);
     }
 
@@ -40,7 +41,7 @@ export default function SimpleInputComponent(props) {
         <div className={styles.mainDiv + " " + extraStyle}>
             <BlackText text={inputTitle} extraStyle={headStyle} divStyle={divStyle}/>
             {inputType === "text" ?
-                <div className={styles.inputBorder + " " + extraMargin}>
+                <div className={styles.inputBorder + " " + extraMargin} style={inlineStyle}>
                     <input type={"text"}
                            name={"inputBox"}
                            placeholder={placeHolder}

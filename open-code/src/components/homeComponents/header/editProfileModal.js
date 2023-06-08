@@ -12,7 +12,6 @@ import Compressor from 'compressorjs';
 import {StoreContext} from "../../../context/context";
 import heic2any from "heic2any";
 
-
 /**
  * Edit  Profile option modal contains profile image picker and edit name, birthdate nad email field.
  * @param props
@@ -29,6 +28,7 @@ export function EditProfileModal(props) {
     const [isAlertSuccess, setIsAlertSuccess] = useState(false)
     const [isAlertError, setIsAlertError] = useState(false)
     const [isLoader, setIsLoader] = useState(false);
+    const [isNameEmpty, setIsNameEmpty] = useState(false);
     const [userDetails, setUserDetail] = useState({
         displayName: user?.displayName,
         email: user?.email,
@@ -51,8 +51,6 @@ export function EditProfileModal(props) {
     async function handleCompressFile(e) {
         const file = e.target.files[0];
         let convertedFile = file;
-        console.log("filetype::", file);
-
         if (file.type === 'image/heic' || file.type === 'image/heif') {
             try {
                 const convertedImage = await heic2any({
@@ -60,9 +58,7 @@ export function EditProfileModal(props) {
                     toType: 'image/jpeg', // Convert HEIC to JPEG
                 });
 
-                convertedFile = new File([convertedImage], 'converted.jpg', { type: 'image/jpeg' });
-
-                console.log("convertedimg", convertedFile);
+                convertedFile = new File([convertedImage], 'converted.jpg', {type: 'image/jpeg'});
             } catch (error) {
                 // Handle conversion error
                 console.error('Error converting HEIC image:', error);
@@ -95,13 +91,15 @@ export function EditProfileModal(props) {
 
     //handle name change
     function handleNameChange(name) {
-        if (!(name.trim.length <= 0)) {
+        if (!(name.trim().length <= 0)) {
+            setIsNameEmpty(false);
             setFullName(name);
             setUserDetail({
                 ...userDetails,
                 displayName: name,
             })
         } else {
+            setIsNameEmpty(true);
             setFullName(user?.displayName)
         }
     }
@@ -163,7 +161,7 @@ export function EditProfileModal(props) {
                 </div>
                 <div style={{display: "flex"}}>
                     <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
-                                          headStyle={styles.headStyle}
+                                          headStyle={styles.headStyle} inlineStyle={{border:isNameEmpty && "1px solid red"}}
                                           inputTitle={"Full Name"} extraInputStyle={styles.extraInputStyle}
                                           value={fullName} onDataChange={handleNameChange}/>
                     <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
