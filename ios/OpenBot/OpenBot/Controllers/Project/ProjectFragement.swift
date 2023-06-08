@@ -374,7 +374,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         projectCollectionView.reloadData();
         authentication.getAllFolders { files, error in
             if let files = files {
-                self.authentication.getFilesInFolder(folderId: files[0].identifier ?? "") { files, error in
+                self.authentication.getFilesInFolder(folderId: self.authentication.getOPenBotFolderId(files: files)) { files, error in
                     if let files = files {
                         for file in files {
                             if file.mimeType == "text/javascript" {
@@ -396,12 +396,18 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
                         self.projectCollectionView.reloadData();
                         self.updateViewsVisibility()
                     } else if let error = error {
+                        self.stopAnimation();
+                        self.allProjects = [];
+                        self.allProjectCommands = [];
                         print("Error getting files in folder: ", error.localizedDescription)
                     }
                     UserDefaults.setAllProjectsToUserDefaults(allProjects: self.allProjects);
                     self.isLoading = false;
                 }
             } else if let error = error {
+                self.stopAnimation();
+                self.allProjects = [];
+                self.allProjectCommands = [];
                 print("Error getting folders: ", error.localizedDescription)
             }
         }

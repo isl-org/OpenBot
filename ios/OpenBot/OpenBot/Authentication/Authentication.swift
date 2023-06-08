@@ -80,7 +80,7 @@ class Authentication {
             self.service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
             self.getAllFoldersInDrive(accessToken: userIdToken?.tokenString ?? "") { files, error in
                 if let files = files {
-                    let folderId = files[0].identifier;
+                    let folderId = self.getOPenBotFolderId(files: files);
                     self.getFilesInFolder(folderId: folderId ?? "") { files, error in
                         if let files = files {
                             for file in files {
@@ -108,6 +108,15 @@ class Authentication {
             }
 
         }
+    }
+
+     func getOPenBotFolderId(files : [GTLRDrive_File])->String{
+        for file in files {
+            if file.name == "openBot-Playground" {
+                return file.identifier ?? "";
+            }
+        }
+        return "";
     }
 
     func signIn(signIn: GIDSignIn!, didSignInForUser user: GIDGoogleUser!,
@@ -202,7 +211,7 @@ class Authentication {
             }
 
             if let files = (result as? GTLRDrive_FileList)?.files {
-                print(files);
+                print("files ",files);
                 completion(files, nil)
             } else {
                 completion(nil, nil)
@@ -317,7 +326,7 @@ class Authentication {
     func getIdOfXmlFile(name: String, completion: @escaping (String?, Error?) -> Void) {
         Authentication.googleAuthentication.getAllFolders { files, error in
             if let files = files {
-                Authentication.googleAuthentication.getFilesInFolder(folderId: files[0].identifier ?? "") { files, error in
+                Authentication.googleAuthentication.getFilesInFolder(folderId:self.getOPenBotFolderId(files: files)) { files, error in
                     if let error = error {
                         completion(nil, error)
                         return
