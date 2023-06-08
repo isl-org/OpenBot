@@ -22,6 +22,7 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet var modesCollectionView: UICollectionView!;
 
+    @IBOutlet weak var openCodeWebView: UIView!
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,8 +56,8 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
-
         gameController.resetControl = true
+        setupOpenCodeIcon();
 
     }
 
@@ -194,6 +195,24 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let viewController = (storyboard?.instantiateViewController(withIdentifier: Constants.gameModes[indexPath.row].identifier))!
+        navigationController?.pushViewController(viewController, animated: true);
+    }
+
+    /**
+     Function to setup openCodeIcon
+     */
+    private func setupOpenCodeIcon() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(loadWebView))
+        openCodeWebView.addGestureRecognizer(tap)
+    }
+
+    /**
+     Function to handle and open webview controller on webview tap
+     - Parameter sender:
+     */
+    @objc func loadWebView(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "openCode", bundle: nil)
+        let viewController = (storyboard.instantiateViewController(withIdentifier: "webView"))
         navigationController?.pushViewController(viewController, animated: true);
     }
 

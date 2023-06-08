@@ -88,7 +88,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     }
 
     /**
-     Function create refresh
+     Function to setup openCodeIcon
      */
     private func setupOpenCodeIcon() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(loadWebView))

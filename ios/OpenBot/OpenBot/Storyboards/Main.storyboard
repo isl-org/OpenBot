@@ -232,7 +232,7 @@
                                 <rect key="frame" x="280" y="92" width="45" height="45"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bluetoothConnected" translatesAutoresizingMaskIntoConstraints="NO" id="yiM-4h-xvS">
-                                        <rect key="frame" x="10" y="10" width="25" height="25"/>
+                                        <rect key="frame" x="10.5" y="10.5" width="24" height="24"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="24" id="J8P-QY-cgP"/>
                                             <constraint firstAttribute="height" constant="24" id="Jkp-rt-DBD"/>
@@ -365,15 +365,40 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gJj-cG-iuu">
+                                <rect key="frame" x="238" y="92" width="45" height="45"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="open_code" translatesAutoresizingMaskIntoConstraints="NO" id="N6a-3m-XeE">
+                                        <rect key="frame" x="7.5" y="7.5" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="IEP-rT-AdM"/>
+                                            <constraint firstAttribute="height" constant="30" id="dvr-a2-GoB"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="4Pt-66-zqR"/>
+                                    <constraint firstItem="N6a-3m-XeE" firstAttribute="leading" secondItem="gJj-cG-iuu" secondAttribute="leading" constant="7.5" id="MgH-W5-pTI"/>
+                                    <constraint firstItem="N6a-3m-XeE" firstAttribute="top" secondItem="gJj-cG-iuu" secondAttribute="top" constant="7.5" id="R9z-dY-VSr"/>
+                                    <constraint firstItem="N6a-3m-XeE" firstAttribute="leading" secondItem="gJj-cG-iuu" secondAttribute="leading" constant="7.5" id="d0U-Kg-Wrg"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="45" id="kpg-dC-KPX"/>
+                                    <constraint firstAttribute="width" constant="45" id="uKH-R8-oWk"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="45" id="xrh-e3-XVG"/>
+                                    <constraint firstItem="N6a-3m-XeE" firstAttribute="top" secondItem="gJj-cG-iuu" secondAttribute="top" constant="7.5" id="zhk-SD-hJW"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="P4B-f4-UdK"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="ksi-ku-dkS" firstAttribute="top" secondItem="P4B-f4-UdK" secondAttribute="top" constant="4" id="2xC-oQ-SHo"/>
                             <constraint firstItem="cJk-CX-n1c" firstAttribute="centerX" secondItem="yc1-Db-SC8" secondAttribute="centerX" id="BO6-80-i6k"/>
+                            <constraint firstItem="gJj-cG-iuu" firstAttribute="top" secondItem="P4B-f4-UdK" secondAttribute="top" id="BTa-cL-bmc"/>
                             <constraint firstItem="f0H-Wf-1Xn" firstAttribute="leading" secondItem="5sD-Bh-gBz" secondAttribute="trailing" id="Cvj-Lc-Tqn"/>
                             <constraint firstItem="cJk-CX-n1c" firstAttribute="top" secondItem="f0H-Wf-1Xn" secondAttribute="bottom" constant="13" id="JwB-zo-Tya"/>
                             <constraint firstItem="cJk-CX-n1c" firstAttribute="leading" secondItem="P4B-f4-UdK" secondAttribute="leading" id="LoT-CS-gFv"/>
+                            <constraint firstItem="5sD-Bh-gBz" firstAttribute="leading" secondItem="gJj-cG-iuu" secondAttribute="trailing" constant="20" id="V6e-tW-EN9"/>
                             <constraint firstItem="5sD-Bh-gBz" firstAttribute="top" secondItem="P4B-f4-UdK" secondAttribute="top" constant="4" id="Wby-9T-xZR"/>
                             <constraint firstItem="P4B-f4-UdK" firstAttribute="trailing" secondItem="f0H-Wf-1Xn" secondAttribute="trailing" constant="10" id="dmJ-E3-a4v"/>
                             <constraint firstItem="ksi-ku-dkS" firstAttribute="leading" secondItem="P4B-f4-UdK" secondAttribute="leading" constant="12" id="eXh-Cq-5wb"/>
@@ -386,6 +411,7 @@
                     <connections>
                         <outlet property="bluetooth" destination="5sD-Bh-gBz" id="Dui-1o-bzb"/>
                         <outlet property="modesCollectionView" destination="cJk-CX-n1c" id="pT6-lO-fVX"/>
+                        <outlet property="openCodeWebView" destination="gJj-cG-iuu" id="pDb-II-gBT"/>
                         <outlet property="settings" destination="f0H-Wf-1Xn" id="4oo-ut-III"/>
                         <outlet property="titleLabel" destination="ksi-ku-dkS" id="mTg-KG-uTP"/>
                     </connections>
@@ -501,14 +527,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7MC-BA-4bk" customClass="BluetoothTableViewCell" customModule="OpenBot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="49" width="414" height="34.5"/>
+                                <rect key="frame" x="0.0" y="49" width="414" height="34"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7MC-BA-4bk" id="BJK-9F-9vf">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXM-H5-QVt">
-                                            <rect key="frame" x="323.5" y="0.0" width="85.5" height="34.5"/>
+                                            <rect key="frame" x="323.5" y="0.0" width="85.5" height="34"/>
                                             <color key="tintColor" name="gamepad"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Connect">

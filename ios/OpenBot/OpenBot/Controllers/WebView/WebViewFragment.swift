@@ -5,12 +5,14 @@
 import Foundation
 import UIKit
 import WebKit
+
 /**
  class for webview
  */
 class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
     var webView: WKWebView!
     var newWebviewPopupWindow: WKWebView?
+
     /**
      Function to configure webview before its load
      */
@@ -41,6 +43,9 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
         webView.navigationDelegate = self
         let myURL = URL(string: "https://www.openbot.itinker.io/")
         let myRequest = URLRequest(url: myURL!)
+        let scrollView = webView.scrollView
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
         webView.isUserInteractionEnabled = true
         webView.allowsLinkPreview = false
         webView.configuration.preferences.javaScriptEnabled = true
