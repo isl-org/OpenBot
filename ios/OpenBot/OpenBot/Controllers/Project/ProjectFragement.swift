@@ -9,7 +9,6 @@ import GoogleAPIClientForREST
 import GTMSessionFetcher
 
 class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
-    let shadowSheet = UIView(frame: UIScreen.main.bounds);
     @IBOutlet weak var baseView = UIView()
     var animationView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4));
     @IBOutlet weak var qrScannerIcon: UIView!
@@ -29,7 +28,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     private let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
     private var allProjectCommands: [ProjectData] = UserDefaults.getALlProjectsDataFromUserDefaults()
     private var myProjectLabel: CustomLabel = CustomLabel(frame: .zero)
-    var deleteProjectView = UIView();
     var fileName: String = String()
     var projectId: String = String()
     var isLoading: Bool = false
@@ -74,14 +72,11 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         setupOpenCodeIcon();
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
-        let tap = UITapGestureRecognizer(target: self, action: #selector(hideDeletePopUp))
-        shadowSheet.addGestureRecognizer(tap)
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated);
-//        NotificationCenter.default.removeObserver(self);
     }
 
     /**
@@ -152,7 +147,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             noProjectMessageView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
         }
         animateFloatingView()
-        updateUIConstraints()
     }
 
     /**
@@ -264,8 +258,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         cell.longPressAction = {
             self.fileName = self.allProjects[indexPath.row].projectName;
             self.projectId = self.allProjects[indexPath.row].projectId
-            self.createShadowSheet(index: indexPath.row);
-
+//            self.createShadowSheet(index: indexPath.row);
+            self.createDeleteProject()
         }
         return cell
     }
@@ -658,84 +652,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         stopAnimation();
     }
 
-    @objc private func hideDeletePopUp() {
-        shadowSheet.removeFromSuperview();
-    }
-
-    /**
-     Function to create shadow sheet which will load on logout popup.
-     */
-    private func createShadowSheet(index: Int) {
-        shadowSheet.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        tabBarController?.view.addSubview(shadowSheet)
-        createDeleteProject()
-        shadowSheet.addSubview(deleteProjectView);
-    }
-
-    /**
-     function to update the UI of shadow sheet and delete project popup
-     */
-    private func updateUIConstraints() {
-        if currentOrientation == .portrait {
-            shadowSheet.frame = UIScreen.main.bounds
-            deleteProjectView.frame = CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 84, width: width * 0.90, height: 168)
-        } else {
-            shadowSheet.frame = CGRect(x: 0, y: 0, width: height, height: width);
-            deleteProjectView.frame = CGRect(x: height / 2 - 160, y: width / 2 - 84, width: width * 0.90, height: 168);
-        }
-    }
-
-    /***
-     Function to create ui of delete project popup
-     */
-    private func createDeleteProject() {
-        if currentOrientation == .portrait {
-            deleteProjectView.frame = CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 84, width: width * 0.90, height: 168);
-        } else {
-            deleteProjectView.frame = CGRect(x: height / 2 - 160, y: width / 2 - 84, width: width * 0.90, height: 168);
-        }
-        deleteProjectView.backgroundColor =  traitCollection.userInterfaceStyle == .dark ? Colors.lightBlack : .white;
-        let deleteThisFileLabel = CustomLabel(text: "Delete this file?", fontSize: 18, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 24, y: 22, width: 150, height: 40));
-        let msg = CustomLabel(text: "You cannot restore this file later.\n", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 24, y: deleteThisFileLabel.frame.origin.y + 35, width: width, height: 40));
-        let cancelBtn = UIButton(frame: CGRect(x: 80, y: msg.frame.origin.y + 50, width: 100, height: 35));
-        cancelBtn.setTitle("CANCEL", for: .normal);
-        cancelBtn.addTarget(self, action: #selector(cancelDeletePopup), for: .touchUpInside)
-        cancelBtn.setTitleColor(Colors.title, for: .normal)
-        deleteProjectView.addSubview(deleteThisFileLabel);
-        deleteProjectView.addSubview(msg);
-        deleteProjectView.addSubview(cancelBtn);
-        let deleteBtn = UIButton(frame: CGRect(x: cancelBtn.frame.origin.x + 130, y: cancelBtn.frame.origin.y, width: 100, height: 35))
-        deleteBtn.setTitle("DELETE", for: .normal);
-        deleteBtn.setTitleColor(Colors.title, for: .normal)
-        deleteBtn.addTarget(self, action: #selector(deleteFile), for: .touchUpInside)
-        deleteProjectView.addSubview(deleteBtn);
-    }
-
-    /**
-     function calls after tap on cancel button of delete project popup
-     - Parameter sender:
-     */
-    @objc func cancelDeletePopup(_ sender: UIButton) {
-        shadowSheet.removeFromSuperview();
-    }
-
-    /**
-
-     - Parameter sender:
-     */
-    @objc func deleteFile(_ sender: UIButton) {
-        shadowSheet.removeFromSuperview()
-        isLoading = true;
-        animateFloatingView();
-        deleteProject(projectName: fileName, projectId: projectId) { error, deleteCount in
-            if deleteCount != 0 {
-                self.stopAnimation();
-                self.reloadProjects();
-
-            }
-        }
-    }
-
     /**
      Function to handle deletion of a project from google drive
      - Parameters:
@@ -786,6 +702,26 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
         dispatchGroup.notify(queue: .main) {
             completion(deletionError, deleteCount)
+        }
+    }
+
+    private func createDeleteProject() {
+        let alertController = UIAlertController(title: "Delete this file", message: "You cannot restore this file later", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
+            self.isLoading = true;
+            self.animateFloatingView();
+            self.deleteProject(projectName: self.fileName, projectId: self.projectId) { error, deleteCount in
+                if deleteCount != 0 {
+                    self.stopAnimation();
+                    self.reloadProjects();
+                }
+            }
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(deleteAction)
+        if let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
+            rootViewController.present(alertController, animated: true, completion: nil)
         }
     }
 }
@@ -858,11 +794,14 @@ extension UserDefaults {
      Static method to delete all projects from user default
 
      */
-    static  func deleteAllProjectsFromUserDefaults() {
+    static func deleteAllProjectsFromUserDefaults() {
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "allProjects");
         defaults.removeObject(forKey: "allProjectCommands");
         defaults.synchronize()
     }
 }
+
+
+
 
