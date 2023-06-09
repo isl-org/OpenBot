@@ -163,10 +163,14 @@ public class BarCodeScannerFragment extends CameraFragment {
         String qrCodeValue = barcodes.valueAt(0).displayValue;
         // grCode value is in Json object
         Gson gson = new Gson();
-        JsonObject jsonObject = gson.fromJson(qrCodeValue, JsonObject.class); // get json
-        String linkCode = jsonObject.get("driveLink").getAsString(); // get as string
-        projectName = jsonObject.get("projectName").getAsString(); // get as string
-        extractFileID(linkCode);
+        if (qrCodeValue.startsWith("{\"driveLink\"")) {
+          JsonObject jsonObject = gson.fromJson(qrCodeValue, JsonObject.class); // get json
+          String linkCode = jsonObject.get("driveLink").getAsString(); // get as string
+          projectName = jsonObject.get("projectName").getAsString(); // get as string
+          extractFileID(linkCode);
+        } else {
+          handleBottomSheet(false);
+        }
       }
     }
   }
