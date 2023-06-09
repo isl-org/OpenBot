@@ -29,6 +29,7 @@ class scannerFragment: CameraController {
  */
     override func viewDidLoad() {
         super.viewDidLoad();
+        setupNavigationBarItem();
         createScanHeading()
         createScanMessage()
         createScannerBorder()
@@ -200,7 +201,15 @@ class scannerFragment: CameraController {
         previewLayer.videoGravity = .resizeAspectFill
         previewLayer.frame = cameraView.layer.bounds
         cameraView.layer.addSublayer(previewLayer)
-        previewLayer.connection?.videoOrientation = AVCaptureVideoOrientation(rawValue: currentOrientation.rawValue) ?? .portrait;
+        if currentOrientation.rawValue == 3{
+            previewLayer.connection?.videoOrientation = AVCaptureVideoOrientation(rawValue: 4) ?? .portrait;
+        }
+        else if currentOrientation.rawValue == 4{
+            previewLayer.connection?.videoOrientation = AVCaptureVideoOrientation(rawValue: 3) ?? .portrait;
+        }
+        else {
+            previewLayer.connection?.videoOrientation = AVCaptureVideoOrientation(rawValue: currentOrientation.rawValue) ?? .portrait;
+        }
         captureSession.startRunning()
     }
 
@@ -208,7 +217,7 @@ class scannerFragment: CameraController {
      Creating Bottom sheet for QR scan Successful
      */
     private func createSuccessUI() {
-        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: projectName,isScannerFragment: true);
+        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: projectName, isScannerFragment: true);
         whiteSheet.startBtn.addTarget(self, action: #selector(start), for: .touchUpInside);
         whiteSheet.cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside);
         view.addSubview(whiteSheet);
@@ -218,7 +227,7 @@ class scannerFragment: CameraController {
      Creating Bottom sheet for QR scan Error
      */
     private func createErrorUI() {
-        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: String(),isScannerFragment: true);
+        whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: String(), isScannerFragment: true);
         whiteSheet.cancelButton.addTarget(self, action: #selector(scan), for: .touchUpInside);
         view.addSubview(whiteSheet);
     }
@@ -299,6 +308,18 @@ class scannerFragment: CameraController {
 
     @objc func reInitializeCamera() {
         initializeCamera()
+    }
+
+    func setupNavigationBarItem() {
+        if UIImage(named: "back") != nil {
+            let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: "Qr Scanner", target: self, action: #selector(back(sender:)), titleColor: Colors.navigationColor ?? .white)
+            navigationItem.leftBarButtonItem = newBackButton
+        }
+    }
+
+    @objc func back(sender: UIBarButtonItem) {
+        _ = navigationController?.popViewController(animated: true)
     }
 
 
