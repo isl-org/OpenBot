@@ -85,7 +85,7 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="org.openbot.profile.ProfileFragment"
-        android:label="@string/profile" >
+        android:label="My Profile" >
         <action
             android:id="@+id/action_profileFragment_to_EditProfileFragment"
             app:destination="@id/EditProfileFragment" />
@@ -125,7 +125,7 @@
     <fragment
         android:id="@+id/projectsFragment"
         android:name="org.openbot.projects.ProjectsFragment"
-        android:label="Projects">
+        android:label="My Projects">
         <action
             android:id="@+id/action_projectsFragment_to_barCodeScannerFragment"
             app:destination="@id/barCodeScannerFragment" />
