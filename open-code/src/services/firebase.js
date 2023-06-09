@@ -52,15 +52,14 @@ export async function uploadProfilePic(file, fileName) {
  */
 export async function googleSigIn() {
     let isAndroid = /Android/i.test(navigator.userAgent);
-    if(isAndroid){
+    if (isAndroid) {
         await auth.signInWithRedirect(provider)
-    }else{
+    } else {
         const signIn = await auth.signInWithPopup(provider)
         localStorage.setItem("isSigIn", "true");
         localStorage.setItem(localStorageKeys.accessToken, signIn.credential?.accessToken);
         return signIn
     }
-
 }
 
 /**

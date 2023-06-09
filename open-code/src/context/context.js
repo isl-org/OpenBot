@@ -2,9 +2,9 @@ import React, {createContext, useState} from 'react'
 import {getCurrentProject} from "../services/workspace";
 import {Constants, localStorageKeys} from "../utils/constants";
 
-export const StoreContext = createContext(null)
+export const StoreContext = createContext(null);
 
-export default ({children, isOnline,user,setUser,}) => {
+export default ({children, isOnline, user, setUser,}) => {
     let savedProjectName = null
     let savedProjectXml = null
     let savedFileId = null
@@ -28,7 +28,7 @@ export default ({children, isOnline,user,setUser,}) => {
     const [category, setCategory] = useState(Constants.qr);
     const [workspace, setWorkspace] = useState();
     const [isError, setIsError] = useState(false);
-
+    const [isSignIn, setIsSignIn] = useState(false);
     const store = {
         projectName, setProjectName,
         drawer, setDrawer,
@@ -41,7 +41,8 @@ export default ({children, isOnline,user,setUser,}) => {
         folderId, setFolderId,
         user, setUser,
         workspace, setWorkspace,
-        isError, setIsError, isOnline
+        isError, setIsError, isOnline,
+        isSignIn, setIsSignIn
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }

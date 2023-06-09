@@ -264,7 +264,7 @@ export function ProfileSignIn(params) {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const location = useLocation();
-    const {isOnline} = useContext(StoreContext)
+    const {isOnline, setIsSignIn} = useContext(StoreContext)
 
     //open google signIn and set user details in User
     const handleSignIn = () => {
@@ -275,6 +275,7 @@ export function ProfileSignIn(params) {
                     displayName: response?.user.displayName,
                     email: response?.user.email
                 });
+                setIsSignIn(true);
             }).catch((error) => {
                 console.log("signIn error: ", error)
             });

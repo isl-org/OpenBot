@@ -224,11 +224,6 @@ export async function getFilterProjects() {
             return true;
         });
     })
-
-    filterProjects.sort((a, b) => {
-        return new Date(b.updatedTime) - new Date(a.updatedTime);
-    });
-
     return filterProjects;
 }
 
