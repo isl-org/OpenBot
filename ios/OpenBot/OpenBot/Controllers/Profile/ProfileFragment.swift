@@ -31,7 +31,9 @@ class profileFragment: UIViewController {
         createMyProfileLabel();
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
-        signInView = CustomView(frame: view.bounds, backgroundColor: traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white);
+        signInView = CustomView(frame: currentOrientation == .portrait ? CGRect(origin: CGPoint(x: 0, y: 150), size: CGSize(width: width, height: height - 150)) :
+                CGRect(origin: CGPoint(x: 0, y: 100), size: CGSize(width: height, height: width - 100))
+                , backgroundColor: traitCollection.userInterfaceStyle == .dark ? UIColor.black : UIColor.white);
         guestView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: height / 2 - 100, width: width, height: height / 2)
                 : CGRect(x: height / 2 - width / 2, y: 0, width: width, height: height / 2);
         view.addSubview(signInView);
@@ -53,12 +55,14 @@ class profileFragment: UIViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if currentOrientation == .portrait {
+            signInView.frame = CGRect(origin: CGPoint(x: 0, y: 140), size: CGSize(width: width, height: height - 140))
             guestView.frame.origin = CGPoint(x: 0, y: height / 2 - 100);
             userImgView.frame.origin.x = safeAreaLayoutValue.left + 38;
             logoutImgView.frame.origin.x = safeAreaLayoutValue.left + 38;
             editProfileLabel.frame.origin.x = userImgView.right + 20;
             logoutLabel.frame.origin.x = editProfileLabel.left;
         } else {
+            signInView.frame = CGRect(origin: CGPoint(x: 0, y: 100), size: CGSize(width: height, height: width - 100))
             guestView.frame.origin = CGPoint(x: height / 2 - 200, y: width / 2 - 100);
             userImgView.frame.origin.x = safeAreaLayoutValue.top + 38;
             logoutImgView.frame.origin.x = safeAreaLayoutValue.top + 38;
@@ -78,6 +82,7 @@ class profileFragment: UIViewController {
         view.addSubview(label)
         label.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true;
         label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true;
+        label.layoutIfNeeded();
     }
 
     /**
@@ -104,7 +109,7 @@ class profileFragment: UIViewController {
      Function to create labels for edit profile and logout
      */
     private func createEditProfileAndLogoutLabel() {
-        editProfileLabel = CustomLabel(text: "Edit Profile", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: userImgView.right + 72, y: 145, width: 120, height: 50))
+        editProfileLabel = CustomLabel(text: "Edit Profile", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: userImgView.right + 72, y: 0, width: 120, height: 50))
         signInView.addSubview(editProfileLabel);
         editProfileLabel.isUserInteractionEnabled = true;
         let tapOnEditProfile = UITapGestureRecognizer(target: self, action: #selector(editProfileHandler))
@@ -122,7 +127,7 @@ class profileFragment: UIViewController {
     private func createEditProfileAndLogoutIcons() {
         let userIcon = UIImage(named: "user_icon");
         let logoutIcon = UIImage(named: "logout");
-        userImgView = UIImageView(frame: CGRect(x: safeAreaLayoutValue.left + 38, y: 162, width: userIcon?.size.width ?? 18, height: userIcon?.size.height ?? 18));
+        userImgView = UIImageView(frame: CGRect(x: safeAreaLayoutValue.left + 38, y: 17, width: userIcon?.size.width ?? 18, height: userIcon?.size.height ?? 18));
         logoutImgView = UIImageView(frame: CGRect(x: safeAreaLayoutValue.left + 38, y: userImgView.bottom + 52, width: logoutIcon?.size.width ?? 24, height: logoutIcon?.size.height ?? 18));
         userImgView.image = userIcon;
         logoutImgView.image = logoutIcon;
@@ -134,8 +139,6 @@ class profileFragment: UIViewController {
      Function to create shadow sheet which will load on logout popup.
      */
     private func createShadowSheet() {
-        shadowSheet.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        tabBarController?.view.addSubview(shadowSheet)
         createLogoutPopup()
     }
 
@@ -143,24 +146,11 @@ class profileFragment: UIViewController {
      Function to create logout popup
      */
     private func createLogoutPopup() {
-        logoutView.frame =  currentOrientation == .portrait ? CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 84, width: width * 0.90, height: 168):
-                   CGRect(x: height/2 - 160, y: width/2 -  84, width: width * 0.90, height: 168);
-        shadowSheet.addSubview(logoutView);
-        logoutView.backgroundColor =  traitCollection.userInterfaceStyle == .dark ? Colors.lightBlack : .white;
-        let confirmLogoutLabel = CustomLabel(text: "Confirm Logout", fontSize: 18, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 24, y: 22, width: 150, height: 40));
-        let msg = CustomLabel(text: "Are you sure you want to logout?", fontSize: 16, fontColor: Colors.textColor ?? .black, frame: CGRect(x: 24, y: confirmLogoutLabel.frame.origin.y + 35, width: width, height: 40));
-        let cancelBtn = UIButton(frame: CGRect(x: 80, y: msg.frame.origin.y + 50, width: 100, height: 35));
-        cancelBtn.setTitle("CANCEL", for: .normal);
-        cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside)
-        cancelBtn.setTitleColor(Colors.title, for: .normal)
-        logoutView.addSubview(confirmLogoutLabel);
-        logoutView.addSubview(msg);
-        logoutView.addSubview(cancelBtn);
-        let logoutBtn = UIButton(frame: CGRect(x: cancelBtn.frame.origin.x + 130, y: cancelBtn.frame.origin.y, width: 100, height: 35))
-        logoutBtn.setTitle("LOGOUT", for: .normal);
-        logoutBtn.setTitleColor(Colors.title, for: .normal)
-        logoutBtn.addTarget(self, action: #selector(logout), for: .touchUpInside)
-        logoutView.addSubview(logoutBtn);
+        let storyboard = UIStoryboard(name: "openCode", bundle: nil)
+        let viewController = (storyboard.instantiateViewController(withIdentifier: "alert"));
+        viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+        viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+        present(viewController, animated: true, completion: nil)
     }
 
     /**
@@ -245,14 +235,13 @@ class profileFragment: UIViewController {
     /**
      function to update the UI positions in landscape and portrait mode
      */
-    private func updateUIConstraints(){
-        if currentOrientation == .portrait{
+    private func updateUIConstraints() {
+        if currentOrientation == .portrait {
             shadowSheet.frame = UIScreen.main.bounds
             logoutView.frame = CGRect(x: (width - width * 0.90) / 2, y: height / 2 - 84, width: width * 0.90, height: 168)
-        }
-        else{
+        } else {
             shadowSheet.frame = CGRect(x: 0, y: 0, width: height, height: width);
-            logoutView.frame = CGRect(x: height/2 - 160, y: width/2 -  84, width: width * 0.90, height: 168);
+            logoutView.frame = CGRect(x: height / 2 - 160, y: width / 2 - 84, width: width * 0.90, height: 168);
         }
     }
 

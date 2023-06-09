@@ -250,6 +250,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         saveChangesBtn = CustomButton(text: "Save Changes", frame: CGRect(x: cancelBtn.frame.origin.x + 194.0, y: cancelBtn.frame.origin.y, width: 147, height: 47), selector: #selector(saveChanges))
         scrollView.addSubview(saveChangesBtn)
         saveChangesBtn.backgroundColor = Colors.title
+        saveChangesBtn.setTitleColor(UIColor.white, for: .normal);
     }
 
     /**
