@@ -44,12 +44,12 @@ export function RightDrawer() {
                             width: 0,
                             flexShrink: 0,
                             '& .MuiDrawer-paper': {
-                                width: drawer ? category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' : isLandscape ? '50%' : isTabletQuery ? '45%' : '25%' : isMobile ? isLandscape ? '3%' : '6%' : '2%',
+                                width: drawer ? category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' : isLandscape ? '50%' : isTabletQuery ? '45%' : '25%' : isMobile ? isLandscape ? '3%' : '6%' : '3%',
                                 borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
                                 backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
                                 color: theme === "dark" ? colors.whiteFont : colors.blackFont,
                                 top: isLandscape ? "4rem" : isTabletQuery ? "6rem" : "5rem",
-                                bottom: isMobile ? "9%" : isLandscape ? "18%" : isTabletQuery ? "4.4rem" : "4.4rem"
+                                bottom: isMobile ? "9%" : isLandscape ? "18%" : isTabletQuery ? "4.4rem" : "4.4rem",
                             },
                         }}
                         // Drawer is always visible and can only be closed programmatically
@@ -59,13 +59,20 @@ export function RightDrawer() {
                     >
                         {category === Constants.qr ?
                             <>
-                                <QrCode/>
-                                <div style={{display: "flex"}}>
-                                    <RightSlider/>
-                                    <DrawerBody isMobile={isMobile}/>
+                                <div style={{overflow: "scroll", height: isLandscape ? "63%" : "100%"}}>
+                                    <QrCode/>
+                                    <div style={{display: "flex"}}>
+                                        <RightSlider/>
+                                        <DrawerBody isMobile={isMobile}/>
+                                    </div>
                                 </div>
                             </> :
-                            <div style={{display: "flex", height: "100%", position: "relative", overflow: "scroll"}}>
+                            <div style={{
+                                display: "flex",
+                                height: isLandscape ? "65.5%" : isMobile ? "80%" : "79%",
+                                position: "relative",
+                                overflow: "scroll"
+                            }}>
                                 <CodeEditor/>
                             </div>
 

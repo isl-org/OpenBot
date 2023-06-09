@@ -81,7 +81,6 @@ export const BottomBar = () => {
                             setIsLoader(false);
                             setCategory(Constants.qr);
                             setDrawer(true);
-
                         }
                     ).catch((err) => {
                         console.log("err::", err)
