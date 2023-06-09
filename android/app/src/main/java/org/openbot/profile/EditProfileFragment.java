@@ -2,6 +2,7 @@ package org.openbot.profile;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +47,20 @@ public class EditProfileFragment extends Fragment {
       @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the FragmentEditProfile layout.
     binding = FragmentEditProfileBinding.inflate(inflater, container, false);
+
+    // getting screen width.
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    int screenWidth = displayMetrics.widthPixels;
+
+    // Check if the device is in landscape orientation then apply the updated layout params to the
+    // ScrollView
+    final int orientation = getResources().getConfiguration().orientation;
+    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+      ViewGroup.LayoutParams layoutParams = binding.inputFormScrollView.getLayoutParams();
+      layoutParams.width = (int) (screenWidth / 1.7);
+      binding.inputFormScrollView.setLayoutParams(layoutParams);
+    }
     // Get the current user.
     user = FirebaseAuth.getInstance().getCurrentUser();
     return binding.getRoot();

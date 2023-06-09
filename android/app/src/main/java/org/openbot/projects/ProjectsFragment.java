@@ -201,6 +201,9 @@ public class ProjectsFragment extends Fragment {
         @Override
         public void onStateChanged(@NonNull View bottomSheet, int newState) {
           // Handle state changes here
+          if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+            projectsBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+          }
           if (newState == BottomSheetBehavior.STATE_EXPANDED
               || newState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
             binding.projectsLoader.setVisibility(View.GONE);

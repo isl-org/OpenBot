@@ -70,7 +70,7 @@ public class DriveProjectsAdapter extends CommonRecyclerViewAdapter<ProjectsData
     DateTime dateTime = new DateTime(String.valueOf(data.getProjectDate()));
     Instant instant = Instant.ofEpochMilli(dateTime.getValue());
     LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
-    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd MMMM, yyyy");
+    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
     String formattedDate = outputFormatter.format(localDate);
     updatedDate.setText(formattedDate);
   }
