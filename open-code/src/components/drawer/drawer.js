@@ -44,7 +44,7 @@ export function RightDrawer() {
                             width: 0,
                             flexShrink: 0,
                             '& .MuiDrawer-paper': {
-                                width: drawer ? category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' : isLandscape ? '50%' : isTabletQuery ? '45%' : '25%' : isMobile ? isLandscape ? '3%' : '6%' : '3%',
+                                width: drawer ? category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' : isLandscape ? '50%' : isTabletQuery ? '45%' : '25%' : isMobile ? isLandscape ? '3%' : '6%' : '2%',
                                 borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
                                 backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
                                 color: theme === "dark" ? colors.whiteFont : colors.blackFont,

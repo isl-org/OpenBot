@@ -144,6 +144,7 @@ export const Toolbox = (props) => {
                 {/*<Block type="motorStop"/>*/}
             </Category>
             <Category name="AI" colour={"#D030BA"}>
+                <Label text="Artificial Intelligence" web-class="Heading"></Label>
                 <Block type="followObjects"/>
                 <Block type="navigate"/>
                 <Block type="navigateXAndY"/>
