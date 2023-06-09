@@ -6,14 +6,12 @@ export const StoreContext = createContext(null)
 
 export default ({children, isOnline,user,setUser,}) => {
     let savedProjectName = null
-    let savedProjectId = null
     let savedProjectXml = null
     let savedFileId = null
     let savedFolderId = null
 
     if (localStorage.getItem(localStorageKeys.currentProject)) {
         savedProjectName = getCurrentProject().projectName
-        savedProjectId = getCurrentProject().id
         savedProjectXml = getCurrentProject().xmlValue
         savedFileId = getCurrentProject()?.fileId
         savedFolderId = getCurrentProject().folderId

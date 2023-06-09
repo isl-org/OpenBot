@@ -18,7 +18,7 @@ import {Images} from "../../utils/images";
 import {motion, AnimatePresence} from "framer-motion";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
-import {getAllLocalProjects, getCurrentProject} from "../../services/workspace";
+import {getCurrentProject} from "../../services/workspace";
 import navbarStyle from "../navBar/navbar.module.css"
 import BlueText from "../fonts/blueText";
 

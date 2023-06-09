@@ -290,7 +290,10 @@
     /*background-color: red;*/
     width: 18px;
     height: 18px;
-    margin: 40px 20px 0 0px;
+    margin: 18px 20px 0 0;
+    display: inline-block;
+    padding: 3px 10px 10px 10px;
+    pointer-events: auto;
 }
 
 .Date {
@@ -367,7 +370,7 @@
     }
 
     .PencilIcon {
-        margin: 7% 10% 0 0px;
+        margin: 12% 10% 0 0px;
     }
 
     .Date {

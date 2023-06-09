@@ -1,6 +1,5 @@
 import {Constants, errorToast, localStorageKeys} from "../utils/constants";
 import {FormatDate, getCurrentProject} from "./workspace";
-import {googleSignOut} from "./firebase";
 
 
 /**

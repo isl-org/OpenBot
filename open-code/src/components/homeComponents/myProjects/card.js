@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import styles from "./newProject.module.css"
 import style from "../../../components/navBar/navbar.module.css"
 import {Images} from "../../../utils/images";
@@ -156,11 +156,15 @@ function Card(props) {
                                        text={projectData?.projectName?.slice(0, isMobile ? 8 : 10) + " " + ((projectData?.projectName?.length > (isMobile ? 8 : 10)) ? "..." : "")}/>
                         }
                     </div>
-                    <img alt="pencil-icon" src={theme === Themes.dark ? Images.darkDots : Images.dots}
-                         className={styles.PencilIcon} onClick={(event) => {
-                        event.stopPropagation(); // prevent click event from propagating to parent element
-                        handleClick(event);
-                    }}/>
+                    <div>
+                        <img alt="pencil-icon" src={theme === Themes.dark ? Images.darkDots : Images.dots}
+                             className={styles.PencilIcon}
+                             onClick={(event) => {
+                                 event.stopPropagation(); // prevent click event from propagating to parent element
+                                 handleClick(event);
+                             }}
+                        />
+                    </div>
                     <EditProjectPopUp open={openPopUp} anchorEl={anchorEl}
                                       setOpen={setOpenPopUp}
                                       setRename={setRename}
@@ -181,7 +185,8 @@ function Card(props) {
                 <BlackText extraStyle={styles.Date} text={projectData.time}/>
             </div>
         </div>
-    );
+    )
+        ;
 }
 
 export default Card;

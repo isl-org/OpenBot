@@ -46,7 +46,6 @@ export function EditProfileModal(props) {
         setIsEditProfileModal(false)
     }
 
-
     //compressing the profile image
     async function handleCompressFile(e) {
         const file = e.target.files[0];
@@ -161,7 +160,8 @@ export function EditProfileModal(props) {
                 </div>
                 <div style={{display: "flex"}}>
                     <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
-                                          headStyle={styles.headStyle} inlineStyle={{border:isNameEmpty && "1px solid red"}}
+                                          headStyle={styles.headStyle}
+                                          inlineStyle={{border: isNameEmpty && "1px solid red"}}
                                           inputTitle={"Full Name"} extraInputStyle={styles.extraInputStyle}
                                           value={fullName} onDataChange={handleNameChange}/>
                     <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}

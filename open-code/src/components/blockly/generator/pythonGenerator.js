@@ -1,5 +1,4 @@
 import {pythonGenerator} from "blockly/python";
-import {javascriptGenerator} from "blockly/javascript";
 
 /**
  * code generation of blocks in python
