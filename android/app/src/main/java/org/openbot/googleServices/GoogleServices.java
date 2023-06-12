@@ -50,7 +50,7 @@ public class GoogleServices {
   private final ProjectsFragment projectsFragment;
   private final FirebaseAuth firebaseAuth;
   public ArrayList<ProjectsDataInObject> projectsList = new ArrayList<>();
-  private SharedPreferencesManager sharedPreferencesManager;
+  private final SharedPreferencesManager sharedPreferencesManager;
 
   /**
    * Constructor for the GoogleServices class

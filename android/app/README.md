@@ -426,6 +426,7 @@ To access OpenBot Playground services, click on the OpenBot Playground icon loca
 <img src="../../docs/images/playground_sign-in.gif" alt="openBot playground Sign-in" width="25%"/>
 <img src="../../docs/images/playground_services.gif" alt="openBot playground Services" width="25%"/>
 </p>
+
 ## Add your own fragment
 
 Please refer to the [ContributionGuide](ContributionGuide.md) to learn how to add your own fragments to the OpenBot app.
