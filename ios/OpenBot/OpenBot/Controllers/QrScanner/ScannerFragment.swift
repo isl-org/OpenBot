@@ -42,11 +42,11 @@ class scannerFragment: CameraController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(removeFragment(_:)))
         cancelBtn.addGestureRecognizer(tap)
         NotificationCenter.default.addObserver(self, selector: #selector(reInitializeCamera), name: .reInitializeCamera, object: nil);
-
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated);
+        alert.dismiss(animated: true);
         NotificationCenter.default.removeObserver(self);
     }
 
@@ -121,6 +121,7 @@ class scannerFragment: CameraController {
     }
 
     var hasSuccessfulScan = false
+    var scanCount : Int = 0;
 
     /**
      Delegate Method called for each frame. If Qr scan successful it will stops.
@@ -152,11 +153,11 @@ class scannerFragment: CameraController {
                     print("QRResult", qrResult)
                     captureSession.stopRunning();
                     hasSuccessfulScan = true
+                    scanCount = scanCount + 1;
                     createOverlayAlert();
                     Authentication.download(file: qrResult) { data, error in
                         self.alert.dismiss(animated: true);
                         if error != nil {
-                            self.hasSuccessfulScan = false
                             self.createErrorUI()
                             return;
                         }
@@ -184,6 +185,7 @@ class scannerFragment: CameraController {
     override func initializeCamera() {
         // Configure the input device (camera)
         hasSuccessfulScan = false;
+        scanCount = 0;
         guard let captureDevice = AVCaptureDevice.default(for: .video) else {
             return
         }
@@ -217,6 +219,12 @@ class scannerFragment: CameraController {
      Creating Bottom sheet for QR scan Successful
      */
     private func createSuccessUI() {
+        if scanCount > 1 {
+            return;
+        }
+        if whiteSheet.isDescendant(of: view) {
+            return
+        }
         whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: projectName, isScannerFragment: true);
         whiteSheet.startBtn.addTarget(self, action: #selector(start), for: .touchUpInside);
         whiteSheet.cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside);
@@ -227,6 +235,12 @@ class scannerFragment: CameraController {
      Creating Bottom sheet for QR scan Error
      */
     private func createErrorUI() {
+        if scanCount > 1 {
+            return;
+        }
+        if whiteSheet.isDescendant(of: view) {
+            return
+        }
         whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds, fileName: String(), isScannerFragment: true);
         whiteSheet.cancelButton.addTarget(self, action: #selector(scan), for: .touchUpInside);
         view.addSubview(whiteSheet);
@@ -250,6 +264,8 @@ class scannerFragment: CameraController {
     @objc private func cancel() {
         whiteSheet.animateBottomSheet();
         initializeCamera();
+        hasSuccessfulScan = false;
+        scanCount = 0;
     }
 
     /**
@@ -287,7 +303,10 @@ class scannerFragment: CameraController {
      */
     @objc private func scan() {
         whiteSheet.animateBottomSheet();
+        hasSuccessfulScan = false;
+        scanCount = 0;
         initializeCamera();
+
     }
 
     @objc func removeFragment(_ sender: UIView) {
@@ -298,12 +317,24 @@ class scannerFragment: CameraController {
      Function to create loader
      */
     func createOverlayAlert() {
+        if scanCount > 1 {
+            return;
+        }
+        if let presentedViewController = presentedViewController {
+            // An alert or view controller is already being presented
+            // Handle this case if needed
+            return
+        }
+        print( hasSuccessfulScan);
+        print("i was called")
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
         loadingIndicator.startAnimating();
         loadingIndicator.hidesWhenStopped = true
         loadingIndicator.style = UIActivityIndicatorView.Style.medium
         alert.view.addSubview(loadingIndicator)
-        present(alert, animated: true, completion: nil)
+        DispatchQueue.main.async{
+            self.present(self.alert, animated: true, completion: nil)
+        }
     }
 
     @objc func reInitializeCamera() {

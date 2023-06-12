@@ -102,6 +102,9 @@ class jsEvaluator {
                 let playSoundSpeed: @convention(block) (String) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.playSoundSpeed(speedMode: speed);
                 }
+                let setSpeed : @convention(block) (String) -> Void = { (speed) in
+                    self.runOpenBotThreadClass?.playSoundSpeed(speedMode: speed);
+                }
                 let motorBackward: @convention(block) () -> Void = { () in
                     self.runOpenBotThreadClass?.motorBackward();
                 }
@@ -234,8 +237,6 @@ class jsEvaluator {
 
                 }
 
-
-
                 context.setObject(moveForward,
                         forKeyedSubscript: Strings.moveForward as NSString)
                 context.setObject(loop,
@@ -326,6 +327,8 @@ class jsEvaluator {
                         forKeyedSubscript: "toggleLed" as NSString);
                 context.setObject(reachPosition,
                         forKeyedSubscript: "reachPosition" as NSString);
+                context.setObject(setSpeed,
+                        forKeyedSubscript: "setSpeed" as NSString)
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -389,6 +392,7 @@ class jsEvaluator {
                 bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
                 return
             }
+            print("inside sendControl");
             if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
                 bluetooth.sendData(payload: "c" + String(control.getLeft()) + "," + String(control.getRight()) + "\n")
             }
@@ -431,6 +435,7 @@ class jsEvaluator {
                 return
             }
             print("inside move forward", speed)
+            jsEvaluator?.wait(forTime: 0.03);
             NotificationCenter.default.post(name: .commandName, object: "move Forward \(speed)");
             let carControl = Control(left: speed, right: speed)
             sendControl(control: carControl);
