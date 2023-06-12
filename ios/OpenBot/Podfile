@@ -14,6 +14,7 @@ target 'OpenBot' do
   pod 'GoogleSignIn'
   pod 'GoogleSignInSwiftSupport'
   pod 'GoogleAPIClientForREST/Drive'
+  pod 'FirebaseFirestore'
   # Pods for OpenBot
 
   target 'OpenBotTests' do

@@ -7,7 +7,7 @@ import UIKit
 import GoogleSignIn
 import FirebaseAuth
 import FirebaseStorage
-
+import FirebaseFirestore
 /***
  class for fragment of edit profile section
  */
@@ -24,9 +24,11 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     private var dob: UILabel!
     private var firstNameField: UITextField!
     private var lastNameField: UITextField!
+    private var dobField : UITextField!
     let imagePickerVC = UIImagePickerController()
     private var scrollView = UIScrollView();
     var saveChangesBtn = CustomButton();
+    private var datePicker = UIDatePicker();
 
 /**
     Method calls after view loaded
@@ -40,14 +42,14 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         scrollView.contentSize = CGSize(width: width, height: contentHeight)
         imagePickerVC.delegate = self;
         createUserProfileImageView()
-        scrollView.frame =  currentOrientation == .portrait ?CGRect(x: 0, y: profileIcon.bottom + adapted(dimensionSize: 40, to: .height), width: width, height: height) :  CGRect(x: height - width - safeAreaLayoutValue.bottom, y: profileIcon.top , width: width, height: height);
+        scrollView.frame = currentOrientation == .portrait ? CGRect(x: 0, y: profileIcon.bottom + adapted(dimensionSize: 40, to: .height), width: width, height: height) : CGRect(x: height - width - safeAreaLayoutValue.bottom, y: profileIcon.top, width: width, height: height);
         createLabels();
         createTextFields();
         firstNameField.delegate = self;
+        dobField.delegate = self;
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         createButtons();
-//        automaticallyAdjustsScrollViewInsets = false
         scrollView.contentInsetAdjustmentBehavior = .never
     }
 
@@ -60,14 +62,13 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
-        if currentOrientation == .portrait{
+        if currentOrientation == .portrait {
             scrollView.isScrollEnabled = false
             scrollView.contentSize = CGSize(width: width, height: 800);
-            scrollView.frame =  CGRect(x: 0, y: profileIcon.bottom + adapted(dimensionSize: 40, to: .height), width: width, height: height)
+            scrollView.frame = CGRect(x: 0, y: profileIcon.bottom + adapted(dimensionSize: 40, to: .height), width: width, height: height)
             scrollView.contentInset.bottom = 0
-        }
-        else{
-            scrollView.frame =  CGRect(x: height - width - safeAreaLayoutValue.bottom, y: profileIcon.top , width: width, height: height);
+        } else {
+            scrollView.frame = CGRect(x: height - width - safeAreaLayoutValue.bottom, y: profileIcon.top, width: width, height: height);
             scrollView.contentSize = CGSize(width: width, height: 1000);
             scrollView.isScrollEnabled = true
             scrollView.contentInset.bottom = view.safeAreaInsets.bottom
@@ -119,16 +120,17 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         setTextField(textField: firstNameField, value: getFirstName(name: Auth.auth().currentUser?.displayName ?? "Unknown"));
         lastNameField = CustomTextField(frame: CGRect(x: 17, y: lastName.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
         setTextField(textField: lastNameField, value: getLastName(name: Auth.auth().currentUser?.displayName ?? ""));
-        let dobField = CustomTextField(frame: CGRect(x: 17, y: dob.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
-        setTextField(textField: dobField, value: Date.getCurrentDate());
-        dobField.isEnabled = false
+        dobField = CustomTextField(frame: CGRect(x: 17, y: dob.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
+        getDOB { dob in
+            self.setTextField(textField: self.dobField, value: dob ??  Date.getCurrentDate());
+        }
         let img = UIImageView(frame: CGRect(x: dobField.frame.size.width - 40, y: 15, width: 20, height: 20));
         img.image = UIImage(named: "calendar");
         dobField.addSubview(img)
         let emailField = CustomTextField(frame: CGRect(x: 17, y: email.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
         setTextField(textField: emailField, value: authentication.googleSignIn.currentUser?.profile?.email ?? "");
         emailField.isEnabled = false
-        emailField.textColor = traitCollection.userInterfaceStyle == .dark ? Colors.lightBlack: UIColor.lightGray;
+        emailField.textColor = traitCollection.userInterfaceStyle == .dark ? Colors.lightBlack : UIColor.lightGray;
         scrollView.addSubview(firstNameField);
         scrollView.addSubview(lastNameField);
         scrollView.addSubview(dobField);
@@ -160,12 +162,12 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
      - Returns:
      */
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        print("I was called")
         let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
         if newText?.count == 0 {
             textField.layer.borderColor = UIColor.red.cgColor
             saveChangesBtn.isEnabled = false;
-        }
-        else{
+        } else {
             saveChangesBtn.isEnabled = true;
             DispatchQueue.main.async {
                 textField.layer.borderColor = UIColor(red: 0 / 255, green: 113 / 255, blue: 197 / 255, alpha: 0.4).cgColor
@@ -196,8 +198,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         let indexOfSpace = name.lastIndex(of: " ");
         if indexOfSpace == nil {
             return "";
-        }
-        else{
+        } else {
             let index = name.index(after: indexOfSpace!);
             return String(name[index...])
         }
@@ -245,7 +246,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
      Function to create button named cancel and done.
      */
     private func createButtons() {
-        let cancelBtn = CustomButton(text: "Cancel", frame: CGRect(x: 17, y: email.bottom  +   adapted(dimensionSize: 60, to: .height), width: 147, height: 47), selector: #selector(cancel))
+        let cancelBtn = CustomButton(text: "Cancel", frame: CGRect(x: 17, y: email.bottom + adapted(dimensionSize: 60, to: .height), width: 147, height: 47), selector: #selector(cancel))
         scrollView.addSubview(cancelBtn);
         saveChangesBtn = CustomButton(text: "Save Changes", frame: CGRect(x: cancelBtn.frame.origin.x + 194.0, y: cancelBtn.frame.origin.y, width: 147, height: 47), selector: #selector(saveChanges))
         scrollView.addSubview(saveChangesBtn)
@@ -267,6 +268,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
      */
     @objc func saveChanges(_ sender: UIButton) {
         createOverlayAlert();
+        updateDOb(date: dobField.text ?? Date.getCurrentDate());
         let credential = GoogleAuthProvider.credential(withIDToken: (authentication.googleSignIn.currentUser?.idToken!.tokenString)!, accessToken: (authentication.googleSignIn.currentUser?.accessToken.tokenString)!)
         Auth.auth().signIn(with: credential) { result, error in
             if let user = result?.user {
@@ -311,16 +313,16 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         var maxWidth = maxSize
 
 // Check the aspect ratio of the image
-        let aspectRatio = actualWidth/actualHeight
+        let aspectRatio = actualWidth / actualHeight
 
         if aspectRatio > 1 {
             // Landscape image
             maxWidth = maxSize
-            maxHeight = maxSize/aspectRatio
+            maxHeight = maxSize / aspectRatio
         } else {
             // Portrait image
             maxHeight = maxSize
-            maxWidth = maxSize*aspectRatio
+            maxWidth = maxSize * aspectRatio
         }
 
         let rect = CGRect(x: 0.0, y: 0.0, width: maxWidth, height: maxHeight)
@@ -386,7 +388,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
      Toast message on error while loading profile picture
      */
     func imageLoadFailed() {
-        showToast("Error while loading profile picture",icon: UIImage(named: "check")!);
+        showToast("Error while loading profile picture", icon: UIImage(named: "check")!);
         alert.dismiss(animated: true);
     }
 
@@ -409,7 +411,90 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         _ = navigationController?.popViewController(animated: true)
     }
 
+    private func updateDOb(date : String) {
+        let dateString = date // The string representation of the DOB
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/yyyy"
+
+        if let date = dateFormatter.date(from: dateString) {
+            let timestamp = Timestamp(date: date)
+
+
+            if let uid = Auth.auth().currentUser?.uid {
+                let userRef = Firestore.firestore().collection("users").document(uid)
+                let data: [String: Any] = [
+                    "dob": timestamp
+                ]
+                userRef.setData(data, merge: true) { error in
+                    if let error = error {
+                        // Handle the error
+                        print("Error updating user profile: \(error.localizedDescription)")
+                    } else {
+                        // User profile updated successfully
+                        print("User profile updated successfully!")
+                    }
+                }
+            }
+        }
+    }
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == dobField {
+           showDatePicker();
+        }
+    }
+
+
+    func showDatePicker() {
+        datePicker.datePickerMode = .date
+        datePicker.addTarget(self, action: #selector(dateChange), for:
+        UIControl.Event.valueChanged);
+        datePicker.frame.size = CGSize(width: 0, height: 300);
+        datePicker.preferredDatePickerStyle = .wheels;
+        dobField.inputView = datePicker;
+    }
+
+    @objc func dateChange(datePicker: UIDatePicker){
+        dobField.text = formatDate(date: datePicker.date);
+    }
+
+    private func formatDate(date : Date) -> String{
+        let formatter = DateFormatter();
+        formatter.dateFormat = "dd/mm/yyyy";
+        return formatter.string(from: date);
+    }
+
+    private func getDOB(completion: @escaping (String?) -> Void) {
+        if let uid = Auth.auth().currentUser?.uid {
+            let userRef = Firestore.firestore().collection("users").document(uid)
+
+            userRef.getDocument { (document, error) in
+                if let document = document, document.exists {
+                    if let dobTimestamp = document.data()?["dob"] as? Timestamp {
+                        let dobDate = dobTimestamp.dateValue()
+
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "dd/MM/yyyy"
+                        let dobString = dateFormatter.string(from: dobDate)
+
+                        completion(dobString)
+                    } else {
+                        completion(nil)
+                    }
+                } else {
+                    completion(nil)
+                }
+            }
+        } else {
+            completion(nil)
+        }
+    }
+
+
+
+
 }
+
 
 
 
