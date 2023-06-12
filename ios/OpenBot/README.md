@@ -4,7 +4,10 @@
 
 1. **Safety:** Always make sure you operate in a safe environment. Keep in mind, that your phone could be damaged in a collision! Special
    care is necessary when using automated control (e.g. person following or driving policy). Make sure you always have a game controller connected and are familiar with the key mapping so you can stop the vehicle at any time. Use at your own risk!
+
 2. **App under development:** The application is under development and may crash or exhibit unexpected behaviour depending on your phone model and version of the operating system. Make sure to test all functionalities with no wheels connected. Use at your own risk!
+
+3. **The app will be `available` soon on the `App Store`.**
 
 ## App Screens
 
@@ -15,14 +18,14 @@ The app starts with a menu screen that shows all available screens. The Bluetoot
 The bottom of the app displays a tab bar with tabs for `Home, Projects, and Profile`. By default, the Home tab is displayed. If a user is logged in, all their saved projects in the "openbot-opencode" folder on Google Drive will be listed in Projects tab. The Profile tab includes buttons for accessing the user's profile and signing out.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../../docs/images/ios_main_screen.jpeg" alt="Main Menu" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/ios_main_screen.jpg" alt="Main Menu" width="25%"/>
 <img style="padding-right: 2%;" src="../../docs/images/ios_bluetooth_screen.jpg" alt="Bluetooth" width="25%"/>
 <img style="padding-right: 2%;" src="../../docs/images/ios_settings_screen.jpg" alt="Settings" width="25%"/>
 </p>
 
 #### Bluetooth Connection
 
-Unlike the Android app, which allows connecting the smartphone to the low-level control board of an OpenBot via a USB cable, the iOS app relies solely on a Bluetooth Low-Energy (BLE) wireless connection. When opening the Bluetooth connection screen in the iOS application (by clicking on the bluetooth logo from the main screen or from any fragment), a list of all compatible devices is displayed. Compatibility is here enforced by using a range of specific UUIDs assigned to an OpenBot vehicle at both the [app](https://github.com/3dwesupport/OpenBot/blob/090dcb28206195a7ee45a13b8ded968a8d365abe/ios/OpenBot/OpenBot/Utils/Constants.swift#L57) and [firmware](https://github.com/3dwesupport/OpenBot/blob/090dcb28206195a7ee45a13b8ded968a8d365abe/firmware/openbot_nano/openbot_nano.ino#L115) levels. You must ensure that these UUIDs match. Pairing an iOS device to an OpenBot vehicle then simply requires to select that vehicle from the list and press the "Connect" button. The default baud rate for the connection is set to 115200 and can be changed at the app and firmware level.
+Unlike the Android app, which allows connecting the smartphone to the low-level control board of an OpenBot via a USB cable, the iOS app relies `solely` on a Bluetooth Low-Energy (BLE) wireless connection. When opening the Bluetooth connection screen in the iOS application (by clicking on the bluetooth logo from the main screen or from any fragment), a list of all compatible devices is displayed. Compatibility is here enforced by using a range of specific UUIDs assigned to an OpenBot vehicle at both the [app](https://github.com/3dwesupport/OpenBot/blob/090dcb28206195a7ee45a13b8ded968a8d365abe/ios/OpenBot/OpenBot/Utils/Constants.swift#L57) and [firmware](https://github.com/3dwesupport/OpenBot/blob/090dcb28206195a7ee45a13b8ded968a8d365abe/firmware/openbot_nano/openbot_nano.ino#L115) levels. You must ensure that these UUIDs match. Pairing an iOS device to an OpenBot vehicle then simply requires to select that vehicle from the list and press the "Connect" button. The default baud rate for the connection is set to 115200 and can be changed at the app and firmware level.
 
 <p align="left">
 <img src="../../docs/images/ios_ble.gif" alt="BLE connection" width="25%" />
@@ -57,7 +60,7 @@ Free Roam offers simple robot control with real time updates and information abo
 The first button is for selecting the **control mode**. There are two different control modes:
 
 - **Gamepad**: The app receives controls from a connected BT controller.
-- **Phone (Coming Soon)**:  The robot can be controlled via another smartphone with the controller app installed or though a Python script running on a computer connected to the same network.
+- **Phone**:  The robot can be controlled via another smartphone with the controller app installed or though a Python script running on a computer connected to the same network.
 
 The second button is for selecting the **drive mode**. There are three different drive modes when using a game controller (e.g. PS4):
 
@@ -152,6 +155,8 @@ Simple UI for collection of data sets.
 
 - **Model Resolution**: Used to switch between resolutions of images saved for training different models.
 
+- **Server**: Server functionality is under Development.
+
 - **Log Collected Data**: the data collection process can be controlled from the screen or remotely, for instance from a bluetooth controller. When using a bluetooth controller, you may:
 
   - press the **A button** to **start** the data collection process
@@ -244,7 +249,8 @@ If the robot successfully reaches the goal location, a message will appear indic
 Note that this feature uses `ARKit`, a framework developed by Apple for augmented reality applications. The user will need to have an ARKit-compatible device to use this feature.
 
 <p align="left">
-<img src="../../docs/images/ios_navigation_screen.jpeg" alt="Model Management" width="25%" />
+<img src="../../docs/images/ios_set_navigation_screen.jpg" alt="Model Management" width="25%" />
+<img src="../../docs/images/ios_navigation_screen.jpg" alt="Model Management" width="25%" />
 </p>
 
 
