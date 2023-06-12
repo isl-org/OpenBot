@@ -153,7 +153,6 @@
 
 .iconMargin {
     margin: 10px;
-
 }
 
 .noSpace {
@@ -252,7 +251,7 @@
     }
 
     .operationsDiv {
-        margin-right: -0.5rem;
+        margin-right: -7rem;
     }
 
     .buttonMargin {
@@ -288,6 +287,7 @@
     }
 
     .buttonStyle {
+        width: 7rem;
         height: 2.5rem;
     }
 
@@ -374,10 +374,6 @@
 
     .buttonsDiv {
         height: 18%;
-    }
-
-    .operationsDiv {
-        margin-right: 1.4rem;
     }
 
     .buttonStyle {

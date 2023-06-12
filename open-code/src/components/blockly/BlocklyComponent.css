@@ -159,12 +159,6 @@
     }
 }
 
-@media (max-height: 500px) and (min-width: 700px) {
-    .blocklyToolboxContents {
-        height: 220%;
-    }
-}
-
 /*.zelos-renderer.dark-theme .blocklyText{*/
 /*    fill: white;*/
 /*}*/
