@@ -392,10 +392,8 @@ class jsEvaluator {
                 bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
                 return
             }
-            print("inside sendControl");
-            if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-                bluetooth.sendData(payload: "c" + String(control.getLeft()) + "," + String(control.getRight()) + "\n")
-            }
+            jsEvaluator?.wait(forTime: 10);
+            bluetooth.sendData(payload: "c" + String(control.getLeft()) + "," + String(control.getRight()) + "\n")
         }
 
 
@@ -435,7 +433,6 @@ class jsEvaluator {
                 return
             }
             print("inside move forward", speed)
-            jsEvaluator?.wait(forTime: 0.03);
             NotificationCenter.default.post(name: .commandName, object: "move Forward \(speed)");
             let carControl = Control(left: speed, right: speed)
             sendControl(control: carControl);
@@ -453,7 +450,7 @@ class jsEvaluator {
                 sendControl(control: Control());
                 return
             }
-            NotificationCenter.default.post(name: .commandName, object: "move OponBot \(left) left and \(right) right");
+            NotificationCenter.default.post(name: .commandName, object: "move OpenBot \(left) left and \(right) right");
             let carControl = Control(left: Float(left), right: Float(right));
             sendControl(control: carControl);
         }
@@ -882,6 +879,7 @@ class jsEvaluator {
         }
 
         func follow(object : String){
+
             if isCancelled {
                 return
             }

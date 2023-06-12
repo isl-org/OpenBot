@@ -73,6 +73,7 @@ class runRobot : UIViewController {
     @objc func cancel(){
         NotificationCenter.default.post(name: .cancelThread, object: nil);
         NotificationCenter.default.post(name: .commandName, object: "\(Strings.cancel)ed");
+        bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
     }
 
     /**
