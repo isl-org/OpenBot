@@ -150,7 +150,6 @@ class scannerFragment: CameraController {
                     let qrCodeData = try JSONDecoder().decode(QrData.self, from: jsonData)
                     qrResult = qrCodeData.driveLink
                     projectName = qrCodeData.projectName
-                    print("QRResult", qrResult)
                     captureSession.stopRunning();
                     hasSuccessfulScan = true
                     scanCount = scanCount + 1;
@@ -325,8 +324,6 @@ class scannerFragment: CameraController {
             // Handle this case if needed
             return
         }
-        print( hasSuccessfulScan);
-        print("i was called")
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
         loadingIndicator.startAnimating();
         loadingIndicator.hidesWhenStopped = true
