@@ -53,6 +53,7 @@ public class BlocklyExecutingFragment extends ControlsFragment {
         v -> {
           myWebView.destroy();
           binding.jsCommand.setText("Cancelled");
+          vehicle.setControl(0, 0);
         });
     // if string js code variable is not null execute js code when you navigate on this fragment.
     if (barCodeScannerFragment.finalCode != null && isRunJSCommand) {
