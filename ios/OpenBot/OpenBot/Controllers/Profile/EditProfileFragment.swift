@@ -121,8 +121,9 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         lastNameField = CustomTextField(frame: CGRect(x: 17, y: lastName.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
         setTextField(textField: lastNameField, value: getLastName(name: Auth.auth().currentUser?.displayName ?? ""));
         dobField = CustomTextField(frame: CGRect(x: 17, y: dob.frame.origin.y + adapted(dimensionSize: 30, to: .height), width: width - 34, height: 47));
+        self.setTextField(textField: self.dobField, value: Date.getCurrentDate());
         getDOB { dob in
-            self.setTextField(textField: self.dobField, value: dob ??  Date.getCurrentDate());
+            self.dobField.text = dob;
         }
         let img = UIImageView(frame: CGRect(x: dobField.frame.size.width - 40, y: 15, width: 20, height: 20));
         img.image = UIImage(named: "calendar");
@@ -449,9 +450,10 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(dateChange), for:
         UIControl.Event.valueChanged);
+        datePicker.preferredDatePickerStyle = .wheels
         datePicker.frame.size = CGSize(width: 0, height: 300);
-        datePicker.preferredDatePickerStyle = .wheels;
         dobField.inputView = datePicker;
+        datePicker.maximumDate = Date()
     }
 
     @objc func dateChange(datePicker: UIDatePicker){
@@ -460,7 +462,7 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
 
     private func formatDate(date : Date) -> String{
         let formatter = DateFormatter();
-        formatter.dateFormat = "dd/mm/yyyy";
+        formatter.dateFormat = "dd/MM/yyyy";
         return formatter.string(from: date);
     }
 
