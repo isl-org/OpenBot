@@ -31,9 +31,18 @@ export default function SimpleInputComponent(props) {
     const theme = useContext(ThemeContext);
     const date = new Date()
     let currentDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const [inputDOBValue, setInputDOBValue] = useState(value ? value : currentDate)
 
+
+    //name change event handling
     function handleChange(e) {
         setInputValue(e.target.value);
+        onDataChange(e.target.value);
+    }
+
+    //DOB change event handling
+    function handleDOBValueChange(e) {
+        setInputDOBValue(e.target.value);
         onDataChange(e.target.value);
     }
 
@@ -60,8 +69,9 @@ export default function SimpleInputComponent(props) {
                     <div className={styles.inputBorder}>
                         <input type="date" name="date"
                                min="1920-01-01"
+                               value={inputDOBValue}
                                max={currentDate}
-                               defaultValue={currentDate}
+                               onChange={handleDOBValueChange}
                                className={styles.inputSection + " " + extraInputStyle}
                                style={{color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont}}
 

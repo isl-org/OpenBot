@@ -4,7 +4,7 @@ import {Constants, localStorageKeys} from "../utils/constants";
 
 export const StoreContext = createContext(null);
 
-export default ({children, isOnline, user, setUser,}) => {
+export default ({children, isOnline, user, setUser}) => {
     let savedProjectName = null
     let savedProjectXml = null
     let savedFileId = null
@@ -29,6 +29,8 @@ export default ({children, isOnline, user, setUser,}) => {
     const [workspace, setWorkspace] = useState();
     const [isError, setIsError] = useState(false);
     const [isSignIn, setIsSignIn] = useState(false);
+    const [isDob, setIsDob] = useState(undefined);
+    const [isDobChanged,setIsDobChanged]=useState(false);
     const store = {
         projectName, setProjectName,
         drawer, setDrawer,
@@ -42,7 +44,9 @@ export default ({children, isOnline, user, setUser,}) => {
         user, setUser,
         workspace, setWorkspace,
         isError, setIsError, isOnline,
-        isSignIn, setIsSignIn
+        isSignIn, setIsSignIn,
+        isDob, setIsDob,
+        isDobChanged,setIsDobChanged
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }

@@ -9,7 +9,7 @@ import BlueText from "../../fonts/blueText";
 import {Constants, errorToast, PathName, Themes} from "../../../utils/constants";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useLocation} from "react-router-dom";
-import {googleSigIn} from "../../../services/firebase";
+import {getDateOfBirth, googleSigIn} from "../../../services/firebase";
 import {StoreContext} from "../../../context/context";
 
 
@@ -26,11 +26,12 @@ export function ProfileOptionModal(props) {
         setIsEditProfileModal,
         setIsHelpCenterModal,
         setIsLogoutModal,
+        setEditProfileLoaderOpen
     } = props
     const location = useLocation();
     const themes = useTheme();
     const {theme, toggleTheme, setUser} = useContext(ThemeContext);
-    const {isOnline} = useContext(StoreContext)
+    const {isOnline, setIsDob, isDob, isDobChanged} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const isSignedIn = localStorage.getItem("isSigIn") === "true";
     const isHomePage = location.pathname === PathName.home;
@@ -71,12 +72,19 @@ export function ProfileOptionModal(props) {
                  style={{backgroundColor: theme === Themes.dark ? colors.blackPopupBackground : colors.whiteBackground}}>
 
                 {(isHomePage || (isOnPlaygroundPage && isSignedIn)) &&
-                    <PopUpInRowText onClick={() => handleOnclick(setIsEditProfileModal)} text={"Edit Profile"}
-                                    icon={theme === Themes.dark ? Images.darkUserIcon : Images.userIcon}/>
+                    <PopUpInRowText
+                        onClick={async () => {
+                            setEditProfileLoaderOpen(true);
+                            isDobChanged ? setIsDob(await getDateOfBirth()) : setIsDob(isDob ?? await getDateOfBirth()); // setting date of birth on modal
+                            setEditProfileLoaderOpen(false);
+                            handleOnclick(setIsEditProfileModal);
+                        }}
+                        text={"Edit Profile"}
+                        icon={theme === Themes.dark ? Images.darkUserIcon : Images.userIcon}/>
                 }
                 {isOnPlaygroundPage && isMobile && !isMobileLandscape &&
                     <>
-                        { !tabletQuery && <PopUpInRowText
+                        {!tabletQuery && <PopUpInRowText
                             onClick={() => {
                                 handleClose();
                                 toggleTheme(!theme)

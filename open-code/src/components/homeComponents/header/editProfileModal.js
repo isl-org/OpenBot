@@ -1,6 +1,6 @@
 import React, {forwardRef, useContext, useEffect, useRef, useState} from "react";
 import {ThemeContext} from "../../../App";
-import {auth, uploadProfilePic} from "../../../services/firebase";
+import {auth, setDateOfBirth, uploadProfilePic} from "../../../services/firebase";
 import styles from "../../navBar/navbar.module.css";
 import {Images} from "../../../utils/images";
 import {Box, Modal} from "@mui/material";
@@ -11,6 +11,7 @@ import {Constants, errorToast, Themes} from "../../../utils/constants";
 import Compressor from 'compressorjs';
 import {StoreContext} from "../../../context/context";
 import heic2any from "heic2any";
+import firebase from "firebase/compat/app";
 
 /**
  * Edit  Profile option modal contains profile image picker and edit name, birthdate nad email field.
@@ -19,27 +20,30 @@ import heic2any from "heic2any";
  * @constructor
  */
 export function EditProfileModal(props) {
-    const {isEditProfileModal, setIsEditProfileModal, user} = props
+    const {isEditProfileModal, setIsEditProfileModal, user, isDob} = props
     const inputRef = useRef();
-    const {theme} = useContext(ThemeContext)
-    const {isOnline} = useContext(StoreContext)
+    const {theme} = useContext(ThemeContext);
+    const {isOnline, setIsDobChanged} = useContext(StoreContext);
     const [file, setFile] = useState(user?.photoURL && user.photoURL);
     const [fullName, setFullName] = useState(user?.displayName);
-    const [isAlertSuccess, setIsAlertSuccess] = useState(false)
-    const [isAlertError, setIsAlertError] = useState(false)
+    const [isAlertSuccess, setIsAlertSuccess] = useState(false);
+    const [isAlertError, setIsAlertError] = useState(false);
+    const [isNameChangeError, setIsNameChangeError] = useState(false);
+    const [isDOBChangeError, setIsDOBChangeError] = useState(false);
     const [isLoader, setIsLoader] = useState(false);
     const [isNameEmpty, setIsNameEmpty] = useState(false);
+    const [DOB, setDOB] = useState(isDob);
     const [userDetails, setUserDetail] = useState({
         displayName: user?.displayName,
         email: user?.email,
         photoUrl: user?.photoURL
     })
-
     useEffect(() => {
         setUserDetail({
             displayName: auth?.currentUser.displayName,
             photoUrl: auth?.currentUser.photoURL,
         })
+        setIsDobChanged(false);
     }, [])
 
     const handleClose = () => {
@@ -103,6 +107,25 @@ export function EditProfileModal(props) {
         }
     }
 
+    // TimeStamp format for setting DOB
+    function toTimeStamp(dob) {
+        const dateParts = dob.split('-');
+        const year = parseInt(dateParts[0]);
+        const month = parseInt(dateParts[1]) - 1; // Months are zero-based in JavaScript Date object
+        const day = parseInt(dateParts[2]);
+        const date = new Date(year, month, day);
+        return firebase.firestore.Timestamp.fromDate(date).toDate();
+    }
+
+    //handle Date of birth change
+    const handleDOBChange = (e) => {
+        const DOB = {
+            dob: toTimeStamp(e),
+        }
+        setDOB(DOB)
+    }
+
+    // Handling save button on edit profile modal
     const handleSubmit = async () => {
         if (isOnline) {
             //TODO date of birth condition needs to be handle
@@ -116,31 +139,53 @@ export function EditProfileModal(props) {
                         photoURL: photoURL,
                         displayName: userDetails.displayName,
                     }).then(() => {
-                        setIsAlertSuccess(true)
+                        setIsNameChangeError(false);
+                        setIsAlertSuccess(true);
                         setTimeout(
                             function () {
-                                handleClose()
-                                setIsAlertSuccess(false)
+                                handleClose();
+                                setIsAlertSuccess(false);
                             }.bind(), 1000);
                     }).catch((error) => {
+                        setIsNameChangeError(true);
                         console.log("error::::", error);
-                        setIsAlertError(true)
                     })
                     setIsLoader(false)
                 })
             }
+
+            if (DOB !== isDob) {
+                await setDateOfBirth(DOB).then(() => {
+                    setIsAlertSuccess(true);
+                    setIsDOBChangeError(false);
+                    setIsDobChanged(true);
+                    setTimeout(
+                        function () {
+                            handleClose()
+                            setIsAlertSuccess(false)
+                        }.bind(), 1000);
+                })
+                    .catch((e) => {
+                        setIsDOBChangeError(true);
+                        console.log(e);
+                    })
+            }
+
+            if (isDOBChangeError === true && isNameChangeError === true) {
+                setIsAlertError(true)
+            }
+
         } else {
             errorToast(Constants.InternetOffMsg);
         }
     }
-
-
     return (
         <Modal
             open={isEditProfileModal}
             style={{display: "flex", alignItems: "center", justifyContent: "center", overflow: "scroll"}}>
 
-            <Box className={styles.editProfileModal + " " + (theme === Themes.dark && styles.darkEditProfileModal)}>
+            <Box
+                className={styles.editProfileModal + " " + (theme === Themes.dark && styles.darkEditProfileModal)}>
                 <div className={styles.crossIconDiv}>
                     <img onClick={handleClose} alt={"cross icon"} className={styles.crossIcon}
                          src={theme === Themes.dark ? Images.darkCrossIcon : Images.lightCrossIcon}/>
@@ -151,7 +196,8 @@ export function EditProfileModal(props) {
                     {isLoader ?
                         <LoaderComponent color="blue" height="20" width="20"/> :
                         <>
-                            <input ref={inputRef} style={{display: "none",}} type="file" accept="image/*,.heic,.heif"
+                            <input ref={inputRef} style={{display: "none",}} type="file"
+                                   accept="image/*,.heic,.heif"
                                    onChange={handleChange}/>
                             <img onClick={() => inputRef.current?.click()} alt={"edit profile icon"}
                                  className={styles.editProfileIcon} src={Images.editProfileIcon}/>
@@ -166,7 +212,9 @@ export function EditProfileModal(props) {
                                           value={fullName} onDataChange={handleNameChange}/>
                     <SimpleInputComponent inputType={"date"} extraStyle={styles.inputExtraStyle}
                                           headStyle={styles.headStyle}
-                                          inputTitle={"Date Of Birth"} extraInputStyle={styles.extraInputStyle}/>
+                                          inputTitle={"Date Of Birth"} onDataChange={handleDOBChange}
+                                          value={DOB}
+                                          extraInputStyle={styles.extraInputStyle}/>
                 </div>
                 <SimpleInputComponent inputType={"email"} extraStyle={styles.emailInputExtraStyle}
                                       headStyle={styles.headStyle}
@@ -179,12 +227,16 @@ export function EditProfileModal(props) {
                     <BlueButton onClick={handleClose} buttonName={"Cancel"} buttonStyle={styles.buttonText}/>
                 </div>
 
-                {isAlertSuccess && <Alert message={"Profile updated successfully!"}/>}
+                {isAlertSuccess && !isDOBChangeError && !isNameChangeError &&
+                    <Alert message={"Profile updated successfully!"}/>}
                 {isAlertError && <Alert message={"Oops! There was an error."}/>}
+                {isNameChangeError && !isDOBChangeError && <Alert message={"There was an error in changing Name."}/>}
+                {isDOBChangeError && !isNameChangeError && <Alert message={"There was an error in changing DOB."}/>}
             </Box>
 
         </Modal>
     )
+
 }
 
 
