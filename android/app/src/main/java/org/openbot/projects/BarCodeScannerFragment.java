@@ -1,5 +1,7 @@
 package org.openbot.projects;
 
+import android.app.Activity;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -88,6 +90,10 @@ public class BarCodeScannerFragment extends CameraFragment {
             binding.overlayView.setVisibility(View.GONE);
             barCodeAccess = true;
           }
+
+          if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+            successBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+          }
         }
 
         @Override
@@ -112,6 +118,9 @@ public class BarCodeScannerFragment extends CameraFragment {
             // code when the bottom sheet is hidden
             binding.overlayView.setVisibility(View.GONE);
             barCodeAccess = true;
+          }
+          if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+            failedBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
           }
         }
 
@@ -152,7 +161,9 @@ public class BarCodeScannerFragment extends CameraFragment {
       SparseArray<Barcode> barcodes = barcodeDetector.detect(frame);
       // If a qr code is detected and barCodeAccess is true, get the qr code value and call
       // extractFileID().
+      System.out.println("Sanjeev == " + barCodeAccess);
       if (barcodes.size() != 0 && barCodeAccess) {
+        System.out.println("sanjeev == get access ");
         requireActivity()
             .runOnUiThread(
                 () -> {
@@ -222,13 +233,16 @@ public class BarCodeScannerFragment extends CameraFragment {
                 // Set the finalCode to the modified code and handle the bottom sheet with a success
                 // state.
                 finalCode = code;
-                requireActivity()
-                    .runOnUiThread(
-                        () ->
-                            binding.qrMessage.setText(
-                                projectName
-                                    + " file detected. Start to execute the code on your OpenBot."));
-                handleBottomSheet(true);
+                Activity activity = getActivity();
+                if (activity != null) {
+                  requireActivity()
+                      .runOnUiThread(
+                          () ->
+                              binding.qrMessage.setText(
+                                  projectName
+                                      + " file detected. Start to execute the code on your OpenBot."));
+                  handleBottomSheet(true);
+                }
               }
 
               @Override
@@ -255,5 +269,17 @@ public class BarCodeScannerFragment extends CameraFragment {
   public void onPause() {
     super.onPause();
     if (cameraToggle) toggleCamera();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    barCodeAccess = true;
+    int orientation = getResources().getConfiguration().orientation;
+    if (orientation == Configuration.ORIENTATION_LANDSCAPE
+        || orientation == Configuration.ORIENTATION_PORTRAIT) {
+      successBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+      failedBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
   }
 }
