@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/edit_profile_layout"
     android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -87,17 +88,15 @@
             android:text="Date Of Birth"
             android:textSize="18sp" />
 
-        <EditText
+        <TextView
             android:id="@+id/date_of_birth"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="15dp"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:textColor="@color/black_text"
             android:background="@drawable/border_radius_input_text"
-            android:clickable="false"
-            android:cursorVisible="false"
-            android:focusable="false"
-            android:inputType="date"
-            android:maxLines="1"
             android:paddingHorizontal="10dp" />
 
         <TextView

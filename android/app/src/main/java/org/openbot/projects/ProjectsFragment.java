@@ -185,13 +185,13 @@ public class ProjectsFragment extends Fragment {
     AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
     builder.setTitle("Delete this file ?").setMessage("You cannot restore this file later.");
     builder.setPositiveButton(
-        "Yes",
+        "Delete",
         (dialog, id) -> {
           // Perform the file deletion using googleServices.deleteFile() method
           googleServices.deleteFile(projectId, projectName, adapter, binding);
           binding.projectsLoader.setVisibility(View.VISIBLE);
         });
-    builder.setNegativeButton("No", (dialog, id) -> dialog.cancel());
+    builder.setNegativeButton("Cancel", (dialog, id) -> dialog.cancel());
     AlertDialog dialog = builder.create();
     dialog.show();
   }

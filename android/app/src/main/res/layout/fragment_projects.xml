@@ -126,7 +126,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/projects_bottom_sheet"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="180dp"
             android:background="@drawable/bottom_sheet_bg"
             android:orientation="vertical"
             android:padding="20dp"

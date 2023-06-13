@@ -1,6 +1,8 @@
 package org.openbot.profile;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -14,6 +16,8 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -31,9 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Calendar;
 import org.openbot.R;
 import org.openbot.databinding.FragmentEditProfileBinding;
 
@@ -69,6 +71,7 @@ public class EditProfileFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    binding.editProfileLayout.setOnClickListener(v -> closeKeyboard(view));
     // Set click listener on the "Edit Profile Picture" button and call function to select image
     // from local storage.
     binding.editProfilePicBtn.setOnClickListener(v -> imageChooser());
@@ -76,6 +79,39 @@ public class EditProfileFragment extends Fragment {
     if (user != null) {
       setProfileDetails();
     }
+    binding.dateOfBirth.setOnClickListener(
+        v -> {
+          // on below line we are getting
+          // the instance of our calendar.
+          final Calendar c = Calendar.getInstance();
+
+          // on below line we are getting
+          // our day, month and year.
+          int year = c.get(Calendar.YEAR);
+          int month = c.get(Calendar.MONTH);
+          int day = c.get(Calendar.DAY_OF_MONTH);
+
+          // on below line we are creating a variable for date picker dialog.
+          DatePickerDialog datePickerDialog =
+              new DatePickerDialog(
+                  // on below line we are passing context.
+                  requireContext(),
+                  (view1, year1, monthOfYear, dayOfMonth) -> {
+                    // on below line we are setting date to our text view.
+                    //                  selectedDateTV.setText(dayOfMonth + "-" + (monthOfYear + 1)
+                    // + "-" + year);
+                    TextView setDateOfBirth = requireView().findViewById(R.id.date_of_birth);
+                    setDateOfBirth.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                  },
+                  // on below line we are passing year,
+                  // month and day for selected date in our date picker.
+                  year,
+                  month,
+                  day);
+          // at last we are calling show to
+          // display our date picker dialog.
+          datePickerDialog.show();
+        });
     // Attach the firstNameTextWatcher to the firstName EditText to listen for text changes.
     binding.firstName.addTextChangedListener(firstNameTextWatcher);
     // Set a click listener on the "Save Changes" button to perform actions when clicked.
@@ -97,6 +133,11 @@ public class EditProfileFragment extends Fragment {
         v -> Navigation.findNavController(requireView()).popBackStack());
   }
 
+  private void closeKeyboard(View v) {
+    InputMethodManager inputMethodManager =
+        (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
+  }
   /** Method to open the image gallery to choose an image for the profile picture. */
   private void imageChooser() {
     Intent i = new Intent();
@@ -236,7 +277,6 @@ public class EditProfileFragment extends Fragment {
    * Set the profile details from the FirebaseUser hello object to the UI elements in the layout.
    */
   private void setProfileDetails() {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     // Load the profile picture using Glide library
     Glide.with(this)
         .load(user.getPhotoUrl())
@@ -260,7 +300,6 @@ public class EditProfileFragment extends Fragment {
     binding.firstName.setText(firstName);
     binding.lastName.setText(lastName);
     binding.emailAddress.setText(user.getEmail());
-    binding.dateOfBirth.setText(dateFormat.format(new Date()));
   }
 
   /**
@@ -280,17 +319,21 @@ public class EditProfileFragment extends Fragment {
 
   private void showToast(boolean success) {
     if (success) {
-      Toast.makeText(
-              requireContext().getApplicationContext(),
-              "✅   Profile Update Successfully.",
-              Toast.LENGTH_SHORT)
-          .show();
+      if (getContext() != null) {
+        Toast.makeText(
+                requireContext().getApplicationContext(),
+                "✅   Profile Update Successfully.",
+                Toast.LENGTH_SHORT)
+            .show();
+      }
     } else {
-      Toast.makeText(
-              requireContext().getApplicationContext(),
-              "⚠️   Profile Update Unsuccessful.",
-              Toast.LENGTH_SHORT)
-          .show();
+      if (getContext() != null) {
+        Toast.makeText(
+                requireContext().getApplicationContext(),
+                "⚠️   Profile Update Unsuccessful.",
+                Toast.LENGTH_SHORT)
+            .show();
+      }
     }
   }
 }
