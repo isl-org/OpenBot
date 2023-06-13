@@ -12,7 +12,6 @@ import "./field_toggle";
  * @type {{previousStatement: null, nextStatement: null, type: string, message0: string, args0: [{date: string, name: string, type: string}]}}
  */
 
-
 Blockly.Blocks["wait"] = {
     init: function () {
         this.jsonInit({

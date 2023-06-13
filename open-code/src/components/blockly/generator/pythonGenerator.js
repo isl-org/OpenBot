@@ -236,32 +236,32 @@ pythonGenerator['brightnessHighOrLow'] = function (block) {
 };
 
 
-pythonGenerator['followObjects'] = function(block) {
+pythonGenerator['followObjects'] = function (block) {
     let dropdown_follow_objects = block.getFieldValue('follow objects');
     let code = '';
-    code+="follow('"+dropdown_follow_objects+"')\n"
+    code += "follow('" + dropdown_follow_objects + "')\n"
     return code;
 };
 
-pythonGenerator['navigate'] = function(block) {
+pythonGenerator['navigate'] = function (block) {
     let dropdown_navigate_models = block.getFieldValue('navigate models');
     let code = '';
-    code+="navigationModel('"+dropdown_navigate_models+"')\n"
+    code += "navigationModel('" + dropdown_navigate_models + "')\n"
     return code;
 };
 
-pythonGenerator['navigateForwardAndLeft'] = function(block) {
+pythonGenerator['navigateForwardAndLeft'] = function (block) {
     let left_position = block.getFieldValue('left');
     let right_position = block.getFieldValue('right');
     let code = '';
-    code+="reachGoal("+left_position+","+right_position+")\n";
+    code += "reachGoal(" + left_position + "," + right_position + ")\n";
     return code;
 };
 
-pythonGenerator['navigateXAndY'] = function(block) {
+pythonGenerator['navigateXAndY'] = function (block) {
     let positionX = block.getFieldValue('x');
     let positionY = block.getFieldValue('y');
     let code = '';
-    code+="reachPosition("+positionX+","+positionY+")\n";
+    code += "reachPosition(" + positionX + "," + positionY + ")\n";
     return code;
 };

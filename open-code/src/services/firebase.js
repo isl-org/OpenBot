@@ -78,7 +78,10 @@ export async function googleSignOut() {
     });
 }
 
-
+/**
+ * function to get saved date of birth from firebase
+ * @returns {Promise<string>}
+ */
 export async function getDateOfBirth() {
     const docRef = doc(db, "users", auth.currentUser?.uid);
     const docSnap = await getDoc(docRef);
@@ -91,6 +94,11 @@ export async function getDateOfBirth() {
     }
 }
 
+/**
+ * function to store date of birth in firebase
+ * @param DOB
+ * @returns {Promise<void>}
+ */
 export async function setDateOfBirth(DOB) {
     const workspaceRef = doc(collection(db, "users"), auth.currentUser?.uid);
     setDoc(workspaceRef, DOB).catch((e) => console.log(e));
