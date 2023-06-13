@@ -46,31 +46,6 @@ pythonGenerator['moveLeft&Right'] = function (block) {
     return code;
 };
 
-
-pythonGenerator['movementCircular'] = function (block) {
-    let number_radius_value = block.getFieldValue('radius_value');
-    let code = '';
-    code += "moveCircular(" + number_radius_value + ")\n";
-    return code;
-};
-
-pythonGenerator['circularAtSpeed'] = function (block) {
-    let number_radius_value = block.getFieldValue('radius_value');
-    let number_speed_value = block.getFieldValue('speed_value');
-    let code = '';
-    code += "moveCircular(" + number_radius_value + "," + number_speed_value + ")\n";
-    return code;
-};
-
-pythonGenerator['circularAtSpeedForTime'] = function (block) {
-    let number_radius_value = block.getFieldValue('radius_value');
-    let number_speed_value = block.getFieldValue('speed_value');
-    let number_time = block.getFieldValue('time');
-    let code = '';
-    code += "moveCircular(" + number_radius_value + "," + number_speed_value + ")\npause(" + number_time + ")\n";
-    return code;
-};
-
 pythonGenerator['movementStop'] = function () {
     let code = '';
     code += "stopRobot()\n"
@@ -200,21 +175,6 @@ pythonGenerator['driveModeControls'] = function (block) {
     return code;
 };
 
-
-pythonGenerator['motorDirection'] = function (block) {
-    let dropdown_driveModeControls = block.getFieldValue('motor_direction');
-    let code = '';
-    code += dropdown_driveModeControls + "\n";
-    return code;
-};
-
-pythonGenerator['motorStop'] = function () {
-    let code = "";
-    code += "motorStop()\n";
-    return code;
-};
-
-
 pythonGenerator['bumper'] = function () {
     let code = "";
     code += "bumperCollision()";
@@ -240,13 +200,6 @@ pythonGenerator['sonarReading'] = function () {
     let code = "";
     code += "sonarReading() ";
     return [code, pythonGenerator.ORDER_NONE];
-};
-
-pythonGenerator['speedAdjustment'] = function (block) {
-    let number_speed = block.getFieldValue('speed');
-    let code = '';
-    code += "setSpeed(" + number_speed + ")\n";
-    return code;
 };
 
 pythonGenerator['indicators'] = function (block) {
@@ -312,12 +265,3 @@ pythonGenerator['navigateXAndY'] = function(block) {
     code+="reachPosition("+positionX+","+positionY+")\n";
     return code;
 };
-
-
-pythonGenerator['onBumper'] = function (block) {
-    const statements_bumper_blocks = pythonGenerator.statementToCode(block, 'bumper_blocks');
-    let code = "";
-    code += "def bumper():\n" + statements_bumper_blocks;
-    return code;
-};
-

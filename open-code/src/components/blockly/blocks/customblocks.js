@@ -227,93 +227,6 @@ Blockly.Blocks["moveLeft&Right"] = {
     }
 };
 
-
-Blockly.Blocks["movementCircular"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "move in circle of radius %1 m",
-            "args0": [
-                {
-                    "type": "field_number",
-                    "name": "radius_value",
-                    "value": 5,
-                    "min": 0
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["circularAtSpeed"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "move in circle of radius %1 m with speed %2",
-            "args0": [
-                {
-                    "type": "field_number",
-                    "name": "radius_value",
-                    "value": 5,
-                    "min": 0
-                },
-                {
-                    "type": "field_number",
-                    "name": "speed_value",
-                    "value": 192,
-                    "min": -255,
-                    "max": 255
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["circularAtSpeedForTime"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "move in circle of radius %1 m with speed %2 for %3 ms",
-            "args0": [
-                {
-                    "type": "field_number",
-                    "name": "radius_value",
-                    "value": 5,
-                    "min": 0
-                },
-                {
-                    "type": "field_number",
-                    "name": "speed_value",
-                    "value": 192,
-                    "min": -255,
-                    "max": 255
-                },
-                {
-                    "type": "field_number",
-                    "name": "time",
-                    "value": 3000,
-                    "min": 0
-                },
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
 Blockly.Blocks["movementStop"] = {
     init: function () {
         this.jsonInit({
@@ -445,29 +358,6 @@ Blockly.Blocks["forever"] = {
                 {
                     "type": "input_statement",
                     "name": "forever_loop_blocks"
-                }
-            ],
-            "colour": 210,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["onBumper"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "%1 %2",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "bumper",
-                    "text": "on bumper sensor"
-                },
-                {
-                    "type": "input_statement",
-                    "name": "bumper_blocks"
                 }
             ],
             "colour": 210,
@@ -678,55 +568,6 @@ Blockly.Blocks["driveModeControls"] = {
     }
 };
 
-
-Blockly.Blocks["motorDirection"] = {
-    init: function () {
-        this.jsonInit({
-                "type": "block_type",
-                "message0": "switch direction of motor to %1",
-                "args0": [
-                    {
-                        "type": "field_dropdown",
-                        "name": "motor_direction",
-                        "options": [
-                            [
-                                "forward",
-                                "'forward'"
-                            ],
-                            [
-                                "backward",
-                                "'backward'"
-                            ],
-                        ]
-                    }
-                ],
-                "previousStatement": null,
-                "nextStatement": null,
-                "colour": 230,
-                "tooltip": "",
-                "helpUrl": ""
-            }
-        );
-    }
-};
-
-
-Blockly.Blocks["motorStop"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "stop motor immediately",
-            "inputsInline": true,
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-
 Blockly.Blocks["bumper"] = {
     init: function () {
         this.jsonInit({
@@ -754,30 +595,6 @@ Blockly.Blocks["brightness"] = {
                     "value": 50,
                     "min": 0, // Minimum value for the slider
                     "max": 100 // Maximum value for the slider
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-
-        });
-    }
-};
-
-Blockly.Blocks["speedAdjustment"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "set speed at %1",
-            "args0": [
-                {
-                    "type": "field_slider",
-                    "name": "speed",
-                    "value": 192,
-                    "min": -255,
-                    "max": 255
                 }
             ],
             "previousStatement": null,

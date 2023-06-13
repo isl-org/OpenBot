@@ -5,6 +5,7 @@ import {controlBlocksType, loopBlocksType} from "../../../utils/constants";
 import '../generator/javascriptGenerator';
 import '../blocks/customblocks';
 import "../generator/pythonGenerator"
+
 /**
  * ToolBox has box component
  * @param props
@@ -16,13 +17,9 @@ export const Toolbox = (props) => {
         <>
             <Category name="Control" colour={"#567AE4"}>
                 <Label text="Control" web-class="Heading"></Label>
-
                 <Block type="start"/>
                 <Block type="forever"/>
-                <Block type="onBumper"/>
-
                 <Block type="wait"/>
-
                 <Block type="controls_if" gap="8">
                     <Value name="IF0">
                         <Shadow type="logic_boolean">
@@ -135,13 +132,7 @@ export const Toolbox = (props) => {
                 <Block type="forward&BackwardAtSpeed"/>
                 <Block type="left&RightAtSpeed"/>
                 <Block type="moveLeft&Right"/>
-                {/*<Block type="movementCircular"/>*/}
-                {/*<Block type="circularAtSpeed"/>*/}
-                {/*<Block type="circularAtSpeedForTime"/>*/}
-                {/*<Block type="speedAdjustment"/>*/}
                 <Block type="movementStop"/>
-                {/*<Block type="motorDirection"/>*/}
-                {/*<Block type="motorStop"/>*/}
             </Category>
             <Category name="AI" colour={"#D030BA"}>
                 <Label text="Artificial Intelligence" web-class="Heading"></Label>

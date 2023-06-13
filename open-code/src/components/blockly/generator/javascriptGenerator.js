@@ -69,31 +69,6 @@ javascriptGenerator['moveLeft&Right'] = function (block) {
     return code;
 };
 
-
-javascriptGenerator['movementCircular'] = function (block) {
-    let number_radius_value = block.getFieldValue('radius_value');
-    let code = '';
-    code += "moveCircular(" + number_radius_value + ");\n";
-    return code;
-};
-
-javascriptGenerator['circularAtSpeed'] = function (block) {
-    let number_radius_value = block.getFieldValue('radius_value');
-    let number_speed_value = block.getFieldValue('speed_value');
-    let code = '';
-    code += "moveCircular(" + number_radius_value + "," + number_speed_value + ");\n";
-    return code;
-};
-
-javascriptGenerator['circularAtSpeedForTime'] = function (block) {
-    let number_radius_value = block.getFieldValue('radius_value');
-    let number_speed_value = block.getFieldValue('speed_value');
-    let number_time = block.getFieldValue('time');
-    let code = '';
-    code += "moveCircular(" + number_radius_value + "," + number_speed_value + ");\npause(" + number_time + ");\n";
-    return code;
-};
-
 javascriptGenerator['movementStop'] = function () {
     let code = '';
     code += "stopRobot();\n"
@@ -223,21 +198,6 @@ javascriptGenerator['driveModeControls'] = function (block) {
     return code;
 };
 
-
-javascriptGenerator['motorDirection'] = function (block) {
-    let dropdown_driveModeControls = block.getFieldValue('motor_direction');
-    let code = '';
-    code += dropdown_driveModeControls + ";\n";
-    return code;
-};
-
-javascriptGenerator['motorStop'] = function () {
-    let code = "";
-    code += "motorStop();\n";
-    return code;
-};
-
-
 javascriptGenerator['bumper'] = function () {
     let code = "";
     code += "bumperCollision()";
@@ -263,13 +223,6 @@ javascriptGenerator['sonarReading'] = function () {
     let code = "";
     code += "sonarReading() ";
     return [code, javascriptGenerator.ORDER_NONE];
-};
-
-javascriptGenerator['speedAdjustment'] = function (block) {
-    let number_speed = block.getFieldValue('speed');
-    let code = '';
-    code += "setSpeed(" + number_speed + ");\n";
-    return code;
 };
 
 javascriptGenerator['indicators'] = function (block) {
@@ -335,11 +288,3 @@ javascriptGenerator['navigateXAndY'] = function(block) {
     code+="reachPosition("+positionX+","+positionY+");\n";
     return code;
 };
-
-javascriptGenerator['onBumper'] = function (block) {
-    const statements_bumper_blocks = javascriptGenerator.statementToCode(block, 'bumper_blocks');
-    let code = "";
-    code += "function bumper(){\n" + statements_bumper_blocks + "}";
-    return code;
-};
-
