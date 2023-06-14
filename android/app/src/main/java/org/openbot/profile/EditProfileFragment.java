@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -43,8 +42,10 @@ public class EditProfileFragment extends Fragment {
   private FragmentEditProfileBinding binding;
   private FirebaseUser user;
   private Uri selectedImageUri;
+  private final Calendar calender = Calendar.getInstance();
 
-  @Override
+
+    @Override
   public View onCreateView(
       @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the FragmentEditProfile layout.
@@ -81,35 +82,17 @@ public class EditProfileFragment extends Fragment {
     }
     binding.dateOfBirth.setOnClickListener(
         v -> {
-          // on below line we are getting
-          // the instance of our calendar.
-          final Calendar c = Calendar.getInstance();
+          int year = calender.get(Calendar.YEAR);
+          int month = calender.get(Calendar.MONTH);
+          int day = calender.get(Calendar.DAY_OF_MONTH);
 
-          // on below line we are getting
-          // our day, month and year.
-          int year = c.get(Calendar.YEAR);
-          int month = c.get(Calendar.MONTH);
-          int day = c.get(Calendar.DAY_OF_MONTH);
-
-          // on below line we are creating a variable for date picker dialog.
           DatePickerDialog datePickerDialog =
               new DatePickerDialog(
                   // on below line we are passing context.
                   requireContext(),
-                  (view1, year1, monthOfYear, dayOfMonth) -> {
-                    // on below line we are setting date to our text view.
-                    //                  selectedDateTV.setText(dayOfMonth + "-" + (monthOfYear + 1)
-                    // + "-" + year);
-                    TextView setDateOfBirth = requireView().findViewById(R.id.date_of_birth);
-                    setDateOfBirth.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-                  },
-                  // on below line we are passing year,
-                  // month and day for selected date in our date picker.
-                  year,
-                  month,
-                  day);
-          // at last we are calling show to
-          // display our date picker dialog.
+                  (view1, getYear, monthOfYear, dayOfMonth) -> {
+                    binding.dateOfBirth.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                  }, year, month, day);
           datePickerDialog.show();
         });
     // Attach the firstNameTextWatcher to the firstName EditText to listen for text changes.

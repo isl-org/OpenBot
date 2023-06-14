@@ -54,6 +54,7 @@ public class BlocklyExecutingFragment extends ControlsFragment {
           myWebView.destroy();
           binding.jsCommand.setText("Cancelled");
           vehicle.setControl(0, 0);
+          vehicle.setIndicator(0);
         });
     // if string js code variable is not null execute js code when you navigate on this fragment.
     if (barCodeScannerFragment.finalCode != null && isRunJSCommand) {
@@ -120,6 +121,8 @@ public class BlocklyExecutingFragment extends ControlsFragment {
   public void onPause() {
     super.onPause();
     myWebView.destroy();
+    vehicle.setIndicator(0);
+    vehicle.setControl(0, 0);
     // if previous speed multiplier value is not 0, set the speed multiplier back to its previous
     // value when you go back from this screen.
     if (previousSpeedMultiplier != 0) {
