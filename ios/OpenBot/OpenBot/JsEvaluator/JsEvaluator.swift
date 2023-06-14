@@ -49,7 +49,7 @@ class jsEvaluator {
     @objc func cancelThread() {
         cancelLoop = true;
         runOpenBotThreadClass?.cancel()
-        bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n");
+        bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
     }
 
     /**
@@ -369,7 +369,7 @@ class jsEvaluator {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = (control.getLeft() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
             let right = (control.getRight() * gameController.selectedSpeedMode.rawValue).rounded(FloatingPointRoundingRule.toNearestOrAwayFromZero)
-            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
+            bluetooth.sendDataFromJs(payloadData: "c" + String(left) + "," + String(right) + "\n")
         }
     }
 
@@ -389,11 +389,11 @@ class jsEvaluator {
          */
         func sendControl(control: Control) {
             if isCancelled {
-                bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
+                bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n")
                 return
             }
             jsEvaluator?.wait(forTime: 10);
-            bluetooth.sendData(payload: "c" + String(control.getLeft()) + "," + String(control.getRight()) + "\n")
+            bluetooth.sendDataFromJs(payloadData: "c" + String(control.getLeft()) + "," + String(control.getRight()) + "\n")
         }
 
 
@@ -465,7 +465,7 @@ class jsEvaluator {
                 return
             }
             print("inside moveCircular")
-            bluetooth.sendData(payload: "c" + String(200) + "," + String(200) + "\n");
+            bluetooth.sendDataFromJs(payloadData: "c" + String(200) + "," + String(200) + "\n");
         }
 
         /**
@@ -481,9 +481,9 @@ class jsEvaluator {
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
             while (bluetooth.peri != nil && bluetooth.speedometer != "w0.00,0.00") {
-                bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
+                bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n")
             }
-            bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
+            bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n")
         }
 
         /**
@@ -625,14 +625,14 @@ class jsEvaluator {
          */
         func setLedBrightness(factor: Int) {
             if isCancelled {
-                bluetooth.sendData(payload: "l" + String(0) + "," + String(0) + "\n")
+                bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n")
                 return
             }
             print("inside setLedBrightness");
             NotificationCenter.default.post(name: .commandName, object: "Set Led BrightNess \(factor) ");
             let front = (factor * 255) / 100
             let back = ((factor * 255)) / 100
-            bluetooth.sendData(payload: "l" + String(front) + "," + String(back) + "\n")
+            bluetooth.sendDataFromJs(payloadData:"l" + String(front) + "," + String(back) + "\n")
         }
 
         /**
@@ -640,13 +640,13 @@ class jsEvaluator {
          */
         func setLeftIndicatorOn() {
             if isCancelled {
-                bluetooth.sendData(payload: "i0,0\n")
+                bluetooth.sendDataFromJs(payloadData: "i0,0\n")
                 return
             }
             NotificationCenter.default.post(name: .commandName, object: "Left Indicator On");
             print("inside setLeftIndicatorOn");
             let indicatorValues = "i1,0\n"
-            bluetooth.sendData(payload: indicatorValues)
+            bluetooth.sendDataFromJs(payloadData: indicatorValues)
         }
 
         /**
@@ -654,13 +654,13 @@ class jsEvaluator {
          */
         func setRightIndicatorOn() {
             if isCancelled {
-                bluetooth.sendData(payload: "i0,0\n")
+                bluetooth.sendDataFromJs(payloadData: "i0,0\n")
                 return
             }
             NotificationCenter.default.post(name: .commandName, object: "Right Indicator On");
             print("inside setRightIndicatorOn");
             let indicatorValues = "i0,1\n"
-            bluetooth.sendData(payload: indicatorValues)
+            bluetooth.sendDataFromJs(payloadData: indicatorValues)
         }
 
         /**
@@ -671,8 +671,8 @@ class jsEvaluator {
                 return
             }
             NotificationCenter.default.post(name: .commandName, object: "Indicator Off");
-            let indicatorValues = "i0,0\n"
-            bluetooth.sendData(payload: indicatorValues)
+            let indicatorValues = "i0,0\n";
+            bluetooth.sendDataFromJs(payloadData: indicatorValues)
         }
 
         /**

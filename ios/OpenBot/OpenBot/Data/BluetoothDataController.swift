@@ -219,6 +219,16 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         }
     }
 
+
+    func sendDataFromJs(payloadData: String) {
+        let dataToSend: Data? = payloadData.data(using: String.Encoding.utf8)
+        if (dataToSend != nil && discoveredPeripheral != nil) {
+            if let writeCharacteristics {
+                discoveredPeripheral.writeValue(dataToSend!, for: writeCharacteristics, type: CBCharacteristicWriteType.withoutResponse)
+            }
+        }
+    }
+
     func stopRobot() {
         let payLoad = "c0,0\n";
         let dataToSend: Data? = payLoad.data(using: String.Encoding.utf8);
@@ -227,8 +237,6 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
                 discoveredPeripheral.writeValue(dataToSend!, for: writeCharacteristics, type: CBCharacteristicWriteType.withResponse);
             }
         }
-
-
     }
 
     /// function to disconnect the connected device

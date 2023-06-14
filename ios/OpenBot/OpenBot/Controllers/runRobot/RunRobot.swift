@@ -4,7 +4,8 @@
 
 import Foundation
 import UIKit
-class runRobot : UIViewController {
+
+class runRobot: UIViewController {
     @IBOutlet weak var stopRobot: UIButton!
     @IBOutlet weak var commandMessage: UILabel!
     let bluetooth = bluetoothDataController.shared
@@ -33,10 +34,15 @@ class runRobot : UIViewController {
 
      - Parameter animated:
      */
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.post(name: .cancelThread, object: nil)
+    }
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NotificationCenter.default.post(name: .cancelThread, object: nil)
-        bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
+        bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n");
+        bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n")
         NotificationCenter.default.removeObserver(self);
     }
 
@@ -56,6 +62,7 @@ class runRobot : UIViewController {
 
     @IBOutlet weak var runRobotConstraints: NSLayoutConstraint!
     let factor = 0.8;
+
     /**
      override function calls when the current orientation changed
      - Parameters:
@@ -64,16 +71,17 @@ class runRobot : UIViewController {
      */
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-       updateConstraints();
+        updateConstraints();
     }
 
     /**
      Function calls on cancel button of screen tapped. This stop the execution of blockly code
      */
-    @objc func cancel(){
+    @objc func cancel() {
         NotificationCenter.default.post(name: .cancelThread, object: nil);
         NotificationCenter.default.post(name: .commandName, object: "\(Strings.cancel)ed");
-        bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n")
+        bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
+        bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
     }
 
     /**
@@ -93,16 +101,18 @@ class runRobot : UIViewController {
      */
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
+        bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
+        bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
     }
+
 
     /**
      Function to update the constraints of image
      */
-    fileprivate func updateConstraints(){
-        if currentOrientation == .portrait{
+    fileprivate func updateConstraints() {
+        if currentOrientation == .portrait {
             runRobotConstraints.constant = 0;
-        }
-        else{
+        } else {
             runRobotConstraints.constant = -60;
         }
     }
