@@ -219,7 +219,6 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         }
     }
 
-
     func sendDataFromJs(payloadData: String) {
         let dataToSend: Data? = payloadData.data(using: String.Encoding.utf8)
         if (dataToSend != nil && discoveredPeripheral != nil) {

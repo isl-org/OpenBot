@@ -41,8 +41,7 @@ class runRobot: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        bluetooth.sendData(payload: "c" + String(0) + "," + String(0) + "\n");
-        bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n")
+       stopCar();
         NotificationCenter.default.removeObserver(self);
     }
 
@@ -80,8 +79,7 @@ class runRobot: UIViewController {
     @objc func cancel() {
         NotificationCenter.default.post(name: .cancelThread, object: nil);
         NotificationCenter.default.post(name: .commandName, object: "\(Strings.cancel)ed");
-        bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
-        bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
+      stopCar()
     }
 
     /**
@@ -101,8 +99,7 @@ class runRobot: UIViewController {
      */
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
-        bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
-        bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
+        stopCar();
     }
 
 
@@ -117,5 +114,11 @@ class runRobot: UIViewController {
         }
     }
 
+    func stopCar(){
+        bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
+        bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
+        let indicatorValues = "i0,0\n";
+        bluetooth.sendDataFromJs(payloadData: indicatorValues)
+    }
 
 }
