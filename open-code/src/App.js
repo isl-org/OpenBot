@@ -2,7 +2,7 @@ import './App.css';
 import {RouterComponent} from "./components/router/router";
 import StoreProvider from './context/context';
 import {createContext, useEffect, useState} from "react";
-import {localStorageKeys, Themes} from "./utils/constants";
+import {localStorageKeys, PathName, Themes} from "./utils/constants";
 import {auth, googleSignOut} from "./services/firebase";
 import {ToastContainer} from "react-toastify";
 
@@ -20,6 +20,10 @@ function App() {
     const [internetOn, setInternetOn] = useState(window.navigator.onLine);
     const [user, setUser] = useState();
     let isAndroid = /Android/i.test(navigator.userAgent);
+
+    if (localStorage.getItem("PageVisited") === null && window.location.pathname === PathName.playGround) {
+        window.location.href = "https://openbot.itinker.io";
+    }
 
     useEffect(() => {
         window.addEventListener('online', handleOnline);
@@ -41,7 +45,7 @@ function App() {
     }, [theme]);
 
     useEffect(() => {
-        if(isAndroid) {
+        if (isAndroid) {
             auth.getRedirectResult().then(async function (result) {
                 if (result.credential) {
                     localStorage.setItem(localStorageKeys.accessToken, result.credential.accessToken);

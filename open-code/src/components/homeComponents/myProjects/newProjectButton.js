@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Modal, useTheme} from "@mui/material";
 import {StoreContext} from "../../../context/context";
@@ -23,8 +23,8 @@ function NewProjectButton(props) {
     const [open, setOpen] = useState(false);
     const [isInputError, setIsInputError] = useState(true);
     const themes = useTheme();
-    const isMobile = useMediaQuery(themes.breakpoints.down('md'));
-
+    const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
+    const [isTabletQuery, setIsTabletQuery] = useState(window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches);
     const {theme} = useContext(ThemeContext)
     const {
         projectName,
@@ -43,11 +43,21 @@ function NewProjectButton(props) {
         setFileId("")
     }
 
+
+    useEffect(() => {
+        const handleOrientationChange = () => {
+            setIsTabletQuery(window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches);
+        };
+        window.addEventListener("resize", handleOrientationChange);
+    }, []);
+
+
     // Function to close the modal
     const handleClose = () => setOpen(false);
 
     // Function to handle new project creation
     const OpenNewProjectHandle = () => {
+        localStorage.setItem("PageVisited", "true");
         if (!projectName || projectName <= 0) {
             // If project name is not entered or is empty, set input error flag
             setIsInputError(true)
@@ -74,7 +84,7 @@ function NewProjectButton(props) {
     return (
         <>
             <div className={styles.Content + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}
-                 style={{marginRight: isProject > 0 ? (!isMobile) && 42 : 0}}
+                 style={{marginRight: isProject > 0 ? (!isMobile) && 42 : isTabletQuery ? "-50px" : 0}}
                  onClick={handleOpen}>
                 {/*add new project icon*/}
                 <div className={styles.Card + " " + (theme === "dark" ? styles.MainDark : styles.MainLight)}>
@@ -148,7 +158,8 @@ function CreateNewProjectModal(params) {
                 </div>
                 {/*The button to create a new project*/}
                 {isMobile ?
-                    <div className={isMobileLandscape && isIOS?styles.iosButton:isMobileLandscape && isAndroid?styles.androidButton:styles.creatButton}>
+                    <div
+                        className={isMobileLandscape && isIOS ? styles.iosButton : isMobileLandscape && isAndroid ? styles.androidButton : styles.creatButton}>
                         <CreateButton OpenNewProjectHandle={OpenNewProjectHandle}/>
                     </div> :
                     <CreateButton OpenNewProjectHandle={OpenNewProjectHandle}/>

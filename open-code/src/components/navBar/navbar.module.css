@@ -465,23 +465,23 @@
     padding-top: 8%;
 }
 
-.connectAndDriveDivPara{
+.connectAndDriveDivPara {
     width: 70%;
     padding-left: 5%;
 }
 
-.saveAndDownloadDivContent{
+.saveAndDownloadDivContent {
     width: 70%;
     padding-left: 5%;
 }
 
 @media (max-width: 767px) {
 
-    .saveAndDownloadDivContent{
+    .saveAndDownloadDivContent {
         width: 90%;
     }
 
-    .connectAndDriveDivPara{
+    .connectAndDriveDivPara {
         width: 90%;
     }
 
@@ -878,7 +878,7 @@
         padding-top: 8%;
     }
 
-    .connectAndDriveDivPara{
+    .connectAndDriveDivPara {
         padding-top: 2%;
         width: 87%;
         padding-left: 5%;
@@ -892,7 +892,6 @@
 
 @media only screen and (max-height: 440px) and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
     /* CSS rules for mobile landscape view */
-
     .navbarDiv {
         height: 4rem;
     }
@@ -974,7 +973,7 @@
         font-size: 15px;
     }
 
-    .option{
+    .option {
         height: 86px !important;
         width: 157px !important;
     }
@@ -1002,11 +1001,11 @@
         padding-top: 6%;
     }
 
-    .connectAndDriveDivPara{
+    .connectAndDriveDivPara {
         width: 90%;
     }
 
-    .saveAndDownloadDivContent{
+    .saveAndDownloadDivContent {
         width: 90%;
     }
 
