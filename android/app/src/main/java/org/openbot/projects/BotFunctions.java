@@ -267,7 +267,7 @@ public class BotFunctions implements SensorEventListener {
 
   @JavascriptInterface
   public void leftIndicatorOn() {
-    mActivity.runOnUiThread(() -> binding.jsCommand.setText("Right Indicator On"));
+    mActivity.runOnUiThread(() -> binding.jsCommand.setText("Left Indicator On"));
     vehicle.setIndicator(-1);
   }
 
