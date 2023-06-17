@@ -57,7 +57,6 @@ function NewProjectButton(props) {
 
     // Function to handle new project creation
     const OpenNewProjectHandle = () => {
-        localStorage.setItem("PageVisited", "true");
         if (!projectName || projectName <= 0) {
             // If project name is not entered or is empty, set input error flag
             setIsInputError(true)
