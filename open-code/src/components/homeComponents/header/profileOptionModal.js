@@ -26,18 +26,21 @@ export function ProfileOptionModal(props) {
         setIsEditProfileModal,
         setIsHelpCenterModal,
         setIsLogoutModal,
-        setEditProfileLoaderOpen
+        setEditProfileLoaderOpen,
+        isDobChanged
     } = props
     const location = useLocation();
     const themes = useTheme();
     const {theme, toggleTheme, setUser} = useContext(ThemeContext);
-    const {isOnline, setIsDob, isDob, isDobChanged} = useContext(StoreContext);
+    const {isOnline, setIsDob, isDob} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const isSignedIn = localStorage.getItem("isSigIn") === "true";
     const isHomePage = location.pathname === PathName.home;
     const isOnPlaygroundPage = location.pathname === PathName.playGround;
     const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
+    const date = new Date()
+    let currentDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
 
     const handleClose = () => {
         setIsProfileModal(false)
@@ -75,7 +78,7 @@ export function ProfileOptionModal(props) {
                     <PopUpInRowText
                         onClick={async () => {
                             setEditProfileLoaderOpen(true);
-                            isDobChanged ? setIsDob(await getDateOfBirth()) : setIsDob(isDob ?? await getDateOfBirth()); // setting date of birth on modal
+                            isDobChanged ? setIsDob(await getDateOfBirth()) : setIsDob(isDob ?? await getDateOfBirth() ?? currentDate); // setting date of birth on modal
                             setEditProfileLoaderOpen(false);
                             handleOnclick(setIsEditProfileModal);
                         }}

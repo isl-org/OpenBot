@@ -34,6 +34,7 @@ export function Header() {
     const [open, setOpen] = useState(false);
     const [deleteLoader, setDeleteLoader] = useState(false);
     const [editProfileLoaderOpen, setEditProfileLoaderOpen] = useState(false);
+    const [isDobChanged, setIsDobChanged] = useState(false);
     const location = useLocation();
     let navigate = useNavigate();
 
@@ -118,7 +119,7 @@ export function Header() {
                             setIsEditProfileModal={setIsEditProfileModal}
                             setIsLogoutModal={setIsLogoutModal}
                             setEditProfileLoaderOpen={setEditProfileLoaderOpen}
-                            setIsHelpCenterModal={setIsHelpCenterModal}/>
+                            setIsHelpCenterModal={setIsHelpCenterModal} isDobChanged={isDobChanged} />
                     }
                     {/*edit profile pop up */}
                     {editProfileLoaderOpen && <SimpleBackdrop/>}
@@ -126,7 +127,7 @@ export function Header() {
                         <EditProfileModal
                             isEditProfileModal={isEditProfileModal}
                             setIsEditProfileModal={setIsEditProfileModal}
-                            user={user} isDob={isDob}/>
+                            user={user} isDob={isDob} setIsDobChanged={setIsDobChanged}/>
                     }
                     {/*log out pop up*/}
                     {isLogoutModal &&
