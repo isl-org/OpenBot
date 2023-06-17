@@ -73,14 +73,17 @@
 		66B3C59C2A1D673D0079BC16 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B3C59B2A1D673D0079BC16 /* UIButton.swift */; };
 		66E7A02C297697BE00283ED6 /* DetectorFloatYoloV5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */; };
 		727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */; };
+		727D30A012E8F58F2DD21369 /* ServerCommunication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D384E16A0157F2B8C7084 /* ServerCommunication.swift */; };
 		727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */; };
 		727D3457F432B9743263C307 /* sensorDataRetrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */; };
 		727D34602C26673639AA0D0B /* Dimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3946DB74E63117B32AF4 /* Dimension.swift */; };
 		727D348793BC7E328164FDB2 /* DataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3157F2B5E5DBB1565EDD /* DataLogger.swift */; };
 		727D34E3CC491BD7758C572F /* WebRTCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */; };
 		727D36915DB88577316D9C46 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A8D7ACD08EF11740FC2 /* Connection.swift */; };
+		727D3693A3F8CF2A51BBC9C4 /* NsdService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3EA2158BC2BB77C83DF8 /* NsdService.swift */; };
 		727D3695CD23839015A90EFB /* DeviceCurrentOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */; };
 		727D37CDD881685D4EF6BFF5 /* timestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F5FE3F054BE4FA52191 /* timestamp.swift */; };
+		727D3928D96E5AD69D24DA6D /* ServerListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3937D1457F50C712CDD9 /* ServerListener.swift */; };
 		727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */; };
 		727D3B42755B3A6BF1C5202F /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3189735FC4F7A4E4A6C1 /* Browser.swift */; };
 		727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */; };
@@ -114,9 +117,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		14FEE4780CE79F3AAB630B6D /* Pods-OpenBotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.release.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.release.xcconfig"; sourceTree = "<group>"; };
 		17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot_OpenBotUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		38BD59823D98022F3763FF79 /* Pods-OpenBot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.release.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.release.xcconfig"; sourceTree = "<group>"; };
 		4FEF4178D0A2805591A6A3A6 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		4FEF41FCA3B501192D417D73 /* CVPixelBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CVPixelBuffer.swift; path = extensions/CVPixelBuffer.swift; sourceTree = "<group>"; };
 		4FEF421BF49FEE835C6DC5CB /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
@@ -185,6 +186,7 @@
 		66AC721829B885C70022108A /* Navigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		66B3C59B2A1D673D0079BC16 /* UIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
 		66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectorFloatYoloV5.swift; sourceTree = "<group>"; };
+		6F048E6F75C27D1520723C37 /* Pods-OpenBot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.release.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.release.xcconfig"; sourceTree = "<group>"; };
 		727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptedConstraint.swift; path = Adaptive/AdaptedConstraint.swift; sourceTree = "<group>"; };
 		727D3157F2B5E5DBB1565EDD /* DataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLogger.swift; sourceTree = "<group>"; };
 		727D3189735FC4F7A4E4A6C1 /* Browser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
@@ -193,6 +195,8 @@
 		727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCCustomFrameCapture.swift; path = WebRTC/RTCCustomFrameCapture.swift; sourceTree = "<group>"; };
 		727D368915F3602E605FEA51 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		727D37586F16DE497CEA62CE /* SignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalingMessage.swift; sourceTree = "<group>"; };
+		727D384E16A0157F2B8C7084 /* ServerCommunication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCommunication.swift; sourceTree = "<group>"; };
+		727D3937D1457F50C712CDD9 /* ServerListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerListener.swift; sourceTree = "<group>"; };
 		727D3946DB74E63117B32AF4 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
 		727D39B02AB471D9F31B0747 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		727D3A51A7A6155C22E62412 /* GifLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GifLoader.swift; sourceTree = "<group>"; };
@@ -201,16 +205,18 @@
 		727D3C4EBE89B9B6E537BE8B /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
 		727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRTCClient.swift; path = WebRTC/WebRTCClient.swift; sourceTree = "<group>"; };
+		727D3EA2158BC2BB77C83DF8 /* NsdService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NsdService.swift; sourceTree = "<group>"; };
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
 		727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIDeviceExtension.swift; path = extensions/UIDeviceExtension.swift; sourceTree = "<group>"; };
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
-		74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
-		7D15502AB5B13CA6849277AC /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
+		808FD0EDC2699A60CAFB77BF /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
+		85028858BF84C30C93BF2CF7 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBotTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A342C9A4C1417EB2B878B82D /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		BF9BAED728AF94A800EF3E48 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		CADB8D624A9E1D1494E9F87D /* Pods_OpenBot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DBEAC972F15CC83E41C6AAA9 /* Pods-OpenBot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.debug.xcconfig"; sourceTree = "<group>"; };
+		D8CE9F77688B7B3F870BEA75 /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
+		DB93BBCA8A2B2872FB0CF679 /* Pods-OpenBotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.release.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.release.xcconfig"; sourceTree = "<group>"; };
+		F0AA8AF1DB97EAA31FE62D4A /* Pods-OpenBot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -250,19 +256,6 @@
 				9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		37A05E57C6BA519D6B86A37B /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				DBEAC972F15CC83E41C6AAA9 /* Pods-OpenBot.debug.xcconfig */,
-				38BD59823D98022F3763FF79 /* Pods-OpenBot.release.xcconfig */,
-				A342C9A4C1417EB2B878B82D /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */,
-				7D15502AB5B13CA6849277AC /* Pods-OpenBot-OpenBotUITests.release.xcconfig */,
-				74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */,
-				14FEE4780CE79F3AAB630B6D /* Pods-OpenBotTests.release.xcconfig */,
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		4FEF4191C08EC7053A46679C /* OpenBotTests */ = {
@@ -338,6 +331,7 @@
 				4FEF47EAC21A4C2BDD11B72B /* README.md */,
 				4FEF4FB9DCF0D8F0BFCB835B /* tflite */,
 				4FEF421BF49FEE835C6DC5CB /* config.json */,
+				727D3012CF4D90EBBE877212 /* server */,
 			);
 			path = OpenBot;
 			sourceTree = "<group>";
@@ -419,8 +413,8 @@
 				4FEF4191C08EC7053A46679C /* OpenBotTests */,
 				4FEF4549B0D1FC8F591E63FE /* OpenBotUITests */,
 				4FEF4BD00A645A3985233A37 /* README.md */,
-				37A05E57C6BA519D6B86A37B /* Pods */,
 				158970C63E9775BD41F614A3 /* Frameworks */,
+				ED732554C69FE0395DA9AB35 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -570,6 +564,16 @@
 			path = FreeRoam;
 			sourceTree = "<group>";
 		};
+		727D3012CF4D90EBBE877212 /* server */ = {
+			isa = PBXGroup;
+			children = (
+				727D3EA2158BC2BB77C83DF8 /* NsdService.swift */,
+				727D384E16A0157F2B8C7084 /* ServerCommunication.swift */,
+				727D3937D1457F50C712CDD9 /* ServerListener.swift */,
+			);
+			path = server;
+			sourceTree = "<group>";
+		};
 		BF9BAED628AF94A800EF3E48 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -577,6 +581,20 @@
 			);
 			name = Frameworks;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		ED732554C69FE0395DA9AB35 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F0AA8AF1DB97EAA31FE62D4A /* Pods-OpenBot.debug.xcconfig */,
+				6F048E6F75C27D1520723C37 /* Pods-OpenBot.release.xcconfig */,
+				85028858BF84C30C93BF2CF7 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */,
+				D8CE9F77688B7B3F870BEA75 /* Pods-OpenBot-OpenBotUITests.release.xcconfig */,
+				808FD0EDC2699A60CAFB77BF /* Pods-OpenBotTests.debug.xcconfig */,
+				DB93BBCA8A2B2872FB0CF679 /* Pods-OpenBotTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -929,6 +947,9 @@
 				727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */,
 				66AC721429B885410022108A /* ObjectTrackingFragment.swift in Sources */,
 				4FEF43D0E4F94DBBD4DB0614 /* Date.swift in Sources */,
+				727D3693A3F8CF2A51BBC9C4 /* NsdService.swift in Sources */,
+				727D30A012E8F58F2DD21369 /* ServerCommunication.swift in Sources */,
+				727D3928D96E5AD69D24DA6D /* ServerListener.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -958,7 +979,7 @@
 /* Begin XCBuildConfiguration section */
 		4FEF43D6410B560C20FD769C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A342C9A4C1417EB2B878B82D /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */;
+			baseConfigurationReference = 85028858BF84C30C93BF2CF7 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */;
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -975,7 +996,7 @@
 		};
 		4FEF442167610372B5B63F94 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 38BD59823D98022F3763FF79 /* Pods-OpenBot.release.xcconfig */;
+			baseConfigurationReference = 6F048E6F75C27D1520723C37 /* Pods-OpenBot.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -983,7 +1004,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 45P94DZS6G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -1018,7 +1039,7 @@
 		};
 		4FEF44CECB7978AC34B0EE6A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DBEAC972F15CC83E41C6AAA9 /* Pods-OpenBot.debug.xcconfig */;
+			baseConfigurationReference = F0AA8AF1DB97EAA31FE62D4A /* Pods-OpenBot.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1026,7 +1047,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 45P94DZS6G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -1122,7 +1143,7 @@
 		};
 		4FEF4A7750256B55C807D1AF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 14FEE4780CE79F3AAB630B6D /* Pods-OpenBotTests.release.xcconfig */;
+			baseConfigurationReference = DB93BBCA8A2B2872FB0CF679 /* Pods-OpenBotTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OpenBot.app/OpenBot";
 				CURRENT_PROJECT_VERSION = 1;
@@ -1196,7 +1217,7 @@
 		};
 		4FEF4BD51157BE3E8D2839B5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7D15502AB5B13CA6849277AC /* Pods-OpenBot-OpenBotUITests.release.xcconfig */;
+			baseConfigurationReference = D8CE9F77688B7B3F870BEA75 /* Pods-OpenBot-OpenBotUITests.release.xcconfig */;
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -1213,7 +1234,7 @@
 		};
 		4FEF4D381CB9363B3F2093A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */;
+			baseConfigurationReference = 808FD0EDC2699A60CAFB77BF /* Pods-OpenBotTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OpenBot.app/OpenBot";
 				CURRENT_PROJECT_VERSION = 1;
