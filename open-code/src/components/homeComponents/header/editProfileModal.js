@@ -20,10 +20,10 @@ import firebase from "firebase/compat/app";
  * @constructor
  */
 export function EditProfileModal(props) {
-    const {isEditProfileModal, setIsEditProfileModal, user, isDob} = props
+    const {isEditProfileModal, setIsEditProfileModal, user, isDob,setIsDobChanged} = props
     const inputRef = useRef();
     const {theme} = useContext(ThemeContext);
-    const {isOnline, setIsDobChanged} = useContext(StoreContext);
+    const {isOnline} = useContext(StoreContext);
     const [file, setFile] = useState(user?.photoURL && user.photoURL);
     const [fullName, setFullName] = useState(user?.displayName);
     const [isAlertSuccess, setIsAlertSuccess] = useState(false);

@@ -30,7 +30,6 @@ export default ({children, isOnline, user, setUser}) => {
     const [isError, setIsError] = useState(false);
     const [isSignIn, setIsSignIn] = useState(false);
     const [isDob, setIsDob] = useState(undefined);
-    const [isDobChanged,setIsDobChanged]=useState(false);
     const store = {
         projectName, setProjectName,
         drawer, setDrawer,
@@ -46,7 +45,6 @@ export default ({children, isOnline, user, setUser}) => {
         isError, setIsError, isOnline,
         isSignIn, setIsSignIn,
         isDob, setIsDob,
-        isDobChanged,setIsDobChanged
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }
