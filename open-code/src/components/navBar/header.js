@@ -11,9 +11,10 @@ import {PopUpModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {ProfileOptionModal} from "../homeComponents/header/profileOptionModal";
 import {PathName} from "../../utils/constants";
 import {LogoSection, ProfileSignIn, ProjectName, ProjectNamePopUp} from "../homeComponents/header/headerComponents";
-import {useTheme} from "@mui/material";
+import {Backdrop, CircularProgress, useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {deleteProjectFromStorage} from "../../services/workspace";
+import {colors} from "../../utils/color";
 
 
 /**
@@ -23,7 +24,7 @@ import {deleteProjectFromStorage} from "../../services/workspace";
  */
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext);
-    const {projectName, setProjectName, user, setUser} = useContext(StoreContext);
+    const {projectName, setProjectName, user, setUser, isDob} = useContext(StoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [deleteProject, setDeleteProject] = useState(false);
     const [isHelpCenterModal, setIsHelpCenterModal] = useState(false)
@@ -32,6 +33,7 @@ export function Header() {
     const [isLogoutModal, setIsLogoutModal] = useState(false);
     const [open, setOpen] = useState(false);
     const [deleteLoader, setDeleteLoader] = useState(false);
+    const [editProfileLoaderOpen, setEditProfileLoaderOpen] = useState(false);
     const location = useLocation();
     let navigate = useNavigate();
 
@@ -58,10 +60,25 @@ export function Header() {
         });
     }
 
+    //Handling sign-out functionality
     const handleSignOut = () => {
         googleSignOut().then(() => {
             setIsLogoutModal(false);
         })
+    }
+
+    //Loader while getting date of birth
+    function SimpleBackdrop() {
+        return (
+            <div>
+                <Backdrop
+                    sx={{color: colors.openBotBlue, zIndex: (theme) => theme.zIndex.drawer + 1}}
+                    open={editProfileLoaderOpen}
+                >
+                    <CircularProgress color="inherit"/>
+                </Backdrop>
+            </div>
+        );
     }
 
     return (
@@ -100,14 +117,16 @@ export function Header() {
                             setIsProfileModal={setIsProfileModal}
                             setIsEditProfileModal={setIsEditProfileModal}
                             setIsLogoutModal={setIsLogoutModal}
+                            setEditProfileLoaderOpen={setEditProfileLoaderOpen}
                             setIsHelpCenterModal={setIsHelpCenterModal}/>
                     }
                     {/*edit profile pop up */}
+                    {editProfileLoaderOpen && <SimpleBackdrop/>}
                     {isEditProfileModal &&
                         <EditProfileModal
                             isEditProfileModal={isEditProfileModal}
                             setIsEditProfileModal={setIsEditProfileModal}
-                            user={user}/>
+                            user={user} isDob={isDob}/>
                     }
                     {/*log out pop up*/}
                     {isLogoutModal &&
@@ -149,7 +168,7 @@ function RightSection(params) {
                      style={{height: 24}}/>
             }
             {/*if screen is playground, and it's mobile than do not show change theme icon and divider*/}
-            {!(location.pathname === PathName.playGround && isMobile )  &&
+            {!(location.pathname === PathName.playGround && isMobile) &&
                 <>
                     {/*change theme icon*/}
                     <img alt="icon" onClick={() => toggleTheme(!theme)}

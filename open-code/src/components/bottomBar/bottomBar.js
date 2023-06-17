@@ -15,7 +15,6 @@ import {
 import WhiteText from "../fonts/whiteText";
 import BlackText from "../fonts/blackText";
 import {Images} from "../../utils/images";
-import {motion, AnimatePresence} from "framer-motion";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {getCurrentProject} from "../../services/workspace";
@@ -86,8 +85,21 @@ export const BottomBar = () => {
                         console.log("err::", err)
                         setIsLoader(false);
                         errorToast("Failed to Upload");
-
                     })
+
+                    const data = {
+                        projectName: getCurrentProject().projectName,
+                        xmlValue: getCurrentProject().xmlValue,
+                        createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
+                    }
+                    // Call function to upload xml data to Google Drive
+                    uploadToGoogleDrive(data, "xml")
+                        .then()
+                        .catch((err) => {
+                            errorToast("Failed to upload");
+                            console.log(err)
+                            setIsLoader(false);
+                        })
                 }
             } else {
                 errorToast("Please sign-In to generate QR.")
@@ -227,8 +239,6 @@ export const BottomBar = () => {
                                     buttonActive={buttonActive} clickedButton={clickedButton}/>
 
                 <div className={styles.operationsDiv}>
-                    {/*upload icon*/}
-                    <UploadInDrive/>
                     {/*undo redo*/}
                     <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
                               buttonActive={buttonActive}/>
@@ -404,147 +414,6 @@ function UndoRedo(params) {
                 <img alt={""} className={styles.commandSize} src={Images.redoIcon}/>
             </button>
         </div>
-    )
-}
-
-
-/**
- * Component to handle the uploading of an XML file to Google Drive.
- * Shows a button with a cloud icon, which will trigger the upload when clicked.
- * If the user is not signed in, a sign in popup will be shown.
- * While the upload is in progress, a loader will be shown.
- * After the upload is complete, a tick animation will be shown briefly.
- * @param {Function} params.setSignInPopUp - A function to set the sign in popup state.
- * @param {Boolean} params.signInPopUp - A boolean to determine if the sign in popup should be shown.
- * @returns {JSX.Element}
- */
-function UploadInDrive(params) {
-    const [isDriveLoader, setIsDriveLoader] = useState(false);
-    const [showTick, setShowTick] = useState(false);
-    const {isOnline} = useContext(StoreContext)
-
-    //if signIn add code in xml file to google drive or else show signIn pop Up
-    const handleDriveButton = () => {
-        if (isOnline) {
-            if (localStorage.getItem("isSigIn") === "true") {
-                setIsDriveLoader(true);
-                const data = {
-                    projectName: getCurrentProject().projectName,
-                    xmlValue: getCurrentProject().xmlValue,
-                    createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
-                }
-
-                // Call function to upload data to Google Drive
-                uploadToGoogleDrive(data, "xml")
-                    .then((res) => {
-                            setIsDriveLoader(false);
-                            //after response show tick after 400ms
-                            res && setTimeout(() => {
-                                setShowTick(true);
-                            }, 400);
-                        }
-                    )
-                    .catch((err) => {
-                        setIsDriveLoader(false);
-                        errorToast("Failed to upload");
-                        console.log(err)
-                    })
-            } else {
-                // If user is not signed in, show sign in alert
-                errorToast("Please sign in to save project in drive.")
-            }
-        } else {
-            errorToast(Constants.InternetOffMsg)
-        }
-
-    }
-
-    // Remove tick animation after 1000ms
-    useEffect(() => {
-        if (showTick) {
-            const timeout = setTimeout(() => {
-                setShowTick(false);
-            }, 1000);
-            return () => clearTimeout(timeout);
-        }
-    }, [showTick]);
-
-    //tick animation
-    const tickVariants = {
-        hidden: {
-            pathLength: 0,
-            opacity: 0
-        },
-        visible: {
-            pathLength: 1,
-            opacity: 1,
-            transition: {
-                duration: 0.7,
-                ease: "easeInOut"
-            }
-        }
-    };
-
-    //drive loader
-    const DriveLoader = () => {
-        return <div>
-            <CircularProgress
-                sx={{
-                    color: "#0071C5",
-                }}
-                size={40}
-                thickness={2.5}
-                value={100}
-            />
-        </div>
-    }
-
-    return (
-        <>
-
-            {/* Upload button */}
-            <div onClick={() => handleDriveButton()} className={styles.iconMargin + " " + styles.iconSpace}
-                 style={{display: "flex", alignItems: "center"}}>
-
-                {/*icon*/}
-                <img alt="drive" className={isDriveLoader ? styles.shrinkDriveIcon : styles.driveIconStyle}
-                     src={Images.cloud} style={isDriveLoader ? {position: "absolute", marginLeft: 6} : {}}/>
-
-                {/*loader*/}
-                <div>{isDriveLoader && <DriveLoader/>}</div>
-
-                {/*tick animation*/}
-                <AnimatePresence>
-                    {showTick && (
-                        <motion.svg
-                            key="tick"
-                            width="30"
-                            height="30"
-                            viewBox="0 0 50 50"
-                            style={{
-                                position: "absolute",
-                                marginLeft: 2.3,
-                            }}
-                            initial={{opacity: 0, scale: 0.2}}
-                            animate={{opacity: 1, scale: 1}}
-                            exit={{opacity: 0, scale: 0.2}}
-                        >
-                            <motion.path
-                                d="M15.63 27.077l6.842 6.84L34.923 20"
-                                fill="transparent"
-                                strokeWidth="5"
-                                stroke="#fff"
-                                variants={tickVariants}
-                                initial="hidden"
-                                animate="visible"
-                            />
-                        </motion.svg>
-                    )}
-                </AnimatePresence>
-
-            </div>
-            {/*// <button className={styles.driveStyle + " " + styles.iconMargin}*/}
-        </>
     )
 }
 

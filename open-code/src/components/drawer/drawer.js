@@ -100,8 +100,10 @@ export const RightSlider = () => {
     // Render the icon with the correct style and theme
     return (
         <div className={styles.slider + " " + (!drawer && styles.leftSlider)} onClick={closeDrawer}>
-            <img alt="slider" src={theme === "dark" ? Images.rightSliderDark : Images.rightSlider}
-                 style={drawer ? qrStyles.rightSliderIcon : qrStyles.leftSliderIcon}/>
+            {drawer ? <img alt="slider" src={theme === "dark" ? Images.rightSliderDark : Images.rightSlider}
+                           style={drawer ? qrStyles.rightSliderIcon : qrStyles.leftSliderIcon}/> :
+                <img alt="slider" src={theme === "dark" ? Images.leftSliderDark : Images.leftSlider}
+                     style={drawer ? qrStyles.rightSliderIcon : qrStyles.leftSliderIcon}/>}
         </div>
     )
 }

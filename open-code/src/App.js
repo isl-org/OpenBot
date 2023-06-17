@@ -41,7 +41,7 @@ function App() {
     }, [theme]);
 
     useEffect(() => {
-        if(isAndroid) {
+        if (isAndroid) {
             auth.getRedirectResult().then(async function (result) {
                 if (result.credential) {
                     localStorage.setItem(localStorageKeys.accessToken, result.credential.accessToken);
