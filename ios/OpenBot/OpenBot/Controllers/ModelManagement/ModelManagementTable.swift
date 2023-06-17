@@ -29,6 +29,7 @@ class ModelManagementTable: UITableViewController {
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.backgroundColor = Colors.robotInfoColor;
         view.frame.origin.y = 250;
         setupHeader()
         setupNavigationBarItem()

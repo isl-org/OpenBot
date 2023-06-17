@@ -122,9 +122,9 @@ class expandedAutoPilot: UIView {
         bluetoothIconView.frame.size = CGSize(width: 40, height: 50);
         addSubview(bluetoothIconView);
         if (isBluetoothConnected) {
-            bluetoothIcon = createIcons(iconImg: Images.bluetoothConnected!, x: 0, y: 5, size: resized(size: Images.bluetoothConnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue)
+            bluetoothIcon = createIcons(iconImg: Images.bluetoothConnected_v2!, x: 0, y: 5, size: resized(size: Images.bluetoothConnected_v2!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue)
         } else {
-            bluetoothIcon = createIcons(iconImg: Images.bluetoothDisconnected!, x: 0, y: 5, size: resized(size: Images.bluetoothDisconnected!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue)
+            bluetoothIcon = createIcons(iconImg: Images.bluetoothDisconnected_v2!, x: 0, y: 5, size: resized(size: Images.bluetoothDisconnected_v2!.size, basedOn: Dimension.height), backgroundColor: Colors.title ?? .blue)
         }
         bluetoothIconView.addSubview(bluetoothIcon)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ble(_:)))
@@ -530,9 +530,9 @@ class expandedAutoPilot: UIView {
     /// - Parameter notification:
     @objc func updateConnect(_ notification: Notification) {
         if (isBluetoothConnected) {
-            bluetoothIcon.image = Images.bluetoothConnected
+            bluetoothIcon.image = Images.bluetoothConnected_v2
         } else {
-            bluetoothIcon.image = Images.bluetoothDisconnected
+            bluetoothIcon.image = Images.bluetoothDisconnected_v2
         }
     }
 

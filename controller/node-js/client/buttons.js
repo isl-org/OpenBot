@@ -31,9 +31,11 @@ export function Buttons (connection) {
 
   this.setMirrored = mirrored => {
     const video = document.getElementById('video')
+
+    // 'translateX' changes between -50% and +50% to keep video centered
     video.style.cssText = mirrored
-      ? '-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); transform: scale(-1, 1); filter: FlipH;'
-      : ''
+      ? '-moz-transform: scale(-1, 1) translateX(50%); -webkit-transform: scale(-1, 1) translateX(50%); -o-transform: scale(-1, 1) translateX(50%); transform: scale(-1, 1) translateX(50%); filter: FlipH;'
+      : 'translateX(-50%)'
 
     document.getElementById('mirror_button').src = mirrored ? 'icons/flip_black_24dp-mirrored.svg' : 'icons/flip_black_24dp.svg'
 
