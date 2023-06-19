@@ -738,7 +738,6 @@
 				808FD0EDC2699A60CAFB77BF /* Pods-OpenBotTests.debug.xcconfig */,
 				DB93BBCA8A2B2872FB0CF679 /* Pods-OpenBotTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

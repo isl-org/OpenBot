@@ -115,8 +115,14 @@ class DataCollectionController: CameraController {
                 saveZipFilesName.append(tmpUrl)
             }
         }
+        if let last = saveZipFilesName.last {
+            uploadFile(saveZipFilesName : last)
+        };
+    }
+
+
+    func presentActivityController(){
         let avc = UIActivityViewController(activityItems: saveZipFilesName, applicationActivities: nil)
-        uploadFile(saveZipFilesName : saveZipFilesName);
         present(avc, animated: true)
         avc.completionWithItemsHandler = { activity, success, items, error in
             DataLogger.shared.deleteFiles(fileNameToDelete: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
@@ -259,7 +265,11 @@ class DataCollectionController: CameraController {
 
             // Save the collected sensor data
             dataLogger.saveSensorData()
-
+            if let url = URL(string: dataLogger.openbotPath) {
+                if isLoggedButtonPressed {
+                    createZip(path: url)
+                }
+            }
             // Reset data logger
             dataLogger.reset()
         }
@@ -316,11 +326,7 @@ class DataCollectionController: CameraController {
         if isLoggedButtonPressed && loggingEnabled {
             toggleLogging()
         }
-        if let url = URL(string: dataLogger.openbotPath) {
-            if isLoggedButtonPressed {
-                createZip(path: url)
-            }
-        }
+     presentActivityController()
         _ = navigationController?.popViewController(animated: true)
     }
 
@@ -345,35 +351,56 @@ class DataCollectionController: CameraController {
         }
     }
 
-    func uploadFile(saveZipFilesName :  [URL]){
-        guard let fileData = try? Data(contentsOf: saveZipFilesName[0]) else {
+    func uploadFile(saveZipFilesName: URL) {
+         let fileURL = saveZipFilesName
+        guard let fileData = try? Data(contentsOf: fileURL) else {
             print("Failed to read file data.")
             return
         }
-        print("fileData ", fileData);
-        let urlComponent = URLComponents(string:"https:192.168.1.9:8000/upload");
-        if urlComponent?.url != nil {
-            var request = URLRequest(url: (urlComponent?.url)!)
-            request.httpMethod = "POST"
-            request.setValue("application/zip", forHTTPHeaderField: "Content-Type")
-            request.httpBody = fileData
-            let session = URLSession.shared
-            let task = session.dataTask(with: request) { data, response, error in
-                print("data is :",data);
-                if let error = error {
-                    print("Error: at line 357 \(error.localizedDescription)")
-                    return
-                }
 
-                // Handle the response here
-                if let httpResponse = response as? HTTPURLResponse {
-                    print("Status code: \(httpResponse.statusCode)")
-                }
+        let serverURL = URL(string: "http://192.168.1.9:8000/upload")!
+        var request = URLRequest(url: serverURL)
+        request.httpMethod = "POST"
+
+        let boundary = "Boundary-\(UUID().uuidString)"
+        let contentType = "multipart/form-data; boundary=\(boundary)"
+        request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+
+        let body = NSMutableData()
+
+        // Add file data
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileURL.lastPathComponent)\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: application/zip\r\n\r\n".data(using: .utf8)!)
+        body.append(fileData)
+        body.append("\r\n".data(using: .utf8)!)
+
+        // Add more fields if needed
+
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+        request.httpBody = body as Data
+
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+                return
             }
 
-            task.resume()
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Status code: \(httpResponse.statusCode)")
+            }
+
+            if let data = data {
+                // Handle the response data here
+                print("Response data: \(data)")
+            }
         }
+        task.resume()
     }
+
+
 }
 
 

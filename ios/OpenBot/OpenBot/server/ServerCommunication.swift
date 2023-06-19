@@ -35,35 +35,7 @@ class ServerCommunication : sendInitialMessageDelegate {
             print("connection.stateUpdateHandler \(newState)")
             switch newState {
             case .ready:
-                let ip = ipAddress.getIPAddress();
-                print(ip)
-                let urlComponent = URLComponents(string:"http://192.168.1.9:8000/upload")
-                print("url", urlComponent?.url);
-                if urlComponent?.url != nil {
-                    var request = URLRequest(url: (urlComponent?.url)!)
-
-
-                    request.httpMethod = "GET" // Set the HTTP method
-
-                    let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                        if let error = error {
-                            print("Error: \(error.localizedDescription)")
-                            return
-                        }
-
-                        if let httpResponse = response as? HTTPURLResponse {
-                            print("Status code: \(httpResponse.statusCode)")
-                        }
-
-                        if let data = data {
-                            // Process the response data
-                            let responseString = String(data: data, encoding: .utf8)
-                            print("Response: \(responseString ?? "")")
-                        }
-                    }
-
-
-                task.resume()} // Start the URLSession task
+                print("ready");
             case .preparing:
                 return
             default:
@@ -120,40 +92,6 @@ class ServerCommunication : sendInitialMessageDelegate {
         client.send(message: msg)
     }
 
-
-    func callAPI() {
-        guard let url = URL(string: "/models") else {
-            print("Invalid URL")
-            return
-        }
-
-        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-            if let error = error {
-                print("Error: \(error)")
-                return
-            }
-
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("Invalid response")
-                return
-            }
-
-            if httpResponse.statusCode == 200 {
-                // API call was successful
-                if let data = data {
-                    // Process the response data here
-                    // You can convert the data to JSON, decode it, etc.
-                    print("API response: \(String(data: data, encoding: .utf8) ?? "")")
-                }
-            } else {
-                // API call returned an error
-                print("API Error: \(httpResponse.statusCode)")
-            }
-        }
-
-        task.resume()
-    }
-
 }
 
 struct ipAddress{
@@ -194,4 +132,5 @@ struct ipAddress{
 
         return address
     }
+
 }
