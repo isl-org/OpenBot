@@ -117,7 +117,7 @@ export const RightSlider = () => {
  */
 export const DrawerBody = (props) => {
     const {isMobile} = props
-    const qrScanSteps = ["Open OpenBot App on your phone", "Tap ScanQR Icon on homepage", "Point your phone to this screen to capture the code"]
+    const qrScanSteps = ["Open OpenBot App on your phone", "Tap ScanQR Icon on Projects page", "Point your phone to this screen to capture the code"]
     return (
         <>
             <div>

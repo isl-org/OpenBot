@@ -332,7 +332,7 @@ function GenerateCodeButton(params) {
                 {isMobile || isLandscape || isTabletQuery.matches || isDesktopSmallerScreen ? (
                     ""
                 ) : (
-                    <span className={styles.leftButton + " " + styles.iconMargin}>Generate QR </span>
+                    <span className={styles.leftButton + " " + styles.iconMargin}>Upload Code </span>
                 )}
             </button>
 
