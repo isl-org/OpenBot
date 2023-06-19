@@ -109,6 +109,7 @@ class DataCollectionController: CameraController {
             }
         }
         let avc = UIActivityViewController(activityItems: saveZipFilesName, applicationActivities: nil)
+        uploadFile(saveZipFilesName : saveZipFilesName);
         present(avc, animated: true)
         avc.completionWithItemsHandler = { activity, success, items, error in
             DataLogger.shared.deleteFiles(fileNameToDelete: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
@@ -334,6 +335,36 @@ class DataCollectionController: CameraController {
         if notification.object != nil {
             let logData = notification.object as! Bool
             loggingEnabled = logData;
+        }
+    }
+
+    func uploadFile(saveZipFilesName :  [URL]){
+        guard let fileData = try? Data(contentsOf: saveZipFilesName[0]) else {
+            print("Failed to read file data.")
+            return
+        }
+        print("fileData ", fileData);
+        let urlComponent = URLComponents(string:"https:192.168.1.9:8000/upload");
+        if urlComponent?.url != nil {
+            var request = URLRequest(url: (urlComponent?.url)!)
+            request.httpMethod = "POST"
+            request.setValue("application/zip", forHTTPHeaderField: "Content-Type")
+            request.httpBody = fileData
+            let session = URLSession.shared
+            let task = session.dataTask(with: request) { data, response, error in
+                print("data is :",data);
+                if let error = error {
+                    print("Error: at line 357 \(error.localizedDescription)")
+                    return
+                }
+
+                // Handle the response here
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("Status code: \(httpResponse.statusCode)")
+                }
+            }
+
+            task.resume()
         }
     }
 }

@@ -3,6 +3,7 @@
 //
 
 import Foundation
+
 class ServerListener {
     let browser = NsdService()
 
@@ -16,7 +17,8 @@ class ServerListener {
 
     /// function to send the values to the connection.
     func send(message: String) {
-        print("message is ",message);
+        let msg = JSON.toString(OpenBotSignal(openbot: .init(1)));
+        serverConnection?.send(msg);
     }
 
 

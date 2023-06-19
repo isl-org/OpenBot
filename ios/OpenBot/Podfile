@@ -8,7 +8,6 @@ target 'OpenBot' do
   pod 'DropDown'
   pod 'Starscream', '~> 3.0.1'
   pod 'GoogleWebRTC'
-
   # Pods for OpenBot
 
   target 'OpenBotTests' do

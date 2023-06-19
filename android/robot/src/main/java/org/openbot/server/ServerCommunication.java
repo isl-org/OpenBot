@@ -51,7 +51,8 @@ public class ServerCommunication {
       new JsonHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-          Timber.d("Server found: %s", response.toString());
+          Timber.d("Server found: %s", response.toString() + headers + statusCode);
+          Timber.d("" + headers);
           try {
             uploadAll();
           } catch (Exception e) {
@@ -210,7 +211,9 @@ public class ServerCommunication {
       Timber.e("File not found: %s", file.getAbsolutePath());
       return;
     }
-
+    System.out.println("url is: " + serverUrl);
+    Timber.e("Url is" + serverUrl + "/upload" );
+    Timber.e("paramerter is ->" + params );
     client.post(context, serverUrl + "/upload", params, new UploadResponseHandler(file));
   }
 
@@ -258,3 +261,4 @@ public class ServerCommunication {
     }
   }
 }
+
