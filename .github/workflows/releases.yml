@@ -29,7 +29,7 @@ jobs:
       - name: Specify Release Asset Paths
         id: asset_paths
         run:  |
-          echo "::set-output name=openbot_apk_path::$(pwd)/app/build/outputs/apk/debug/app-debug.apk"
+          echo "::set-output name=openbot_apk_path::$(pwd)/robot/build/outputs/apk/debug/robot-debug.apk"
           echo "::set-output name=controller_apk_path::$(pwd)/controller/build/outputs/apk/debug/controller-debug.apk"
       - name: Specify Release Asset Names using Tag [${{github.event.release.tag_name}}]
         id: asset_names
