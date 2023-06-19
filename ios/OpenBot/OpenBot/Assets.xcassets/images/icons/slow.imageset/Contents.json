@@ -1,10 +1,12 @@
 {
   "images" : [
     {
+      "filename" : "slow 4.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "slow 3.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },

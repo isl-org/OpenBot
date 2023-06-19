@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bottom_sheet_corner_radius">16dp</dimen>
+    <dimen name="bottom_sheet_top_padding">8dp</dimen>
+    <dimen name="text_margin">12dp</dimen>
+    <dimen name="icon_asset_size">88dp</dimen>
+    <dimen name="feed_padding">12dp</dimen>
+</resources>

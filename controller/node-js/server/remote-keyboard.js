@@ -74,22 +74,18 @@ function RemoteKeyboard (commandHandler) {
           case 'a':
             if (pressedKeys.has('w')) {
               commandHandler.forwardLeft()
-            }
-            else if (pressedKeys.has('s')) {
+            } else if (pressedKeys.has('s')) {
               commandHandler.backwardLeft()
-            }
-            else {
+            } else {
               commandHandler.rotateLeft()
             }
             break
           case 'd':
             if (pressedKeys.has('w')) {
               commandHandler.forwardRight()
-            }
-            else if (pressedKeys.has('s')) {
+            } else if (pressedKeys.has('s')) {
               commandHandler.backwardRight()
-            }
-            else {
+            } else {
               commandHandler.rotateRight()
             }
             break

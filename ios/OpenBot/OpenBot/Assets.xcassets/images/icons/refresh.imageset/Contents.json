@@ -29,6 +29,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "white_refresh 5.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -39,6 +40,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "black_refresh 5.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -49,6 +51,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "white_refresh 6.svg",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -59,6 +62,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "black_refresh 6.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

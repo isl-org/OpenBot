@@ -8,6 +8,7 @@
  */
 
 export function Keyboard () {
+  // 'key' is added as innerHTML
   const menuTable = [
     { keypressCode: 'w', key: 'W', description: 'Go forward' },
     { keypressCode: 's', key: 'S', description: 'Go backward' },
@@ -17,12 +18,12 @@ export function Keyboard () {
     { keypressCode: 'e', key: 'E', description: 'Speed up' },
     { keypressCode: 'm', key: 'M', description: 'Drive mode' },
     { keypressCode: 'n', key: 'N', description: 'Toggle noise' },
-    { keypressCode: 'ArrowLeft', key: 'Left', description: 'Left indicator' },
-    { keypressCode: 'ArrowRight', key: 'Right', description: 'Right indicator' },
-    { keypressCode: 'ArrowUp', key: 'Up', description: 'Cancel indicators' },
-    { keypressCode: 'ArrowDown', key: 'Down', description: 'Network mode' },
-    { keypressCode: ' ', key: 'SPACE', description: 'Toggle logging' },
-    { keypressCode: 'Escape', key: 'ESC', description: 'Quit' }
+    { keypressCode: 'ArrowLeft', key: '<img src="/icons/arrow.svg" style="transform: rotate(90deg)" />', description: 'Left indicator' },
+    { keypressCode: 'ArrowRight', key: '<img src="/icons/arrow.svg" style="transform: rotate(-90deg)" />', description: 'Right indicator' },
+    { keypressCode: 'ArrowUp', key: '<img src="/icons/arrow.svg" style="transform: rotate(180deg)" />', description: 'Cancel indicators' },
+    { keypressCode: 'ArrowDown', key: '<img src="/icons/arrow.svg" style="transform: rotate(0deg)" />', description: 'Network mode' },
+    { keypressCode: ' ', key: '<div class="space-symbol"></div>', description: 'Toggle logging' },
+    { keypressCode: 'Escape', key: 'Esc', description: 'Quit' }
   ]
 
   // build a set of the keypress codes for a quick lookup
@@ -45,7 +46,17 @@ export function Keyboard () {
   const createMenuList = () => {
     const listItems = menuTable.map(item => {
       const liItem = document.createElement('li')
-      liItem.appendChild(document.createTextNode(`${item.key}: ${item.description}`))
+
+      const keySymbol = document.createElement('div')
+      keySymbol.innerHTML = item.key
+      keySymbol.classList.add('key-display')
+
+      const keyDescription = document.createElement('p')
+      keyDescription.innerText = item.description
+      keyDescription.classList.add('key-desc')
+
+      liItem.appendChild(keySymbol)
+      liItem.appendChild(keyDescription)
       liItem.setAttribute('key', item.key)
       liItem.setAttribute('keypressCode', item.keypressCode)
 
@@ -58,8 +69,12 @@ export function Keyboard () {
     list.forEach(liItem => {
       const keypressName = liItem.getAttribute('keypressCode')
 
-      liItem.setAttribute('style',
-        pressedKeys.has(keypressName) ? 'font-weight: bold' : 'font-weight: normal')
+      // set class according to press state
+      if (pressedKeys.has(keypressName)) {
+        liItem.classList.add('key-pressed')
+      } else {
+        liItem.classList.remove('key-pressed')
+      }
     })
   }
 

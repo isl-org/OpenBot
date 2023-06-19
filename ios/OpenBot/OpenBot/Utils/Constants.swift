@@ -17,6 +17,12 @@ struct Images {
     static let bluetoothDisconnected = UIImage(named: "bluetoothDisconnected")
     static let frontCamera = UIImage(named: "frontCamera")
     static let ble = UIImage(named: "ble")
+    static let bluetooth = UIImage(named: "bluetooth")
+    static let bluetoothSearching = UIImage(named: "bluetoothSearching")
+    static let bluetooth_v2 = UIImage(named: "bluetooth_v2")
+    static let bluetoothConnected_v2 = UIImage(named: "bluetoothConnected_v2")
+    static let bluetoothDisconnected_v2 = UIImage(named: "bluetoothDisconnected_v2")
+    static let bluetoothSearching_v2 = UIImage(named: "bluetoothSearching_v2")
     static let settings = UIImage(named: "settings")
     static let closeIcon = UIImage(named: "closeIcon")
     static let phoneIcon = UIImage(named: "phone")
@@ -35,6 +41,7 @@ struct Images {
     static let upwardArrow = UIImage(named: "upward-arrow")
     static let openBotLogo = UIImage(named: "openBotLogo")
     static let gmapMarker = UIImage(named: "gmap_marker")
+    static let pointGoalIcon = UIImage(named: "pointGoal")
 }
 
 /// Colors of the user inerface
@@ -52,6 +59,14 @@ struct Colors {
     static let modelDetail = UIColor(named: "modelDetailPopup")
     static let blue = UIColor(red: 0, green: 113, blue: 197, alpha: 1);
     static let lightBlack = UIColor(red: 0.16, green: 0.16, blue: 0.16, alpha: 1.00)
+    static let freeRoamColor = UIColor(red: 247.0 / 255.0, green: 105.0 / 255.0, blue: 36.0 / 255.0, alpha: 1.00)
+    static let dataCollectionColor = UIColor(red: 147.0 / 255.0, green: 196.0 / 255.0, blue: 125.0 / 255.0, alpha: 1.00)
+    static let controllerMappingColor = UIColor(red: 103.0 / 255.0, green: 93.0 / 255.0, blue: 154.0 / 255.0, alpha: 1.00)
+    static let robotInfoColor = UIColor(named: "HomePageTitleColor")! //UIColor(red: 75.0/255.0, green: 123.0/255.0, blue: 1.0, alpha: 1.00)
+    static let autopilotColor = UIColor(red: 40.0 / 255.0, green: 47.0 / 255.0, blue: 55.0 / 255.0, alpha: 1.00)
+    static let objectTrackingColor = UIColor(red: 1.0, green: 217.0 / 255.0, blue: 102.0 / 255.0, alpha: 1.00)
+    static let pointGoalColor = UIColor(red: 52.0 / 255.0, green: 181.0 / 255.0, blue: 183.0 / 255.0, alpha: 1.00)
+    static let modelColor = UIColor(red: 183.0 / 255.0, green: 138.0 / 255.0, blue: 164.0 / 255.0, alpha: 1.00)
 }
 
 /// Set of constants used in the code
@@ -63,15 +78,23 @@ struct Constants {
     static let openbotService_TX = "9bf1103b-834c-47cf-b149-c9e4bcf778a7"
 
     // Game Data
-    static let gameModes: [ModeItem] = [
-        ModeItem(label: Strings.freeRoam, icon: Images.freeRoam!, identifier: Strings.ScreenFreeRoam),
-        ModeItem(label: Strings.dataCollection, icon: Images.dataCollection!, identifier: Strings.ScreenDataCollection),
-        ModeItem(label: Strings.controllerMapping, icon: Images.controllerMapping!, identifier: Strings.ScreenControllerMapping),
-        ModeItem(label: Strings.Autopilot, icon: Images.autopilotIcon!, identifier: Strings.AutopilotFragment),
-        ModeItem(label: Strings.ObjectTracking, icon: Images.objectTrackingIcon!, identifier: Strings.ObjectTrackingFragment),
-        ModeItem(label: Strings.modelManagement, icon: Images.modelManagementIcon!, identifier: Strings.ScreenModelManagement),
-        ModeItem(label: Strings.robotInfo, icon: Images.robotInfoIcon!, identifier: Strings.ScreenRobotInfo),
-        ModeItem(label: Strings.navigation, icon: Images.objectTrackingIcon!, identifier: Strings.ScreenNavigation),
+    static let gameModes: [[ModeItem]] = [
+        // General
+        [
+            ModeItem(label: Strings.freeRoam, icon: Images.freeRoam!, identifier: Strings.ScreenFreeRoam, color: Colors.freeRoamColor),
+            ModeItem(label: Strings.dataCollection, icon: Images.dataCollection!, identifier: Strings.ScreenDataCollection, color: Colors.dataCollectionColor),
+            ModeItem(label: Strings.controllerMapping, icon: Images.controllerMapping!, identifier: Strings.ScreenControllerMapping, color: Colors.controllerMappingColor),
+            ModeItem(label: Strings.robotInfo, icon: Images.robotInfoIcon!, identifier: Strings.ScreenRobotInfo, color: Colors.robotInfoColor)
+        ],
+        // AI
+        [
+            ModeItem(label: Strings.Autopilot, icon: Images.autopilotIcon!, identifier: Strings.AutopilotFragment, color: Colors.autopilotColor),
+            ModeItem(label: Strings.ObjectTracking, icon: Images.objectTrackingIcon!, identifier: Strings.ObjectTrackingFragment, color: Colors.objectTrackingColor),
+            ModeItem(label: Strings.navigation, icon: Images.pointGoalIcon!, identifier: Strings.ScreenNavigation, color: Colors.pointGoalColor),
+            ModeItem(label: Strings.modelManagement, icon: Images.modelManagementIcon!, identifier: Strings.ScreenModelManagement, color: Colors.modelColor)
+        ],
+        // Legacy
+        []
     ]
     static let frameColors: [UIColor] = [UIColor.red, UIColor.orange, UIColor.blue, UIColor.green, UIColor.brown]
     static let autopilotMode = "AUTOPILOT"
@@ -164,10 +187,11 @@ enum PATH_TYPE: String {
          ASSET = "ASSET",
          FILE = "FILE"
 }
+
 /// Class for value of all safe area value
-struct safeAreaLayoutValue{
-    static let top : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0.0
-    static let bottom : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0.0
-    static let left : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0.0;
-    static let right : CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0.0;
+struct safeAreaLayoutValue {
+    static let top: CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0.0
+    static let bottom: CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0.0
+    static let left: CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0.0;
+    static let right: CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0.0;
 }
