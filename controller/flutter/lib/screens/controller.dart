@@ -24,7 +24,7 @@ class Controller extends StatefulWidget {
 }
 
 class ControllerState extends State<Controller> {
-  final discoveries = <Discovery>[];
+  final List<Service> services = [];
   final registrations = <Registration>[];
   ServerSocket? _serverSocket;
   Stream<Uint8List>? _broadcast;
@@ -149,14 +149,16 @@ class ControllerState extends State<Controller> {
   void initState() {
     super.initState();
     registerNewService();
-    addDiscovery();
     videoConnection();
+    getNewDiscoverServices();
   }
 
-  Future<void> addDiscovery() async {
+  Future<void> getNewDiscoverServices() async {
     final discovery = await startDiscovery('_openbot-server._tcp.');
-    setState(() {
-      discoveries.add(discovery);
+    discovery.addServiceListener((service, status) {
+      if (status == ServiceStatus.found) {
+        services.add(service);
+      }
     });
   }
 
@@ -251,7 +253,8 @@ class ControllerState extends State<Controller> {
               objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
               mirror: mirroredVideo,
             ),
-            ControlSelector(setMirrorVideo, indicatorLeft, indicatorRight, discoveries)
+            ControlSelector(
+                setMirrorVideo, indicatorLeft, indicatorRight, services)
           ],
         ),
         debugShowCheckedModeBanner: false,

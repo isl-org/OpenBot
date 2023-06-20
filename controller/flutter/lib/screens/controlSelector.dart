@@ -10,9 +10,11 @@ class ControlSelector extends StatefulWidget {
   final dynamic updateMirrorView;
   final bool indicatorLeft;
   final bool indicatorRight;
-  final List <Discovery> discoveries;
+  final List<Service> networkServices;
+
   const ControlSelector(this.updateMirrorView, this.indicatorLeft,
-      this.indicatorRight, this.discoveries, {super.key});
+      this.indicatorRight, this.networkServices,
+      {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -26,20 +28,61 @@ class ControlSelectorState extends State<ControlSelector> {
 
   // Initial Selected Value
   String dropDownValue = 'No server';
-
-  // List of items in our dropdown menu
-  var openBotServers = [
-    'No server',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-  ];
+  late List<DropdownMenuItem<String>> items = [];
 
   @override
   void initState() {
     super.initState();
-    // print("sanjeev widget discoveries == $widget.discoveries");
+    // items.clear();
+  }
+
+  // Function to generate DropdownMenuItem widgets
+  List<DropdownMenuItem<String>> buildDropdownMenuItems() {
+     items = [
+      DropdownMenuItem(
+        value: 'No server',
+        child: Container(
+          height: 30,
+          width: 85,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(3)),
+            color: Color(0xFF0071C5),
+          ),
+          alignment: Alignment.center,
+          child: const Text(
+            'No server',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 13,
+              color: Color(0xFFffffff),
+            ),
+          ),
+        ),
+      ),
+    ];
+    items.addAll(widget.networkServices.map((discovery) {
+      return DropdownMenuItem(
+        value: discovery.name,
+        child: Container(
+          height: 30,
+          width: 85,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(3)),
+            color: Color(0xFF0071C5),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            discovery.name ?? '',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 13,
+              color: Color(0xFFffffff),
+            ),
+          ),
+        ),
+      );
+    }));
+    return items;
   }
 
   @override
@@ -238,33 +281,12 @@ class ControlSelectorState extends State<ControlSelector> {
                       color: Color(0xFFffffff),
                     ),
                     menuMaxHeight: 150,
-                    items: openBotServers.map((String item) {
-                      return DropdownMenuItem(
-                        value: item,
-                        child: Container(
-                          height: 30,
-                          width: 85,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(3)),
-                            color: Color(0xFF0071C5),
-                          ),
-                          // Set the background color here
-                          alignment: Alignment.center,
-                          child: Text(
-                            item,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Color(0xFFffffff),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
+                    items: buildDropdownMenuItems(),
+                    onChanged: (String? serverName) {
                       setState(() {
-                        dropDownValue = newValue!;
+                        dropDownValue = serverName!;
                       });
+                      clientSocket?.writeln({"server_event": serverName});
                     },
                   ),
                   GestureDetector(
@@ -362,8 +384,7 @@ class ControlSelectorState extends State<ControlSelector> {
                 ],
               )
             ],
-          ) // color: const Color(0xFF292929),
-              ));
+          )));
     }
   }
 }
