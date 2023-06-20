@@ -36,6 +36,7 @@ class ServerCommunication : sendInitialMessageDelegate {
             switch newState {
             case .ready:
                 print("ready");
+                self.callApi()
             case .preparing:
                 return
             default:
@@ -92,6 +93,44 @@ class ServerCommunication : sendInitialMessageDelegate {
         client.send(message: msg)
     }
 
+    func callApi(){
+        guard let url = URL(string: "http://192.168.1.9:8000/test") else {
+            print("Invalid URL")
+            return
+        }
+
+// Create a URLSession configuration
+        let config = URLSessionConfiguration.default
+
+// Create a URLSession instance
+        let session = URLSession(configuration: config)
+
+// Create a data task for the GET request
+        let task = session.dataTask(with: url) { (data, response, error) in
+            // Handle the response
+            if let error = error {
+                print("Request error: \(error.localizedDescription)")
+            } else if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 200 {
+                    // Request succeeded
+                    if let data = data {
+                        // Process the received data
+                        // Example: Convert data to a string
+                        if let responseString = String(data: data, encoding: .utf8) {
+                            print("Response: \(responseString)")
+                        }
+                    }
+                } else {
+                    // Request failed with a non-200 status code
+                    print("Request failed with status code: \(httpResponse.statusCode)")
+                }
+            }
+        }
+
+// Start the task
+        task.resume()
+    }
+
 }
 
 struct ipAddress{
@@ -132,5 +171,7 @@ struct ipAddress{
 
         return address
     }
+
+
 
 }

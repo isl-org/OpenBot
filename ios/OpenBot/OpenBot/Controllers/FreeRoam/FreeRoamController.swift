@@ -64,6 +64,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         var serverListener = ServerListener();
         serverListener.start();
         serverListener.send(message: "cgfhvjbknlm;,");
+
     }
 
     /**

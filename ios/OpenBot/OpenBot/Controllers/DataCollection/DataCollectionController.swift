@@ -326,7 +326,9 @@ class DataCollectionController: CameraController {
         if isLoggedButtonPressed && loggingEnabled {
             toggleLogging()
         }
-     presentActivityController()
+        if saveZipFilesName.count != 0 {
+            presentActivityController()
+        }
         _ = navigationController?.popViewController(animated: true)
     }
 
