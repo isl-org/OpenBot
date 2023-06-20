@@ -149,7 +149,15 @@ class ControllerState extends State<Controller> {
   void initState() {
     super.initState();
     registerNewService();
+    addDiscovery();
     videoConnection();
+  }
+
+  Future<void> addDiscovery() async {
+    final discovery = await startDiscovery('_openbot-server._tcp.');
+    setState(() {
+      discoveries.add(discovery);
+    });
   }
 
   Future<void> registerNewService() async {
@@ -243,7 +251,7 @@ class ControllerState extends State<Controller> {
               objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
               mirror: mirroredVideo,
             ),
-            ControlSelector(setMirrorVideo, indicatorLeft, indicatorRight)
+            ControlSelector(setMirrorVideo, indicatorLeft, indicatorRight, discoveries)
           ],
         ),
         debugShowCheckedModeBanner: false,

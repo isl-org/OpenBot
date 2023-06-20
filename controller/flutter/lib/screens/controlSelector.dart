@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:nsd/nsd.dart';
 import 'package:openbot_controller/globals.dart';
 import 'package:openbot_controller/screens/tiltingPhoneMode.dart';
 
@@ -9,10 +10,9 @@ class ControlSelector extends StatefulWidget {
   final dynamic updateMirrorView;
   final bool indicatorLeft;
   final bool indicatorRight;
-
-  const ControlSelector(
-      this.updateMirrorView, this.indicatorLeft, this.indicatorRight,
-      {super.key});
+  final List <Discovery> discoveries;
+  const ControlSelector(this.updateMirrorView, this.indicatorLeft,
+      this.indicatorRight, this.discoveries, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -23,6 +23,24 @@ class ControlSelector extends StatefulWidget {
 class ControlSelectorState extends State<ControlSelector> {
   bool isTiltingPhoneMode = false;
   bool isScreenMode = false;
+
+  // Initial Selected Value
+  String dropDownValue = 'No server';
+
+  // List of items in our dropdown menu
+  var openBotServers = [
+    'No server',
+    'Item 2',
+    'Item 3',
+    'Item 4',
+    'Item 5',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // print("sanjeev widget discoveries == $widget.discoveries");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -210,6 +228,45 @@ class ControlSelectorState extends State<ControlSelector> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  DropdownButton(
+                    value: dropDownValue,
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
+                    underline: Container(),
+                    dropdownColor: const Color(0xFF0071C5),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFFffffff),
+                    ),
+                    menuMaxHeight: 150,
+                    items: openBotServers.map((String item) {
+                      return DropdownMenuItem(
+                        value: item,
+                        child: Container(
+                          height: 30,
+                          width: 85,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(3)),
+                            color: Color(0xFF0071C5),
+                          ),
+                          // Set the background color here
+                          alignment: Alignment.center,
+                          child: Text(
+                            item,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFFffffff),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropDownValue = newValue!;
+                      });
+                    },
+                  ),
                   GestureDetector(
                       onTap: () {
                         clientSocket?.writeln("{command: LOGS}");
@@ -301,12 +358,11 @@ class ControlSelectorState extends State<ControlSelector> {
                             ),
                           ),
                         ),
-                      ))
+                      )),
                 ],
               )
             ],
           ) // color: const Color(0xFF292929),
-
               ));
     }
   }
