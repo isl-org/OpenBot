@@ -286,7 +286,11 @@ class ControlSelectorState extends State<ControlSelector> {
                       setState(() {
                         dropDownValue = serverName!;
                       });
-                      clientSocket?.writeln({"server_event": serverName});
+                      if(serverName != "No server"){
+                        clientSocket?.writeln("{server: $serverName}");
+                      } else {
+                        clientSocket?.writeln("{server: noServerFound}");
+                      }
                     },
                   ),
                   GestureDetector(
