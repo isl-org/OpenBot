@@ -4,10 +4,11 @@
 
 import Foundation
 import Network
-
+var servers: [String] = ["No Server"]
 class NsdService {
-    var browser: NWBrowser
-    init(){
+    var browser: NWBrowser;
+
+    init() {
         let parameters = NWParameters()
         parameters.includePeerToPeer = true
         browser = NWBrowser(for: .bonjour(type: "_openbot-server._tcp.", domain: nil), using: parameters)
@@ -36,10 +37,11 @@ class NsdService {
                     handler(result)
                 }
                 if case NWEndpoint.service(let name, let type, let domain, let interface) = result.endpoint {
-                    print("name  ========",name);
+                    print("name  ========", name);
                     print("domain =========", domain);
-                    print("type ==========",type);
+                    print("type ==========", type);
                     print("interface =======", interface);
+                    servers.append(name);
                 }
             }
 
@@ -80,4 +82,6 @@ class NsdService {
         netService?.stop()
         netService = nil
     }
+
+
 }

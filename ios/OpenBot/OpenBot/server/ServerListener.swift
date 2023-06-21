@@ -4,8 +4,10 @@
 
 import Foundation
 import Network
-class ServerListener {
-    let browser = NsdService()
+class ServerListener  {
+
+
+    let browser = NsdService();
 
     ///function to start the browser to create the client.
     func start() {
@@ -21,5 +23,7 @@ class ServerListener {
         serverConnection?.send(msg);
     }
 
-
+    func nsdServiceDidChangeServers(_ nsdService: NsdService) {
+        print("Something is added to the server");
+    }
 }

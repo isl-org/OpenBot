@@ -5,11 +5,9 @@
 import Foundation
 import Network
 var serverConnection : ServerCommunication?
-class ServerCommunication : sendInitialMessageDelegate {
+class ServerCommunication  {
     let connection: NWConnection
     // outgoing connection
-    weak var msgDelegate: sendInitialMessageDelegate?
-
     /// initializing function; endpoint
     init(endpoint: NWEndpoint) {
         print("PeerConnection outgoing endpoint: \(endpoint)")
@@ -19,9 +17,7 @@ class ServerCommunication : sendInitialMessageDelegate {
         let parameters = NWParameters(tls: nil, tcp: tcpOptions)
         parameters.includePeerToPeer = true
         connection = NWConnection(to: endpoint, using: parameters)
-        print(endpoint.interface);
         start()
-        msgDelegate = self
     }
 
     /// initializing function; incoming connection
@@ -85,22 +81,8 @@ class ServerCommunication : sendInitialMessageDelegate {
         }
     }
 
-    /// function to parse the message for the connection and send it.
-    func sendMessage() {
-        var msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
-        client.send(message: msg);
-        msg = JSON.toString(VideoProtocolEvent(status: .init(VIDEO_PROTOCOL: "WEBRTC")));
-        client.send(message: msg);
-        msg = JSON.toString(VideoServerUrlEvent(status: .init(VIDEO_SERVER_URL: "")));
-        client.send(message: msg);
-        msg = JSON.toString(VideoCommandEvent(status: .init(VIDEO_COMMAND: "START")));
-        client.send(message: msg);
-        msg = JSON.toString(VehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true)));
-        client.send(message: msg)
-    }
-
     func callApi(){
-        guard let url = URL(string: "http://192.168.1.17:8000/test") else {
+        guard let url = URL(string: "http://192.168.1.9:8000/test") else {
             print("Invalid URL")
             return
         }

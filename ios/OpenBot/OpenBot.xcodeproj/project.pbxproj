@@ -118,7 +118,6 @@
 		727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */; };
 		727D3EFB9016C8224990ACE8 /* ProfileFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A89E5445B66EEB3177C /* ProfileFragment.swift */; };
 		727D3FA70675D0042BFBB89A /* ScannerFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E372C09E1BADA2A03FA /* ScannerFragment.swift */; };
-		BF812E8828AE2C4200E0B682 /* BuildFile in Resources */ = {isa = PBXBuildFile; };
 		BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9BAED728AF94A800EF3E48 /* GameController.framework */; };
 		DB5B604C1844E78F9C021354 /* Pods_OpenBot_OpenBotUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */; };
 		FEC71CD19514A3FE19FEE5D1 /* Pods_OpenBotTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */; };
@@ -860,7 +859,6 @@
 				4FEF41E8F6D7496059371C24 /* Assets.xcassets in Resources */,
 				4FEF434E29022789D4FB8985 /* Main.storyboard in Resources */,
 				4FEF43565A0B8A9578E85B54 /* Launch Screen.storyboard in Resources */,
-				BF812E8828AE2C4200E0B682 /* BuildFile in Resources */,
 				3A3C9E0D29E803AC008758C9 /* projectCollectionViewCell.xib in Resources */,
 				3AA7193929DD42CF00DE8336 /* openCode.storyboard in Resources */,
 				4FEF4209E4568C06F71C8E86 /* config.json in Resources */,

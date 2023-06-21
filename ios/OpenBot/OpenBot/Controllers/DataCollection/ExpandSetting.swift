@@ -46,6 +46,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     var models: [Model] = [];
     var leftSpeedLabel = UILabel()
     var samplingPeriod: Double = 0.2
+    let serverUpwardImage = UIImageView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -85,6 +86,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
         addGestureRecognizer(tap)
     }
+
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -192,17 +194,26 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         serverDropDown.backgroundColor = Colors.freeRoamButtonsColor
         serverDropDown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
         serverDropDown.anchorView = serverDropDownView
-        serverDropDown.width = 150
-        serverDropDownView.frame.size = CGSize(width: 200, height: 100);
+        serverDropDown.width = 210
+        serverDropDownView.frame.size = CGSize(width: 210, height: 100);
         addSubview(serverDropDownView);
         serverDropDownView.translatesAutoresizingMaskIntoConstraints = false
-        serverDropDown.dataSource = ["No Server", "MY Server"]
+        print("nsdService.servers =======", servers);
+        serverDropDown.dataSource = servers;
         serverDropDown.show()
         serverDropDownView.leadingAnchor.constraint(equalTo: server.leadingAnchor, constant: 0).isActive = true;
         serverDropDownView.topAnchor.constraint(equalTo: server.bottomAnchor, constant: 10).isActive = true;
         serverDropDown.selectionAction = { [unowned self] (index: Int, item: String) in
-           serverDropDownLabel.text = item;
+            serverDropDownLabel.text = item;
         }
+        serverDropDown.cancelAction = { [unowned self] in
+            UIView.animate(withDuration: 0) {
+                // Rotate back to the original position
+                self.serverUpwardImage.transform = CGAffineTransform.identity
+                // Toggle the rotation state
+            }
+        }
+
     }
 
     /// UI Function to create server label
@@ -211,7 +222,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         server.backgroundColor = Colors.title;
         server.layer.cornerRadius = 10;
         server.translatesAutoresizingMaskIntoConstraints = false;
-        server.widthAnchor.constraint(equalToConstant: 150).isActive = true;
+        server.widthAnchor.constraint(equalToConstant: 210).isActive = true;
         server.heightAnchor.constraint(equalToConstant: 40).isActive = true;
         server.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
         server.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 230).isActive = true;
@@ -222,13 +233,12 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         server.isUserInteractionEnabled = true;
         let tap = UITapGestureRecognizer(target: self, action: #selector(serverHandler))
         server.addGestureRecognizer(tap)
-        let upwardImage = UIImageView()
-        upwardImage.frame.size = CGSize(width: 5, height: 5)
-        upwardImage.image = Images.upwardArrow
-        server.addSubview(upwardImage)
-        upwardImage.translatesAutoresizingMaskIntoConstraints = false
-        upwardImage.trailingAnchor.constraint(equalTo: server.trailingAnchor, constant: -10).isActive = true
-        upwardImage.topAnchor.constraint(equalTo: server.topAnchor, constant: 11.5).isActive = true
+        serverUpwardImage.frame.size = CGSize(width: 5, height: 5)
+        serverUpwardImage.image = Images.upwardArrow
+        server.addSubview(serverUpwardImage)
+        serverUpwardImage.translatesAutoresizingMaskIntoConstraints = false
+        serverUpwardImage.trailingAnchor.constraint(equalTo: server.trailingAnchor, constant: -10).isActive = true
+        serverUpwardImage.topAnchor.constraint(equalTo: server.topAnchor, constant: 15.5).isActive = true
     }
 
     /// UI Function to create subview on based of orientation
@@ -483,6 +493,9 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
 
     @objc func serverHandler(_ sender: UIView) {
         serverDropDown.show();
+        UIView.animate(withDuration: 0) {
+            self.serverUpwardImage.transform = CGAffineTransform(rotationAngle: .pi)
+        }
     }
 
     /// Function to update resolutions
