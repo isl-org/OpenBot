@@ -360,7 +360,7 @@ class DataCollectionController: CameraController {
             return
         }
 
-        let serverURL = URL(string: "http://192.168.1.9:8000/upload")!
+        let serverURL = URL(string: "http://192.168.1.17:8000/upload")!
         var request = URLRequest(url: serverURL)
         request.httpMethod = "POST"
 

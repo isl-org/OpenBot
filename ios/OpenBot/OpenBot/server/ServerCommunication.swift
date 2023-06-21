@@ -19,6 +19,7 @@ class ServerCommunication : sendInitialMessageDelegate {
         let parameters = NWParameters(tls: nil, tcp: tcpOptions)
         parameters.includePeerToPeer = true
         connection = NWConnection(to: endpoint, using: parameters)
+        print(endpoint.interface);
         start()
         msgDelegate = self
     }
@@ -37,6 +38,11 @@ class ServerCommunication : sendInitialMessageDelegate {
             case .ready:
                 print("ready");
                 self.callApi()
+                if let endpoint = self.connection.currentPath?.localEndpoint {
+                    if case let NWEndpoint.hostPort(host, _) = endpoint {
+                        print("Server IP Address: \(host)")
+                    }
+                }
             case .preparing:
                 return
             default:
@@ -94,7 +100,7 @@ class ServerCommunication : sendInitialMessageDelegate {
     }
 
     func callApi(){
-        guard let url = URL(string: "http://192.168.1.9:8000/test") else {
+        guard let url = URL(string: "http://192.168.1.17:8000/test") else {
             print("Invalid URL")
             return
         }

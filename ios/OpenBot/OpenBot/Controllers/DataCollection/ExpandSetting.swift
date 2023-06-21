@@ -17,7 +17,10 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     var medium = UIButton()
     var high = UIButton()
     var modelResolution = UILabel()
-    var server = UIButton()
+    var server = UIView();
+    var serverDropDownLabel = UILabel()
+    var serverDropDown = DropDown()
+    var serverDropDownView = UIView()
     var secondView = UIView()
     var leadingConstraint: NSLayoutConstraint!
     var topConstraint: NSLayoutConstraint!
@@ -34,6 +37,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     var sensorButtons = [UIButton]()
     var dropDownView = UIView()
     var ddView = UIView()
+    var serverDdView = UIView();
     let dropDown = DropDown()
     var dropdownLabel = UILabel()
     var dropdownTopAnchor: NSLayoutConstraint!
@@ -57,6 +61,8 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         createDropdown()
         createLabels(value: Strings.server, leadingAnchor: 10, topAnchor: 200, labelWidth: 240, labelHeight: 40).font = UIFont.boldSystemFont(ofSize: 16.0)
         createServer()
+        createServerDropDown();
+        serverDropDown.hide();
         createSecondView()
         createSecondViewLabel(value: "Images", leadingAnchor: 10, topAnchor: 10, labelWidth: 100, labelHeight: 40).font = UIFont.boldSystemFont(ofSize: 16.0)
         createImagesButton()
@@ -182,9 +188,47 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         dropDownView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
     }
 
+    func createServerDropDown() {
+        serverDropDown.backgroundColor = Colors.freeRoamButtonsColor
+        serverDropDown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
+        serverDropDown.anchorView = serverDropDownView
+        serverDropDown.width = 150
+        serverDropDownView.frame.size = CGSize(width: 200, height: 100);
+        addSubview(serverDropDownView);
+        serverDropDownView.translatesAutoresizingMaskIntoConstraints = false
+        serverDropDown.dataSource = ["No Server", "MY Server"]
+        serverDropDown.show()
+        serverDropDownView.leadingAnchor.constraint(equalTo: server.leadingAnchor, constant: 0).isActive = true;
+        serverDropDownView.topAnchor.constraint(equalTo: server.bottomAnchor, constant: 10).isActive = true;
+        serverDropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+           serverDropDownLabel.text = item;
+        }
+    }
+
     /// UI Function to create server label
     func createServer() {
-        server = createButton(borderColor: "red", buttonName: Strings.server, leadingAnchor: 10, topAnchor: 230, action: #selector(serverHandler(_:)))
+        addSubview(server);
+        server.backgroundColor = Colors.title;
+        server.layer.cornerRadius = 10;
+        server.translatesAutoresizingMaskIntoConstraints = false;
+        server.widthAnchor.constraint(equalToConstant: 150).isActive = true;
+        server.heightAnchor.constraint(equalToConstant: 40).isActive = true;
+        server.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
+        server.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 230).isActive = true;
+        serverDropDownLabel.text = "No Server"
+        serverDropDownLabel.textColor = Colors.border
+        serverDropDownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        server.addSubview(serverDropDownLabel);
+        server.isUserInteractionEnabled = true;
+        let tap = UITapGestureRecognizer(target: self, action: #selector(serverHandler))
+        server.addGestureRecognizer(tap)
+        let upwardImage = UIImageView()
+        upwardImage.frame.size = CGSize(width: 5, height: 5)
+        upwardImage.image = Images.upwardArrow
+        server.addSubview(upwardImage)
+        upwardImage.translatesAutoresizingMaskIntoConstraints = false
+        upwardImage.trailingAnchor.constraint(equalTo: server.trailingAnchor, constant: -10).isActive = true
+        upwardImage.topAnchor.constraint(equalTo: server.topAnchor, constant: 11.5).isActive = true
     }
 
     /// UI Function to create subview on based of orientation
@@ -438,6 +482,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     @objc func serverHandler(_ sender: UIView) {
+        serverDropDown.show();
     }
 
     /// Function to update resolutions
@@ -548,5 +593,12 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
 
     @objc func updateSpeedLabel(_ notification: Notification) {
         leftSpeedLabel.text = notification.object as? String
+    }
+
+    /// function to show server dropdown
+    ///
+    /// - Parameter sender:
+    @objc func showServerDropdown(_ sender: UIButton) {
+        serverDropDown.show()
     }
 }

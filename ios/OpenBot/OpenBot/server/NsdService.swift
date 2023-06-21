@@ -35,6 +35,12 @@ class NsdService {
                 if case NWEndpoint.service = result.endpoint {
                     handler(result)
                 }
+                if case NWEndpoint.service(let name, let type, let domain, let interface) = result.endpoint {
+                    print("name  ========",name);
+                    print("domain =========", domain);
+                    print("type ==========",type);
+                    print("interface =======", interface);
+                }
             }
 
             for (_, change) in changes.enumerated() {

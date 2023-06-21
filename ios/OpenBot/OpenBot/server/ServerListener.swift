@@ -3,7 +3,7 @@
 //
 
 import Foundation
-
+import Network
 class ServerListener {
     let browser = NsdService()
 
@@ -11,8 +11,8 @@ class ServerListener {
     func start() {
         browser.start { result in
             print("client.handler result: \(result)")
-            print(" client is :", client)
         }
+
     }
 
     /// function to send the values to the connection.

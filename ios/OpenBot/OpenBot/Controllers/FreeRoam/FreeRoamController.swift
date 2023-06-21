@@ -4,7 +4,7 @@
 
 import UIKit
 import AVFoundation
-
+import Network
 /// Implementation of the FreeRoamController
 class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var sonarLabel = UILabel()
@@ -64,7 +64,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         var serverListener = ServerListener();
         serverListener.start();
         serverListener.send(message: "cgfhvjbknlm;,");
-
+        print(ipAddress.getIPAddress())
     }
 
     /**
