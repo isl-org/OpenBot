@@ -4,6 +4,7 @@
 
 import Foundation
 import Network
+
 var servers: [String] = ["No Server"]
 
 class NsdService {
@@ -41,7 +42,7 @@ class NsdService {
                     print("domain =========", domain);
                     print("type ==========", type);
                     print("interface =======", interface);
-                    if !servers.contains(name){
+                    if !servers.contains(name) {
                         servers.append(name);
                     }
                     NotificationCenter.default.post(name: .server, object: nil);
@@ -77,13 +78,6 @@ class NsdService {
         }
 
         browser.start(queue: .main)
-    }
-
-    ///To reset the connection.
-    func reset() {
-        browser.cancel()
-        netService?.stop()
-        netService = nil
     }
 
 

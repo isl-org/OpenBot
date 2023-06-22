@@ -5,6 +5,7 @@
 import Foundation
 import UIKit
 import AVFoundation
+import ZIPFoundation
 
 /// The DataCollectionController class implements a set of mechanisms allowing to sample visual observations and sensor data from the phone
 /// and to save this data in a collection of zip files, that will be later used for training purposes.
@@ -68,6 +69,7 @@ class DataCollectionController: CameraController {
         //Start the server
         var serverListener = ServerListener();
         serverListener.start();
+        dataLogger.getDocumentDirectoryInformation()
     }
 
     /// Notifies the view controller that its view is about to be added to a view hierarchy.
@@ -101,34 +103,32 @@ class DataCollectionController: CameraController {
     ///
     /// - Parameters: path of the folder to compress
     func createZip(path: URL) {
-        for t in DataLogger.shared.baseDirList {
-            let baseDirectoryName = t + ".zip";
-            let fm = FileManager.default
-            let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash + t)
-            var error: NSError?
-            let coordinator = NSFileCoordinator()
-            coordinator.coordinate(readingItemAt: baseDirectoryUrl, options: [.forUploading], error: &error) { (zipUrl) in
-                let tmpUrl = try! fm.url(
-                        for: .itemReplacementDirectory,
-                        in: .userDomainMask,
-                        appropriateFor: zipUrl,
-                        create: true
-                ).appendingPathComponent(baseDirectoryName)
-                try! fm.moveItem(at: zipUrl, to: tmpUrl)
-                saveZipFilesName.append(tmpUrl)
+        for file in dataLogger.baseDirList {
+            let baseDirectoryName = file + ".zip";
+            let fileManager = FileManager.default
+            let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
+            var sourceURL = URL(fileURLWithPath: path)
+            sourceURL.appendPathComponent(file);
+            var destinationURL = URL(fileURLWithPath: path)
+            destinationURL.appendPathComponent(baseDirectoryName);
+            do {
+                try fileManager.zipItem(at: sourceURL, to: destinationURL, shouldKeepParent: false)
+                saveZipFilesName.append(destinationURL);
+                if let last = saveZipFilesName.last {
+                    uploadFile(saveZipFilesName: last)
+                };
+            } catch {
+                print(error)
             }
         }
-        if let last = saveZipFilesName.last {
-            uploadFile(saveZipFilesName : last)
-        };
     }
 
 
-    func presentActivityController(){
+    func presentActivityController() {
         let avc = UIActivityViewController(activityItems: saveZipFilesName, applicationActivities: nil)
         present(avc, animated: true)
         avc.completionWithItemsHandler = { activity, success, items, error in
-            DataLogger.shared.deleteFiles(fileNameToDelete: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
+            DataLogger.shared.deleteZipFileFromDocument();
         }
     }
 
@@ -357,13 +357,13 @@ class DataCollectionController: CameraController {
     }
 
     func uploadFile(saveZipFilesName: URL) {
-         let fileURL = saveZipFilesName
+        let fileURL = saveZipFilesName
         guard let fileData = try? Data(contentsOf: fileURL) else {
             print("Failed to read file data.")
             return
         }
 
-        let serverURL = URL(string: "http://192.168.1.9:8000/upload")!
+        let serverURL = URL(string: "http://192.168.1.6:8000/upload")!
         var request = URLRequest(url: serverURL)
         request.httpMethod = "POST"
 

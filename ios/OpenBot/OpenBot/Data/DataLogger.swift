@@ -154,16 +154,12 @@ class DataLogger {
     ///
     /// - Parameter fileNameToDelete: file name to be deleted in documents directory (also can provide path after doc directory).
     func deleteFiles(fileNameToDelete: String) {
-
-        print("fileNameToDelete : ", fileNameToDelete)
         var filePath = ""
         // Fine documents directory on device
         let dirs: [String] = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true)
         if dirs.count > 0 {
             let dir = dirs[0] //documents directory
             filePath = dir.appendingFormat("/" + fileNameToDelete)
-            print("Local path = \(filePath)")
-
         } else {
             print("Could not find local directory to store file")
             return
@@ -203,9 +199,9 @@ class DataLogger {
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentDirectoryURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
             for url in fileURLs {
-                if url.lastPathComponent.first == "2" && !url.lastPathComponent.contains(".") {
-                    deleteFiles(fileNameToDelete: url.lastPathComponent);
-                }
+                //deletes the all files
+                deleteFiles(fileNameToDelete: url.lastPathComponent);
+                // deletes the
             }
         } catch {
             print("Error in deleting .zip file")

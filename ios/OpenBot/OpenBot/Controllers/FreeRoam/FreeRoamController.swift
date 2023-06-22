@@ -5,6 +5,7 @@
 import UIKit
 import AVFoundation
 import Network
+
 /// Implementation of the FreeRoamController
 class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var sonarLabel = UILabel()
@@ -28,7 +29,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("navigationController is :",navigationController);
+        print("navigationController is :", navigationController);
         setupNavigationBarItem()
         setupSpeedMode()
         applySafeAreaConstraints()
@@ -61,7 +62,6 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
         gameController.resetControl = false
-        print(ipAddress.getIPAddress())
     }
 
     /**

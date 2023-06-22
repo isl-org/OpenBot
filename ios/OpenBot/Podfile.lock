@@ -850,6 +850,7 @@ PODS:
   - TensorFlowLiteSwift/Metal (0.0.1-nightly.20230112):
     - TensorFlowLiteC/Metal (= 0.0.1-nightly.20230112)
     - TensorFlowLiteSwift/Core (= 0.0.1-nightly.20230112)
+  - ZIPFoundation (0.9.16)
 
 DEPENDENCIES:
   - DropDown
@@ -864,6 +865,7 @@ DEPENDENCIES:
   - Starscream (~> 3.0.1)
   - TensorFlowLiteSwift/CoreML (~> 0.0.1-nightly)
   - TensorFlowLiteSwift/Metal (~> 0.0.1-nightly)
+  - ZIPFoundation (~> 0.9)
 
 SPEC REPOS:
   trunk:
@@ -898,6 +900,7 @@ SPEC REPOS:
     - Starscream
     - TensorFlowLiteC
     - TensorFlowLiteSwift
+    - ZIPFoundation
 
 SPEC CHECKSUMS:
   abseil: 926fb7a82dc6d2b8e1f2ed7f3a718bce691d1e46
@@ -931,7 +934,8 @@ SPEC CHECKSUMS:
   Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
   TensorFlowLiteC: a410cecaabe4ac6c49ba60c68b6fbac72cd4385e
   TensorFlowLiteSwift: 23f32f43a1423ca784182be2d31a6597b7ab6227
+  ZIPFoundation: d170fa8e270b2a32bef9dcdcabff5b8f1a5deced
 
-PODFILE CHECKSUM: 271036263c3955194c20d39106a939ec84431e1c
+PODFILE CHECKSUM: 65b4210950c2f88ab79eef61076af6b64791f78f
 
 COCOAPODS: 1.10.2

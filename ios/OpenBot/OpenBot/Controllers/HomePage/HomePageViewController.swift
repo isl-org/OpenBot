@@ -81,10 +81,9 @@ class HomePageViewController: CameraController, UICollectionViewDataSource, UICo
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
-
+        DataLogger.shared.deleteZipFileFromDocument();
         gameController.resetControl = true
         setupOpenCodeIcon();
-
     }
 
     override func initializeCamera() {
@@ -123,7 +122,6 @@ class HomePageViewController: CameraController, UICollectionViewDataSource, UICo
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated);
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-        DataLogger.shared.deleteZipFileFromDocument()
         viewControllerName = classNameFrom(self)
         if (isBluetoothConnected) {
             bluetooth.setImage(Images.bluetoothConnected, for: .normal)
