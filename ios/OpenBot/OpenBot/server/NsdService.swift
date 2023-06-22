@@ -5,6 +5,7 @@
 import Foundation
 import Network
 var servers: [String] = ["No Server"]
+
 class NsdService {
     var browser: NWBrowser;
 
@@ -28,7 +29,6 @@ class NsdService {
             default:
                 break
             }
-
         }
         browser.browseResultsChangedHandler = { results, changes in
             for result in results {
@@ -41,7 +41,10 @@ class NsdService {
                     print("domain =========", domain);
                     print("type ==========", type);
                     print("interface =======", interface);
-                    servers.append(name);
+                    if !servers.contains(name){
+                        servers.append(name);
+                    }
+                    NotificationCenter.default.post(name: .server, object: nil);
                 }
             }
 

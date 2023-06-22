@@ -61,9 +61,6 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
         gameController.resetControl = false
-        var serverListener = ServerListener();
-        serverListener.start();
-        serverListener.send(message: "cgfhvjbknlm;,");
         print(ipAddress.getIPAddress())
     }
 

@@ -51,4 +51,5 @@ extension Notification.Name {
     static let reInitializeCamera = Notification.Name("reInitializeCamera");
     static let commandName = Notification.Name("commandName");
     static let projectDeleted  = Notification.Name("projectDeleted");
+    static let server = Notification.Name("server");
 }

@@ -201,7 +201,7 @@ class expandedAutoPilot: UIView {
         serverDropDown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
 
         serverDropDown.anchorView = serverDropDownView
-        serverDropDown.dataSource = ["No Server"]
+        serverDropDown.dataSource = servers
         serverDropDown.show()
         ddView = createDropdownView(borderColor: "", buttonName: "No Server", leadingAnchor: 180, topAnchor: adapted(dimensionSize: 50, to: .height), action: #selector(showServerDropdown(_:)))
         serverDropDown.selectionAction = { [unowned self] (index: Int, item: String) in
