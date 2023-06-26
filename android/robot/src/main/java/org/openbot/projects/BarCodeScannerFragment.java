@@ -161,9 +161,7 @@ public class BarCodeScannerFragment extends CameraFragment {
       SparseArray<Barcode> barcodes = barcodeDetector.detect(frame);
       // If a qr code is detected and barCodeAccess is true, get the qr code value and call
       // extractFileID().
-      System.out.println("Sanjeev == " + barCodeAccess);
       if (barcodes.size() != 0 && barCodeAccess) {
-        System.out.println("sanjeev == get access ");
         requireActivity()
             .runOnUiThread(
                 () -> {
