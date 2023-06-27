@@ -43,6 +43,8 @@ public class BlocklyExecutingFragment extends CameraFragment {
   private int previousSpeedMultiplier;
   private SharedPreferencesManager sharedPreferencesManager;
   private boolean isRunJSCommand = false;
+  public static boolean isFollow = false;
+  public static String classType = "person";
   private Detector detector;
   private Model model;
   private Bitmap croppedBitmap;
@@ -132,7 +134,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
 
   @Override
   protected void processFrame(Bitmap bitmap, ImageProxy imageProxy) {
-//    followObject(bitmap);
+    if (isFollow) followObject(bitmap);
   }
 
   private Model getModel() {
@@ -162,7 +164,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
         if (detector != null) {
           Timber.i("Running detection on image %s", frameNum);
           final List<Detector.Recognition> results =
-                  detector.recognizeImage(croppedBitmap, "person");
+                  detector.recognizeImage(croppedBitmap, classType);
           if (!results.isEmpty())
             Timber.i(
                     "Object: "

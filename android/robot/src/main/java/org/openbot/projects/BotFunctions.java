@@ -33,10 +33,6 @@ public class BotFunctions implements SensorEventListener {
   /**
    * get vehicle and audioPlayer in parameters to control openBot commands.
    *
-   * @param getVehicle
-   * @param getAudioPlayer
-   * @param getSharedPreferencesManager
-   * @param getBinding
    */
   public BotFunctions(
       Vehicle getVehicle,
@@ -113,8 +109,6 @@ public class BotFunctions implements SensorEventListener {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-    //    Control control = new Control(0, 0);
-    //    vehicle.setControl(control);
   }
 
   @JavascriptInterface
@@ -365,7 +359,9 @@ public class BotFunctions implements SensorEventListener {
 
   @JavascriptInterface
   public void follow(String object) {
-    Timber.tag("Ai Blocks").i(object);
+    mActivity.runOnUiThread(() -> binding.jsCommand.setText("Follow " + object));
+    BlocklyExecutingFragment.classType = object;
+    BlocklyExecutingFragment.isFollow = true;
   }
 
   @JavascriptInterface
