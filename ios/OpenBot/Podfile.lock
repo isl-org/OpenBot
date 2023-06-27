@@ -1,22 +1,22 @@
 PODS:
   - DropDown (2.3.13)
-  - GoogleWebRTC (1.1.31999)
+  - GoogleWebRTC (1.1.32000)
   - Starscream (3.0.6)
-  - TensorFlowLiteC (0.0.1-nightly.20230114):
-    - TensorFlowLiteC/Core (= 0.0.1-nightly.20230114)
-  - TensorFlowLiteC/Core (0.0.1-nightly.20230114)
-  - TensorFlowLiteC/CoreML (0.0.1-nightly.20230114):
+  - TensorFlowLiteC (0.0.1-nightly.20230626):
+    - TensorFlowLiteC/Core (= 0.0.1-nightly.20230626)
+  - TensorFlowLiteC/Core (0.0.1-nightly.20230626)
+  - TensorFlowLiteC/CoreML (0.0.1-nightly.20230626):
     - TensorFlowLiteC/Core
-  - TensorFlowLiteC/Metal (0.0.1-nightly.20230114):
+  - TensorFlowLiteC/Metal (0.0.1-nightly.20230626):
     - TensorFlowLiteC/Core
-  - TensorFlowLiteSwift/Core (0.0.1-nightly.20230114):
-    - TensorFlowLiteC (= 0.0.1-nightly.20230114)
-  - TensorFlowLiteSwift/CoreML (0.0.1-nightly.20230114):
-    - TensorFlowLiteC/CoreML (= 0.0.1-nightly.20230114)
-    - TensorFlowLiteSwift/Core (= 0.0.1-nightly.20230114)
-  - TensorFlowLiteSwift/Metal (0.0.1-nightly.20230114):
-    - TensorFlowLiteC/Metal (= 0.0.1-nightly.20230114)
-    - TensorFlowLiteSwift/Core (= 0.0.1-nightly.20230114)
+  - TensorFlowLiteSwift/Core (0.0.1-nightly.20230626):
+    - TensorFlowLiteC (= 0.0.1-nightly.20230626)
+  - TensorFlowLiteSwift/CoreML (0.0.1-nightly.20230626):
+    - TensorFlowLiteC/CoreML (= 0.0.1-nightly.20230626)
+    - TensorFlowLiteSwift/Core (= 0.0.1-nightly.20230626)
+  - TensorFlowLiteSwift/Metal (0.0.1-nightly.20230626):
+    - TensorFlowLiteC/Metal (= 0.0.1-nightly.20230626)
+    - TensorFlowLiteSwift/Core (= 0.0.1-nightly.20230626)
 
 DEPENDENCIES:
   - DropDown
@@ -35,11 +35,11 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
-  GoogleWebRTC: b39a78c4f5cc6b0323415b9233db03a2faa7b0f0
+  GoogleWebRTC: 4d261187b30512efdb711d21fa961a6adf138717
   Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
-  TensorFlowLiteC: 1865e02914e8fa8d4fc3e360e493666f42904928
-  TensorFlowLiteSwift: bcdf48f2a270d2e3b0940d8658cd0d67083465ea
+  TensorFlowLiteC: 8d1002515bee3f3183fbc10b1a39c130d077db1e
+  TensorFlowLiteSwift: fa12b950cc96afa7e5e4b2344d0d8dea3146e508
 
 PODFILE CHECKSUM: 9294626c880133901b9f3818004e38ac67976573
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3
