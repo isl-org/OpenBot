@@ -12,6 +12,7 @@
 		4FEF41E8F6D7496059371C24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */; };
 		4FEF4209E4568C06F71C8E86 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF421BF49FEE835C6DC5CB /* config.json */; };
 		4FEF4223DEADF8BB21DA3C08 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF44B2FB76048B40DBA010 /* Array.swift */; };
+		4FEF4242D751C015C19275BA /* modes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF491F1B4D50A2AC5CAC35 /* modes.swift */; };
 		4FEF434E29022789D4FB8985 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4E0B9A9BAE2BD7321783 /* Main.storyboard */; };
 		4FEF43565A0B8A9578E85B54 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4EE1E197D3F52EFF3B88 /* Launch Screen.storyboard */; };
 		4FEF43788A6975AED9390369 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47EAC21A4C2BDD11B72B /* README.md */; };
@@ -136,6 +137,7 @@
 		4FEF47C56474B6324A408225 /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIViewExtension.swift; path = extensions/UIViewExtension.swift; sourceTree = "<group>"; };
 		4FEF47EAC21A4C2BDD11B72B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4FEF482EC43FA3B64007EBD2 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
+		4FEF491F1B4D50A2AC5CAC35 /* modes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = modes.swift; sourceTree = "<group>"; };
 		4FEF499CF4ACA43C440075A0 /* OpenBotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenBotTests.swift; sourceTree = "<group>"; };
 		4FEF49E95825B789A39EDA21 /* Detector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Detector.swift; sourceTree = "<group>"; };
 		4FEF49FAEA0EB5E01610A55B /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -301,13 +303,6 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		4FEF44F0837469F66D5A7156 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		4FEF4549B0D1FC8F591E63FE /* OpenBotUITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -322,7 +317,6 @@
 			children = (
 				66AC71E129B885410022108A /* Controllers */,
 				BF9BAED628AF94A800EF3E48 /* Frameworks */,
-				4FEF44F0837469F66D5A7156 /* Models */,
 				4FEF42AB3B7AC14D55B7DBA3 /* Utils */,
 				4FEF4A209F128B8F5AC06E17 /* Products */,
 				4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */,
@@ -335,6 +329,7 @@
 				4FEF47EAC21A4C2BDD11B72B /* README.md */,
 				4FEF4FB9DCF0D8F0BFCB835B /* tflite */,
 				4FEF421BF49FEE835C6DC5CB /* config.json */,
+				4FEF4DA2B3E93B4F72AD2738 /* Models */,
 			);
 			path = OpenBot;
 			sourceTree = "<group>";
@@ -374,6 +369,14 @@
 				4FEF4EE1E197D3F52EFF3B88 /* Launch Screen.storyboard */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		4FEF4DA2B3E93B4F72AD2738 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4FEF491F1B4D50A2AC5CAC35 /* modes.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		4FEF4E8F0A2942C4C971E2BA /* Server */ = {
@@ -925,6 +928,7 @@
 				727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */,
 				66AC721429B885410022108A /* ObjectTrackingFragment.swift in Sources */,
 				4FEF43D0E4F94DBBD4DB0614 /* Date.swift in Sources */,
+				4FEF4242D751C015C19275BA /* modes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
