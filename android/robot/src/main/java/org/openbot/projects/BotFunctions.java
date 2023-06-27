@@ -22,6 +22,7 @@ public class BotFunctions implements SensorEventListener {
   private final SharedPreferencesManager sharedPreferencesManager;
   private final FragmentBlocklyExecutingBinding binding;
   private final Activity mActivity;
+  private final Context mContext;
   private final SensorManager sensorManager;
   private final Sensor accelerometerSensor;
   private final Sensor gyroscopeSensor;
@@ -38,18 +39,19 @@ public class BotFunctions implements SensorEventListener {
       Vehicle getVehicle,
       AudioPlayer getAudioPlayer,
       SharedPreferencesManager getSharedPreferencesManager,
-      Context mContext,
+      Context getContext,
       FragmentBlocklyExecutingBinding getBinding,
       Activity getActivity) {
     vehicle = getVehicle;
     audioPlayer = getAudioPlayer;
     sharedPreferencesManager = getSharedPreferencesManager;
-    sensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
+    sensorManager = (SensorManager) getContext.getSystemService(Context.SENSOR_SERVICE);
     accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
     magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     binding = getBinding;
     mActivity = getActivity;
+    mContext = getContext;
   }
 
   /** openBot Movement functions */
@@ -114,7 +116,8 @@ public class BotFunctions implements SensorEventListener {
   @JavascriptInterface
   public void stopRobot() {
     mActivity.runOnUiThread(() -> binding.jsCommand.setText("Stop Car Immediately"));
-    vehicle.setControl(0, 0);
+    BlocklyExecutingFragment.isFollow = false;
+    vehicle.stopBot();
   }
 
   /**

@@ -92,8 +92,9 @@ public class BlocklyExecutingFragment extends CameraFragment {
         v -> {
           myWebView.destroy();
           binding.jsCommand.setText(getString(android.R.string.cancel));
-          vehicle.setControl(0, 0);
+          vehicle.stopBot();
           vehicle.setIndicator(0);
+          isFollow = false;
         });
     // if string js code variable is not null execute js code when you navigate on this fragment.
     if (BarCodeScannerFragment.finalCode != null && isRunJSCommand) {
@@ -187,7 +188,8 @@ public class BlocklyExecutingFragment extends CameraFragment {
             }
           }
           tracker.trackResults(mappedRecognitions, frameNum);
-          vehicle.setControl(tracker.updateTarget());
+          if (isFollow) vehicle.setControl(tracker.updateTarget());
+          else vehicle.stopBot();
         }
 
         computingNetwork = false;
@@ -312,7 +314,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
     super.onPause();
     myWebView.destroy();
     vehicle.setIndicator(0);
-    vehicle.setControl(0, 0);
+    vehicle.stopBot();
     // if previous speed multiplier value is not 0, set the speed multiplier back to its previous
     // value when you go back from this screen.
     if (previousSpeedMultiplier != 0) {
