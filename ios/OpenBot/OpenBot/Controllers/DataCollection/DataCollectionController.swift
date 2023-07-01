@@ -363,46 +363,47 @@ class DataCollectionController: CameraController {
             return
         }
 
-        let serverURL = URL(string: "http://192.168.1.6:8000/upload")!
-        var request = URLRequest(url: serverURL)
-        request.httpMethod = "POST"
+        if let host = ServerCommunication.serverEndPoint?.host {
+            let port = ServerCommunication.serverEndPoint?.port ?? "8000";
+            var request = URLRequest(url: URL(string: "http://\(host):\(port)/upload")!)
+            request.httpMethod = "POST"
+            let boundary = "Boundary-\(UUID().uuidString)"
+            let contentType = "multipart/form-data; boundary=\(boundary)"
+            request.setValue(contentType, forHTTPHeaderField: "Content-Type")
 
-        let boundary = "Boundary-\(UUID().uuidString)"
-        let contentType = "multipart/form-data; boundary=\(boundary)"
-        request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+            let body = NSMutableData()
 
-        let body = NSMutableData()
+            // Add file data
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileURL.lastPathComponent)\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: application/zip\r\n\r\n".data(using: .utf8)!)
+            body.append(fileData)
+            body.append("\r\n".data(using: .utf8)!)
 
-        // Add file data
-        body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileURL.lastPathComponent)\"\r\n".data(using: .utf8)!)
-        body.append("Content-Type: application/zip\r\n\r\n".data(using: .utf8)!)
-        body.append(fileData)
-        body.append("\r\n".data(using: .utf8)!)
+            // Add more fields if needed
 
-        // Add more fields if needed
+            body.append("--\(boundary)--\r\n".data(using: .utf8)!)
 
-        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+            request.httpBody = body as Data
 
-        request.httpBody = body as Data
+            let session = URLSession.shared
+            let task = session.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error.localizedDescription)")
+                    return
+                }
 
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Error: \(error.localizedDescription)")
-                return
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("Status code: \(httpResponse.statusCode)")
+                }
+
+                if let data = data {
+                    // Handle the response data here
+                    print("Response data: \(data)")
+                }
             }
-
-            if let httpResponse = response as? HTTPURLResponse {
-                print("Status code: \(httpResponse.statusCode)")
-            }
-
-            if let data = data {
-                // Handle the response data here
-                print("Response data: \(data)")
-            }
+            task.resume()
         }
-        task.resume()
     }
 }
 

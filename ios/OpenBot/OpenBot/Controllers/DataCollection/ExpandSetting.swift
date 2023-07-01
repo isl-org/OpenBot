@@ -203,10 +203,20 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         print("nsdService.servers =======", servers);
         serverDropDown.dataSource = servers;
         serverDropDown.show()
+        print("serverItems ========== \(serverItems)");
         serverDropDownView.leadingAnchor.constraint(equalTo: server.leadingAnchor, constant: 0).isActive = true;
         serverDropDownView.topAnchor.constraint(equalTo: server.bottomAnchor, constant: 10).isActive = true;
         serverDropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             serverDropDownLabel.text = item;
+            let server = serverItems.filter { server in
+                server.name == item
+            }
+            if item == "No Server"{
+                ServerCommunication.serverEndPoint = nil;
+            }
+            if let endpoint = server.first?.endpoint {
+                serverConnection = ServerCommunication(endpoint: endpoint)
+            };
         }
         serverDropDown.cancelAction = { [unowned self] in
             UIView.animate(withDuration: 0) {

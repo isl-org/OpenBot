@@ -9,10 +9,11 @@ var serverConnection: ServerCommunication?
 
 class ServerCommunication {
     let connection: NWConnection
+    static var serverEndPoint: Endpoint?
     // outgoing connection
     /// initializing function; endpoint
     init(endpoint: NWEndpoint) {
-        print("PeerConnection outgoing endpoint: \(endpoint)")
+        print("PeerConnection outgoing endpoint: \(endpoint) endPoint interface is : \(endpoint.interface)")
         let tcpOptions = NWProtocolTCP.Options()
         tcpOptions.enableKeepalive = true
         tcpOptions.keepaliveIdle = 2
@@ -35,9 +36,14 @@ class ServerCommunication {
             switch newState {
             case .ready:
                 self.callApi()
-                if let endpoint = self.connection.currentPath?.localEndpoint {
-                    if case let NWEndpoint.hostPort(host, _) = endpoint {
-                        print("Server IP Address: \(host)")
+                if let endpoint = self.connection.currentPath?.remoteEndpoint {
+                    if case let NWEndpoint.hostPort(host, port) = endpoint {
+                        let end = self.connection.endpoint
+                        if case NWEndpoint.service(let name, let type, let domain, let interface) = end {
+                            let hostComponents = host.debugDescription.components(separatedBy: "%")
+                            let ipAddress = hostComponents.first ?? ""
+                            ServerCommunication.serverEndPoint = Endpoint(name: name, host: ipAddress, port: port.debugDescription);
+                        }
                     }
                 }
             case .preparing:
@@ -51,18 +57,23 @@ class ServerCommunication {
 
 
     func callApi() {
-        guard let url = URL(string: "http://192.168.1.6:8000/test") else {
-            print("Invalid URL")
+
+        guard let host = ServerCommunication.serverEndPoint?.host else {
+            print("Invalid URL host")
             return
         }
-
-// Create a URLSession configuration
+        guard let port = ServerCommunication.serverEndPoint?.port else {
+            print("Invalid URL port");
+            return
+        }
+        guard let url = URL(string: "http://\(host):\(port)/test") else {
+            print("Invalid URL found")
+            return
+        }
+        print("host is =========", host);
         let config = URLSessionConfiguration.default
 
-// Create a URLSession instance
         let session = URLSession(configuration: config)
-
-// Create a data task for the GET request
         let task = session.dataTask(with: url) { (data, response, error) in
             // Handle the response
             if let error = error {

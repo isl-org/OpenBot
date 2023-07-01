@@ -6,6 +6,7 @@ import Foundation
 import Network
 
 var servers: [String] = ["No Server"]
+var serverItems: [ServerItem] = [];
 
 class NsdService {
     var browser: NWBrowser;
@@ -33,10 +34,11 @@ class NsdService {
         }
         browser.browseResultsChangedHandler = { results, changes in
             for result in results {
-                print(result)
+                print("results are =======", result)
                 if case NWEndpoint.service = result.endpoint {
                     handler(result)
                 }
+
                 if case NWEndpoint.service(let name, let type, let domain, let interface) = result.endpoint {
                     print("name  ========", name);
                     print("domain =========", domain);
@@ -57,7 +59,12 @@ class NsdService {
                         print("added hostPort \(host) \(port)")
                     case .service(let name, let type, let domain, let interface):
                         print("added service \(name) \(type) \(domain) \(String(describing: interface))")
-                        serverConnection = ServerCommunication(endpoint: browseResult.endpoint);
+                        let item = ServerItem(name: name, endpoint: browseResult.endpoint)
+                        if !serverItems.contains(where: { item in
+                            item.name == name;
+                        }) {
+                            serverItems.append(item);
+                        }
                     default:
                         print("fail")
                     }
@@ -76,9 +83,6 @@ class NsdService {
                 }
             }
         }
-
         browser.start(queue: .main)
     }
-
-
 }
