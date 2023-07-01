@@ -5,6 +5,8 @@
 import Foundation
 import UIKit
 import DropDown
+import GoogleSignIn
+
 
 class popupWindowView: UIView {
     var textFieldLeadingConstraints: NSLayoutConstraint!
@@ -262,6 +264,7 @@ class popupWindowView: UIView {
         input.leadingAnchor.constraint(equalTo: firstBox.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
         input.topAnchor.constraint(equalTo: firstBox.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
     }
+
     /// function to create second input text field for number.
     func createSecondInputField() {
         let input = UITextField();
@@ -336,6 +339,17 @@ class popupWindowView: UIView {
 
         try saveConfigFileToDocument(modelItems: modifyModels());
         if let index = model.name.firstIndex(of: ".") {
+            if GIDSignIn.sharedInstance.currentUser != nil {
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.withoutEscapingSlashes]
+                do {
+                    let jsonData = try encoder.encode(modifyModels())
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        print(jsonString)
+                    }
+                }
+            } else {
+            }
             NotificationCenter.default.post(name: .removeBlankScreen, object: model.name.prefix(upTo: index));
         }
         removeFromSuperview();

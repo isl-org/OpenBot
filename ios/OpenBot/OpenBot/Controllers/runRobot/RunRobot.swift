@@ -4,11 +4,22 @@
 
 import Foundation
 import UIKit
+import AVFoundation
 
-class runRobot: UIViewController {
+class runRobot: CameraController {
     @IBOutlet weak var stopRobot: UIButton!
     @IBOutlet weak var commandMessage: UILabel!
     let bluetooth = bluetoothDataController.shared
+    private var bufferHeight = 0
+    private var bufferWidth = 0
+    private var result: Control?
+    var detector: Detector?
+    private let inferenceQueue = DispatchQueue(label: "openbot.runRobot.inferencequeue")
+    private var isInferenceQueueBusy = false
+    var vehicleControl: Control = Control()
+    public var MINIMUM_CONFIDENCE_TF_OD_API: Float = 0.5
+    private var useDynamicSpeed: Bool = false
+    public var isFollow: Bool = false
 
     /**
       override function calls when view of controller loaded
@@ -19,9 +30,16 @@ class runRobot: UIViewController {
         stopRobot.setTitle("Stop Car", for: .normal);
         stopRobot.addTarget(self, action: #selector(cancel), for: .touchUpInside);
         stopRobot.layer.cornerRadius = 10;
+        NotificationCenter.default.addObserver(self, selector: #selector(updateFollowCommandToTrue), name: .setFollowBlockTrue, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(updateFollowCommandToFalse), name: .setFollowBlockFalse, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandMsg), name: .commandName, object: nil);
         setupNavigationBarItem()
         updateConstraints();
+        let modelItems = Common.loadAllModelItemsFromBundle()
+        if (modelItems.count > 0) {
+            let model = modelItems.first(where: { $0.type == TYPE.DETECTOR.rawValue })
+            detector = try! Detector.create(model: Model.fromModelItem(item: model ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: 1) as? Detector
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -41,7 +59,7 @@ class runRobot: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-       stopCar();
+        stopCar();
         NotificationCenter.default.removeObserver(self);
     }
 
@@ -49,13 +67,32 @@ class runRobot: UIViewController {
      updating current commands
      - Parameter notification:
      */
+    var count: Int = 0;
+
     @objc func updateCommandMsg(_ notification: Notification) {
         DispatchQueue.main.async {
+            self.detector?.setSelectedClass(newClass: notification.object as! String)
             let message = notification.object as! String
             // Update UI periodically to show all the received messages
+            if self.count > 1 {
+                return;
+            }
+            self.count = self.count + 1;
             DispatchQueue.main.async {
                 self.commandMessage.text = message;
             }
+        }
+    }
+
+    @objc func updateFollowCommandToTrue() {
+        DispatchQueue.main.async {
+            self.isFollow = true;
+        }
+    }
+
+    @objc func updateFollowCommandToFalse() {
+        DispatchQueue.main.async {
+            self.isFollow = false;
         }
     }
 
@@ -79,7 +116,7 @@ class runRobot: UIViewController {
     @objc func cancel() {
         NotificationCenter.default.post(name: .cancelThread, object: nil);
         NotificationCenter.default.post(name: .commandName, object: "\(Strings.cancel)ed");
-      stopCar()
+        stopCar()
     }
 
     /**
@@ -114,11 +151,117 @@ class runRobot: UIViewController {
         }
     }
 
-    func stopCar(){
+    func stopCar() {
+        NotificationCenter.default.post(name: .setFollowBlockFalse, object: nil);
         bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
         bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
         let indicatorValues = "i0,0\n";
         bluetooth.sendDataFromJs(payloadData: indicatorValues)
     }
 
+    func sendControl(control: Control) {
+        if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
+            let left = control.getLeft() * gameController.selectedSpeedMode.rawValue
+            let right = control.getRight() * gameController.selectedSpeedMode.rawValue
+            vehicleControl = control
+            print("send data to bluetooth")
+            bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
+            NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)))
+            NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
+        }
+    }
+
+    func updateTarget(_ detection: CGRect) -> Control {
+
+        // Left and right wheels control values
+        var left: Float = 0.0
+        var right: Float = 0.0
+
+        let frameWidth = UIScreen.main.bounds.size.width
+        let frameHeight = UIScreen.main.bounds.size.height
+
+        let dx: CGFloat = CGFloat(detector!.getImageSizeX()) / frameWidth
+        let dy: CGFloat = CGFloat(detector!.getImageSizeY()) / frameHeight
+        let trackedPos = detection.applying(CGAffineTransform(scaleX: dx, y: dy))
+
+        // Calculate track box area for distance estimate
+        let boxArea: Float = Float(trackedPos.height * trackedPos.width)
+
+        // Make sure object center is in frame
+        var centerX: Float = Float(trackedPos.midX)
+        centerX = max(0, min(centerX, Float(frameWidth)))
+
+        // Scale relative position along x-axis between -1 and 1
+        let x_pos_norm: Float = 1.0 - 2.0 * centerX / Float(frameWidth)
+
+        // Generate vehicle controls
+        if (x_pos_norm < 0.0) {
+            left = 1.0
+            right = 1.0 + x_pos_norm
+        } else {
+            left = 1 - x_pos_norm
+            right = 1.0
+        }
+
+        // Adjust speed depending on size of detected object bounding box
+        if (useDynamicSpeed) {
+            var scaleFactor: Float = 1.0 - boxArea / Float(frameWidth * frameHeight)
+            scaleFactor = scaleFactor > 0.75 ? 1.0 : scaleFactor // tracked object far, full speed
+            // apply scale factor if tracked object is not too near, otherwise stop
+            if (scaleFactor > 0.25) {
+                left *= scaleFactor
+                right *= scaleFactor
+            } else {
+                left = 0.0
+                right = 0.0
+            }
+        }
+
+        return Control(left: left, right: right)
+    }
+
+    override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        if (isFollow) {
+            let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
+
+            bufferWidth = CVPixelBufferGetWidth(pixelBuffer!)
+            bufferHeight = CVPixelBufferGetHeight(pixelBuffer!)
+            guard let imagePixelBuffer = pixelBuffer else {
+                debugPrint("unable to get image from sample buffer")
+                return
+            }
+            guard !isInferenceQueueBusy else {
+                return
+            }
+
+            inferenceQueue.async {
+                self.isInferenceQueueBusy = true
+                let res = self.detector?.recognizeImage(pixelBuffer: imagePixelBuffer);
+                if res != nil {
+                    if (res!.count > 0) {
+                        self.result = self.updateTarget(res!.first!.getLocation())
+                    } else {
+                        self.result = Control(left: 0, right: 0)
+                    }
+                    guard let controlResult = self.result else {
+                        return
+                    }
+
+                    DispatchQueue.main.async {
+                        if (res!.count > 0) {
+                            for item in res! {
+                                if (item.getConfidence() > self.MINIMUM_CONFIDENCE_TF_OD_API) {
+                                    self.sendControl(control: controlResult)
+                                } else {
+                                    self.sendControl(control: Control())
+                                }
+                            }
+                        }
+                    }
+                }
+                self.isInferenceQueueBusy = false
+            }
+
+        }
+    }
 }

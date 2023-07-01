@@ -4,6 +4,8 @@
 
 import Foundation
 import JavaScriptCore
+import AVFoundation
+import UIKit
 
 /**
  Class to evaluate the JS code inside openBot
@@ -102,7 +104,7 @@ class jsEvaluator {
                 let playSoundSpeed: @convention(block) (String) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.playSoundSpeed(speedMode: speed);
                 }
-                let setSpeed : @convention(block) (String) -> Void = { (speed) in
+                let setSpeed: @convention(block) (String) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.playSoundSpeed(speedMode: speed);
                 }
                 let motorBackward: @convention(block) () -> Void = { () in
@@ -115,7 +117,7 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.motorStop()
                 }
                 let playSoundMode: @convention(block) (String) -> Void = { (mode) in
-                    self.runOpenBotThreadClass?.playSoundMode(driveMode : mode);
+                    self.runOpenBotThreadClass?.playSoundMode(driveMode: mode);
                 }
                 let ledBrightness: @convention(block) (Int) -> Void = { brightnessFactor in
                     self.runOpenBotThreadClass?.setLedBrightness(factor: brightnessFactor);
@@ -177,61 +179,61 @@ class jsEvaluator {
 
                 }
                 let accelerationReadingX: @convention(block) () -> Double = { () -> Double in
-                   let temp =  self.runOpenBotThreadClass?.accelerationReading(axis: "x") ?? 0.0;
+                    let temp = self.runOpenBotThreadClass?.accelerationReading(axis: "x") ?? 0.0;
                     print(temp);
                     return temp;
                 }
                 let accelerationReadingY: @convention(block) () -> Double = { () -> Double in
-                    let temp =  self.runOpenBotThreadClass?.accelerationReading(axis: "y") ?? 0.0;
+                    let temp = self.runOpenBotThreadClass?.accelerationReading(axis: "y") ?? 0.0;
                     print(temp);
                     return temp;
                 }
                 let accelerationReadingZ: @convention(block) () -> Double = { () -> Double in
-                    let temp =  self.runOpenBotThreadClass?.accelerationReading(axis: "z") ?? 0.0;
+                    let temp = self.runOpenBotThreadClass?.accelerationReading(axis: "z") ?? 0.0;
                     print(temp);
                     return temp;
                 }
                 let magneticReadingX: @convention(block) () -> Double = { () -> Double in
-                   let temp =  self.runOpenBotThreadClass?.magneticReading(axis: "x") ?? 0.0;
-                    print("magnetic reading x",temp)
+                    let temp = self.runOpenBotThreadClass?.magneticReading(axis: "x") ?? 0.0;
+                    print("magnetic reading x", temp)
                     return temp;
                 }
                 let magneticReadingY: @convention(block) () -> Double = { () -> Double in
-                    let temp =  self.runOpenBotThreadClass?.magneticReading(axis: "y") ?? 0.0;
+                    let temp = self.runOpenBotThreadClass?.magneticReading(axis: "y") ?? 0.0;
                     print(temp)
                     return temp;
                 }
                 let magneticReadingZ: @convention(block) () -> Double = { () -> Double in
-                    let temp =  self.runOpenBotThreadClass?.magneticReading(axis: "z") ?? 0.0;
+                    let temp = self.runOpenBotThreadClass?.magneticReading(axis: "z") ?? 0.0;
                     print(temp)
                     return temp;
                 }
 
-                let navigationModel: @convention(block) (String) -> Void = {(model) in
-                    self.runOpenBotThreadClass?.navigationModel(model : model);
+                let navigationModel: @convention(block) (String) -> Void = { (model) in
+                    self.runOpenBotThreadClass?.navigationModel(model: model);
                 }
 
-                let reachGoal: @convention(block) (Double,Double) -> Void = {(forward,left) in
-                    self.runOpenBotThreadClass?.reachGoal(forward : forward, left : left);
+                let reachGoal: @convention(block) (Double, Double) -> Void = { (forward, left) in
+                    self.runOpenBotThreadClass?.reachGoal(forward: forward, left: left);
                 }
 
-                let reachPosition: @convention(block) (Double,Double) -> Void = {(x,y) in
-                    self.runOpenBotThreadClass?.reachPosition(x : x, y : y);
+                let reachPosition: @convention(block) (Double, Double) -> Void = { (x, y) in
+                    self.runOpenBotThreadClass?.reachPosition(x: x, y: y);
                 }
 
-                let follow: @convention(block) (String)-> Void = { (object) in
-                    self.runOpenBotThreadClass?.follow(object:object);
+                let follow: @convention(block) (String) -> Void = { (object) in
+                    self.runOpenBotThreadClass?.follow(object: object);
                 }
 
-                let toggleLed : @convention(block) (String) -> Void = {(status) in
+                let toggleLed: @convention(block) (String) -> Void = { (status) in
                     switch status {
-                    case "ON" :
+                    case "ON":
                         self.runOpenBotThreadClass?.setLedBrightness(factor: 100);
                         break;
-                    case "OFF" :
+                    case "OFF":
                         self.runOpenBotThreadClass?.setLedBrightness(factor: 0);
                         break;
-                    default :
+                    default:
                         self.runOpenBotThreadClass?.setLedBrightness(factor: 100);
                     }
 
@@ -411,7 +413,6 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
-
         }
 
         /**
@@ -478,6 +479,7 @@ class jsEvaluator {
             }
             print("inside stop robot")
             NotificationCenter.default.post(name: .commandName, object: "Stop");
+            NotificationCenter.default.post(name: .setFollowBlockFalse, object: nil);
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
             while (bluetooth.peri != nil && bluetooth.speedometer != "w0.00,0.00") {
@@ -544,22 +546,22 @@ class jsEvaluator {
                 return
             }
             NotificationCenter.default.post(name: .commandName, object: "Play Sound \(speedMode)");
-           switch speedMode {
-           case "slow":
-               audioPlayer.playSpeedMode(speedMode: .SLOW);
-               break
-           case "medium":
-               audioPlayer.playSpeedMode(speedMode: .NORMAL);
-               break
-           case "fast":
-               audioPlayer.playSpeedMode(speedMode: .FAST);
-               break
-           default:
-               break
-           }
+            switch speedMode {
+            case "slow":
+                audioPlayer.playSpeedMode(speedMode: .SLOW);
+                break
+            case "medium":
+                audioPlayer.playSpeedMode(speedMode: .NORMAL);
+                break
+            case "fast":
+                audioPlayer.playSpeedMode(speedMode: .FAST);
+                break
+            default:
+                break
+            }
         }
 
-        func playSoundMode(driveMode : String){
+        func playSoundMode(driveMode: String) {
             if isCancelled {
                 return
             }
@@ -632,7 +634,7 @@ class jsEvaluator {
             NotificationCenter.default.post(name: .commandName, object: "Set Led BrightNess \(factor) ");
             let front = (factor * 255) / 100
             let back = ((factor * 255)) / 100
-            bluetooth.sendDataFromJs(payloadData:"l" + String(front) + "," + String(back) + "\n")
+            bluetooth.sendDataFromJs(payloadData: "l" + String(front) + "," + String(back) + "\n")
         }
 
         /**
@@ -857,34 +859,35 @@ class jsEvaluator {
             }
         }
 
-        func navigationModel(model : String){
+        func navigationModel(model: String) {
             if isCancelled {
                 return
             }
             print(model);
         }
 
-        func reachGoal(forward : Double, left : Double){
+        func reachGoal(forward: Double, left: Double) {
             if isCancelled {
                 return
             }
-            print(forward,left);
+            print(forward, left);
         }
 
-        func reachPosition(x : Double, y : Double){
+
+        func reachPosition(x: Double, y: Double) {
             if isCancelled {
                 return
             }
-            print(x , y);
+            print(x, y);
         }
 
-        func follow(object : String){
-
+        func follow(object: String) {
             if isCancelled {
                 return
             }
+            NotificationCenter.default.post(name: .setFollowBlockTrue, object: nil);
+            NotificationCenter.default.post(name: .commandName, object: object);
             print(object);
         }
     }
 }
-
