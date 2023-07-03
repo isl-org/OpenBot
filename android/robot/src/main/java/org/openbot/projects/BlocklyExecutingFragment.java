@@ -29,6 +29,7 @@ import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.CameraUtils;
+import org.openbot.utils.FileUtils;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -45,8 +46,10 @@ public class BlocklyExecutingFragment extends CameraFragment {
   private boolean isRunJSCommand = false;
   public static boolean isFollow = false;
   public static String classType = "person";
+  public static String modelName = "MobileNetV1-300.tflite";
   private Detector detector;
   private Model model;
+  private List<Model> modelList;
   private Bitmap croppedBitmap;
   private Matrix frameToCropTransform;
   private Network.Device getDevice;
@@ -101,15 +104,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
       runJSCommand(BarCodeScannerFragment.finalCode);
     }
 
-    try {
-      masterList.stream()
-              .filter(f -> f.name.contains(preferencesManager.getObjectNavModel()))
-              .findFirst()
-              .ifPresent(value -> model = value);
-
-    } catch (IllegalArgumentException e) {
-      e.printStackTrace();
-    }
+    modelList = FileUtils.loadConfigJSONFromAsset(requireActivity());
 
     switch (preferencesManager.getDevice()){
       case 0:
@@ -139,6 +134,11 @@ public class BlocklyExecutingFragment extends CameraFragment {
   }
 
   private Model getModel() {
+    for (Model getModel : modelList){
+      if (getModel.getName().equals(modelName)){
+        model = getModel;
+      }
+    }
     return model;
   }
   private void followObject(Bitmap bitmap){

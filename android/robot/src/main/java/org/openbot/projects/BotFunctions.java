@@ -361,8 +361,9 @@ public class BotFunctions implements SensorEventListener {
   }
 
   @JavascriptInterface
-  public void follow(String object) {
-    mActivity.runOnUiThread(() -> binding.jsCommand.setText("Follow " + object));
+  public void follow(String object, String modelName) {
+    mActivity.runOnUiThread(() -> binding.jsCommand.setText("Follow " + object + " using " + modelName));
+    BlocklyExecutingFragment.modelName = modelName;
     BlocklyExecutingFragment.classType = object;
     BlocklyExecutingFragment.isFollow = true;
   }

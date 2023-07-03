@@ -41,6 +41,7 @@ import org.openbot.projects.GoogleSignInCallback;
 import org.openbot.projects.ProjectsDataInObject;
 import org.openbot.projects.ProjectsFragment;
 import org.openbot.tflite.Model;
+import org.openbot.utils.FileUtils;
 
 import timber.log.Timber;
 
@@ -109,6 +110,7 @@ public class GoogleServices {
                         Timber.tag(TAG).d("onComplete: successful");
                         // Get the signed-in account and Notify callback of successful sign-in.
                         mCallback.onSignInSuccess(task.getResult().getUser());
+                        createAndUploadJsonFile(FileUtils.loadConfigJSONFromAsset(mActivity));
                       } else {
                         Timber.tag(TAG).w("signInWithCredential%s", task.getException().getMessage());
                         task.getException().printStackTrace();
