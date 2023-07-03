@@ -101,11 +101,11 @@ struct Strings {
     static let bluetoothScreen: String = "bluetoothScreen"
 
     // Logging Headers
-    static let accelerationHeader: String = "TimeStamp[ns] x[m/s^2], y[m/s^2], z[m/s^2]\n"
-    static let locationCoordinatesHeader: String = "TimeStamp latitude, longitude\n"
-    static let gyroscopeHeader: String = "TimeStamp[ns], x[rad/s], yx[rad/s], zx[rad/s]\n"
-    static let magnetometerHeader: String = "TimeStamp[ns] x[uT], y[uT], z[uT]\n"
-    static let gpsHeader: String = "TimeStamp latitude, longitude, altitude[m], speed[m/s]\n"
+    static let accelerationHeader: String = "timestamp[ns] x[m/s^2], y[m/s^2], z[m/s^2]\n"
+    static let locationCoordinatesHeader: String = "timestamp latitude, longitude\n"
+    static let gyroscopeHeader: String = "timestamp[ns], x[rad/s], yx[rad/s], zx[rad/s]\n"
+    static let magnetometerHeader: String = "timestamp[ns] x[uT], y[uT], z[uT]\n"
+    static let gpsHeader: String = "timestamp latitude, longitude, altitude[m], speed[m/s]\n"
     static let bumperHeader: String = "timestamp[ns], bumper\n"
     static let ctrlHeader: String = "timestamp[ns], leftCtrl, rightCtrl\n"
     static let indicatorHeader: String = "timestamp[ns], signal\n"
