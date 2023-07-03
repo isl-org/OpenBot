@@ -135,7 +135,7 @@ public class ModelManagementFragment extends Fragment
               }
               masterList.add(item1);
               showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
-              FileUtils.updateModelConfig(requireActivity(), masterList);
+              FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList);
               Toast.makeText(
                       requireContext().getApplicationContext(),
                       "Model added: " + fileName,
@@ -259,7 +259,7 @@ public class ModelManagementFragment extends Fragment
             item,
             item1 -> {
               adapter.notifyDataSetChanged();
-              FileUtils.updateModelConfig(requireActivity(), masterList);
+              FileUtils.updateModelConfig(requireActivity(), requireActivity(), masterList);
             });
     edMbS.show(getChildFragmentManager(), edMbS.getTag());
   }
@@ -288,7 +288,7 @@ public class ModelManagementFragment extends Fragment
           model.setPath(requireActivity().getFilesDir() + File.separator + model.name);
           model.setPathType(Model.PATH_TYPE.FILE);
           //          adapter.notifyDataSetChanged();
-          FileUtils.updateModelConfig(requireActivity(), masterList);
+          FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList);
           break;
         }
       }
@@ -317,7 +317,7 @@ public class ModelManagementFragment extends Fragment
             mItem.setPathType(originalModelConfig.pathType);
             adapter.notifyItemChanged(index);
           }
-          FileUtils.updateModelConfig(requireActivity(), masterList);
+          FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList);
         });
     builder.setNegativeButton("Cancel", (dialog, id) -> {});
     AlertDialog dialog = builder.create();

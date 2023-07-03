@@ -261,6 +261,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
     builder.setNegativeButton("Cancel", (dialog, id) -> requireActivity().onBackPressed());
     AlertDialog dialog = builder.create();
     dialog.show();
+    dialog.setCancelable(false);
   }
 
   @SuppressLint("SetJavaScriptEnabled")
