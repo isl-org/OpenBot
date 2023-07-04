@@ -670,7 +670,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         let dispatchGroup = DispatchGroup()
         var deleteCount: Int = 0;
         dispatchGroup.enter()
-        authentication.getIdOfXmlFile(name: projectName) { fileId, error in
+        authentication.getIdOfDriveFile(name: projectName, fileType: "Xml") { fileId, error in
             if let error = error {
                 print("Error while deleting file", error)
             }

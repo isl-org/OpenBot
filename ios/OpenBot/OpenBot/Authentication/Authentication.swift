@@ -73,7 +73,7 @@ class Authentication {
             let userEmail = user?.profile?.email ?? ""
             let googleProfilePicURL = user?.profile?.imageURL(withDimension: 150)?.absoluteString ?? ""
             let imgUrl = Auth.auth().currentUser?.photoURL;
-            let driveScope = "https://www.googleapis.com/auth/drive.readonly"
+            let driveScope = "https://www.googleapis.com/auth/drive.file"
             let grantedScopes = user?.grantedScopes
             if grantedScopes == nil || !grantedScopes!.contains(driveScope) {
             }
@@ -110,7 +110,7 @@ class Authentication {
         }
     }
 
-     func getOPenBotFolderId(files : [GTLRDrive_File])->String{
+    func getOPenBotFolderId(files: [GTLRDrive_File]) -> String {
         for file in files {
             if file.name == "openBot-Playground" {
                 return file.identifier ?? "";
@@ -125,6 +125,7 @@ class Authentication {
             // Show the sign-out button and hide the GIDSignInButton
         }
     }
+
     /**
      static method to download a file
      - Parameters:
@@ -147,6 +148,7 @@ class Authentication {
             }
         })
     }
+
     /**
      Static method to download a file
      - Parameters:
@@ -211,7 +213,7 @@ class Authentication {
             }
 
             if let files = (result as? GTLRDrive_FileList)?.files {
-                print("files ",files);
+                print("files ", files);
                 completion(files, nil)
             } else {
                 completion(nil, nil)
@@ -323,19 +325,26 @@ class Authentication {
        - name:
        - completion:
      */
-    func getIdOfXmlFile(name: String, completion: @escaping (String?, Error?) -> Void) {
+    func getIdOfDriveFile(name: String, fileType: String, completion: @escaping (String?, Error?) -> Void) {
         Authentication.googleAuthentication.getAllFolders { files, error in
             if let files = files {
-                Authentication.googleAuthentication.getFilesInFolder(folderId:self.getOPenBotFolderId(files: files)) { files, error in
+                Authentication.googleAuthentication.getFilesInFolder(folderId: self.getOPenBotFolderId(files: files)) { files, error in
                     if let error = error {
                         completion(nil, error)
                         return
                     }
                     if let files = files {
                         for file in files {
-                            if file.mimeType == "text/xml" && file.name == "\(name).xml" {
-                                completion(file.identifier, nil)
-                                return
+                            if (fileType == "Xml") {
+                                if file.mimeType == "text/xml" && file.name == "\(name).xml" {
+                                    completion(file.identifier, nil)
+                                    return
+                                }
+                            } else if (fileType == "JSON") {
+                                if file.mimeType == "application/json" && file.name == "\(name).json" {
+                                    completion(file.identifier, nil)
+                                    return
+                                }
                             }
                         }
                     }
@@ -347,6 +356,116 @@ class Authentication {
         }
     }
 
+    /**
+     Function to create openBot Folder in drive
+     - Parameter completion:
+     */
+    func createOpenBotFolder(completion: @escaping (String) -> Void) {
+        let service: GTLRDriveService = GTLRDriveService()
+        let signIn = googleSignIn.currentUser
+        service.authorizer = signIn?.fetcherAuthorizer
+        let folder = GTLRDrive_File()
+        folder.mimeType = "application/vnd.google-apps.folder"
+        folder.name = "openBot-Playground"
+        let query = GTLRDriveQuery_FilesCreate.query(withObject: folder, uploadParameters: nil)
+        service.executeQuery(query) { (_, file, error) in
+            if let error = error {
+                print(error.localizedDescription);
+                completion("");
+            }
+            let folder = file as! GTLRDrive_File
+            completion(folder.identifier!)
+        }
+    }
+
+    /**
+     Function to check whether openBot folder exists or not
+     - Parameter completion:
+     */
+    func checkFolderExistsInDrive(completion: @escaping (String) -> Void) {
+        let signIn = googleSignIn.currentUser
+        var folderID = ""
+        getAllFoldersInDrive(accessToken: signIn?.idToken?.tokenString ?? "") { files, error in
+            if let files = files {
+                folderID = self.getOPenBotFolderId(files: files);
+                if (folderID == "") {
+                    self.createOpenBotFolder { identifier in
+                        if (identifier == "") {
+                            completion("")
+                        } else {
+                            completion(identifier)
+                        }
+                    }
+                } else {
+                    completion(folderID)
+                }
+            }
+            if let error = error {
+                completion("")
+                print(error);
+            }
+        }
+    }
+
+    /**
+     Function to upload JSON file to drive
+     - Parameters:
+       - fileData:
+       - folderId:
+     */
+    func uploadFileToDrive(fileData: Data, folderId: String) {
+        let service: GTLRDriveService = GTLRDriveService()
+        let signIn = googleSignIn.currentUser
+        service.authorizer = signIn?.fetcherAuthorizer
+        let metadata = GTLRDrive_File.init()
+        metadata.name = "config.json"
+        metadata.mimeType = "application/json"
+        metadata.parents = [folderId]
+        let uploadParameters = GTLRUploadParameters(data: fileData, mimeType: "application/json")
+        let query = GTLRDriveQuery_FilesCreate.query(withObject: metadata, uploadParameters: uploadParameters)
+        service.uploadProgressBlock = { _, totalBytesUploaded, totalBytesExpectedToUpload in
+        }
+        service.executeQuery(query) { _, result, error in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
+        }
+
+    }
+
+    /**
+     Function to update or create JSON file
+     - Parameter fileData:
+     */
+    func updateModelListFile(fileData: Data) {
+        let service: GTLRDriveService = GTLRDriveService()
+        let signIn = googleSignIn.currentUser
+        service.authorizer = signIn?.fetcherAuthorizer
+        checkFolderExistsInDrive { folderID in
+            if folderID != "" {
+                self.getIdOfDriveFile(name: "config", fileType: "JSON") { fileId, error in
+                    if let fileId = fileId {
+                        self.deleteFile(fileId: fileId) { error in
+                            if let error = error {
+                                print(error)
+                            }
+                            self.uploadFileToDrive(fileData: fileData, folderId: folderID)
+                        }
+                    } else {
+                        if let error = error {
+                            print("error while getting json file::", error)
+                        } else {
+                            self.uploadFileToDrive(fileData: fileData, folderId: folderID)
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
 }
+
+
+
