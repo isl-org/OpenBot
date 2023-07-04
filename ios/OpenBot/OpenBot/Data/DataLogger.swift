@@ -200,8 +200,10 @@ class DataLogger {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentDirectoryURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
             for url in fileURLs {
                 //deletes the all files
-                deleteFiles(fileNameToDelete: url.lastPathComponent);
-                // deletes the
+                if !((url.lastPathComponent.contains(".tflite")) || (url.lastPathComponent.contains("config.json"))){
+                    print("deleting files ======", url.lastPathComponent);
+                    deleteFiles(fileNameToDelete: url.lastPathComponent);
+                }
             }
         } catch {
             print("Error in deleting .zip file")

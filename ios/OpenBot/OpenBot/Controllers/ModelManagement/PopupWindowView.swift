@@ -334,7 +334,7 @@ class popupWindowView: UIView {
     /// handler when tapped on the save/done button.
     @objc func onDoneBtnTap(_ sender: UIButton) throws {
 
-        try saveConfigFileToDocument(modelItems: modifyModels());
+        try Common.saveConfigFileToDocument(modelItems: modifyModels());
         if let index = model.name.firstIndex(of: ".") {
             NotificationCenter.default.post(name: .removeBlankScreen, object: model.name.prefix(upTo: index));
         }
@@ -346,26 +346,6 @@ class popupWindowView: UIView {
         endEditing(true);
     }
 
-    /// to save the file configs into document directory.
-    func saveConfigFileToDocument(modelItems: [ModelItem]) throws {
-        let fileManager = FileManager.default
-        do {
-            let documentDirectory = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-            let fileURL = documentDirectory.appendingPathComponent("config.json")
-            let jsonEncoder = JSONEncoder()
-            do {
-                let jsonData = try jsonEncoder.encode(modelItems)
-                let jsonString = String(data: jsonData, encoding: .utf8)
-                if let jsonString = jsonString {
-                    try jsonString.write(to: fileURL, atomically: true, encoding: .utf8)
-                }
-            } catch {
-                print("inside catch", error)
-            }
-        } catch {
-            print(error)
-        }
-    }
 
     /// function to let user modify the model, and store them into documents directory.
     func modifyModels() -> [ModelItem] {

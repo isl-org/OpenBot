@@ -65,6 +65,7 @@ class expandedAutoPilot: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toggleNetwork), name: .toggleNetworks, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateFps), name: .updateAutoPilotFps, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateServer), name: .server, object: nil);
     }
 
     /// Initialization routine
@@ -206,6 +207,15 @@ class expandedAutoPilot: UIView {
         ddView = createDropdownView(borderColor: "", buttonName: "No Server", leadingAnchor: 180, topAnchor: adapted(dimensionSize: 50, to: .height), action: #selector(showServerDropdown(_:)))
         serverDropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             serverDropDownLabel.text = item
+            let server = serverItems.filter { server in
+                server.name == item
+            }
+            if item == "No Server"{
+                ServerCommunication.serverEndPoint = nil;
+            }
+            if let endpoint = server.first?.endpoint {
+                serverConnection = ServerCommunication(endpoint: endpoint)
+            };
         }
         serverDropDown.width = 150
         serverDropDownView.frame.size = CGSize(width: 200, height: 100);
@@ -556,6 +566,10 @@ class expandedAutoPilot: UIView {
     /// - Parameter notification:
     @objc func updateFps(_ notification: Notification) {
         speedLabel.text = String(notification.object as! Double)
+    }
+
+    @objc func updateServer(_ notification: Notification){
+        serverDropDown.dataSource = servers;
     }
 }
 

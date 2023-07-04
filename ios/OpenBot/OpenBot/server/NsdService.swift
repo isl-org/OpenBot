@@ -71,6 +71,7 @@ class NsdService {
                 case .removed(let browseResult):
                     print("removed \(browseResult.endpoint)")
                     serverConnection = nil;
+
                 case .changed(_, let browseResult, let flags):
                     if flags.contains(.interfaceAdded) {
                         print("\(browseResult.endpoint) added interfaces")

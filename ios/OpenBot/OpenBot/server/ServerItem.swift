@@ -4,6 +4,9 @@
 
 import Foundation
 import Network
+/***
+   Structure of available Server
+ */
 public struct ServerItem {
     var name: String
     var endpoint : NWEndpoint

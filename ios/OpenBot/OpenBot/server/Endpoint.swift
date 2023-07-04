@@ -4,7 +4,9 @@
 
 import Foundation
 import Network
-
+/**
+ Structure of available Endpoints
+ */
 public struct Endpoint {
     var name: String
     var host : String
