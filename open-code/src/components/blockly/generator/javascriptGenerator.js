@@ -259,32 +259,41 @@ javascriptGenerator['brightnessHighOrLow'] = function (block) {
 };
 
 
-javascriptGenerator['followObjects'] = function(block) {
+javascriptGenerator['followObjects'] = function (block) {
     let dropdown_follow_objects = block.getFieldValue('follow objects');
     let code = '';
-    code+="follow('"+dropdown_follow_objects+"');\n"
+    code += "follow('" + dropdown_follow_objects + "');\n"
     return code;
 };
 
-javascriptGenerator['navigate'] = function(block) {
-    let dropdown_navigate_models = block.getFieldValue('navigate models');
+javascriptGenerator['autopilot'] = function (block) {
+    let dropdown_autopilot_models = block.getFieldValue('autopilot models');
     let code = '';
-    code+="navigationModel('"+dropdown_navigate_models+"');\n"
+    code += "enableAutopilot('" + dropdown_autopilot_models + "');\n"
     return code;
 };
 
-javascriptGenerator['navigateForwardAndLeft'] = function(block) {
+javascriptGenerator['navigateForwardAndLeft'] = function (block) {
     let left_position = block.getFieldValue('left');
     let right_position = block.getFieldValue('right');
     let code = '';
-    code+="reachGoal("+left_position+","+right_position+");\n";
+    code += "reachGoal(" + left_position + "," + right_position + ");\n";
     return code;
 };
 
-javascriptGenerator['navigateXAndY'] = function(block) {
+javascriptGenerator['navigateXAndY'] = function (block) {
     let positionX = block.getFieldValue('x');
     let positionY = block.getFieldValue('y');
     let code = '';
-    code+="reachPosition("+positionX+","+positionY+");\n";
+    code += "reachPosition(" + positionX + "," + positionY + ");\n";
+    return code;
+};
+
+
+javascriptGenerator['objectTracking'] = function (block, generator) {
+    const dropdown_class = block.getFieldValue('class');
+    const dropdown_models = block.getFieldValue('models');
+    let code = "";
+    code += "follow('" + dropdown_class + "','" + dropdown_models + "');\n"
     return code;
 };

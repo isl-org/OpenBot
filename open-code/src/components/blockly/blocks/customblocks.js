@@ -6,6 +6,7 @@ import '@blockly/field-slider';
 import '@blockly/block-plus-minus';
 import {Images} from "../../../utils/images";
 import "./field_toggle";
+import {filterModels} from "../../../services/workspace";
 
 /**
  * Defining blocks and their behaviour
@@ -1013,20 +1014,379 @@ Blockly.Blocks["followObjects"] = {
 };
 
 
-Blockly.Blocks["navigate"] = {
+Blockly.Blocks["objectTracking"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "navigate using %1",
+            "message0": "follow a %1 using %2",
             "args0": [
                 {
                     "type": "field_dropdown",
-                    "name": "navigate models",
+                    "name": "class",
                     "options": [
                         [
-                            "CIL-Mobile-Cmd",
-                            "CIL-Mobile-Cmd"
+                            "person",
+                            "person"
                         ],
+                        [
+                            "bicycle",
+                            "bicycle"
+                        ],
+                        [
+                            "car",
+                            "car"
+                        ],
+                        [
+                            "motorcycle",
+                            "motorcycle"
+                        ],
+                        [
+                            "airplane",
+                            "airplane"
+                        ],
+                        [
+                            "bus",
+                            "bus"
+                        ],
+                        [
+                            "train",
+                            "train"
+                        ],
+                        [
+                            "truck",
+                            "truck"
+                        ],
+                        [
+                            "boat",
+                            "boat"
+                        ],
+                        [
+                            "traffic light",
+                            "traffic light"
+                        ],
+                        [
+                            "fire hydrant",
+                            "fire hydrant"
+                        ],
+                        [
+                            "stop sign",
+                            "stop sign"
+                        ],
+                        [
+                            "parking meter",
+                            "parking meter"
+                        ],
+                        [
+                            "bench",
+                            "bench"
+                        ],
+                        [
+                            "bird",
+                            "bird"
+                        ],
+                        [
+                            "cat",
+                            "cat"
+                        ],
+                        [
+                            "dog",
+                            "dog"
+                        ],
+                        [
+                            "horse",
+                            "horse"
+                        ],
+                        [
+                            "sheep",
+                            "sheep"
+                        ],
+                        [
+                            "cow",
+                            "cow"
+                        ],
+                        [
+                            "elephant",
+                            "elephant"
+                        ],
+                        [
+                            "bear",
+                            "bear"
+                        ],
+                        [
+                            "zebra",
+                            "zebra"
+                        ],
+                        [
+                            "giraffe",
+                            "giraffe"
+                        ],
+                        [
+                            "backpack",
+                            "backpack"
+                        ],
+                        [
+                            "umbrella",
+                            "umbrella"
+                        ],
+                        [
+                            "handbag",
+                            "handbag"
+                        ],
+                        [
+                            "tie",
+                            "tie"
+                        ],
+                        [
+                            "suitcase",
+                            "suitcase"
+                        ],
+                        [
+                            "frisbee",
+                            "frisbee"
+                        ],
+                        [
+                            "skis",
+                            "skis"
+                        ],
+                        [
+                            "snowboard",
+                            "snowboard"
+                        ],
+                        [
+                            "sports ball",
+                            "sports ball"
+                        ],
+                        [
+                            "kite",
+                            "kite"
+                        ],
+                        [
+                            "baseball bat",
+                            "baseball bat"
+                        ],
+                        [
+                            "baseball glove",
+                            "baseball glove"
+                        ],
+                        [
+                            "skateboard",
+                            "skateboard"
+                        ],
+                        [
+                            "surfboard",
+                            "surfboard"
+                        ],
+                        [
+                            "tennis racket",
+                            "tennis racket"
+                        ],
+                        [
+                            "bottle",
+                            "bottle"
+                        ],
+                        [
+                            "wine glass",
+                            "wine glass"
+                        ],
+                        [
+                            "cup",
+                            "cup"
+                        ],
+                        [
+                            "fork",
+                            "fork"
+                        ],
+                        [
+                            "knife",
+                            "knife"
+                        ],
+                        [
+                            "spoon",
+                            "spoon"
+                        ],
+                        [
+                            "bowl",
+                            "bowl"
+                        ],
+                        [
+                            "banana",
+                            "banana"
+                        ],
+                        [
+                            "apple",
+                            "apple"
+                        ],
+                        [
+                            "sandwich",
+                            "sandwich"
+                        ],
+                        [
+                            "orange",
+                            "orange"
+                        ],
+                        [
+                            "broccoli",
+                            "broccoli"
+                        ],
+                        [
+                            "carrot",
+                            "carrot"
+                        ],
+                        [
+                            "hot dog",
+                            "hot dog"
+                        ],
+                        [
+                            "pizza",
+                            "pizza"
+                        ],
+                        [
+                            "donut",
+                            "donut"
+                        ],
+                        [
+                            "cake",
+                            "cake"
+                        ],
+                        [
+                            "chair",
+                            "chair"
+                        ],
+                        [
+                            "couch",
+                            "couch"
+                        ],
+                        [
+                            "potted plant",
+                            "potted plant"
+                        ],
+                        [
+                            "bed",
+                            "bed"
+                        ],
+                        [
+                            "dining table",
+                            "dining table"
+                        ],
+                        [
+                            "toilet",
+                            "toilet"
+                        ],
+                        [
+                            "tv",
+                            "tv"
+                        ],
+                        [
+                            "laptop",
+                            "laptop"
+                        ],
+                        [
+                            "mouse",
+                            "mouse"
+                        ],
+                        [
+                            "remote",
+                            "remote"
+                        ],
+                        [
+                            "keyboard",
+                            "keyboard"
+                        ],
+                        [
+                            "cell phone",
+                            "cell phone"
+                        ],
+                        [
+                            "microwave",
+                            "microwave"
+                        ],
+                        [
+                            "oven",
+                            "oven"
+                        ],
+                        [
+                            "toaster",
+                            "toaster"
+                        ],
+                        [
+                            "sink",
+                            "sink"
+                        ],
+                        [
+                            "refrigerator",
+                            "refrigerator"
+                        ],
+                        [
+                            "book",
+                            "book"
+                        ],
+                        [
+                            "clock",
+                            "clock"
+                        ],
+                        [
+                            "vase",
+                            "vase"
+                        ],
+                        [
+                            "scissors",
+                            "scissors"
+                        ],
+                        [
+                            "teddy bear",
+                            "teddy bear"
+                        ],
+                        [
+                            "hair drier",
+                            "hair drier"
+                        ],
+                        [
+                            "toothbrush",
+                            "toothbrush"
+                        ]
+
+                    ]
+                },
+                {
+                    "type": "field_dropdown",
+                    "name": "models",
+                    "options": filterModels("DETECTOR") ?? [[
+                        "CIL-Mobile-Cmd",
+                        "CIL-Mobile-Cmd"
+                    ],
+                        [
+                            "PilotNet-Goal",
+                            "PilotNet-Goal"
+                        ],
+                        [
+                            "MobileNetV1-300",
+                            "MobileNetV1-300"
+                        ]
+                    ]
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["autopilot"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "enable autopilot using %1",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "autopilot models",
+                    "options": filterModels("AUTOPILOT" || "CMDNAV") ?? [[
+                        "CIL-Mobile-Cmd",
+                        "CIL-Mobile-Cmd"
+                    ],
                         [
                             "PilotNet-Goal",
                             "PilotNet-Goal"
