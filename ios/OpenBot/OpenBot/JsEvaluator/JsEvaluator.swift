@@ -239,6 +239,10 @@ class jsEvaluator {
 
                 }
 
+                let enableAutopilot : @convention(block) (String) -> Void = { (modelName) in
+                    self.runOpenBotThreadClass?.enableAutopilot(model : modelName);
+                }
+
                 context.setObject(moveForward,
                         forKeyedSubscript: Strings.moveForward as NSString)
                 context.setObject(loop,
@@ -331,6 +335,8 @@ class jsEvaluator {
                         forKeyedSubscript: "reachPosition" as NSString);
                 context.setObject(setSpeed,
                         forKeyedSubscript: "setSpeed" as NSString)
+                context.setObject(enableAutopilot,
+                        forKeyedSubscript: "enableAutopilot" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -479,7 +485,7 @@ class jsEvaluator {
             }
             print("inside stop robot")
             NotificationCenter.default.post(name: .commandName, object: "Stop");
-            NotificationCenter.default.post(name: .setFollowBlockFalse, object: nil);
+            runRobot.isObjectTracking = false;
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
             while (bluetooth.peri != nil && bluetooth.speedometer != "w0.00,0.00") {
@@ -885,9 +891,17 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
-            NotificationCenter.default.post(name: .setFollowBlockTrue, object: nil);
             NotificationCenter.default.post(name: .commandName, object: object);
             print(object);
+            runRobot.enableObjectTracking();
         }
+
+            func enableAutopilot(model : String){
+                if isCancelled {
+                    return
+                }
+                print(model);
+                runRobot.enableAutopilot();
+            }
     }
 }

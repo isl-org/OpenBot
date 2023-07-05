@@ -200,7 +200,6 @@ class Detector: Network {
             return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
 
         } catch {
-
             print("error:\(error)")
             return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
 
