@@ -57,7 +57,6 @@ export const BottomBar = () => {
                 let code = javascriptGenerator.workspaceToCode(
                     workspace
                 );
-
                 const start = workspace.getBlocksByType("start")
                 const forever = workspace.getBlocksByType("forever")
                 if (start.length === 0 && forever.length === 0) {
@@ -76,6 +75,18 @@ export const BottomBar = () => {
                                 driveLink: res,
                                 projectName: getCurrentProject().projectName
                             }
+                            const data = {
+                                projectName: getCurrentProject().projectName,
+                                xmlValue: getCurrentProject().xmlValue,
+                                createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
+                            }
+                            uploadToGoogleDrive(data, "xml")   // Call function to upload xml data to Google Drive
+                                .then()
+                                .catch((err) => {
+                                    errorToast("Failed to upload");
+                                    console.log(err)
+                                    setIsLoader(false);
+                                })
                             setCode(linkCode);
                             setIsLoader(false);
                             setCategory(Constants.qr);
@@ -87,19 +98,7 @@ export const BottomBar = () => {
                         errorToast("Failed to Upload");
                     })
 
-                    const data = {
-                        projectName: getCurrentProject().projectName,
-                        xmlValue: getCurrentProject().xmlValue,
-                        createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
-                    }
-                    // Call function to upload xml data to Google Drive
-                    uploadToGoogleDrive(data, "xml")
-                        .then()
-                        .catch((err) => {
-                            errorToast("Failed to upload");
-                            console.log(err)
-                            setIsLoader(false);
-                        })
+
                 }
             } else {
                 errorToast("Please sign-In to generate QR.")
