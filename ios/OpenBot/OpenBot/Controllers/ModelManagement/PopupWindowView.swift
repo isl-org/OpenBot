@@ -336,16 +336,14 @@ class popupWindowView: UIView {
 
     /// handler when tapped on the save/done button.
     @objc func onDoneBtnTap(_ sender: UIButton) throws {
-
-        try saveConfigFileToDocument(modelItems: modifyModels());
+        try Common.saveConfigFileToDocument(modelItems: Common.modifyModels(modelAddress: modelAddress, model: model,widthOfModel: widthOfModel,heightOfModel: heightOfModel));
         if let index = model.name.firstIndex(of: ".") {
             if GIDSignIn.sharedInstance.currentUser != nil {
                 let encoder = JSONEncoder()
                 encoder.outputFormatting = [.withoutEscapingSlashes]
                 do {
-                    let jsonData = try encoder.encode(modifyModels())
+                    let jsonData = try encoder.encode(Common.modifyModels(modelAddress: modelAddress, model: model,widthOfModel: widthOfModel,heightOfModel: heightOfModel));
                     if let jsonString = String(data: jsonData, encoding: .utf8) {
-                        print(jsonString)
                         if let data = jsonString.data(using: .utf8) {
                             Authentication().updateModelListFile(fileData: data)
                         }
@@ -363,56 +361,5 @@ class popupWindowView: UIView {
         endEditing(true);
     }
 
-    /// to save the file configs into document directory.
-    func saveConfigFileToDocument(modelItems: [ModelItem]) throws {
-        let fileManager = FileManager.default
-        do {
-            let documentDirectory = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-            let fileURL = documentDirectory.appendingPathComponent("config.json")
-            let jsonEncoder = JSONEncoder()
-            do {
-                let jsonData = try jsonEncoder.encode(modelItems)
-                let jsonString = String(data: jsonData, encoding: .utf8)
-                if let jsonString = jsonString {
-                    try jsonString.write(to: fileURL, atomically: true, encoding: .utf8)
-                }
-            } catch {
-                print("inside catch", error)
-            }
-        } catch {
-            print(error)
-        }
-    }
 
-    /// function to let user modify the model, and store them into documents directory.
-    func modifyModels() -> [ModelItem] {
-        var allModels: [ModelItem] = [];
-        let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
-        var isFoundConfigFile: Bool = false;
-        for url in documentDirectoryURls {
-            if url.absoluteString.contains("config.json") {
-                isFoundConfigFile = true
-                break;
-            }
-        }
-        switch isFoundConfigFile {
-        case true:
-            allModels = Common.loadAllModelFromDocumentDirectory()
-        case false:
-            allModels = Common.loadAllModelItemsFromBundle();
-        }
-
-        let newModel = modelAddress == "" ? ModelItem.init(id: model.id, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: model.path, inputSize: widthOfModel + "x" + heightOfModel) :
-                ModelItem.init(id: allModels.count + 1, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: modelAddress, inputSize: widthOfModel + "x" + heightOfModel);
-        var index = 0;
-        for model in allModels {
-            if model.id == newModel.id {
-                allModels[index] = newModel;
-                return allModels;
-            }
-            index = index + 1;
-        }
-        allModels.append(newModel);
-        return allModels
-    }
 }

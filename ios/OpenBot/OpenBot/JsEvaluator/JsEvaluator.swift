@@ -10,7 +10,9 @@ import UIKit
 /**
  Class to evaluate the JS code inside openBot
  */
-class jsEvaluator {
+class jsEvaluator  {
+
+
     private var command: String = "";
     private var vehicleControl: Control = Control();
     let semaphore = DispatchSemaphore(value: 0);
@@ -221,9 +223,10 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.reachPosition(x: x, y: y);
                 }
 
-                let follow: @convention(block) (String) -> Void = { (object) in
-                    self.runOpenBotThreadClass?.follow(object: object);
+                let follow: @convention(block) (String, String) -> Void = { (object, model) in
+                    self.runOpenBotThreadClass?.follow(object: object, model: model);
                 }
+
 
                 let toggleLed: @convention(block) (String) -> Void = { (status) in
                     switch status {
@@ -239,8 +242,8 @@ class jsEvaluator {
 
                 }
 
-                let enableAutopilot : @convention(block) (String) -> Void = { (modelName) in
-                    self.runOpenBotThreadClass?.enableAutopilot(model : modelName);
+                let enableAutopilot: @convention(block) (String) -> Void = { (modelName) in
+                    self.runOpenBotThreadClass?.enableAutopilot(model: modelName);
                 }
 
                 context.setObject(moveForward,
@@ -724,7 +727,6 @@ class jsEvaluator {
          - Parameter controller:
          */
         func switchController(controller: String) {
-
             if isCancelled {
                 return
             }
@@ -887,21 +889,21 @@ class jsEvaluator {
             print(x, y);
         }
 
-        func follow(object: String) {
+        func follow(object: String, model: String) {
             if isCancelled {
                 return
             }
             NotificationCenter.default.post(name: .commandName, object: object);
-            print(object);
+            print(object,model);
             runRobot.enableObjectTracking();
         }
 
-            func enableAutopilot(model : String){
-                if isCancelled {
-                    return
-                }
-                print(model);
-                runRobot.enableAutopilot();
+        func enableAutopilot(model: String) {
+            if isCancelled {
+                return
             }
+            print(model);
+            runRobot.enableAutopilot();
+        }
     }
 }

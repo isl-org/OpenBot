@@ -86,6 +86,7 @@ class runRobot: CameraController {
         }
     }
 
+
     @IBOutlet weak var runRobotConstraints: NSLayoutConstraint!
     let factor = 0.8;
 
@@ -295,3 +296,4 @@ class runRobot: CameraController {
         isInferenceQueueBusy = false
     }
 }
+

@@ -300,6 +300,8 @@ class bluetoothDataController: CMDeviceMotion, CBCentralManagerDelegate, CBPerip
         return 0;
     }
 
+
+
     /**
      return integer value voltage divider
      - Returns:

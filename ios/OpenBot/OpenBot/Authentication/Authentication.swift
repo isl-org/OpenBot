@@ -65,7 +65,12 @@ class Authentication {
                     accessToken: user?.accessToken.tokenString ?? "")
             Auth.auth().signIn(with: credential) { result, error in
             }
-            NotificationCenter.default.post(name: .googleSignIn, object: nil);
+            NotificationCenter.default.post(name: .googleSignIn, object: nil)
+            do {
+                try self.saveConfigJsonToDrive()
+            } catch {
+                print("Error in saving file to drive");
+            }
             let userIdToken = user?.accessToken
             self.userToken = userIdToken?.tokenString ?? ""
             let userFirstName = user?.profile?.givenName ?? ""
@@ -431,7 +436,6 @@ class Authentication {
                 return
             }
         }
-
     }
 
     /**
@@ -464,6 +468,25 @@ class Authentication {
         }
     }
 
+
+
+    private func saveConfigJsonToDrive() throws {
+        var allModels: [ModelItem] = Common.loadAllModelItems()
+        if GIDSignIn.sharedInstance.currentUser != nil {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.withoutEscapingSlashes]
+            do {
+                let jsonData = try encoder.encode(allModels)
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print(jsonString)
+                    if let data = jsonString.data(using: .utf8) {
+                        Authentication().updateModelListFile(fileData: data)
+                    }
+                }
+            }
+        } else {
+        }
+    }
 
 }
 
