@@ -259,13 +259,6 @@ javascriptGenerator['brightnessHighOrLow'] = function (block) {
 };
 
 
-javascriptGenerator['followObjects'] = function (block) {
-    let dropdown_follow_objects = block.getFieldValue('follow objects');
-    let code = '';
-    code += "follow('" + dropdown_follow_objects + "');\n"
-    return code;
-};
-
 javascriptGenerator['autopilot'] = function (block) {
     let dropdown_autopilot_models = block.getFieldValue('autopilot models');
     let code = '';
