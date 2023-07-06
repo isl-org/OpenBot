@@ -123,7 +123,6 @@ public class BotFunctions implements SensorEventListener {
   /**
    * openBot Sensor functions
    *
-   * @return
    */
   @JavascriptInterface
   public float sonarReading() {
@@ -132,8 +131,7 @@ public class BotFunctions implements SensorEventListener {
 
   @JavascriptInterface
   public float speedReading() {
-    float speedReading = (vehicle.getLeftWheelRpm() + vehicle.getRightWheelRpm()) / 2;
-    return speedReading;
+    return (vehicle.getLeftWheelRpm() + vehicle.getRightWheelRpm()) / 2;
   }
 
   @JavascriptInterface
@@ -366,6 +364,13 @@ public class BotFunctions implements SensorEventListener {
     BlocklyExecutingFragment.modelName = modelName;
     BlocklyExecutingFragment.classType = object;
     BlocklyExecutingFragment.isFollow = true;
+  }
+
+  @JavascriptInterface
+  public void enableAutopilot(String modelName) {
+    mActivity.runOnUiThread(() -> binding.jsCommand.setText("startAutopilot using " + modelName));
+    BlocklyExecutingFragment.modelName = modelName;
+    BlocklyExecutingFragment.isAutopilot = true;
   }
 
   @JavascriptInterface

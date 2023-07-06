@@ -40,6 +40,7 @@ public class BotFunctionUtils {
     "navigationModel",
     "reachGoal",
     "follow",
+          "enableAutopilot",
     "reachPosition",
   };
 }

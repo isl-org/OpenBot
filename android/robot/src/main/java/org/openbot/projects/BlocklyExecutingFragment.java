@@ -24,11 +24,13 @@ import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentBlocklyExecutingBinding;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.SharedPreferencesManager;
+import org.openbot.tflite.Autopilot;
 import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.CameraUtils;
+import org.openbot.utils.Enums;
 import org.openbot.utils.FileUtils;
 
 import java.io.IOException;
@@ -41,14 +43,17 @@ public class BlocklyExecutingFragment extends CameraFragment {
 
   private FragmentBlocklyExecutingBinding binding;
   private WebView myWebView;
-  private int previousSpeedMultiplier;
   private SharedPreferencesManager sharedPreferencesManager;
   private boolean isRunJSCommand = false;
   public static boolean isFollow = false;
+  private boolean initializeObjectTracking = false;
+  public static boolean isAutopilot = false;
+  private boolean initializeAutopilot = false;
   public static String classType = "person";
-  public static String modelName = "MobileNetV1-300.tflite";
+  public static String modelName = "";
   private Detector detector;
-  private Model model;
+  private Autopilot autopilot;
+  private Model setModel;
   private List<Model> modelList;
   private Bitmap croppedBitmap;
   private Matrix frameToCropTransform;
@@ -117,31 +122,72 @@ public class BlocklyExecutingFragment extends CameraFragment {
         getDevice = Network.Device.NNAPI;
         break;
     }
-    try {
-      detector = Detector.create(requireActivity(), getModel(), getDevice, preferencesManager.getNumThreads());
-      assert detector != null;
-      croppedBitmap =
-              Bitmap.createBitmap(
-                      detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   @Override
   protected void processFrame(Bitmap bitmap, ImageProxy imageProxy) {
-    if (isFollow) followObject(bitmap);
+    if (isFollow) startFollowObject(bitmap);
+    if (isAutopilot) startAutopilot(bitmap);
   }
 
   private Model getModel() {
-    for (Model getModel : modelList){
-      if (getModel.getName().equals(modelName)){
-        model = getModel;
+    for (Model findModel : modelList){
+      if (FileUtils.nameWithoutExtension(findModel.getName()).equals(modelName)){
+        setModel = findModel;
+        System.out.println("sanjeev == " + modelName + " -- " + findModel.getName());
       }
     }
-    return model;
+    return setModel;
   }
-  private void followObject(Bitmap bitmap){
+
+  private void startAutopilot(Bitmap bitmap){
+    if (!initializeAutopilot) {
+      try {
+        autopilot = new Autopilot(requireActivity(), getModel(), getDevice, preferencesManager.getNumThreads());
+        croppedBitmap =
+                Bitmap.createBitmap(
+                        autopilot.getImageSizeX(), autopilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+     initializeAutopilot = true;
+    if (tracker == null) updateCropImageInfo();
+
+    ++frameNum;
+      // If network is busy, return.
+      if (computingNetwork) {
+        return;
+      }
+
+      computingNetwork = true;
+      Timber.i("Putting image " + frameNum + " for detection in bg thread.");
+
+    if (handler != null) {
+      handler.post(()->{
+                final Canvas canvas = new Canvas(croppedBitmap);
+        canvas.drawBitmap(bitmap, frameToCropTransform, null);
+
+                if (autopilot != null) {
+                  Timber.i("Running autopilot on image %s", frameNum);
+                  vehicle.setControl(autopilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
+                }
+                computingNetwork = false;
+              });}
+  }
+  private void startFollowObject(Bitmap bitmap){
+    if (!initializeObjectTracking) {
+      try {
+        detector = Detector.create(requireActivity(), getModel(), getDevice, preferencesManager.getNumThreads());
+        assert detector != null;
+        croppedBitmap =
+                Bitmap.createBitmap(
+                        detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    initializeObjectTracking = true;
     if (tracker == null) updateCropImageInfo();
 
     ++frameNum;
@@ -220,6 +266,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
   }
 
   private void recreateNetwork(Model model, Network.Device device, int numThreads) {
+
     if (model == null) return;
     tracker.clearTrackedObjects();
     if (detector != null) {
@@ -230,21 +277,38 @@ public class BlocklyExecutingFragment extends CameraFragment {
 
     try {
       Timber.d("Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-      detector = Detector.create(requireActivity(), model, device, numThreads);
+      if (isFollow) {
+        detector = Detector.create(requireActivity(), model, device, numThreads);
+        assert detector != null;
+        croppedBitmap =
+                Bitmap.createBitmap(
+                        detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
 
-      assert detector != null;
-      croppedBitmap =
-              Bitmap.createBitmap(
-                      detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
-      frameToCropTransform =
-              ImageUtils.getTransformationMatrix(
-                      getMaxAnalyseImageSize().getWidth(),
-                      getMaxAnalyseImageSize().getHeight(),
-                      croppedBitmap.getWidth(),
-                      croppedBitmap.getHeight(),
-                      sensorOrientation,
-                      detector.getCropRect(),
-                      detector.getMaintainAspect());
+        frameToCropTransform =
+                ImageUtils.getTransformationMatrix(
+                        getMaxAnalyseImageSize().getWidth(),
+                        getMaxAnalyseImageSize().getHeight(),
+                        croppedBitmap.getWidth(),
+                        croppedBitmap.getHeight(),
+                        sensorOrientation,
+                        detector.getCropRect(),
+                        detector.getMaintainAspect());
+
+      } else if (isAutopilot) {
+        autopilot = new Autopilot(requireActivity(), model, device, numThreads);
+        croppedBitmap = Bitmap.createBitmap(
+                autopilot.getImageSizeX(), autopilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
+
+        frameToCropTransform =
+                ImageUtils.getTransformationMatrix(
+                        getMaxAnalyseImageSize().getWidth(),
+                        getMaxAnalyseImageSize().getHeight(),
+                        croppedBitmap.getWidth(),
+                        croppedBitmap.getHeight(),
+                        sensorOrientation,
+                        autopilot.getCropRect(),
+                        autopilot.getMaintainAspect());
+      }
 
       cropToFrameTransform = new Matrix();
       frameToCropTransform.invert(cropToFrameTransform);
@@ -284,10 +348,8 @@ public class BlocklyExecutingFragment extends CameraFragment {
     if (activity != null) {
       activity.runOnUiThread(
           () -> {
-            // store previous speed multiplier value.
-            previousSpeedMultiplier = vehicle.getSpeedMultiplier();
             // set the speed multiplier to maximum value (255) because openBot moving according to
-            vehicle.setSpeedMultiplier(255);
+            vehicle.setSpeedMultiplier(Enums.SpeedMode.FAST.getValue());
             // add a JavaScript interface to the web-view.
             myWebView.addJavascriptInterface(
                 new BotFunctions(
@@ -318,8 +380,12 @@ public class BlocklyExecutingFragment extends CameraFragment {
     vehicle.stopBot();
     // if previous speed multiplier value is not 0, set the speed multiplier back to its previous
     // value when you go back from this screen.
-    if (previousSpeedMultiplier != 0) {
-      vehicle.setSpeedMultiplier(previousSpeedMultiplier);
-    }
+    Enums.SpeedMode speedMode = Enums.SpeedMode.getByID(preferencesManager.getSpeedMode());
+    assert speedMode != null;
+    preferencesManager.setSpeedMode(speedMode.getValue());
+    vehicle.setSpeedMultiplier(speedMode.getValue());
+
+    isAutopilot = false;
+    isFollow = false;
   }
 }
