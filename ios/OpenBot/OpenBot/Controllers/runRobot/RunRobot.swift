@@ -13,8 +13,8 @@ class runRobot: CameraController {
     private var bufferHeight = 0
     private var bufferWidth = 0
     private var result: Control?
-    var detector: Detector?
-    var autopilot: Autopilot?;
+    static var detector: Detector?
+    static var autopilot: Autopilot?;
     private let inferenceQueue = DispatchQueue(label: "openbot.runRobot.inferencequeue")
     private var isInferenceQueueBusy = false
     var vehicleControl: Control = Control()
@@ -38,9 +38,9 @@ class runRobot: CameraController {
         let modelItems = Common.loadAllModelItemsFromBundle()
         if (modelItems.count > 0) {
             let detectorModel = modelItems.first(where: { $0.type == TYPE.DETECTOR.rawValue })
-            detector = try! Detector.create(model: Model.fromModelItem(item: detectorModel ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: 1) as? Detector
+            runRobot.detector = try! Detector.create(model: Model.fromModelItem(item: detectorModel ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: 1) as? Detector
             let autopilotModel = modelItems.first(where: { $0.type == TYPE.AUTOPILOT.rawValue });
-            autopilot = Autopilot(model: Model.fromModelItem(item: autopilotModel ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: 1);
+            runRobot.autopilot = Autopilot(model: Model.fromModelItem(item: autopilotModel ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: 1);
         }
     }
 
@@ -73,7 +73,7 @@ class runRobot: CameraController {
 
     @objc func updateCommandMsg(_ notification: Notification) {
         DispatchQueue.main.async {
-            self.detector?.setSelectedClass(newClass: notification.object as! String)
+            runRobot.detector?.setSelectedClass(newClass: notification.object as! String)
             let message = notification.object as! String
             // Update UI periodically to show all the received messages
             if self.count > 1 {
@@ -172,8 +172,8 @@ class runRobot: CameraController {
         let frameWidth = UIScreen.main.bounds.size.width
         let frameHeight = UIScreen.main.bounds.size.height
 
-        let dx: CGFloat = CGFloat(detector!.getImageSizeX()) / frameWidth
-        let dy: CGFloat = CGFloat(detector!.getImageSizeY()) / frameHeight
+        let dx: CGFloat = CGFloat(runRobot.detector!.getImageSizeX()) / frameWidth
+        let dy: CGFloat = CGFloat(runRobot.detector!.getImageSizeY()) / frameHeight
         let trackedPos = detection.applying(CGAffineTransform(scaleX: dx, y: dy))
 
         // Calculate track box area for distance estimate
@@ -213,7 +213,7 @@ class runRobot: CameraController {
     }
 
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        print("outside of capture",runRobot.isAutopilot , runRobot.isObjectTracking);
+        print("outside of capture", runRobot.isAutopilot, runRobot.isObjectTracking);
         if (runRobot.isObjectTracking || runRobot.isAutopilot) {
             let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
             print("inside capture ")
@@ -238,24 +238,30 @@ class runRobot: CameraController {
         }
     }
 
-    static func enableObjectTracking() {
+    static func enableObjectTracking(object: String, model : String) {
         print("inside test");
         DispatchQueue.main.async {
             runRobot.isObjectTracking = true;
+
         }
+        let currentModel = Common.returnModelItem(modelName: model)
+        print("running ,model ========================", currentModel);
+        detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: .CPU, numThreads: 1) as? Detector
     }
 
-    static func enableAutopilot() {
+    static func enableAutopilot(model : String) {
         print("inside enableAutopilot")
         DispatchQueue.main.async {
             runRobot.isAutopilot = true;
         }
+        let currentModel = Common.returnModelItem(modelName: model)
+        autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: RuntimeDevice.CPU, numThreads: 1);
     }
 
 
     func runObjectTracking(imagePixelBuffer: CVPixelBuffer) {
         self.isInferenceQueueBusy = true
-        let res = self.detector?.recognizeImage(pixelBuffer: imagePixelBuffer);
+        let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer);
         if res != nil {
             if (res!.count > 0) {
                 self.result = self.updateTarget(res!.first!.getLocation())
@@ -285,7 +291,7 @@ class runRobot: CameraController {
     func runAutopilot(imagePixelBuffer: CVPixelBuffer) {
         self.isInferenceQueueBusy = true
         let startTime = Date().millisecondsSince1970
-        self.result = self.autopilot?.recognizeImage(pixelBuffer: imagePixelBuffer, indicator: 0) ?? Control();
+        self.result = runRobot.autopilot?.recognizeImage(pixelBuffer: imagePixelBuffer, indicator: 0) ?? Control();
         guard let controlResult = self.result else {
             return
         }

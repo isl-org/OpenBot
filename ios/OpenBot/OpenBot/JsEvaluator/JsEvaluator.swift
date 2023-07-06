@@ -895,7 +895,7 @@ class jsEvaluator  {
             }
             NotificationCenter.default.post(name: .commandName, object: object);
             print(object,model);
-            runRobot.enableObjectTracking();
+            runRobot.enableObjectTracking(object: object, model: model);
         }
 
         func enableAutopilot(model: String) {
@@ -903,7 +903,7 @@ class jsEvaluator  {
                 return
             }
             print(model);
-            runRobot.enableAutopilot();
+            runRobot.enableAutopilot(model: model);
         }
     }
 }
