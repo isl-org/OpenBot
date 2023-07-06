@@ -227,7 +227,6 @@ export async function getFilterProjects() {
             return true;
         });
     })
-    await getConfigData();
     return filterProjects;
 }
 
@@ -301,19 +300,19 @@ export async function renameProject(projectName, oldName, screen) {
 }
 
 /**
- * function to get config.json data
+ * function to get updated config.json data
  * @returns {Promise<void>}
  */
 export async function getConfigData() {
-    let projects = []
-    await getDriveProjects(projects).then(() => {
-        let configFile = projects.filter((res) => res.projectType === "application/json")
-        if (configFile?.length > 0) {
-            localStorage.setItem(localStorageKeys.configData, configFile[0].projectData)
-        } else {
-            localStorage.setItem(localStorageKeys.configData, " ")
-        }
-    })
+    if (localStorage.getItem("isSigIn") === "true") {
+        let projects = []
+        await getDriveProjects(projects).then(() => {
+            let configFile = projects.filter((res) => res.projectType === "application/json")
+            if (configFile?.length > 0) {
+                localStorage.setItem(localStorageKeys.configData, configFile[0].projectData)
+            }
+        })
+    }
 }
 
 /**
@@ -322,18 +321,22 @@ export async function getConfigData() {
  * @returns {unknown[]|undefined|null}
  */
 export function filterModels(modelType) {
-    let modelsArray = []
-    let updatedData = localStorage.getItem(localStorageKeys.configData)
-    if (updatedData !== " " || null) {
-        let data = JSON.parse(updatedData)?.filter(obj => obj.type === modelType)
-        if (data?.length === 0) {
-            return null
+    if (localStorage.getItem("isSigIn") === "true") {
+        let modelsArray = []
+        let updatedData = localStorage.getItem(localStorageKeys.configData)
+        if (updatedData !== " " || null) {
+            let data = JSON.parse(updatedData)?.filter(obj => obj.type === modelType)
+            if (data?.length === 0) {
+                return null
+            }
+            data?.forEach((item) => {
+                modelsArray.push(item.name.replace(/\.[^/.]+$/, ""))
+            })
+            return modelsArray?.map((type) => [type, type])
+        } else {
+            return null;
         }
-        data?.forEach((item) => {
-            modelsArray.push(item.name.replace(/\.[^/.]+$/, ""))
-        })
-        return modelsArray?.map((type) => [type, type])
     } else {
-        return null
+        return null;
     }
 }
