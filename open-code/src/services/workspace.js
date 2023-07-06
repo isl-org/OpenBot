@@ -227,6 +227,7 @@ export async function getFilterProjects() {
             return true;
         });
     })
+    await getConfigData();
     return filterProjects;
 }
 
@@ -310,6 +311,8 @@ export async function getConfigData() {
             let configFile = projects.filter((res) => res.projectType === "application/json")
             if (configFile?.length > 0) {
                 localStorage.setItem(localStorageKeys.configData, configFile[0].projectData)
+            } else {
+                localStorage.setItem(localStorageKeys.configData, " ");
             }
         })
     }
