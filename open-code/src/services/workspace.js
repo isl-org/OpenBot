@@ -13,7 +13,7 @@ import {
  * @param driveProjects
  * @returns {Promise<void>}
  */
-export async function getDriveProjects(driveProjects) {
+async function getDriveProjects(driveProjects) {
 
     if (localStorage.getItem("isSigIn") === "true") {
         try {
@@ -57,7 +57,7 @@ export async function getDriveProjects(driveProjects) {
  * @returns {Promise<void>}
  * @param projectName
  */
-export async function deleteProjectFromStorage(projectName) {
+async function deleteProjectFromStorage(projectName) {
 
     try {
 
@@ -105,7 +105,7 @@ export async function deleteProjectFromStorage(projectName) {
  * @param projectName
  * @param code
  */
-export function updateCurrentProject(projectName, code) {
+function updateCurrentProject(projectName, code) {
 
     const project = {
         storage: "local",
@@ -147,7 +147,7 @@ export function updateCurrentProject(projectName, code) {
  * get that project which is running currently in work space.
  * @returns {return project data in object}
  */
-export function getCurrentProject() {
+function getCurrentProject() {
     try {
         const getProject = localStorage.getItem(localStorageKeys.currentProject)
         return JSON.parse(getProject)
@@ -160,7 +160,7 @@ export function getCurrentProject() {
  * create new project in local storage
  * @param currentProject
  */
-export function createProjectInLocal(currentProject) {
+function createProjectInLocal(currentProject) {
     const objectCurrentProject = JSON.parse(currentProject)
     const getAllProjects = localStorage.getItem(localStorageKeys.allProjects)
     let projectsArray = JSON.parse(getAllProjects) || []
@@ -172,7 +172,7 @@ export function createProjectInLocal(currentProject) {
 /**
  * get all saved projects from local storage.
  */
-export function getAllLocalProjects() {
+function getAllLocalProjects() {
     try {
         const projects = localStorage.getItem(localStorageKeys.allProjects)
         return JSON.parse(projects)
@@ -183,7 +183,7 @@ export function getAllLocalProjects() {
 /**
  * current project changes save in local storage.
  */
-export function updateLocalProjects() {
+function updateLocalProjects() {
 
     if (getCurrentProject()) {
         let allProjects = getAllLocalProjects()
@@ -202,7 +202,7 @@ export function updateLocalProjects() {
 /**
  * remove duplicate project get from drive and also save in local and give high priority to local project
  */
-export async function getFilterProjects() {
+async function getFilterProjects() {
     let allProjects
     let filterProjects
     let allDriveProjects = [];
@@ -236,7 +236,7 @@ export async function getFilterProjects() {
  * @returns {{currentTime: string, currentDate: string}}
  * @constructor
  */
-export function FormatDate() {
+function FormatDate() {
     const date = new Date();
     const dateOptions = {day: 'numeric', month: 'long', year: 'numeric'};
     const currentDate = date.toLocaleDateString('en-US', dateOptions)
@@ -253,7 +253,7 @@ export function FormatDate() {
  * @param {string} screen - The current screen the user is on. Used to determine whether to refresh the page after renaming the project.
  * @returns {Promise<void>}
  */
-export async function renameProject(projectName, oldName, screen) {
+async function renameProject(projectName, oldName, screen) {
     // Only proceed if the project names are different
     if (projectName !== oldName) {
         // Prepare data for updating local storage and Google Drive
@@ -304,7 +304,7 @@ export async function renameProject(projectName, oldName, screen) {
  * function to get updated config.json data
  * @returns {Promise<void>}
  */
-export async function getConfigData() {
+async function getConfigData() {
     if (localStorage.getItem("isSigIn") === "true") {
         let projects = []
         await getDriveProjects(projects).then(() => {
@@ -323,23 +323,39 @@ export async function getConfigData() {
  * @param modelType
  * @returns {unknown[]|undefined|null}
  */
-export function filterModels(modelType) {
+function filterModels(modelType) {
     if (localStorage.getItem("isSigIn") === "true") {
         let modelsArray = []
         let updatedData = localStorage.getItem(localStorageKeys.configData)
         if (updatedData !== " " || null) {
-            let data = JSON.parse(updatedData)?.filter(obj => obj.type === modelType)
+            let data = JSON.parse(updatedData)?.filter(obj => modelType.includes(obj.type))
             if (data?.length === 0) {
                 return null
+            } else if (data?.length > 0) {
+                data?.forEach((item) => {
+                    modelsArray.push(item.name.replace(/\.[^/.]+$/, ""))
+                })
+                return modelsArray?.map((type) => [type, type])
             }
-            data?.forEach((item) => {
-                modelsArray.push(item.name.replace(/\.[^/.]+$/, ""))
-            })
-            return modelsArray?.map((type) => [type, type])
         } else {
             return null;
         }
     } else {
         return null;
     }
+}
+
+export {
+    getDriveProjects,
+    deleteProjectFromStorage,
+    updateCurrentProject,
+    getCurrentProject,
+    createProjectInLocal,
+    getAllLocalProjects,
+    updateLocalProjects,
+    getFilterProjects,
+    FormatDate,
+    renameProject,
+    getConfigData,
+    filterModels
 }
