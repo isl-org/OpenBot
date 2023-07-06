@@ -3,7 +3,7 @@ import React, {useContext, useEffect} from "react";
 import {HomeCarousel} from "../../components/homeComponents/carousel/carousel";
 import {NewProject} from "../../components/homeComponents/myProjects/newProject";
 import CookiesComponent from "../../components/homeComponents/cookies/cookies";
-import {updateLocalProjects} from "../../services/workspace";
+import {getConfigData, updateLocalProjects} from "../../services/workspace";
 import {ThemeContext} from "../../App";
 
 /**
@@ -17,7 +17,7 @@ function Home() {
         //update local projects if there is any change.
         updateLocalProjects();
     }, [])
-
+    getConfigData().then();
     return (
         <div style={{height: '100vh', backgroundColor: theme === "dark" ? "#202020" : "#f8f9fb"}}>
             <Header/>

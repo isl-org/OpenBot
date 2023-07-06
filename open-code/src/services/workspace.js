@@ -1,6 +1,10 @@
 import {localStorageKeys} from "../utils/constants";
 import {
-    checkFileExistsInFolder, deleteFileFromGoogleDrive, getAllFilesFromGoogleDrive, getFolderId, fileRename,
+    checkFileExistsInFolder,
+    deleteFileFromGoogleDrive,
+    fileRename,
+    getAllFilesFromGoogleDrive,
+    getFolderId,
 } from "./googleDrive";
 
 
@@ -32,7 +36,8 @@ export async function getDriveProjects(driveProjects) {
                         } else {
                             driveProjects?.push({
                                 projectName: doc.name.replace(/\.[^/.]+$/, ""),
-                                projectType: doc.mimeType
+                                projectType: doc.mimeType,
+                                projectData: doc.xmlValue,
                             });
 
                         }
@@ -175,7 +180,6 @@ export function getAllLocalProjects() {
     }
 }
 
-
 /**
  * current project changes save in local storage.
  */
@@ -195,9 +199,8 @@ export function updateLocalProjects() {
     }
 }
 
-
 /**
- * remove duplicate project get from drive and also save in local. and give high priority to local project
+ * remove duplicate project get from drive and also save in local and give high priority to local project
  */
 export async function getFilterProjects() {
     let allProjects
@@ -226,7 +229,6 @@ export async function getFilterProjects() {
     })
     return filterProjects;
 }
-
 
 /**
  * Format Date
@@ -294,5 +296,47 @@ export async function renameProject(projectName, oldName, screen) {
             }
         }
 
+    }
+}
+
+/**
+ * function to get updated config.json data
+ * @returns {Promise<void>}
+ */
+export async function getConfigData() {
+    if (localStorage.getItem("isSigIn") === "true") {
+        let projects = []
+        await getDriveProjects(projects).then(() => {
+            let configFile = projects.filter((res) => res.projectType === "application/json")
+            if (configFile?.length > 0) {
+                localStorage.setItem(localStorageKeys.configData, configFile[0].projectData)
+            }
+        })
+    }
+}
+
+/**
+ * function to filter and set models in blocks
+ * @param modelType
+ * @returns {unknown[]|undefined|null}
+ */
+export function filterModels(modelType) {
+    if (localStorage.getItem("isSigIn") === "true") {
+        let modelsArray = []
+        let updatedData = localStorage.getItem(localStorageKeys.configData)
+        if (updatedData !== " " || null) {
+            let data = JSON.parse(updatedData)?.filter(obj => obj.type === modelType)
+            if (data?.length === 0) {
+                return null
+            }
+            data?.forEach((item) => {
+                modelsArray.push(item.name.replace(/\.[^/.]+$/, ""))
+            })
+            return modelsArray?.map((type) => [type, type])
+        } else {
+            return null;
+        }
+    } else {
+        return null;
     }
 }

@@ -6,6 +6,7 @@ import {getDoc, getFirestore} from "firebase/firestore";
 import {getAuth, signOut} from "firebase/auth";
 import {localStorageKeys} from "../utils/constants";
 import {collection, doc, setDoc} from "@firebase/firestore";
+import {getConfigData} from "./workspace";
 
 
 const firebaseConfig = {
@@ -59,6 +60,7 @@ export async function googleSigIn() {
         const signIn = await auth.signInWithPopup(provider)
         localStorage.setItem("isSigIn", "true");
         localStorage.setItem(localStorageKeys.accessToken, signIn.credential?.accessToken);
+        await getConfigData();
         return signIn
     }
 }
@@ -73,6 +75,7 @@ export async function googleSignOut() {
         window.location.reload()
         localStorage.setItem("isSigIn", "false")
         localStorage.setItem(localStorageKeys.accessToken, " ");
+        localStorage.setItem(localStorageKeys.configData, " ");
     }).catch((error) => {
         console.log("Sign-out error ", error)
     });

@@ -235,7 +235,6 @@ pythonGenerator['brightnessHighOrLow'] = function (block) {
     return code;
 };
 
-
 pythonGenerator['followObjects'] = function (block) {
     let dropdown_follow_objects = block.getFieldValue('follow objects');
     let code = '';
@@ -243,10 +242,10 @@ pythonGenerator['followObjects'] = function (block) {
     return code;
 };
 
-pythonGenerator['navigate'] = function (block) {
-    let dropdown_navigate_models = block.getFieldValue('navigate models');
+pythonGenerator['autopilot'] = function (block) {
+    let dropdown_autopilot_models = block.getFieldValue('autopilot models');
     let code = '';
-    code += "navigationModel('" + dropdown_navigate_models + "')\n"
+    code += "enableAutopilot('" + dropdown_autopilot_models + "')\n"
     return code;
 };
 
@@ -263,5 +262,13 @@ pythonGenerator['navigateXAndY'] = function (block) {
     let positionY = block.getFieldValue('y');
     let code = '';
     code += "reachPosition(" + positionX + "," + positionY + ")\n";
+    return code;
+};
+
+pythonGenerator['objectTracking'] = function (block) {
+    const dropdown_class = block.getFieldValue('class');
+    const dropdown_models = block.getFieldValue('models');
+    let code = "";
+    code += "follow('" + dropdown_class + "','" + dropdown_models + "')\n"
     return code;
 };
