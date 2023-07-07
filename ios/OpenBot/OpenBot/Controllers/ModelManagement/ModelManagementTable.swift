@@ -5,7 +5,7 @@
 import Foundation
 import UIKit
 import DropDown
-
+import GoogleSignIn
 class ModelManagementTable: UITableViewController {
     var blankScreen = UIView()
     var blankScreenWidth: NSLayoutConstraint!
@@ -267,6 +267,11 @@ class ModelManagementTable: UITableViewController {
             downloadModel(modelName: models[indexOfSelectedModel])
             break;
         }
+        do {
+            try self.saveConfigJsonToDrive()
+        } catch {
+            print("Error in saving file to drive");
+        }
     }
 
     /// function to show alert(prompt) on the screen
@@ -378,6 +383,24 @@ class ModelManagementTable: UITableViewController {
             blankScreen.removeFromSuperview();
         }
         updateModelItemList(type: "All")
+    }
+
+    private func saveConfigJsonToDrive() throws {
+        var allModels: [ModelItem] = Common.loadAllModelItems()
+        if GIDSignIn.sharedInstance.currentUser != nil {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.withoutEscapingSlashes]
+            do {
+                let jsonData = try encoder.encode(allModels)
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print(jsonString)
+                    if let data = jsonString.data(using: .utf8) {
+                        Authentication().updateModelListFile(fileData: data)
+                    }
+                }
+            }
+        } else {
+        }
     }
 
 }
