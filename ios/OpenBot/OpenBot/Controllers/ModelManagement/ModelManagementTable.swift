@@ -379,7 +379,6 @@ class ModelManagementTable: UITableViewController {
         }
         updateModelItemList(type: "All")
     }
-
 }
 
 class modelManagementCell: UITableViewCell {
