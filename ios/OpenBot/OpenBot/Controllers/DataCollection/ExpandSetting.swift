@@ -652,7 +652,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         secondView.addSubview(dd);
         dd.translatesAutoresizingMaskIntoConstraints = false
         dd.topAnchor.constraint(equalTo: secondView.topAnchor, constant: topAnchor).isActive = true;
-        dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: leadingAnchor).isActive = true
+        dd.leadingAnchor.constraint(equalTo: secondView.leadingAnchor, constant: leadingAnchor).isActive = true
         dd.widthAnchor.constraint(equalToConstant: 210).isActive = true
         dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
         saveAsDropdownLabel.frame = CGRect(x: 10, y: 0, width: 180, height: 40)
