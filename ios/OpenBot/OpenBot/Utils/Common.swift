@@ -227,4 +227,37 @@ class Common {
         }
     }
 
+    static func modifyModels(modelItem: ModelItem) -> [ModelItem] {
+        var allModels: [ModelItem] = [];
+        let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
+        var isFoundConfigFile: Bool = false;
+        for url in documentDirectoryURls {
+            if url.absoluteString.contains("config.json") {
+                isFoundConfigFile = true
+                break;
+            }
+        }
+        switch isFoundConfigFile {
+        case true:
+            allModels = Common.loadAllModelFromDocumentDirectory()
+        case false:
+            allModels = Common.loadAllModelItemsFromBundle();
+        }
+
+        let newModel = ModelItem.init(id: modelItem.id, class: modelItem.class, type: modelItem.type, name: modelItem.name, pathType: modelItem.pathType, path: modelItem.path, inputSize: modelItem.inputSize)
+        var remainingModels: [ModelItem] = [];
+        var updatedIndex = 0
+        for model in allModels {
+            if (model.name == newModel.name) {
+                let index = newModel.id;
+                allModels[index] = newModel;
+                remainingModels = allModels.filter {
+                    $0.name != newModel.name
+                }
+            }
+        }
+        return remainingModels
+    }
+
 }
+
