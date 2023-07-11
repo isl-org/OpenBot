@@ -153,7 +153,7 @@ class ServerCommunication {
                                 print("file downloaded successfully");
                                 //update the config.json
                                 var allModels = Common.loadAllModelItems();
-                                let model = ModelItem(id: (Common.loadAllModelItems().last?.id ?? Common.loadAllModelItems().count) + 1, class: "AUTOPILOT", type: "CMDNAV", name: name, pathType: "URL", path: "", inputSize: "256x96");
+                                let model = ModelItem(id: (Common.loadAllModelItems().last?.id ?? Common.loadAllModelItems().count) + 1, class: "AUTOPILOT", type: "CMDNAV", name: name, pathType: "FILE", path: "", inputSize: "256x96");
                                 allModels.append(model);
                                 try! Common.saveConfigFileToDocument(modelItems: allModels);
                             } else {
