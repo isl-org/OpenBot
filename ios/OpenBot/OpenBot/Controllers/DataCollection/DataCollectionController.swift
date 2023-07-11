@@ -29,6 +29,7 @@ class DataCollectionController: CameraController {
     private var isImageCaptureQueueBusy = false
     var saveZipFilesName = [URL]()
     var paths: [String] = [""]
+    var selectedSaveAsDropdown: String = "Local";
 
     /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
@@ -65,6 +66,8 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateLogData), name: .logData, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSaveAs), name: .saveAs, object: nil)
+
         gameController.resetControl = false
         //Start the server
         var serverListener = ServerListener();
@@ -115,7 +118,15 @@ class DataCollectionController: CameraController {
                 try fileManager.zipItem(at: sourceURL, to: destinationURL, shouldKeepParent: false)
                 saveZipFilesName.append(destinationURL);
                 if let last = saveZipFilesName.last {
-                    uploadFile(saveZipFilesName: last)
+                    switch selectedSaveAsDropdown {
+                    case "Server":
+                        uploadFile(saveZipFilesName: last)
+                    case "Drive":
+                        uploadFilToDrive(saveZipFilesName: last);
+                    default:
+                        print();
+                    }
+
                 };
             } catch {
                 print(error)
@@ -330,7 +341,10 @@ class DataCollectionController: CameraController {
             toggleLogging()
         }
         if saveZipFilesName.count != 0 {
-            presentActivityController()
+            if selectedSaveAsDropdown == "Local" {
+                presentActivityController()
+            }
+
         }
         _ = navigationController?.popViewController(animated: true)
     }
@@ -356,6 +370,10 @@ class DataCollectionController: CameraController {
         }
     }
 
+    /**
+     Function to upload file on server
+     - Parameter saveZipFilesName:
+     */
     func uploadFile(saveZipFilesName: URL) {
         let fileURL = saveZipFilesName
         guard let fileData = try? Data(contentsOf: fileURL) else {
@@ -405,6 +423,37 @@ class DataCollectionController: CameraController {
             task.resume()
         }
     }
+
+    /**
+     Notofication handler of save as dropdown
+     - Parameter notification:
+     */
+    @objc func updateSaveAs(_ notification: Notification) {
+        if notification.object != nil {
+            selectedSaveAsDropdown = notification.object as! String
+        }
+    }
+
+    /**
+     Function to upload collected data on the google drive
+     - Parameter saveZipFilesName:
+     */
+    func uploadFilToDrive(saveZipFilesName: URL) {
+        if Authentication.googleAuthentication.googleSignIn.currentUser == nil {
+            return
+        }
+        Authentication.googleAuthentication.checkFolderExistsInDrive { folderId in
+            if folderId == String() {
+                Authentication.googleAuthentication.createOpenBotFolder { folderId in
+                    Authentication.googleAuthentication.uploadZipFileToDrive(saveZipFilesName: saveZipFilesName, folderId: folderId)
+                }
+            } else {
+                Authentication.googleAuthentication.uploadZipFileToDrive(saveZipFilesName: saveZipFilesName, folderId: folderId)
+            }
+        }
+    }
+
+
 }
 
 

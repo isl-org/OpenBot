@@ -47,8 +47,10 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     var leftSpeedLabel = UILabel()
     var samplingPeriod: Double = 0.2
     let serverUpwardImage = UIImageView()
+    let saveAsUpwardImage = UIImageView();
     let saveAsDropdown = DropDown();
     let saveAsDropdownLabel = UILabel()
+    var saveAsDropdownView = UIView();
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -639,7 +641,6 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     func createSaveAsView(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIView {
         saveAsDropdown.backgroundColor = Colors.freeRoamButtonsColor
         saveAsDropdown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
-        saveAsDropdown.anchorView = serverDropDownView
         saveAsDropdown.width = 210
         let dd = UIView()
         dd.layer.cornerRadius = 10;
@@ -654,25 +655,30 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         dd.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: leadingAnchor).isActive = true
         dd.widthAnchor.constraint(equalToConstant: 210).isActive = true
         dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        saveAsDropdownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        saveAsDropdownLabel.frame = CGRect(x: 10, y: 0, width: 180, height: 40)
         dd.addSubview(saveAsDropdownLabel);
-        saveAsDropdown.dataSource = ["Server","Drive","Local"]
+        saveAsDropdown.dataSource = ["Server", "Drive", "Local"]
         saveAsDropdown.selectionAction = { [unowned self] (index: Int, item: String) in
-            print(item);
             saveAsDropdownLabel.text = item;
+            NotificationCenter.default.post(name: .saveAs, object: item);
         }
+        saveAsUpwardImage.frame.size = CGSize(width: 5, height: 5)
+        saveAsUpwardImage.image = Images.upwardArrow;
+        dd.addSubview(saveAsUpwardImage);
+        saveAsUpwardImage.translatesAutoresizingMaskIntoConstraints = false;
+        saveAsUpwardImage.trailingAnchor.constraint(equalTo: dd.trailingAnchor, constant: -10).isActive = true;
+        saveAsUpwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 15.5).isActive = true;
+        saveAsDropdown.anchorView = dd
         return dd
     }
 
 
     func createSaveAsDropDown() {
-        let saveAsDdView = createSaveAsView(borderColor: "black", buttonName: "Local", leadingAnchor: 10, topAnchor: 30, action: #selector(showSaveAsDropDown))
-        secondView.addSubview(saveAsDdView);
-
+        saveAsDropdownView = createSaveAsView(borderColor: "black", buttonName: "Local", leadingAnchor: 10, topAnchor: 30, action: #selector(showSaveAsDropDown))
+        secondView.addSubview(saveAsDropdownView);
     }
 
     @objc func showSaveAsDropDown(_ sender: UIButton) {
-        print("showning showSaveAsDropDown");
         saveAsDropdown.show();
     }
 

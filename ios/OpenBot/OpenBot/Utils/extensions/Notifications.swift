@@ -50,6 +50,7 @@ extension Notification.Name {
     static let cancelThread = Notification.Name("cancelThread");
     static let reInitializeCamera = Notification.Name("reInitializeCamera");
     static let commandName = Notification.Name("commandName");
-    static let projectDeleted  = Notification.Name("projectDeleted");
+    static let projectDeleted = Notification.Name("projectDeleted");
     static let server = Notification.Name("server");
+    static let saveAs = Notification.Name("saveAs")
 }
