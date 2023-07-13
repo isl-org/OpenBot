@@ -53,8 +53,10 @@ class ModelManagementTable: UITableViewController {
         modelLabel.frame = CGRect.init(x: 20, y: 5, width: headerView.frame.width - 10, height: headerView.frame.height - 10)
         modelLabel.font = UIFont.boldSystemFont(ofSize: 25.0)
         headerView.addSubview(modelLabel)
-        dropDown = createDropDown()
+        dropDown = createDropDown();
         headerView.addSubview(dropDown);
+        let autoSync = createAutoSync();
+        headerView.addSubview(autoSync);
         return headerView
     }
 
@@ -106,7 +108,7 @@ class ModelManagementTable: UITableViewController {
     /// creating dropdowns.
     func createDropDown() -> UIView {
         let ddView = UIView();
-        ddView.frame = CGRect(x: Int(width) / 2, y: 0, width: Int(width) / 2, height: 50);
+        ddView.frame = CGRect(x: Int(width) / 2, y: 0, width: 100, height: 50);
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showModelDropdown(_:)))
         ddView.addGestureRecognizer(tapGesture)
         modelClassLabel = createLabel(text: "All");
@@ -118,7 +120,7 @@ class ModelManagementTable: UITableViewController {
         ddView.addSubview(downwardImage)
         downwardImage.tintColor = Colors.border
         downwardImage.translatesAutoresizingMaskIntoConstraints = false
-        downwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -30).isActive = true
+        downwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: 0).isActive = true
         downwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
         return ddView
     }
@@ -255,6 +257,16 @@ class ModelManagementTable: UITableViewController {
 
     func addProgressIcon(index: Int) {
 
+    }
+
+    func createAutoSync()->UIImageView{
+        let autoSyncIcon = UIImageView(frame: CGRect(x: width - 60, y: 15, width: 30, height: 25));
+        autoSyncIcon.image = UIImage(systemName: "arrow.triangle.2.circlepath")
+        autoSyncIcon.tintColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black
+        autoSyncIcon.isUserInteractionEnabled = true;
+        let tap = UITapGestureRecognizer(target: self, action: #selector(autoSyncAction(_ :)))
+        autoSyncIcon.addGestureRecognizer(tap)
+        return autoSyncIcon;
     }
 
     /// download function to download the model from URL
@@ -412,7 +424,7 @@ class ModelManagementTable: UITableViewController {
         timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(autoSyncAction), userInfo: nil, repeats: true);
     }
 
-    @objc func autoSyncAction() {
+    @objc func autoSyncAction(_ :UIButton) {
         Authentication.googleAuthentication.downloadConfigFile()
     }
 
