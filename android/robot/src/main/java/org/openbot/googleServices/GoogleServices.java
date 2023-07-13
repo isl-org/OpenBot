@@ -10,6 +10,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.ByteArrayContent;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
@@ -26,11 +27,14 @@ import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -420,6 +424,36 @@ public class GoogleServices {
     return xmlProjectId;
   }
 
+  private String checkPlaygroundFolder(){
+    Drive getDriveService = getDriveService();
+    String pageToken = null;
+    do {
+      try {
+        if (getDriveService != null) {
+          FileList result =
+                  getDriveService
+                          .files()
+                          .list()
+                          .setSpaces("drive")
+                          .setPageToken(pageToken)
+                          .setQ("trashed = false")
+                          .execute();
+          List<File> driveProjectFiles = result.getFiles();
+          for (File driveProjectFile : driveProjectFiles) {
+            if (driveProjectFile.getName().equals("openBot-Playground")) {
+              return driveProjectFile.getId();
+            }
+          }
+          pageToken = result.getNextPageToken();
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+        pageToken = null;
+      }
+    } while (pageToken != null);
+    return null;
+  }
+
   public void createAndUploadJsonFile(List<Model> modelList) {
     Drive getDriveService = getDriveService();
     Gson gson = new GsonBuilder().create();
@@ -459,7 +493,7 @@ public class GoogleServices {
                     if (getOpenBotPlayGroundFile && !getConfigFIle)
                       createModelListFile(modelListContent, openBotPlayGroundFileId);
                     if (!getOpenBotPlayGroundFile && !getConfigFIle)
-                      createOpenBotFolder(modelListContent);
+                      createOpenBotFolder(modelListContent, null);
                     pageToken = result.getNextPageToken();
                   }
                 } catch (IOException e) {
@@ -470,7 +504,7 @@ public class GoogleServices {
             }).start();
   }
 
-  private void createOpenBotFolder(String modelListContent) {
+  private void createOpenBotFolder(String modelListContent, java.io.File zipFile) {
     Drive driveService = getDriveService();
     File fileMetadata = new File();
     fileMetadata.setName("openBot-Playground");
@@ -481,7 +515,8 @@ public class GoogleServices {
         File file = driveService.files().create(fileMetadata)
                 .setFields("id")
                 .execute();
-        createModelListFile(modelListContent, file.getId());
+        if(modelListContent != null) createModelListFile(modelListContent, file.getId());
+        else uploadLogData(zipFile);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -521,6 +556,28 @@ public class GoogleServices {
         }
       }
     }).start();
+  }
+
+  public void uploadLogData(java.io.File zipFile) {
+    Drive getDriveService = getDriveService();
+    String playGroundFolderId = checkPlaygroundFolder();
+    if (playGroundFolderId != null){
+      File fileMetadata = new File();
+      String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+      fileMetadata.setName(fileName).setParents(Collections.singletonList(playGroundFolderId));
+      FileContent fileContent = new FileContent("application/zip", zipFile);
+      new Thread(() -> {
+        try {
+          if (getDriveService != null) {
+            File file = getDriveService.files().create(fileMetadata, fileContent).setFields("id").execute();
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }).start();
+    } else {
+      createOpenBotFolder(null, zipFile);
+    }
   }
 
 }

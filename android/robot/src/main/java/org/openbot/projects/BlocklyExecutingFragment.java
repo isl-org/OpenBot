@@ -46,9 +46,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
   private SharedPreferencesManager sharedPreferencesManager;
   private boolean isRunJSCommand = false;
   public static boolean isFollow = false;
-  private boolean initializeObjectTracking = false;
   public static boolean isAutopilot = false;
-  private boolean initializeAutopilot = false;
   public static String classType = "person";
   public static String modelName = "";
   private Detector detector;
@@ -103,6 +101,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
           vehicle.stopBot();
           vehicle.setIndicator(0);
           isFollow = false;
+          isAutopilot = false;
         });
     // if string js code variable is not null execute js code when you navigate on this fragment.
     if (BarCodeScannerFragment.finalCode != null && isRunJSCommand) {
@@ -134,24 +133,12 @@ public class BlocklyExecutingFragment extends CameraFragment {
     for (Model findModel : modelList){
       if (FileUtils.nameWithoutExtension(findModel.getName()).equals(modelName)){
         setModel = findModel;
-        System.out.println("sanjeev == " + modelName + " -- " + findModel.getName());
       }
     }
     return setModel;
   }
 
   private void startAutopilot(Bitmap bitmap){
-    if (!initializeAutopilot) {
-      try {
-        autopilot = new Autopilot(requireActivity(), getModel(), getDevice, preferencesManager.getNumThreads());
-        croppedBitmap =
-                Bitmap.createBitmap(
-                        autopilot.getImageSizeX(), autopilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
-     initializeAutopilot = true;
     if (tracker == null) updateCropImageInfo();
 
     ++frameNum;
@@ -176,18 +163,6 @@ public class BlocklyExecutingFragment extends CameraFragment {
               });}
   }
   private void startFollowObject(Bitmap bitmap){
-    if (!initializeObjectTracking) {
-      try {
-        detector = Detector.create(requireActivity(), getModel(), getDevice, preferencesManager.getNumThreads());
-        assert detector != null;
-        croppedBitmap =
-                Bitmap.createBitmap(
-                        detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
-    initializeObjectTracking = true;
     if (tracker == null) updateCropImageInfo();
 
     ++frameNum;
@@ -384,8 +359,5 @@ public class BlocklyExecutingFragment extends CameraFragment {
     assert speedMode != null;
     preferencesManager.setSpeedMode(speedMode.getValue());
     vehicle.setSpeedMultiplier(speedMode.getValue());
-
-    isAutopilot = false;
-    isFollow = false;
   }
 }

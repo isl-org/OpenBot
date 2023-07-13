@@ -27,6 +27,8 @@ import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,6 +41,8 @@ import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentLoggerBinding;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.ImageUtils;
+import org.openbot.googleServices.GoogleServices;
+import org.openbot.projects.GoogleSignInCallback;
 import org.openbot.tflite.Model;
 import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.Constants;
@@ -65,6 +69,10 @@ public class LoggerFragment extends CameraFragment {
   private int sensorOrientation;
   private RectF cropRect;
   private boolean maintainAspectRatio;
+  private boolean isServer;
+  private boolean isLocal;
+  private boolean isGoogleDive;
+  private GoogleServices googleServices;
 
   @Override
   public View onCreateView(
@@ -84,6 +92,27 @@ public class LoggerFragment extends CameraFragment {
     setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
     setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));
     setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
+    googleServices = new GoogleServices(requireActivity(), requireContext(), new GoogleSignInCallback() {
+      @Override
+      public void onSignInSuccess(FirebaseUser account) {
+
+      }
+
+      @Override
+      public void onSignInFailed(Exception exception) {
+
+      }
+
+      @Override
+      public void onSignOutSuccess() {
+
+      }
+
+      @Override
+      public void onSignOutFailed(Exception exception) {
+
+      }
+    });
 
     if (vehicle.getConnectionType().equals("USB")) {
       binding.usbToggle.setVisibility(View.VISIBLE);
@@ -122,6 +151,27 @@ public class LoggerFragment extends CameraFragment {
     List<String> models = getModelNames(f -> f.pathType != Model.PATH_TYPE.URL);
     initModelSpinner(binding.modelSpinner, models, "");
     initServerSpinner(binding.serverSpinner);
+
+    binding.saveAs.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (position) {
+          case 0:
+            isLocal = true; isGoogleDive = false; isServer = false;
+            break;
+          case 1:
+            isLocal = false; isGoogleDive = true; isServer = false;
+            break;
+          case 2:
+            isLocal = false; isGoogleDive = false; isServer = true;
+            break;
+        }
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {}
+    });
 
     binding.resolutionSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
@@ -316,9 +366,12 @@ public class LoggerFragment extends CameraFragment {
         () -> {
           try {
             File folder = new File(logFolder);
-            if (!isCancel) {
+            if (!isCancel && isServer) {
               // Zip the log folder and then upload it
               serverCommunication.upload(zip(folder));
+            }
+            if (isGoogleDive) {
+              googleServices.uploadLogData(zip(folder));
             }
             TimeUnit.MILLISECONDS.sleep(500);
             FileUtils.deleteQuietly(folder);
@@ -584,10 +637,5 @@ public class LoggerFragment extends CameraFragment {
             croppedBitmap, logFolder + File.separator + "images", frameNum + "_crop.jpeg");
       }
     }
-  }
-
-  @Override
-  public void onConnectionEstablished(String ipAddress) {
-    requireActivity().runOnUiThread(() -> binding.ipAddress.setText(ipAddress));
   }
 }
