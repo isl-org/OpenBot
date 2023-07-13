@@ -469,7 +469,6 @@ class Authentication {
     }
 
 
-
     private func saveConfigJsonToDrive() throws {
         var allModels: [ModelItem] = Common.loadAllModelItems()
         if GIDSignIn.sharedInstance.currentUser != nil {
@@ -488,7 +487,36 @@ class Authentication {
         }
     }
 
+    func downloadConfigFile() {
+        let configFileId = getIdOfDriveFile(name: "config", fileType: "JSON") { id, error in
+            if let error = error {
+                print(error.localizedDescription);
+            }
+            if let id =  id {
+                self.downloadFile(withId: id, accessToken: self.googleSignIn.currentUser?.accessToken.tokenString ?? "") { data, error in
+                    if let error = error {
+                        print(error);
+                    }
+                    if let data = data {
+                        guard let documentDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                            // Failed to get the document directory URL
+                            return
+                        }
+
+                        let fileURL = documentDirectoryURL.appendingPathComponent("config.json")
+
+                        do {
+                            try data.write(to: fileURL)
+                            // File saved successfully
+                            print("File saved at path: \(fileURL.path)")
+                        } catch {
+                            // Error occurred while saving the file
+                            print("Error saving file: \(error.localizedDescription)")
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
-
-
 

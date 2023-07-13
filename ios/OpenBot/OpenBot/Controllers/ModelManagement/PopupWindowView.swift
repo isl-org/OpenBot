@@ -28,6 +28,7 @@ class popupWindowView: UIView {
     var heightOfModel: String!
     var modelAddress: String = ""
 
+
     /// Initializing function
     init(frame: CGRect, _ modelName: String, _ modelAddress: String, _ pathType: String) {
         super.init(frame: frame)
@@ -56,6 +57,7 @@ class popupWindowView: UIView {
         createSecondInputField()
         createButton(label: Strings.cancel, leadingAnchor: 20, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 100, action: #selector(onCancelBtnTap(_:)))
         createButton(label: Strings.done, leadingAnchor: width / 2 - 50, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 200, action: #selector(onDoneBtnTap(_:)));
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -336,13 +338,13 @@ class popupWindowView: UIView {
 
     /// handler when tapped on the save/done button.
     @objc func onDoneBtnTap(_ sender: UIButton) throws {
-        try Common.saveConfigFileToDocument(modelItems: Common.modifyModels(modelAddress: modelAddress, model: model,widthOfModel: widthOfModel,heightOfModel: heightOfModel));
+        try Common.saveConfigFileToDocument(modelItems: Common.modifyModels(modelAddress: modelAddress, model: model, widthOfModel: widthOfModel, heightOfModel: heightOfModel));
         if let index = model.name.firstIndex(of: ".") {
             if GIDSignIn.sharedInstance.currentUser != nil {
                 let encoder = JSONEncoder()
                 encoder.outputFormatting = [.withoutEscapingSlashes]
                 do {
-                    let jsonData = try encoder.encode(Common.modifyModels(modelAddress: modelAddress, model: model,widthOfModel: widthOfModel,heightOfModel: heightOfModel));
+                    let jsonData = try encoder.encode(Common.modifyModels(modelAddress: modelAddress, model: model, widthOfModel: widthOfModel, heightOfModel: heightOfModel));
                     if let jsonString = String(data: jsonData, encoding: .utf8) {
                         if let data = jsonString.data(using: .utf8) {
                             Authentication().updateModelListFile(fileData: data)

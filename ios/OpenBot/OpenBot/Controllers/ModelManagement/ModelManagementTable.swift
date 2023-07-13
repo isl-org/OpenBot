@@ -6,6 +6,7 @@ import Foundation
 import UIKit
 import DropDown
 import GoogleSignIn
+
 class ModelManagementTable: UITableViewController {
     var blankScreen = UIView()
     var blankScreenWidth: NSLayoutConstraint!
@@ -25,6 +26,7 @@ class ModelManagementTable: UITableViewController {
     var popupWindowTopAnchor: NSLayoutConstraint!
     var dropDown = UIView()
     let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
+    var timer = Timer()
 
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
@@ -36,6 +38,7 @@ class ModelManagementTable: UITableViewController {
         createAddModelButton()
         NotificationCenter.default.addObserver(self, selector: #selector(fileDownloaded), name: .fileDownloaded, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeBlankScreen), name: .removeBlankScreen, object: nil)
+        autoSync();
     }
 
     /// Initialization routine
@@ -123,7 +126,7 @@ class ModelManagementTable: UITableViewController {
     /// creating select model dropdown.
     func createModelSelectorDropDown() {
         modelDropdown.backgroundColor = Colors.freeRoamButtonsColor;
-        modelDropdown.textColor =  traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
+        modelDropdown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
         let dropDownView = UIView(frame: CGRect(x: width / 2 + 20, y: 100, width: width / 2 - 80, height: 200));
         view.addSubview(dropDownView);
         modelDropdown.dataSource = ["All", "AutoPilot", "Detector", "Navigation"];
@@ -362,7 +365,9 @@ class ModelManagementTable: UITableViewController {
 
     @objc func fileDownloaded() {
         alert.dismiss(animated: true);
-        tableView.reloadRows(at: [selectedIndex], with: .bottom)
+        if selectedIndex != nil {
+            tableView.reloadRows(at: [selectedIndex], with: .bottom)
+        }
     }
 
     /// function to remove the black screen and display screen with ALL items.
@@ -402,6 +407,15 @@ class ModelManagementTable: UITableViewController {
         } else {
         }
     }
+
+    private func autoSync() {
+        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(autoSyncAction), userInfo: nil, repeats: true);
+    }
+
+    @objc func autoSyncAction() {
+        Authentication.googleAuthentication.downloadConfigFile()
+    }
+
 
 }
 
