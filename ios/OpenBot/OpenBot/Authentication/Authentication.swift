@@ -507,12 +507,17 @@ class Authentication {
 
                         do {
                             try data.write(to: fileURL)
-                            // File saved successfully
                             print("File saved at path: \(fileURL.path)")
+
                         } catch {
                             // Error occurred while saving the file
                             print("Error saving file: \(error.localizedDescription)")
                         }
+
+                        defer {
+                            NotificationCenter.default.post(name: .autoSynced, object: nil);
+                        }
+
                     }
                 }
             }

@@ -27,6 +27,7 @@ class ModelManagementTable: UITableViewController {
     var dropDown = UIView()
     let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
     var timer = Timer()
+    let autoSyncIcon = UIImageView(frame: CGRect(x: width - 60, y: 15, width: 25, height: 20));
 
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
@@ -38,6 +39,7 @@ class ModelManagementTable: UITableViewController {
         createAddModelButton()
         NotificationCenter.default.addObserver(self, selector: #selector(fileDownloaded), name: .fileDownloaded, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeBlankScreen), name: .removeBlankScreen, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(stopRotatingImageView), name: .autoSynced, object: nil);
         autoSync();
     }
 
@@ -259,12 +261,11 @@ class ModelManagementTable: UITableViewController {
 
     }
 
-    func createAutoSync()->UIImageView{
-        let autoSyncIcon = UIImageView(frame: CGRect(x: width - 60, y: 15, width: 30, height: 25));
+    func createAutoSync() -> UIImageView {
         autoSyncIcon.image = UIImage(systemName: "arrow.triangle.2.circlepath")
         autoSyncIcon.tintColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black
         autoSyncIcon.isUserInteractionEnabled = true;
-        let tap = UITapGestureRecognizer(target: self, action: #selector(autoSyncAction(_ :)))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(autoSyncAction(_:)))
         autoSyncIcon.addGestureRecognizer(tap)
         return autoSyncIcon;
     }
@@ -424,11 +425,26 @@ class ModelManagementTable: UITableViewController {
         timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(autoSyncAction), userInfo: nil, repeats: true);
     }
 
-    @objc func autoSyncAction(_ :UIButton) {
-        Authentication.googleAuthentication.downloadConfigFile()
+    @objc func autoSyncAction(_: UIButton) {
+        Authentication.googleAuthentication.downloadConfigFile();
+        startRotatingImageView();
     }
 
+    func startRotatingImageView() {
+        // Create a CABasicAnimation for continuous rotation
+        let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotationAnimation.toValue = NSNumber(value: Double.pi * 2) // Full circle
+        rotationAnimation.duration = 2.0 // Duration for one rotation
+        rotationAnimation.isCumulative = true // Allows cumulative rotations
+        rotationAnimation.repeatCount = .infinity // Infinite rotation
+        // Add the animation to the image view's layer
+        autoSyncIcon.layer.add(rotationAnimation, forKey: "rotationAnimation")
+    }
 
+    // Stop the rotation if needed
+    @objc func stopRotatingImageView() {
+        autoSyncIcon.layer.removeAnimation(forKey: "rotationAnimation")
+    }
 }
 
 class modelManagementCell: UITableViewCell {
