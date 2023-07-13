@@ -5,7 +5,7 @@ import {javascriptGenerator} from 'blockly/javascript';
 import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import {ThemeContext} from "../../App";
-import {Constants, errorToast} from "../../utils/constants";
+import {Constants, Errors, errorToast} from "../../utils/constants";
 import {
     CircularProgress,
     circularProgressClasses,
@@ -35,7 +35,7 @@ export const BottomBar = () => {
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
     const isDesktopSmallerScreen = useMediaQuery(themes.breakpoints.down('md'));
-
+    const [error, setError] = useState("");
     const {
         isOnline,
         generate,
@@ -59,10 +59,20 @@ export const BottomBar = () => {
                 );
                 const start = workspace.getBlocksByType("start")
                 const forever = workspace.getBlocksByType("forever")
-                if (start.length === 0 && forever.length === 0) {
+                const objectTracking = workspace.getBlocksByType("objectTracking")
+                const autopilot = workspace.getBlocksByType("autopilot")
+                let objectTrackingEnabledBlocks = objectTracking?.filter(obj => obj.disabled === false) //filtering objectTracking connected blocks
+                let autopilotEnabledBlocks = autopilot?.filter(obj => obj.disabled === false) //filtering autopilot connected blocks
+                if ((start.length === 0 && forever.length === 0)) {
                     setDrawer(false);
                     setIsLoader(false);
                     setIsError(true);
+                    setError(Errors.error1)
+                } else if (objectTrackingEnabledBlocks?.length > 0 && autopilotEnabledBlocks?.length > 0) {
+                    setDrawer(false);
+                    setIsLoader(false);
+                    setIsError(true);
+                    setError(Errors.error2)
                 } else {
                     if (start.length > 0)
                         code += "\nstart();";
@@ -101,7 +111,7 @@ export const BottomBar = () => {
 
                 }
             } else {
-                errorToast("Please sign-In to generate QR.")
+                errorToast("Please sign-In to upload code.")
             }
         } else {
             errorToast(Constants.InternetOffMsg)
@@ -218,9 +228,7 @@ export const BottomBar = () => {
                 {isError && <div style={{display: "flex", flexDirection: "column"}}
                                  className={styles.errorDiv}>
                     <div>Compilation failed due to following error(s).</div>
-                    <div className={styles.errorItems}>error 1 : &nbsp;&nbsp; No start or forever block
-                        present in the playground.
-                    </div>
+                    <div className={styles.errorItems}>error 1 : &nbsp;&nbsp; {error}</div>
                 </div>
                 }
                 {isLoader &&

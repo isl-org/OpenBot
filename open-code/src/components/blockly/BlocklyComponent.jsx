@@ -13,6 +13,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {checkFileExistsInFolder, getFolderId, getShareableLink} from "../../services/googleDrive";
 import {RightDrawer} from "../drawer/drawer";
 import {useLocation} from "react-router-dom";
+import {ModelUploadingComponent} from "./blocks/ModelUploadingComponent";
 
 
 Blockly.setLocale(locale);
@@ -183,6 +184,9 @@ function BlocklyComponent(props) {
 
         //handle start and forever duplicate blocks occurrence
         primaryWorkspace.current.addChangeListener(handleDuplicateBlocks);
+
+        //button for uploading new models
+        primaryWorkspace.current.registerButtonCallback("uploadFile", ModelUploadingComponent);
 
         // Load XML code into the workspace if it exists, otherwise load initial XML code
         if (currentProjectXml) {

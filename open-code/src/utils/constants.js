@@ -70,12 +70,16 @@ export const Constants = {
     py: "py",
     qr: "qr",
     xml: "xml",
-    InternetOffMsg: "Please check your internet connection."
-
+    InternetOffMsg: "Please check your internet connection.",
 }
 
-export const Category =[
-    "js","py",
+export const Errors = {
+    error1: "No start or forever block present in the playground.",
+    error2: "More than one AI blocks enabled in the playground ",
+}
+
+export const Category = [
+    "js", "py",
 ]
 
 export const PathName = {
