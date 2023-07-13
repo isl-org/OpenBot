@@ -259,6 +259,13 @@ class Common {
         return allModels
     }
 
+    /**
+     Function overloaded to modify model if it is downloaded to the drive or being deleted
+     - Parameters:
+       - model:
+       - isDelete:
+     - Returns:
+     */
     static func modifyModel(model: ModelItem, isDelete: Bool) -> [ModelItem] {
         var allModels: [ModelItem] = [];
         let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();

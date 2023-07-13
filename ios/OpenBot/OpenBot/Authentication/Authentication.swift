@@ -468,7 +468,10 @@ class Authentication {
         }
     }
 
-
+    /**
+     function to save config file to the drive
+     - Throws:
+     */
      func saveConfigJsonToDrive() throws {
         var allModels: [ModelItem] = Common.loadAllModelItems()
         if GIDSignIn.sharedInstance.currentUser != nil {
@@ -486,7 +489,9 @@ class Authentication {
         } else {
         }
     }
-
+    /**
+     function to download the config.json from the drive
+     */
     func downloadConfigFile() {
         let configFileId = getIdOfDriveFile(name: "config", fileType: "JSON") { id, error in
             if let error = error {
@@ -517,7 +522,6 @@ class Authentication {
                         defer {
                             NotificationCenter.default.post(name: .autoSynced, object: nil);
                         }
-
                     }
                 }
             }

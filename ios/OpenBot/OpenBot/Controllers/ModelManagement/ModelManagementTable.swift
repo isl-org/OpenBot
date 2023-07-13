@@ -412,6 +412,10 @@ class ModelManagementTable: UITableViewController {
         updateModelItemList(type: "All")
     }
 
+    /**
+     Function to save config file to drive
+     - Throws:
+     */
     private func saveConfigJsonToDrive() throws {
         let allModels: [ModelItem] = Common.loadAllModelItems()
         if GIDSignIn.sharedInstance.currentUser != nil {
@@ -430,15 +434,24 @@ class ModelManagementTable: UITableViewController {
         }
     }
 
+    /**
+     Function to start the auto sync timer
+     */
     @objc func autoSync() {
         timer = Timer.scheduledTimer(timeInterval: 300, target: self, selector: #selector(autoSyncAction), userInfo: nil, repeats: true);
     }
 
+    /**
+     Action performed after auto sync button tapped
+     */
     @objc func autoSyncAction(_: UIButton) {
         Authentication.googleAuthentication.downloadConfigFile();
         startRotatingImageView();
     }
 
+    /**
+     Function  to start the rotation of sync icon
+     */
     func startRotatingImageView() {
         // Create a CABasicAnimation for continuous rotation
         let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
@@ -450,7 +463,7 @@ class ModelManagementTable: UITableViewController {
         autoSyncIcon.layer.add(rotationAnimation, forKey: "rotationAnimation")
     }
 
-    // Stop the rotation if needed
+    /// Stop the rotation if needed
     @objc func stopRotatingImageView() {
         autoSyncIcon.layer.removeAnimation(forKey: "rotationAnimation")
     }
