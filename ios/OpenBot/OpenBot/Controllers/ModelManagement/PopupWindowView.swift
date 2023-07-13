@@ -347,7 +347,7 @@ class popupWindowView: UIView {
                     let jsonData = try encoder.encode(Common.modifyModels(modelAddress: modelAddress, model: model, widthOfModel: widthOfModel, heightOfModel: heightOfModel));
                     if let jsonString = String(data: jsonData, encoding: .utf8) {
                         if let data = jsonString.data(using: .utf8) {
-                            Authentication().updateModelListFile(fileData: data)
+                            Authentication().updateModelListFile(fileData: data);
                         }
                     }
                 }

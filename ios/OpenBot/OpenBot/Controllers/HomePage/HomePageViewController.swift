@@ -81,10 +81,8 @@ class HomePageViewController: CameraController, UICollectionViewDataSource, UICo
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
-
         gameController.resetControl = true
         setupOpenCodeIcon();
-
     }
 
     override func initializeCamera() {
@@ -190,7 +188,6 @@ class HomePageViewController: CameraController, UICollectionViewDataSource, UICo
     }
 
     @objc func clientDisconnected(_ notification: Notification) {
-        print("inside clientDisconnected")
         isClientConnected = false
         stopSession()
     }

@@ -469,7 +469,7 @@ class Authentication {
     }
 
 
-    private func saveConfigJsonToDrive() throws {
+     func saveConfigJsonToDrive() throws {
         var allModels: [ModelItem] = Common.loadAllModelItems()
         if GIDSignIn.sharedInstance.currentUser != nil {
             let encoder = JSONEncoder()
@@ -479,7 +479,7 @@ class Authentication {
                 if let jsonString = String(data: jsonData, encoding: .utf8) {
                     print(jsonString)
                     if let data = jsonString.data(using: .utf8) {
-                        Authentication().updateModelListFile(fileData: data)
+                        Authentication().updateModelListFile(fileData: data);
                     }
                 }
             }

@@ -40,7 +40,7 @@ class ModelManagementTable: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(fileDownloaded), name: .fileDownloaded, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeBlankScreen), name: .removeBlankScreen, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(stopRotatingImageView), name: .autoSynced, object: nil);
-        autoSync();
+        autoSync()
     }
 
     /// Initialization routine
@@ -206,7 +206,8 @@ class ModelManagementTable: UITableViewController {
             cell.downloadIconView.isHidden = true;
             return cell;
         }
-        if Common.returnModelItem(modelName: models[indexPath.item]).pathType == "ASSET" {
+        if Common.returnModelItem(modelName: models[indexPath.item]).pathType == "ASSET" || Common.returnModelItem(modelName: models[indexPath.item]).pathType == "" ||
+                   Common.returnModelItem(modelName: models[indexPath.item]).path == "" {
             cell.downloadIconView.isHidden = true;
             return cell;
         }
@@ -284,7 +285,7 @@ class ModelManagementTable: UITableViewController {
             break;
         }
         do {
-            try self.saveConfigJsonToDrive()
+            try saveConfigJsonToDrive()
         } catch {
             print("Error in saving file to drive");
         }
@@ -319,6 +320,12 @@ class ModelManagementTable: UITableViewController {
             let url = URL.init(string: model.path)!
             FileDownloader.loadFileAsync(url: url, completion: { s, error in
                 print("File downloaded to : \(s!)")
+                do {
+                    try Common.saveConfigFileToDocument(modelItems: Common.modifyModel(model: model, isDelete: false))
+                    try Authentication.googleAuthentication.saveConfigJsonToDrive();
+                } catch {
+                    print("unable to save config file to document");
+                }
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .fileDownloaded, object: nil);
                 }
@@ -354,9 +361,11 @@ class ModelManagementTable: UITableViewController {
         let filesPath = DataLogger.shared.getDocumentDirectoryInformation()
         for url in filesPath {
             if Common.returnModelItem(modelName: modelName).name == url.lastPathComponent {
-                DataLogger.shared.deleteFiles(fileNameToDelete: url.lastPathComponent)
+                DataLogger.shared.deleteFiles(fileNameToDelete: url.lastPathComponent);
             }
         }
+        let model = Common.returnModelItem(modelName: modelName);
+        Common.modifyModel(model: model, isDelete: true);
         tableView.reloadRows(at: [selectedIndex], with: .bottom)
     }
 
@@ -404,7 +413,7 @@ class ModelManagementTable: UITableViewController {
     }
 
     private func saveConfigJsonToDrive() throws {
-        var allModels: [ModelItem] = Common.loadAllModelItems()
+        let allModels: [ModelItem] = Common.loadAllModelItems()
         if GIDSignIn.sharedInstance.currentUser != nil {
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.withoutEscapingSlashes]
@@ -421,8 +430,8 @@ class ModelManagementTable: UITableViewController {
         }
     }
 
-    private func autoSync() {
-        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(autoSyncAction), userInfo: nil, repeats: true);
+    @objc func autoSync() {
+        timer = Timer.scheduledTimer(timeInterval: 300, target: self, selector: #selector(autoSyncAction), userInfo: nil, repeats: true);
     }
 
     @objc func autoSyncAction(_: UIButton) {
