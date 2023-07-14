@@ -262,6 +262,10 @@ class ModelManagementTable: UITableViewController {
 
     }
 
+    /**
+     Function to create auto sync button
+     - Returns:
+     */
     func createAutoSync() -> UIImageView {
         autoSyncIcon.image = UIImage(systemName: "arrow.triangle.2.circlepath")
         autoSyncIcon.tintColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black
