@@ -27,7 +27,10 @@ class ModelManagementTable: UITableViewController {
     var dropDown = UIView()
     let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
     var timer = Timer()
-    let autoSyncIcon = UIImageView(frame: CGRect(x: width - 60, y: 15, width: 25, height: 20));
+    let autoSyncIcon = currentOrientation == .portrait ? UIImageView(frame: CGRect(x: width - 60, y: 15, width: 25, height: 20)) :
+            UIImageView(frame: CGRect(x: height - 100, y: 15, width: 25, height: 20))
+    let dropDownView = currentOrientation == .portrait ? UIView(frame: CGRect(x: width / 2, y: 70, width: width / 2 - 80, height: 200)) :
+            UIView(frame: CGRect(x: height / 2, y: 70, width: width / 2 - 80, height: 200));
 
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
@@ -52,9 +55,12 @@ class ModelManagementTable: UITableViewController {
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 50));
         let modelLabel = createLabel(text: "Model");
-        modelLabel.frame = CGRect.init(x: 20, y: 5, width: headerView.frame.width - 10, height: headerView.frame.height - 10)
+        modelLabel.frame.size = CGSize(width: headerView.frame.width - 10, height: headerView.frame.height - 10);
         modelLabel.font = UIFont.boldSystemFont(ofSize: 25.0)
         headerView.addSubview(modelLabel)
+        modelLabel.translatesAutoresizingMaskIntoConstraints = false;
+        modelLabel.leadingAnchor.constraint(equalTo: headerView.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true;
+        modelLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 5).isActive = true;
         dropDown = createDropDown();
         headerView.addSubview(dropDown);
         let autoSync = createAutoSync();
@@ -72,8 +78,13 @@ class ModelManagementTable: UITableViewController {
         super.viewWillTransition(to: size, with: coordinator)
         if currentOrientation == .portrait {
             dropDown.frame.origin.x = width / 2;
+            dropDownView.frame.origin = CGPoint(x: width / 2, y: 70);
+            autoSyncIcon.frame.origin = CGPoint(x: width - 60, y: 15);
         } else {
             dropDown.frame.origin.x = height / 2;
+            dropDownView.frame.origin = CGPoint(x: height / 2, y: 70);
+            autoSyncIcon.frame.origin = CGPoint(x: height - 100, y: 15);
+
         }
     }
 
@@ -131,7 +142,6 @@ class ModelManagementTable: UITableViewController {
     func createModelSelectorDropDown() {
         modelDropdown.backgroundColor = Colors.freeRoamButtonsColor;
         modelDropdown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
-        let dropDownView = UIView(frame: CGRect(x: width / 2 + 20, y: 100, width: width / 2 - 80, height: 200));
         view.addSubview(dropDownView);
         modelDropdown.dataSource = ["All", "AutoPilot", "Detector", "Navigation"];
         modelDropdown.anchorView = dropDownView
