@@ -76,6 +76,8 @@ class ModelManagementTable: UITableViewController {
     /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        blankScreen.removeFromSuperview();
+        popupWindow.removeFromSuperview();
         if currentOrientation == .portrait {
             dropDown.frame.origin.x = width / 2;
             dropDownView.frame.origin = CGPoint(x: width / 2, y: 70);
