@@ -2,6 +2,7 @@ package org.openbot.projects;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -360,7 +361,10 @@ public class BotFunctions implements SensorEventListener {
 
   @JavascriptInterface
   public void follow(String object, String modelName) {
-    mActivity.runOnUiThread(() -> binding.jsCommand.setText("Follow " + object + " using " + modelName));
+    mActivity.runOnUiThread(() -> {
+      binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT);
+      binding.jsCommand.setText("Follow " + object + " using " + modelName);
+    });
     BlocklyExecutingFragment.modelName = modelName;
     BlocklyExecutingFragment.classType = object;
     BlocklyExecutingFragment.isFollow = true;
@@ -368,7 +372,10 @@ public class BotFunctions implements SensorEventListener {
 
   @JavascriptInterface
   public void enableAutopilot(String modelName) {
-    mActivity.runOnUiThread(() -> binding.jsCommand.setText("startAutopilot using " + modelName));
+    mActivity.runOnUiThread(() -> {
+      binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT);
+      binding.jsCommand.setText("Start Autopilot using " + modelName);
+    });
     BlocklyExecutingFragment.modelName = modelName;
     BlocklyExecutingFragment.isAutopilot = true;
   }

@@ -41,8 +41,6 @@
             android:layout_height="wrap_content"
             android:rotationY="-200"
             android:src="@drawable/ic_auto_sync"/>
-
-
     </LinearLayout>
 
     <View
