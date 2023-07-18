@@ -119,7 +119,7 @@ export function Header() {
                             setIsEditProfileModal={setIsEditProfileModal}
                             setIsLogoutModal={setIsLogoutModal}
                             setEditProfileLoaderOpen={setEditProfileLoaderOpen}
-                            setIsHelpCenterModal={setIsHelpCenterModal} isDobChanged={isDobChanged} />
+                            setIsHelpCenterModal={setIsHelpCenterModal} isDobChanged={isDobChanged}/>
                     }
                     {/*edit profile pop up */}
                     {editProfileLoaderOpen && <SimpleBackdrop/>}

@@ -27,6 +27,14 @@
     padding-top: 0.8rem;
 }
 
+.modelHeading{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-family: Gilroy-Medium, sans-serif;
+}
+
 
 .listStyle {
     display: flex;

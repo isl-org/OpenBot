@@ -6,7 +6,7 @@ import {getDoc, getFirestore} from "firebase/firestore";
 import {getAuth, signOut} from "firebase/auth";
 import {localStorageKeys} from "../utils/constants";
 import {collection, doc, setDoc} from "@firebase/firestore";
-import {getConfigData} from "./workspace";
+import {setConfigData} from "./workspace";
 
 
 const firebaseConfig = {
@@ -60,7 +60,7 @@ export async function googleSigIn() {
         const signIn = await auth.signInWithPopup(provider)
         localStorage.setItem("isSigIn", "true");
         localStorage.setItem(localStorageKeys.accessToken, signIn.credential?.accessToken);
-        await getConfigData();
+        await setConfigData();
         return signIn
     }
 }

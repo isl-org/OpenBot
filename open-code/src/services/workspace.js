@@ -227,7 +227,7 @@ async function getFilterProjects() {
             return true;
         });
     })
-    await getConfigData();
+    await setConfigData();
     return filterProjects;
 }
 
@@ -301,10 +301,10 @@ async function renameProject(projectName, oldName, screen) {
 }
 
 /**
- * function to get updated config.json data
+ * function to set updated config.json data
  * @returns {Promise<void>}
  */
-async function getConfigData() {
+async function setConfigData() {
     if (localStorage.getItem("isSigIn") === "true") {
         let projects = []
         await getDriveProjects(projects).then(() => {
@@ -315,6 +315,19 @@ async function getConfigData() {
                 localStorage.setItem(localStorageKeys.configData, " ");
             }
         })
+    }
+}
+
+function getConfigData() {
+    try {
+        let models = localStorage.getItem(localStorageKeys.configData)
+        if (models === " " || null) {
+            return [];
+        } else {
+            return JSON.parse(models)
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
 
@@ -356,6 +369,7 @@ export {
     getFilterProjects,
     FormatDate,
     renameProject,
-    getConfigData,
-    filterModels
+    setConfigData,
+    filterModels,
+    getConfigData
 }

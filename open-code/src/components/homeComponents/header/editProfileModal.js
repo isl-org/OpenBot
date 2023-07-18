@@ -20,7 +20,7 @@ import firebase from "firebase/compat/app";
  * @constructor
  */
 export function EditProfileModal(props) {
-    const {isEditProfileModal, setIsEditProfileModal, user, isDob,setIsDobChanged} = props
+    const {isEditProfileModal, setIsEditProfileModal, user, isDob, setIsDobChanged} = props
     const inputRef = useRef();
     const {theme} = useContext(ThemeContext);
     const {isOnline} = useContext(StoreContext);
