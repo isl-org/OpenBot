@@ -1,7 +1,10 @@
 package org.openbot.googleServices;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.widget.ImageView;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -18,6 +21,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.google.common.reflect.TypeToken;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -578,6 +582,50 @@ public class GoogleServices {
     } else {
       createOpenBotFolder(null, zipFile);
     }
+  }
+
+  public void getConfigFileContent(ObjectAnimator rotation, ImageView icon) {
+    Drive driveService = getDriveService();
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    new Thread(() -> {
+      String pageToken = null;
+      do {
+        try {
+          if (driveService != null) {
+            FileList result =
+                    driveService
+                            .files()
+                            .list()
+                            .setSpaces("drive")
+                            .setPageToken(pageToken)
+                            .setQ("trashed = false")
+                            .execute();
+            List<File> driveProjectFiles = result.getFiles();
+            String projectCommands;
+            for (File driveProjectFile : driveProjectFiles) {
+              if (driveProjectFile.getName().equals("config.json")) {
+                // Read the content of the file
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                driveService
+                        .files()
+                        .get(driveProjectFile.getId())
+                        .executeMediaAndDownloadTo(outputStream);
+                projectCommands = outputStream.toString();
+                List<Model> modelList = gson.fromJson(projectCommands, new TypeToken<List<Model>>(){}.getType());
+                FileUtils.updateModelConfig(mActivity, mContext, modelList);
+                break;
+              }
+            }
+            rotation.pause();
+            icon.setRotation(0f);
+            pageToken = result.getNextPageToken();
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
+          pageToken = null;
+        }
+      } while (pageToken != null);
+    }).start();
   }
 
 }
