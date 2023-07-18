@@ -76,17 +76,25 @@ class ModelManagementTable: UITableViewController {
     /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        blankScreen.removeFromSuperview();
-        popupWindow.removeFromSuperview();
         if currentOrientation == .portrait {
             dropDown.frame.origin.x = width / 2;
             dropDownView.frame.origin = CGPoint(x: width / 2, y: 70);
             autoSyncIcon.frame.origin = CGPoint(x: width - 60, y: 15);
+            blankScreen.frame.size = CGSize(width: width, height: CGFloat(60 * models.count) + 80);
+            popupWindowLeadingAnchor.constant = 10;
+            popupWindowHeight.constant = 400;
+            popupWindowWidth.constant = width - 20;
+            popupWindowTopAnchor.constant = 100;
+
         } else {
             dropDown.frame.origin.x = height / 2;
             dropDownView.frame.origin = CGPoint(x: height / 2, y: 70);
             autoSyncIcon.frame.origin = CGPoint(x: height - 100, y: 15);
-
+            blankScreen.frame.size = CGSize(width: height, height: CGFloat(60 * models.count) + 80);
+            popupWindowLeadingAnchor.constant = height / 2 - width / 2
+            popupWindowHeight.constant = 400;
+            popupWindowWidth.constant = width + 20;
+            popupWindowTopAnchor.constant = -50;
         }
     }
 
@@ -184,18 +192,15 @@ class ModelManagementTable: UITableViewController {
     /// function to create the black screen.
     func createBlankScreen() {
         view.addSubview(blankScreen);
+        tableView.isScrollEnabled = false;
+        tableView.allowsSelection = false
         blankScreen.backgroundColor = Colors.freeRoamButtonsColor;
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
         blankScreen.addGestureRecognizer(tap)
+        blankScreen.isUserInteractionEnabled = false
         blankScreen.translatesAutoresizingMaskIntoConstraints = false
-        if currentOrientation == .portrait {
-            blankScreenWidth = blankScreen.widthAnchor.constraint(equalToConstant: width);
-            blankScreenHeight = blankScreen.heightAnchor.constraint(equalToConstant: height);
-        } else {
-            blankScreenWidth = blankScreen.widthAnchor.constraint(equalToConstant: height);
-            blankScreenHeight = blankScreen.heightAnchor.constraint(equalToConstant: width);
-        }
-        NSLayoutConstraint.activate([blankScreenWidth, blankScreenHeight]);
+        blankScreen.frame.size = currentOrientation == .portrait ? CGSize(width: width, height: CGFloat(60 * models.count) + 80) :
+                CGSize(width: height, height: CGFloat(60 * models.count) + 80)
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -365,7 +370,7 @@ class ModelManagementTable: UITableViewController {
             popupWindowHeight = popupWindow.heightAnchor.constraint(equalToConstant: width);
             popupWindowHeight.isActive = true;
             popupWindowWidth = popupWindow.widthAnchor.constraint(equalToConstant: width + 20);
-            popupWindowLeadingAnchor = popupWindow.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25)
+            popupWindowLeadingAnchor = popupWindow.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: height / 2 - width / 2)
             popupWindowTopAnchor = popupWindow.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -50)
         }
         NSLayoutConstraint.activate([popupWindowWidth, popupWindowTopAnchor, popupWindowLeadingAnchor])
@@ -412,6 +417,8 @@ class ModelManagementTable: UITableViewController {
     @objc func removeBlankScreen(_ notification: Notification) {
         if notification.object == nil {
             blankScreen.removeFromSuperview();
+            tableView.isScrollEnabled = true;
+            tableView.allowsSelection = true
             updateModelItemList(type: "All")
             return;
         }
@@ -440,7 +447,6 @@ class ModelManagementTable: UITableViewController {
             do {
                 let jsonData = try encoder.encode(allModels)
                 if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    print(jsonString)
                     if let data = jsonString.data(using: .utf8) {
                         Authentication().updateModelListFile(fileData: data)
                     }

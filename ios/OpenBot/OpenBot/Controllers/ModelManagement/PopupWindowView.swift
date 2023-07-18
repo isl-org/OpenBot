@@ -9,7 +9,6 @@ import GoogleSignIn
 
 
 class popupWindowView: UIView {
-    var textFieldLeadingConstraints: NSLayoutConstraint!
     var typeDropdown = DropDown()
     var typeDropdownView = UIView()
     var modelName: String = ""
@@ -21,8 +20,6 @@ class popupWindowView: UIView {
     var classDropdownLeadingAnchor: NSLayoutConstraint!
     var firstBox = UIView()
     var secondBox = UIView()
-    var firstBoxLeadingAnchor: NSLayoutConstraint!
-    var secondBoxLeadingAnchor: NSLayoutConstraint!
     var model: ModelItem!
     var widthOfModel: String!
     var heightOfModel: String!
@@ -40,7 +37,7 @@ class popupWindowView: UIView {
         addGestureRecognizer(tap)
         createHeading();
         _ = createLabel(text: Strings.name, leadingAnchor: 20, topAnchor: 60);
-        _ = createTextField(text: modelName, trailingAnchor: -width / 2 - 50, topAnchor: 50);
+        _ = createTextField(text: modelName, trailingAnchor: 300, topAnchor: 50);
         createtfliteLabel()
         createEditIcon()
         _ = createLabel(text: Strings.type, leadingAnchor: 20, topAnchor: 130);
@@ -57,33 +54,12 @@ class popupWindowView: UIView {
         createSecondInputField()
         createButton(label: Strings.cancel, leadingAnchor: 20, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 100, action: #selector(onCancelBtnTap(_:)))
         createButton(label: Strings.done, leadingAnchor: width / 2 - 50, backgroundColor: Colors.freeRoamButtonsColor!, buttonWidth: 200, action: #selector(onDoneBtnTap(_:)));
-
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
-
-    /// creating portrait and landscape views.
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if currentOrientation == .portrait {
-            textFieldLeadingConstraints.constant = -width / 2 - 50
-            headingLeadingAnchor.constant = width / 2 - CGFloat(Strings.modelDetails.count * 5)
-            typeDropdownLeadingAnchor.constant = -width / 2 - 50
-            classDropdownLeadingAnchor.constant = -width / 2 - 50
-            firstBox.frame.origin = CGPoint(x: width / 2 - 50, y: 250)
-            secondBox.frame.origin = CGPoint(x: width / 2 + 50, y: 250);
-        } else {
-            textFieldLeadingConstraints.constant = -height / 2 - 50
-            headingLeadingAnchor.constant = height / 2 - CGFloat(Strings.modelDetails.count * 5)
-            typeDropdownLeadingAnchor.constant = -height / 2 - 50
-            classDropdownLeadingAnchor.constant = -height / 2 - 50
-            firstBox.frame.origin = CGPoint(x: height / 2 - 50, y: 250)
-            secondBox.frame.origin = CGPoint(x: height / 2 + 50, y: 250);
-        }
-    }
 
     /// function to setup models list.
     func setupModelItem() {
@@ -127,16 +103,11 @@ class popupWindowView: UIView {
 
     /// function to create text fields.
     func createTextField(text: String, trailingAnchor: CGFloat, topAnchor: CGFloat) -> UITextField {
-        let textField = UITextField();
+        let textField = UITextField(frame: CGRect(x: 120, y: 50, width: 170, height: 60));
+        textField.layer.borderWidth = 1;
         textField.text = text
         addSubview(textField);
         textField.addTarget(self, action: #selector(nameDidChange(_:)), for: .editingChanged);
-        textField.translatesAutoresizingMaskIntoConstraints = false;
-        textField.widthAnchor.constraint(equalToConstant: 170).isActive = true;
-        textField.heightAnchor.constraint(equalToConstant: 60).isActive = true;
-        textFieldLeadingConstraints = textField.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: trailingAnchor)
-        textFieldLeadingConstraints.isActive = true;
-        textField.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topAnchor).isActive = true;
         return textField;
     }
 
@@ -244,10 +215,10 @@ class popupWindowView: UIView {
 
     /// function to create box
     func createBox(isFirst: Bool) -> UIView {
-        let box = UIView();
+        let box = isFirst ? UIView(frame: CGRect(x: 120, y:  250, width: 50, height: 40)) :
+                UIView(frame: CGRect(x: 250, y: 250, width: 50, height: 40))
         box.layer.borderColor = Colors.border?.cgColor;
         box.layer.borderWidth = 1;
-        box.frame.size = CGSize(width: 50, height: 40);
         return box
     }
 
