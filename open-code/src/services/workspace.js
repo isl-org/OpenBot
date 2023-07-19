@@ -6,7 +6,7 @@ import {
     getAllFilesFromGoogleDrive,
     getFolderId,
 } from "./googleDrive";
-
+import configData from "../config.json"
 
 /**
  * get project from drive when user signedIn
@@ -203,6 +203,7 @@ function updateLocalProjects() {
  * remove duplicate project get from drive and also save in local and give high priority to local project
  */
 async function getFilterProjects() {
+    await setConfigData();
     let allProjects
     let filterProjects
     let allDriveProjects = [];
@@ -227,7 +228,6 @@ async function getFilterProjects() {
             return true;
         });
     })
-    await getConfigData();
     return filterProjects;
 }
 
@@ -301,10 +301,10 @@ async function renameProject(projectName, oldName, screen) {
 }
 
 /**
- * function to get updated config.json data
+ * function to set updated config.json data
  * @returns {Promise<void>}
  */
-async function getConfigData() {
+async function setConfigData() {
     if (localStorage.getItem("isSigIn") === "true") {
         let projects = []
         await getDriveProjects(projects).then(() => {
@@ -312,9 +312,24 @@ async function getConfigData() {
             if (configFile?.length > 0) {
                 localStorage.setItem(localStorageKeys.configData, configFile[0].projectData)
             } else {
-                localStorage.setItem(localStorageKeys.configData, " ");
+                localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData));
             }
         })
+    } else {
+        localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData));
+    }
+}
+
+function getConfigData() {
+    try {
+        let models = localStorage.getItem(localStorageKeys.configData)
+        if (models === " " || null) {
+            return [];
+        } else {
+            return JSON.parse(models)
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
 
@@ -324,26 +339,23 @@ async function getConfigData() {
  * @returns {unknown[]|undefined|null}
  */
 function filterModels(modelType) {
-    if (localStorage.getItem("isSigIn") === "true") {
-        let modelsArray = []
-        let updatedData = localStorage.getItem(localStorageKeys.configData)
-        if (updatedData !== " " || null) {
-            let data = JSON.parse(updatedData)?.filter(obj => modelType.includes(obj.type))
-            if (data?.length === 0) {
-                return null
-            } else if (data?.length > 0) {
-                data?.forEach((item) => {
-                    modelsArray.push(item.name.replace(/\.[^/.]+$/, ""))
-                })
-                return modelsArray?.map((type) => [type, type])
-            }
-        } else {
-            return null;
+    let modelsArray = []
+    let updatedData = localStorage.getItem(localStorageKeys.configData)
+    if (updatedData !== " " || null) {
+        let data = JSON.parse(updatedData)?.filter(obj => (obj.type === modelType && obj.pathType === "FILE") || obj.pathType === "ASSET")
+        if (data?.length === 0) {
+            return null
+        } else if (data?.length > 0) {
+            data?.forEach((item) => {
+                modelsArray.push(item.name.replace(/\.[^/.]+$/, ""))
+            })
+            return modelsArray?.map((type) => [type, type])
         }
     } else {
         return null;
     }
 }
+
 
 export {
     getDriveProjects,
@@ -356,6 +368,7 @@ export {
     getFilterProjects,
     FormatDate,
     renameProject,
-    getConfigData,
-    filterModels
+    setConfigData,
+    filterModels,
+    getConfigData
 }

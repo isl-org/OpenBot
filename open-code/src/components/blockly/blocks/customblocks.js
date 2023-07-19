@@ -1006,7 +1006,7 @@ Blockly.Blocks["objectTracking"] = {
                 {
                     "type": "field_dropdown",
                     "name": "models",
-                    "options": filterModels(["DETECTOR"]) ?? [[
+                    "options": filterModels("DETECTOR") ?? [[
                         "CIL-Mobile-Cmd",
                         "CIL-Mobile-Cmd"
                     ],
@@ -1039,7 +1039,7 @@ Blockly.Blocks["autopilot"] = {
                 {
                     "type": "field_dropdown",
                     "name": "autopilot models",
-                    "options": filterModels(["AUTOPILOT", "CMDNAV",]) ?? [[
+                    "options": filterModels("AUTOPILOT") ?? [[
                         "CIL-Mobile-Cmd",
                         "CIL-Mobile-Cmd"
                     ],

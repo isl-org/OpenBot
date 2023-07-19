@@ -1,5 +1,5 @@
 import React from 'react';
-import {Block, Category, Field, Label, Shadow, Value} from "../index";
+import {Block, Button, Category, Field, Label, Shadow, Value} from "../index";
 import {controlsBlocks, loopBlocks} from "../blocks/generalBlocks";
 import {controlBlocksType, loopBlocksType} from "../../../utils/constants";
 import '../generator/javascriptGenerator';

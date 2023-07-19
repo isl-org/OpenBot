@@ -5,7 +5,7 @@ import {javascriptGenerator} from 'blockly/javascript';
 import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import {ThemeContext} from "../../App";
-import {Constants, errorToast} from "../../utils/constants";
+import {Constants, Errors, errorToast} from "../../utils/constants";
 import {
     CircularProgress,
     circularProgressClasses,
@@ -20,6 +20,7 @@ import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {getCurrentProject} from "../../services/workspace";
 import navbarStyle from "../navBar/navbar.module.css"
 import BlueText from "../fonts/blueText";
+import {ModelUploadingComponent} from "../blockly/blocks/ModelUploadingComponent";
 
 /**
  * Bottom Bar contains generate code, upload on drive icon , zoom in-out and undo redo functionality.
@@ -35,7 +36,10 @@ export const BottomBar = () => {
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
     const isDesktopSmallerScreen = useMediaQuery(themes.breakpoints.down('md'));
+    const [isAIModelComponent, setIsAIModelComponent] = useState(false);
+    const [file, setFile] = useState(null);
 
+    const [error, setError] = useState("");
     const {
         isOnline,
         generate,
@@ -59,10 +63,20 @@ export const BottomBar = () => {
                 );
                 const start = workspace.getBlocksByType("start")
                 const forever = workspace.getBlocksByType("forever")
-                if (start.length === 0 && forever.length === 0) {
+                const objectTracking = workspace.getBlocksByType("objectTracking")
+                const autopilot = workspace.getBlocksByType("autopilot")
+                let objectTrackingEnabledBlocks = objectTracking?.filter(obj => obj.disabled === false) //filtering objectTracking connected blocks
+                let autopilotEnabledBlocks = autopilot?.filter(obj => obj.disabled === false) //filtering autopilot connected blocks
+                if ((start.length === 0 && forever.length === 0)) {
                     setDrawer(false);
                     setIsLoader(false);
                     setIsError(true);
+                    setError(Errors.error1)
+                } else if (objectTrackingEnabledBlocks?.length > 0 && autopilotEnabledBlocks?.length > 0) {
+                    setDrawer(false);
+                    setIsLoader(false);
+                    setIsError(true);
+                    setError(Errors.error2)
                 } else {
                     if (start.length > 0)
                         code += "\nstart();";
@@ -101,7 +115,7 @@ export const BottomBar = () => {
 
                 }
             } else {
-                errorToast("Please sign-In to generate QR.")
+                errorToast("Please sign-In to upload code.")
             }
         } else {
             errorToast(Constants.InternetOffMsg)
@@ -218,9 +232,7 @@ export const BottomBar = () => {
                 {isError && <div style={{display: "flex", flexDirection: "column"}}
                                  className={styles.errorDiv}>
                     <div>Compilation failed due to following error(s).</div>
-                    <div className={styles.errorItems}>error 1 : &nbsp;&nbsp; No start or forever block
-                        present in the playground.
-                    </div>
+                    <div className={styles.errorItems}>error 1 : &nbsp;&nbsp; {error}</div>
                 </div>
                 }
                 {isLoader &&
@@ -235,7 +247,14 @@ export const BottomBar = () => {
             <div className={styles.buttonsDiv}>
                 {/*generate code*/}
                 <GenerateCodeButton buttonSelected={buttonSelected} generateCode={generateCode} setDrawer={setDrawer}
-                                    buttonActive={buttonActive} clickedButton={clickedButton}/>
+                                    buttonActive={buttonActive} clickedButton={clickedButton}
+                                    setIsAIModelComponent={setIsAIModelComponent} setFile={setFile}/>
+                {/*model upload pop up */}
+                {
+                    isAIModelComponent &&
+                    <ModelUploadingComponent isAIModelComponent={isAIModelComponent}
+                                             setIsAIModelComponent={setIsAIModelComponent} file={file}/>
+                }
 
                 <div className={styles.operationsDiv}>
                     {/*undo redo*/}
@@ -259,7 +278,7 @@ export const BottomBar = () => {
  * @constructor
  */
 function GenerateCodeButton(params) {
-    const {generateCode, buttonSelected, buttonActive, setDrawer} = params
+    const {generateCode, buttonSelected, buttonActive, setDrawer, setIsAIModelComponent, setFile} = params
     const themes = useTheme();
     const {category, setCategory} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
@@ -272,6 +291,8 @@ function GenerateCodeButton(params) {
     const popUpRef = useRef(null);// Create a reference to the popup element for detecting clicks outside the popup.
     const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
     const isDesktopSmallerScreen = useMediaQuery(themes.breakpoints.down('md'));
+    const inputRef = useRef();
+
     const handleClick = (event) => {
         event.stopPropagation();
         setOpenPopupArrow(!openPopupArrow);
@@ -286,6 +307,11 @@ function GenerateCodeButton(params) {
         setDrawer(true);
         setAnchorEl(null);
         setOpenPopupArrow(!openPopupArrow);
+    }
+
+    const handleChange = (e) => {
+        setFile(e.target.files[0])
+        setIsAIModelComponent(true)
     }
 
     useEffect(() => {
@@ -319,6 +345,7 @@ function GenerateCodeButton(params) {
         };
     }, [popUpRef, arrowClick]);
 
+
     return (
         <div className={styles.iconMargin + " " + styles.noSpace}
              style={{width: isMobile ? "23%" : isLandscape ? "25%" : "31%"}}>
@@ -342,7 +369,8 @@ function GenerateCodeButton(params) {
             }
             } className={`${styles.uploadCodeButton}`} style={{width: isMobile && "70px", marginLeft: "1rem"}}>
                 {!isMobile && !isLandscape && !isTabletQuery.matches && !isDesktopSmallerScreen &&
-                    <img src={language === Constants.js ? Images.jsIconDarkTheme : Images.pyIconDarkTheme} alt={"lang"}
+                    <img src={language === Constants.js ? Images.jsIconDarkTheme : Images.pyIconDarkTheme}
+                         alt={"lang"}
                          style={{width: "1.5rem", height: "1.5rem"}}/>
                 }
                 {isMobile || isLandscape || isTabletQuery.matches || isDesktopSmallerScreen ? <span
@@ -386,6 +414,20 @@ function GenerateCodeButton(params) {
                             <WhiteText extraStyle={styles.pyText} text={"Python"}/> :
                             <BlueText extraStyle={styles.pyText} text={"Python"}/>
                         }
+                    </div>
+                    <div onClick={() => inputRef.current?.click()}
+                         className={`${styles.langItem} ${styles.pyDivMargin} ${(theme.theme === "dark" ? navbarStyle.darkItem : navbarStyle.lightItem)}`}
+                    >
+                        <img alt="Icon" className={styles.langIcon}
+                             src={theme.theme === "dark" ? Images.pyIconDarkTheme : Images.pyIconLightTheme}/>
+                        {theme.theme === "dark" ?
+                            <WhiteText extraStyle={styles.pyText} text={"Upload"}/> :
+                            <BlueText extraStyle={styles.pyText} text={"Upload"}/>
+                        }
+                        <input ref={inputRef} style={{display: "none"}} type="file"
+                               accept=".tflite"
+                               onChange={handleChange}/>
+
                     </div>
                 </div>
             </Popper>

@@ -70,12 +70,33 @@ export const Constants = {
     py: "py",
     qr: "qr",
     xml: "xml",
-    InternetOffMsg: "Please check your internet connection."
-
+    json:"json",
+    tflite:"tflite",
+    InternetOffMsg: "Please check your internet connection.",
 }
 
-export const Category =[
-    "js","py",
+export const Errors = {
+    error1: "No start or forever block present in the playground.",
+    error2: "More than one AI blocks enabled in the playground ",
+}
+
+export const Models = {
+    type: [
+        {value: 'AUTOPILOT'},
+        {value: 'DETECTOR',},
+        {value: 'NAVIGATION'}
+    ],
+    class: [
+        {value: "AUTOPILOT_F"},
+        {value: "MOBILENETV1_1_0_Q"},
+        {value: "MOBILENETV3_S_Q",},
+        {value: "YOLOV4",},
+        {value: "NAVIGATION"}
+    ]
+}
+
+export const Category = [
+    "js", "py",
 ]
 
 export const PathName = {
