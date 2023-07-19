@@ -15,7 +15,7 @@ class runRobot: CameraController {
     private var result: Control?
     static var detector: Detector?
     static var autopilot: Autopilot?;
-    private let inferenceQueue = DispatchQueue(label: "openbot.runRobot.inferencequeue")
+    private let inferenceQueue = DispatchQueue(label: "openbot.runRobot.inferencequeue");
     private var isInferenceQueueBusy = false
     var vehicleControl: Control = Control()
     public var MINIMUM_CONFIDENCE_TF_OD_API: Float = 0.5
@@ -42,6 +42,18 @@ class runRobot: CameraController {
             let autopilotModel = modelItems.first(where: { $0.type == TYPE.AUTOPILOT.rawValue });
             runRobot.autopilot = Autopilot(model: Model.fromModelItem(item: autopilotModel ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: 1);
         }
+    }
+
+    var temp = 0;
+    override func createCameraView() {
+        if temp > 0 {
+            return;
+        }
+        DispatchQueue.main.async {
+            super.createCameraView();
+            self.view.sendSubviewToBack(super.cameraView);
+        }
+        temp = temp + 1;
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -152,6 +164,9 @@ class runRobot: CameraController {
     }
 
     func sendControl(control: Control) {
+        if runRobot.isAutopilot || runRobot.isObjectTracking {
+            createCameraView();
+        }
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
             let left = control.getLeft() * gameController.selectedSpeedMode.rawValue
             let right = control.getRight() * gameController.selectedSpeedMode.rawValue
@@ -213,7 +228,7 @@ class runRobot: CameraController {
     }
 
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        print("outside of capture", runRobot.isAutopilot, runRobot.isObjectTracking);
+
         if (runRobot.isObjectTracking || runRobot.isAutopilot) {
             let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
             print("inside capture ")
@@ -238,10 +253,11 @@ class runRobot: CameraController {
         }
     }
 
-    static func enableObjectTracking(object: String, model : String) {
+    static func enableObjectTracking(object: String, model: String) {
         print("inside test");
         DispatchQueue.main.async {
             runRobot.isObjectTracking = true;
+
 
         }
         let currentModel = Common.returnModelItem(modelName: model)
@@ -249,7 +265,7 @@ class runRobot: CameraController {
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: .CPU, numThreads: 1) as? Detector
     }
 
-    static func enableAutopilot(model : String) {
+    static func enableAutopilot(model: String) {
         print("inside enableAutopilot")
         DispatchQueue.main.async {
             runRobot.isAutopilot = true;
