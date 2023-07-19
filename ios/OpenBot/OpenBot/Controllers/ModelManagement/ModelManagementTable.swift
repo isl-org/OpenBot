@@ -20,10 +20,10 @@ class ModelManagementTable: UITableViewController {
     var popupWindow = UIView();
     var models: [String]!
     var selectedIndex: IndexPath!
-    var popupWindowWidth: NSLayoutConstraint!
-    var popupWindowHeight: NSLayoutConstraint!
-    var popupWindowLeadingAnchor: NSLayoutConstraint!
-    var popupWindowTopAnchor: NSLayoutConstraint!
+    var popupWindowWidth: NSLayoutConstraint?
+    var popupWindowHeight: NSLayoutConstraint?
+    var popupWindowLeadingAnchor: NSLayoutConstraint?
+    var popupWindowTopAnchor: NSLayoutConstraint?
     var dropDown = UIView()
     let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
     var timer = Timer()
@@ -81,20 +81,20 @@ class ModelManagementTable: UITableViewController {
             dropDownView.frame.origin = CGPoint(x: width / 2, y: 70);
             autoSyncIcon.frame.origin = CGPoint(x: width - 60, y: 15);
             blankScreen.frame.size = CGSize(width: width, height: CGFloat(60 * models.count) + 80);
-            popupWindowLeadingAnchor.constant = 10;
-            popupWindowHeight.constant = 400;
-            popupWindowWidth.constant = width - 20;
-            popupWindowTopAnchor.constant = 100;
+            popupWindowLeadingAnchor?.constant = 10;
+            popupWindowHeight?.constant = 400;
+            popupWindowWidth?.constant = width - 20;
+            popupWindowTopAnchor?.constant = 100;
 
         } else {
             dropDown.frame.origin.x = height / 2;
             dropDownView.frame.origin = CGPoint(x: height / 2, y: 70);
             autoSyncIcon.frame.origin = CGPoint(x: height - 100, y: 15);
             blankScreen.frame.size = CGSize(width: height, height: CGFloat(60 * models.count) + 80);
-            popupWindowLeadingAnchor.constant = height / 2 - width / 2
-            popupWindowHeight.constant = 400;
-            popupWindowWidth.constant = width + 20;
-            popupWindowTopAnchor.constant = -50;
+            popupWindowLeadingAnchor?.constant = height / 2 - width / 2
+            popupWindowHeight?.constant = 400;
+            popupWindowWidth?.constant = width + 20;
+            popupWindowTopAnchor?.constant = -50;
         }
     }
 
@@ -362,18 +362,18 @@ class ModelManagementTable: UITableViewController {
         popupWindowLeadingAnchor = popupWindow.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10)
         if currentOrientation == .portrait {
             popupWindowHeight = popupWindow.heightAnchor.constraint(equalToConstant: 400);
-            popupWindowHeight.isActive = true;
+            popupWindowHeight?.isActive = true;
             popupWindowWidth = popupWindow.widthAnchor.constraint(equalToConstant: width - 20)
             popupWindowLeadingAnchor = popupWindow.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10)
             popupWindowTopAnchor = popupWindow.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100)
         } else {
             popupWindowHeight = popupWindow.heightAnchor.constraint(equalToConstant: width);
-            popupWindowHeight.isActive = true;
+            popupWindowHeight?.isActive = true;
             popupWindowWidth = popupWindow.widthAnchor.constraint(equalToConstant: width + 20);
             popupWindowLeadingAnchor = popupWindow.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: height / 2 - width / 2)
             popupWindowTopAnchor = popupWindow.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -50)
         }
-        NSLayoutConstraint.activate([popupWindowWidth, popupWindowTopAnchor, popupWindowLeadingAnchor])
+        NSLayoutConstraint.activate([popupWindowWidth!, popupWindowTopAnchor!, popupWindowLeadingAnchor!])
         popupWindow.backgroundColor = Colors.modelDetail;
     }
 
