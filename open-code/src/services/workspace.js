@@ -203,6 +203,7 @@ function updateLocalProjects() {
  * remove duplicate project get from drive and also save in local and give high priority to local project
  */
 async function getFilterProjects() {
+    await setConfigData();
     let allProjects
     let filterProjects
     let allDriveProjects = [];
@@ -227,7 +228,6 @@ async function getFilterProjects() {
             return true;
         });
     })
-    await setConfigData();
     return filterProjects;
 }
 
