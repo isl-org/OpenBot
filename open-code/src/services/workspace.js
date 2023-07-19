@@ -6,7 +6,7 @@ import {
     getAllFilesFromGoogleDrive,
     getFolderId,
 } from "./googleDrive";
-
+import configData from "../config.json"
 
 /**
  * get project from drive when user signedIn
@@ -312,9 +312,11 @@ async function setConfigData() {
             if (configFile?.length > 0) {
                 localStorage.setItem(localStorageKeys.configData, configFile[0].projectData)
             } else {
-                localStorage.setItem(localStorageKeys.configData, " ");
+                localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData));
             }
         })
+    } else {
+        localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData));
     }
 }
 
@@ -337,26 +339,23 @@ function getConfigData() {
  * @returns {unknown[]|undefined|null}
  */
 function filterModels(modelType) {
-    if (localStorage.getItem("isSigIn") === "true") {
-        let modelsArray = []
-        let updatedData = localStorage.getItem(localStorageKeys.configData)
-        if (updatedData !== " " || null) {
-            let data = JSON.parse(updatedData)?.filter(obj => modelType.includes(obj.type))
-            if (data?.length === 0) {
-                return null
-            } else if (data?.length > 0) {
-                data?.forEach((item) => {
-                    modelsArray.push(item.name.replace(/\.[^/.]+$/, ""))
-                })
-                return modelsArray?.map((type) => [type, type])
-            }
-        } else {
-            return null;
+    let modelsArray = []
+    let updatedData = localStorage.getItem(localStorageKeys.configData)
+    if (updatedData !== " " || null) {
+        let data = JSON.parse(updatedData)?.filter(obj => (obj.type === modelType && obj.pathType === "FILE") || obj.pathType === "ASSET")
+        if (data?.length === 0) {
+            return null
+        } else if (data?.length > 0) {
+            data?.forEach((item) => {
+                modelsArray.push(item.name.replace(/\.[^/.]+$/, ""))
+            })
+            return modelsArray?.map((type) => [type, type])
         }
     } else {
         return null;
     }
 }
+
 
 export {
     getDriveProjects,

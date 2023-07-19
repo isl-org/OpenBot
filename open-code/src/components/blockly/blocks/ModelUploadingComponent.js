@@ -1,25 +1,30 @@
-import React, {useContext, useState} from "react";
-import {Box, Modal} from "@mui/material";
+import React, {useContext, useEffect, useState} from "react";
+import {Backdrop, Box, CircularProgress, Modal} from "@mui/material";
 import styles from "../../navBar/navbar.module.css";
-import {Constants, errorToast, Themes} from "../../../utils/constants";
+import {Constants, errorToast, localStorageKeys, Themes} from "../../../utils/constants";
 import {Images} from "../../../utils/images";
-import LoaderComponent from "../../loader/loaderComponent";
 import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
 import BlueButton from "../../buttonComponent/blueButtonComponent";
-import {Alert} from "../../homeComponents/header/editProfileModal";
 import {ThemeContext} from "../../../App";
 import {colors} from "../../../utils/color";
 import {StoreContext} from "../../../context/context";
-import {getConfigData} from "../../../services/workspace";
+import {getConfigData, setConfigData} from "../../../services/workspace";
 import {uploadToGoogleDrive} from "../../../services/googleDrive";
 
+/**
+ * function to upload new model (.tflite)
+ * @param params
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export function ModelUploadingComponent(params) {
-
     const {isAIModelComponent, setIsAIModelComponent, file} = params
     const {theme} = useContext(ThemeContext);
     const {isOnline} = useContext(StoreContext);
     const localFileName = file?.name.replace(/\.[^/.]+$/, "");
     const [fileName, setFileName] = useState(localFileName ?? "");
+    const [isDesktopLargerScreen, setIsDesktopLargerScreen] = useState(window.matchMedia("(min-height: 900px)").matches);
+    const [fileUploadLoader, setFileUploadLoader] = useState(false);
     const [modelDetails, setModelDetails] = useState({
         displayName: localFileName,
         type: "DETECTOR",
@@ -27,10 +32,36 @@ export function ModelUploadingComponent(params) {
         width: 322,
         height: 322
     })
+
+    //function to close the model
     const handleClose = () => {
         setIsAIModelComponent(false)
     }
 
+    useEffect(() => {
+        const handleOrientationChange = () => {
+            setIsDesktopLargerScreen(
+                window.matchMedia("(min-height: 900px)").matches
+            );
+        };
+        window.addEventListener("resize", handleOrientationChange);
+    }, []);
+
+    //Loader on submit button
+    function SimpleBackdrop() {
+        return (
+            <div>
+                <Backdrop
+                    sx={{color: colors.openBotBlue, zIndex: (theme) => theme.zIndex.drawer + 1}}
+                    open={fileUploadLoader}
+                >
+                    <CircularProgress color="inherit"/>
+                </Backdrop>
+            </div>
+        );
+    }
+
+    //function to handle file name
     function handleTfliteNameChange(e) {
         if (!(e.trim().length <= 0)) {
             setModelDetails({
@@ -43,6 +74,7 @@ export function ModelUploadingComponent(params) {
         }
     }
 
+    //function to handle model type
     function handleTypeChange(e) {
         setModelDetails({
             ...modelDetails,
@@ -50,6 +82,7 @@ export function ModelUploadingComponent(params) {
         })
     }
 
+    //function to handle model class
     function handleClassChange(e) {
         setModelDetails({
             ...modelDetails,
@@ -57,6 +90,7 @@ export function ModelUploadingComponent(params) {
         })
     }
 
+    //function to handle model width
     function handleWidthChange(e) {
         setModelDetails({
             ...modelDetails,
@@ -64,6 +98,7 @@ export function ModelUploadingComponent(params) {
         })
     }
 
+    //function to handle model height
     function handleHeightChange(e) {
         setModelDetails({
             ...modelDetails,
@@ -71,26 +106,46 @@ export function ModelUploadingComponent(params) {
         })
     }
 
+
+    /**
+     * function to save and add new model
+     * @returns {Promise<void>}
+     */
     async function handleSubmit() {
         if (isOnline) {
             if (localStorage.getItem("isSigIn") === "true") {
+                setFileUploadLoader(true);
                 const data = {
                     fileData: file,
                     name: modelDetails.displayName
                 }
-                let configData = getConfigData()
-                await uploadToGoogleDrive(data, Constants.tflite).then(async (res) => {
-                    let newModelData = {
-                        id: configData.length + 1,
-                        name: modelDetails.displayName + `.${Constants.tflite}`,
-                        pathType: "URL",
-                        path: res,
-                        type: `${modelDetails.type}`,
-                        class: `${modelDetails.class}`,
-                        inputSize: `${modelDetails.width}x${modelDetails.height}`
-                    }
-                    configData.push(newModelData)
-                    await uploadToGoogleDrive(JSON.stringify(configData), Constants.json)
+                await setConfigData().then(async () => {
+                    let configData = getConfigData()
+                    await uploadToGoogleDrive(data, Constants.tflite).then(async (res) => {
+                        let newModelData = {
+                            id: configData.length + 1,
+                            name: modelDetails.displayName + `.${Constants.tflite}`,
+                            pathType: "URL",
+                            path: res,
+                            type: `${modelDetails.type}`,
+                            class: `${modelDetails.class}`,
+                            inputSize: `${modelDetails.width}x${modelDetails.height}`
+                        }
+                        configData.push(newModelData)
+                        await uploadToGoogleDrive(JSON.stringify(configData), Constants.json).then(() => {
+                            localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData))
+                            setFileUploadLoader(false);
+                            handleClose()
+                        })
+                            .catch((err) => {
+                                setFileUploadLoader(false);
+                                console.log(err);
+                            })
+                    })
+                        .catch((err) => {
+                            setFileUploadLoader(false);
+                            console.log(err);
+                        })
                 })
             } else {
                 errorToast("Please sign-In to add model.")
@@ -109,7 +164,6 @@ export function ModelUploadingComponent(params) {
                 justifyContent: "center",
                 overflow: "scroll"
             }}>
-
             <Box
                 className={styles.editProfileModal + " " + (theme === Themes.dark && styles.darkEditProfileModal)}>
                 <div className={styles.crossIconDiv}>
@@ -121,11 +175,14 @@ export function ModelUploadingComponent(params) {
                      style={{color: theme === Themes.dark ? colors.whiteFont : colors.blackFont}}>
                     Model Details
                 </div>
-                <div style={{display: "flex", paddingTop: "3%"}}>
-                    <SimpleInputComponent inputType={"name and extension"} extraStyle={styles.inputExtraStyle}
+                {fileUploadLoader && <SimpleBackdrop/>}
+                <div style={{display: "flex", paddingTop: isDesktopLargerScreen && "3%"}}>
+                    <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
                                           headStyle={styles.headStyle}
                                           value={fileName}
+                                          inlineStyle={{height: "50%"}}
                                           onDataChange={handleTfliteNameChange}
+                                          modelExtension={true}
                                           inputTitle={"Model Name"} extraInputStyle={styles.extraInputStyle}
                     />
                     <SimpleInputComponent inputType={"dropdown"} inputTitle={"Type"}

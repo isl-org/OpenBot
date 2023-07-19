@@ -25,12 +25,13 @@
     border-radius: 6px;
 }
 
-.extensionName{
+.extensionName {
     padding-right: 13%;
     font-family: Gilroy-Regular, sans-serif;
+    font-size: 18px;
 }
 
-.dropdownItem{
+.dropdownItem {
     font-family: Gilroy-Regular, sans-serif;
     font-size: 17px;
 }
@@ -40,4 +41,5 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 
