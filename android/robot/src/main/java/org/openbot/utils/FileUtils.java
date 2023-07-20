@@ -114,7 +114,7 @@ public class FileUtils {
     return gson.fromJson(jsonElement, listType);
   }
 
-  public static boolean updateModelConfig(Activity activity, Context context, List<Model> modelList) {
+  public static boolean updateModelConfig(Activity activity, Context context, List<Model> modelList, boolean isDrive) {
     String configFile = "config.json";
     GoogleServices googleServices = new GoogleServices(activity, context, new GoogleSignInCallback() {
       @Override
@@ -141,7 +141,7 @@ public class FileUtils {
       Writer writer = new FileWriter(activity.getFilesDir() + File.separator + configFile);
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
       gson.toJson(modelList, writer);
-      googleServices.createAndUploadJsonFile(modelList);
+      if (!isDrive) googleServices.createAndUploadJsonFile(modelList);
       writer.flush();
       writer.close();
       return true;

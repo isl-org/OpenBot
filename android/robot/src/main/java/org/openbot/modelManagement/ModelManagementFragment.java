@@ -146,7 +146,7 @@ public class ModelManagementFragment extends Fragment
               }
               masterList.add(item1);
               showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
-              FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList);
+              FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
               Toast.makeText(
                       requireContext().getApplicationContext(),
                       "Model added: " + fileName,
@@ -229,7 +229,8 @@ public class ModelManagementFragment extends Fragment
         rotation.start();
         googleServices.getConfigFileContent(rotation, binding.autoSync);
     });
-    adapter = new ModelAdapter(loadModelList(ALL), this);
+      googleServices.getConfigFileContent(rotation, binding.autoSync);
+    adapter = new ModelAdapter(loadModelList(ALL), requireContext(), this);
     binding.modelListContainer.setLayoutManager(new LinearLayoutManager(requireContext()));
     binding.modelListContainer.setAdapter(adapter);
     binding.modelListContainer.addItemDecoration(
@@ -254,26 +255,6 @@ public class ModelManagementFragment extends Fragment
             PermissionUtils.showStoragePermissionModelManagementToast(requireActivity());
           } else openPicker();
         });
-
-      Handler handler = new Handler();
-      Runnable runnable = new Runnable() {
-          @Override
-          public void run() {
-              rotation.start();
-              googleServices.getConfigFileContent(rotation, binding.autoSync);
-              // Schedule the next execution after 5 minutes
-              handler.postDelayed(this, 5 * 60 * 1000);
-          }
-      };
-
-      Timer timer = new Timer();
-      timer.schedule(new TimerTask() {
-          @Override
-          public void run() {
-              handler.post(runnable);
-          }
-      }, 0);
-
   }
 
   private void showModels(List<Model> modelList) {
@@ -317,7 +298,7 @@ public class ModelManagementFragment extends Fragment
             item,
             item1 -> {
               adapter.notifyDataSetChanged();
-              FileUtils.updateModelConfig(requireActivity(), requireActivity(), masterList);
+              FileUtils.updateModelConfig(requireActivity(), requireActivity(), masterList, false);
             });
     edMbS.show(getChildFragmentManager(), edMbS.getTag());
   }
@@ -346,7 +327,7 @@ public class ModelManagementFragment extends Fragment
           model.setPath(requireActivity().getFilesDir() + File.separator + model.name);
           model.setPathType(Model.PATH_TYPE.FILE);
           //          adapter.notifyDataSetChanged();
-          FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList);
+          FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
           break;
         }
       }
@@ -375,7 +356,7 @@ public class ModelManagementFragment extends Fragment
             mItem.setPathType(originalModelConfig.pathType);
             adapter.notifyItemChanged(index);
           }
-          FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList);
+          FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
         });
     builder.setNegativeButton("Cancel", (dialog, id) -> {});
     AlertDialog dialog = builder.create();

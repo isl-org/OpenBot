@@ -18,6 +18,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.net.URL;
+
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentBarCodeScannerBinding;
@@ -215,8 +217,10 @@ public class BarCodeScannerFragment extends CameraFragment {
    * @throws IOException
    */
   private void readFileFromDrive(String fileId) throws IOException {
+    URL fileUrl =
+            new URL("https://drive.google.com/uc?export=download&id=" + fileId + "&confirm=200");
     new ReadFileTask(
-            fileId,
+            fileUrl,
             new ReadFileCallback() {
               @Override
               public void onFileReadSuccess(String fileContents) {

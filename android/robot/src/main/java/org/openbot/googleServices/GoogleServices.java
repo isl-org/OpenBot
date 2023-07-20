@@ -118,7 +118,6 @@ public class GoogleServices {
                         Timber.tag(TAG).d("onComplete: successful");
                         // Get the signed-in account and Notify callback of successful sign-in.
                         mCallback.onSignInSuccess(task.getResult().getUser());
-                        createAndUploadJsonFile(FileUtils.loadConfigJSONFromAsset(mActivity));
                       } else {
                         Timber.tag(TAG).w("signInWithCredential%s", task.getException().getMessage());
                         task.getException().printStackTrace();
@@ -612,13 +611,16 @@ public class GoogleServices {
                         .executeMediaAndDownloadTo(outputStream);
                 projectCommands = outputStream.toString();
                 List<Model> modelList = gson.fromJson(projectCommands, new TypeToken<List<Model>>(){}.getType());
-                FileUtils.updateModelConfig(mActivity, mContext, modelList);
+                FileUtils.updateModelConfig(mActivity, mContext, modelList, true);
                 break;
               }
             }
             rotation.pause();
             icon.setRotation(0f);
             pageToken = result.getNextPageToken();
+          } else {
+            rotation.pause();
+            icon.setRotation(0f);
           }
         } catch (IOException e) {
           e.printStackTrace();

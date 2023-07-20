@@ -10,11 +10,11 @@ import java.net.URL;
 
 /** call this class to read the public google drive file using file id. */
 public class ReadFileTask extends AsyncTask<Void, Void, Void> {
-  String fileId;
+  URL fileUrl;
   private ReadFileCallback callback;
 
-  public ReadFileTask(String fileId, ReadFileCallback callback) {
-    this.fileId = fileId;
+  public ReadFileTask(URL fileUrl, ReadFileCallback callback) {
+    this.fileUrl = fileUrl;
     this.callback = callback;
   }
 
@@ -26,9 +26,6 @@ public class ReadFileTask extends AsyncTask<Void, Void, Void> {
    */
   protected Void doInBackground(Void... voids) {
     try {
-      // Set the file URL to the public download link of the file.
-      URL fileUrl =
-          new URL("https://drive.google.com/uc?export=download&id=" + fileId + "&confirm=200");
       // Open a connection to the URL.
       HttpURLConnection conn = (HttpURLConnection) fileUrl.openConnection();
       // Set the HTTP request method to fetch the file.
