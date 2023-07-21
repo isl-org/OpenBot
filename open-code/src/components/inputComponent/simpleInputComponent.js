@@ -36,8 +36,8 @@ export default function SimpleInputComponent(props) {
     const theme = useContext(ThemeContext);
     const date = new Date()
     let currentDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-    const [inputDOBValue, setInputDOBValue] = useState(value ? value : currentDate)
-    const [modelDropdown, setModelDropdown] = useState(inputTitle === "Type" ? "DETECTOR" : "AUTOPILOT_F");
+    const [inputDOBValue, setInputDOBValue] = useState(value ? value : currentDate);
+    const [modelDropdown, setModelDropdown] = useState(inputTitle === "Type" ? "DETECTOR" : "AUTOPILOT");
     const [modelWidth, setModelWidth] = useState(322)
     const [modelHeight, setModelHeight] = useState(322)
 
@@ -121,7 +121,7 @@ export default function SimpleInputComponent(props) {
                                     value={modelDropdown}
                                     onChange={onModelTypeChange}
                                     sx={{
-                                        backgroundColor: "transparent",
+                                        backgroundColor: theme.theme === "dark" ? "#414141" : colors.whiteBackground,
                                         fontFamily: "Gilroy-Regular, sans-serif",
                                         fontSize: "18px",
                                         borderRadius: "6px",
@@ -130,19 +130,24 @@ export default function SimpleInputComponent(props) {
                                         color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont,
                                         '& .MuiOutlinedInput-notchedOutline': {border: 'none'},
                                     }}
+                                    MenuProps={{
+                                        PaperProps: {
+                                            style: {backgroundColor: theme.theme === "dark" ? "#414141" : colors.whiteBackground}
+                                        }
+                                    }}
                                 >{
                                     (inputTitle === "Type" ? Models.type : Models.class).map((item) => (
                                         <MenuItem
                                             style={theme.theme === "dark" ? {
                                                 color: colors.whiteFont,
-                                                backgroundColor: colors.blackPopupBackground,
+                                                backgroundColor: "#414141",
                                             } : {
                                                 color: colors.blackFont,
                                                 backgroundColor: colors.whiteBackground,
                                             }}
-                                            value={item.value}
-                                            key={item.value}
-                                            className={styles.dropdownItem}>{item.value}</MenuItem>
+                                            value={item}
+                                            key={item}
+                                            className={styles.dropdownItem}>{item}</MenuItem>
                                     ))
                                 }
                                 </Select>
@@ -150,13 +155,17 @@ export default function SimpleInputComponent(props) {
                             :
                             inputType === "dimensions" ?
                                 <div style={{display: "flex", height: "70%"}}>
-                                    <div className={styles.inputBorder + " " + extraMargin} style={{width: "23%"}}>
+                                    <div className={styles.inputBorder + " " + extraMargin} style={{width: "20%"}}>
                                         <input type={"number"}
                                                name={"inputBox"}
                                                placeholder={placeHolder}
                                                className={styles.inputSection + " " + extraInputStyle}
                                                value={modelWidth} onChange={onModelWidthChange}
-                                               style={{color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont}}
+                                               style={{
+                                                   color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont,
+                                                   backgroundColor: theme.theme === "dark" ? "#414141" : colors.whiteBackground,
+                                                   height: "100%",
+                                               }}
                                         />
                                     </div>
                                     <div style={{
@@ -165,13 +174,17 @@ export default function SimpleInputComponent(props) {
                                     }}>×
                                     </div>
                                     <div className={styles.inputBorder + " " + extraMargin}
-                                         style={{width: "23%"}}>
+                                         style={{width: "20%"}}>
                                         <input type={"number"}
                                                name={"inputBox"}
                                                placeholder={placeHolder}
                                                className={styles.inputSection + " " + extraInputStyle}
                                                value={modelHeight} onChange={onModelHeightChange}
-                                               style={{color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont}}
+                                               style={{
+                                                   color: theme.theme === "dark" ? colors.whiteFont : colors.blackFont,
+                                                   backgroundColor: theme.theme === "dark" ? "#414141" : colors.whiteBackground,
+                                                   height: "100%",
+                                               }}
                                         />
                                     </div>
                                 </div>

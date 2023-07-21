@@ -27,7 +27,7 @@
     padding-top: 0.8rem;
 }
 
-.modelHeading{
+.modelHeading {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,6 +40,19 @@
     display: flex;
     margin: 10px;
     cursor: pointer;
+}
+
+.sync {
+    animation: rotation infinite 2s linear
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .modalIcon {

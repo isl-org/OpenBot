@@ -1043,6 +1043,14 @@ Blockly.Blocks["autopilot"] = {
                         "CIL-Mobile-Cmd",
                         "CIL-Mobile-Cmd"
                     ],
+                        [
+                            "PilotNet-Goal",
+                            "PilotNet-Goal"
+                        ],
+                        [
+                            "MobileNetV1-300",
+                            "MobileNetV1-300"
+                        ]
                     ]
                 }
             ],

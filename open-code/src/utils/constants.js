@@ -70,8 +70,8 @@ export const Constants = {
     py: "py",
     qr: "qr",
     xml: "xml",
-    json:"json",
-    tflite:"tflite",
+    json: "json",
+    tflite: "tflite",
     InternetOffMsg: "Please check your internet connection.",
 }
 
@@ -82,22 +82,19 @@ export const Errors = {
 
 export const Models = {
     type: [
-        {value: 'AUTOPILOT'},
-        {value: 'DETECTOR',},
-        {value: 'NAVIGATION'}
+        'AUTOPILOT',
+        'DETECTOR',
+        'NAVIGATION',
     ],
     class: [
-        {value: "AUTOPILOT_F"},
-        {value: "MOBILENETV1_1_0_Q"},
-        {value: "MOBILENETV3_S_Q",},
-        {value: "YOLOV4",},
-        {value: "NAVIGATION"}
+        "AUTOPILOT",
+        "MOBILENET",
+        "EFFICIENTDET",
+        "YOLOV4",
+        "YOLOV5",
+        "NAVIGATION",
     ]
 }
-
-export const Category = [
-    "js", "py",
-]
 
 export const PathName = {
     "home": "/",

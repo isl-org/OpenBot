@@ -9,13 +9,12 @@ import {HelpCenterModal} from "../homeComponents/header/helpCenterModal";
 import {EditProfileModal} from "../homeComponents/header/editProfileModal";
 import {PopUpModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {ProfileOptionModal} from "../homeComponents/header/profileOptionModal";
-import {PathName} from "../../utils/constants";
+import {Constants, errorToast, PathName} from "../../utils/constants";
 import {LogoSection, ProfileSignIn, ProjectName, ProjectNamePopUp} from "../homeComponents/header/headerComponents";
 import {Backdrop, CircularProgress, useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import {deleteProjectFromStorage} from "../../services/workspace";
+import {autoSync, deleteProjectFromStorage} from "../../services/workspace";
 import {colors} from "../../utils/color";
-
 
 /**
  * Open-code's header which contains logo, project name on playground screen and help button, profile signIn
@@ -24,7 +23,7 @@ import {colors} from "../../utils/color";
  */
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext);
-    const {projectName, setProjectName, user, setUser, isDob} = useContext(StoreContext);
+    const {projectName, setProjectName, user, setUser, isDob, isOnline} = useContext(StoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [deleteProject, setDeleteProject] = useState(false);
     const [isHelpCenterModal, setIsHelpCenterModal] = useState(false)
@@ -35,6 +34,7 @@ export function Header() {
     const [deleteLoader, setDeleteLoader] = useState(false);
     const [editProfileLoaderOpen, setEditProfileLoaderOpen] = useState(false);
     const [isDobChanged, setIsDobChanged] = useState(false);
+    const [isAutoSync, setIsAutoSync] = useState(false);
     const location = useLocation();
     let navigate = useNavigate();
 
@@ -108,7 +108,8 @@ export function Header() {
 
                 <div className={styles.navbarIconDiv}>
                     <RightSection setIsHelpCenterModal={setIsHelpCenterModal} toggleTheme={toggleTheme}
-                                  location={location}
+                                  location={location} isOnline={isOnline} isAutoSync={isAutoSync}
+                                  setIsAutoSync={setIsAutoSync}
                                   theme={theme} setIsProfileModal={setIsProfileModal} user={user} setUser={setUser}/>
 
                     {/* delete edit profile option popup*/}
@@ -119,6 +120,7 @@ export function Header() {
                             setIsEditProfileModal={setIsEditProfileModal}
                             setIsLogoutModal={setIsLogoutModal}
                             setEditProfileLoaderOpen={setEditProfileLoaderOpen}
+                            isAutoSync={isAutoSync} setIsAutoSync={setIsAutoSync}
                             setIsHelpCenterModal={setIsHelpCenterModal} isDobChanged={isDobChanged}/>
                     }
                     {/*edit profile pop up */}
@@ -154,14 +156,48 @@ export function Header() {
  * @constructor
  */
 function RightSection(params) {
-    const {setIsHelpCenterModal, toggleTheme, theme, setIsProfileModal, user, setUser, location} = params
+    const {
+        setIsHelpCenterModal,
+        toggleTheme,
+        theme,
+        setIsProfileModal,
+        user,
+        setUser,
+        location,
+        isOnline,
+        isAutoSync,
+        setIsAutoSync
+    } = params
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
-
+    const isSignedIn = localStorage.getItem("isSigIn") === "true";
+    const {setIsAutoSyncEnabled} = useContext(StoreContext);
     return (
         <>
+            {location.pathname === PathName.playGround && isSignedIn && !isMobile && !tabletQuery && !isMobileLandscape &&
+                <img className={`${styles.listStyle} ${isAutoSync && styles.sync}`} alt={"syncIcon"}
+                     src={Images.darkSyncIcon}
+                     onClick={async () => {
+                         if (isOnline) {
+                             if (localStorage.getItem("isSigIn") === "true") {
+                                 setIsAutoSync(true)
+                                 await autoSync().then(() => {
+                                     setIsAutoSyncEnabled(true);
+                                     setIsAutoSync(false);
+                                     // window.location.reload();
+                                 })
+                             } else {
+                                 errorToast("Please sign-In to auto sync.")
+                             }
+                         } else {
+                             errorToast(Constants.InternetOffMsg)
+                         }
+                     }
+                     }
+                     style={{height: 24}}/>
+            }
             {/*help icon if screen is playground and device is not mobile*/}
             {location.pathname === PathName.playGround && !isMobile && !tabletQuery && !isMobileLandscape &&
                 <img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon}

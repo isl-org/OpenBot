@@ -48,6 +48,8 @@ function BlocklyComponent(props) {
         setCode,
         setCategory,
         category,
+        isAutoSyncEnabled,
+        setIsAutoSyncEnabled,
     } = useContext(StoreContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
@@ -131,6 +133,7 @@ function BlocklyComponent(props) {
     }
 
     useEffect(() => {
+        setIsAutoSyncEnabled(false);
         setCategory(Constants.js);
         checkQRCode().catch(err => {
             console.log(err);
@@ -197,7 +200,7 @@ function BlocklyComponent(props) {
         return () => {
             primaryWorkspace.current.dispose();
         }
-    }, [theme, toolbox, blocklyDiv, props]);
+    }, [theme, toolbox, blocklyDiv, props, isAutoSyncEnabled]);
 
     // Return the blockly div and hidden toolbox
     return (

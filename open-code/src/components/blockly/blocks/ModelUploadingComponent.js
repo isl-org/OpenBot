@@ -61,6 +61,7 @@ export function ModelUploadingComponent(params) {
         );
     }
 
+
     //function to handle file name
     function handleTfliteNameChange(e) {
         if (!(e.trim().length <= 0)) {
@@ -162,7 +163,8 @@ export function ModelUploadingComponent(params) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                overflow: "scroll"
+                overflow: "scroll",
+                minHeight: "40rem"
             }}>
             <Box
                 className={styles.editProfileModal + " " + (theme === Themes.dark && styles.darkEditProfileModal)}>
@@ -180,7 +182,10 @@ export function ModelUploadingComponent(params) {
                     <SimpleInputComponent inputType={"text"} extraStyle={styles.inputExtraStyle}
                                           headStyle={styles.headStyle}
                                           value={fileName}
-                                          inlineStyle={{height: "50%"}}
+                                          inlineStyle={{
+                                              height: "50%",
+                                              backgroundColor: theme === "dark" ? "#414141" : colors.whiteBackground
+                                          }}
                                           onDataChange={handleTfliteNameChange}
                                           modelExtension={true}
                                           inputTitle={"Model Name"} extraInputStyle={styles.extraInputStyle}

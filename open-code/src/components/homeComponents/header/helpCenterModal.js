@@ -24,7 +24,7 @@ export function HelpCenterModal(props) {
     }
     return (
         <Modal
-            style={{display: "flex", alignItems: "center", justifyContent: "center", overflow: "scroll"}}
+            style={{display: "flex", alignItems: "center", justifyContent: "center", overflow: "scroll",minHeight:"40rem"}}
             open={isHelpCenterModal}>
             <Box
                 className={styles.helpCenterModalBox + " " + (theme.theme === "dark" ? styles.darkHelpCenterModal : styles.lightHelpCenterModal)}>

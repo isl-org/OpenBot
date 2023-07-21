@@ -48,13 +48,16 @@ import pyIconDarkTheme from "../assets/images/icon/python-icon-dark-theme.png";
 import pyIconLightTheme from "../assets/images/icon/python-icon-light-theme.png";
 import leftSlider from "../assets/images/icon/leftSlider.png";
 import leftSliderDark from "../assets/images/icon/leftSliderDark.png";
+import darkSyncIcon from "../assets/images/icon/sync.png"
+import lightSyncIcon from "../assets/images/icon/lightSyncIcon.png"
+
 /**
  * Images used in opeBot-Playgorund is listed here
  * @type {{lightThemeIcon: *, darkPencilIcon: *, line: *, undoIcon: *, pencilIcon: *, profileImage: *, laptop: *, lightCrossIcon: *, login: *, gameIcon: *, joystickIcon: *, gamepadIcon: *, cloud: *, infoLight: *, logo: *, blueTheme: *, crossIcon: *, darkDots: *, phoneIcon: *, logoutIcon: *, Carousal2Dark: *, dots: *, uploadIcon: *, redoIcon: *, Carousal3Dark: *, avatar: *, darkThemeIcon: *, errorEmojiIcon: *, editProfileIcon: *, darkUserIcon: *, darkLogoutIcon: *, dualDriveIcon: *, dragDropWhite: *, dragDropDark: *, userIcon: *, darkCrossIcon: *, successfulEmojiIcon: *, helpIcon: *, Carousal3: *, Carousal2: *}}
  */
 export const Images = {
-    rightSlider:rightSlider,
-    rightSliderDark:rightSliderDark,
+    rightSlider: rightSlider,
+    rightSliderDark: rightSliderDark,
     helpIcon: helpIcon,
     logoutIcon: logoutIcon,
     userIcon: userIcon,
@@ -95,12 +98,14 @@ export const Images = {
     undoIcon: undoIcon,
     redoIcon: redoIcon,
     uploadIcon: uploadIcon,
-    UpArrowIcon:UpArrowIcon,
-    downArrowIcon:downArrowIcon,
-    jsIconDarkTheme:jsIconDarkTheme,
-    jsIconLightTheme:jsIconLightTheme,
-    pyIconDarkTheme:pyIconDarkTheme,
-    pyIconLightTheme:pyIconLightTheme,
-    leftSlider:leftSlider,
-    leftSliderDark:leftSliderDark
+    UpArrowIcon: UpArrowIcon,
+    downArrowIcon: downArrowIcon,
+    jsIconDarkTheme: jsIconDarkTheme,
+    jsIconLightTheme: jsIconLightTheme,
+    pyIconDarkTheme: pyIconDarkTheme,
+    pyIconLightTheme: pyIconLightTheme,
+    leftSlider: leftSlider,
+    leftSliderDark: leftSliderDark,
+    darkSyncIcon: darkSyncIcon,
+    lightSyncIcon: lightSyncIcon
 }
