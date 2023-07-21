@@ -4,8 +4,6 @@ import BlackText from "../fonts/blackText";
 import {ThemeContext} from "../../App";
 import {colors} from "../../utils/color";
 import {MenuItem, Select} from "@mui/material";
-import {Models} from "../../utils/constants";
-
 
 /**
  * Simple Input Component :: input field
@@ -29,6 +27,7 @@ export default function SimpleInputComponent(props) {
         onWidthDataChange,
         onHeightDataChange,
         modelExtension,
+        modelData,
         OpenNewProjectHandle = () => {
         }
     } = props
@@ -37,7 +36,7 @@ export default function SimpleInputComponent(props) {
     const date = new Date()
     let currentDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
     const [inputDOBValue, setInputDOBValue] = useState(value ? value : currentDate);
-    const [modelDropdown, setModelDropdown] = useState(inputTitle === "Type" ? "DETECTOR" : "AUTOPILOT");
+    const [modelDropdown, setModelDropdown] = useState(inputTitle === "Type" ? "AUTOPILOT" : "AUTOPILOT");
     const [modelWidth, setModelWidth] = useState(322)
     const [modelHeight, setModelHeight] = useState(322)
 
@@ -136,7 +135,7 @@ export default function SimpleInputComponent(props) {
                                         }
                                     }}
                                 >{
-                                    (inputTitle === "Type" ? Models.type : Models.class).map((item) => (
+                                    (modelData).map((item) => (
                                         <MenuItem
                                             style={theme.theme === "dark" ? {
                                                 color: colors.whiteFont,

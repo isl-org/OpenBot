@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Backdrop, Box, CircularProgress, Modal} from "@mui/material";
 import styles from "../../navBar/navbar.module.css";
-import {Constants, errorToast, localStorageKeys, Themes} from "../../../utils/constants";
+import {Constants, errorToast, localStorageKeys, Models, Themes} from "../../../utils/constants";
 import {Images} from "../../../utils/images";
 import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
 import BlueButton from "../../buttonComponent/blueButtonComponent";
@@ -27,8 +27,8 @@ export function ModelUploadingComponent(params) {
     const [fileUploadLoader, setFileUploadLoader] = useState(false);
     const [modelDetails, setModelDetails] = useState({
         displayName: localFileName,
-        type: "DETECTOR",
-        class: "AUTOPILOT_F",
+        type: "AUTOPILOT",
+        class: "AUTOPILOT",
         width: 322,
         height: 322
     })
@@ -191,11 +191,12 @@ export function ModelUploadingComponent(params) {
                                           inputTitle={"Model Name"} extraInputStyle={styles.extraInputStyle}
                     />
                     <SimpleInputComponent inputType={"dropdown"} inputTitle={"Type"}
-                                          onDataChange={handleTypeChange}
+                                          onDataChange={handleTypeChange} modelData={Models.type}
                                           extraStyle={styles.inputExtraStyle}/>
                 </div>
                 <div style={{display: "flex"}}>
                     <SimpleInputComponent inputType={"dropdown"} inputTitle={"Class"}
+                                          modelData={Models.class}
                                           extraStyle={styles.inputExtraStyle}
                                           onDataChange={handleClassChange}
                     />
