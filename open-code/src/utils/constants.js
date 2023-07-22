@@ -86,14 +86,6 @@ export const Models = {
         'DETECTOR',
         'NAVIGATION',
     ],
-    class: [
-        "AUTOPILOT",
-        "MOBILENET",
-        "EFFICIENTDET",
-        "YOLOV4",
-        "YOLOV5",
-        "NAVIGATION",
-    ]
 }
 
 export const PathName = {

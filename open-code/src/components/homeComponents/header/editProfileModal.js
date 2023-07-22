@@ -187,7 +187,6 @@ export function EditProfileModal(props) {
                 alignItems: "center",
                 justifyContent: "center",
                 overflow: "scroll",
-                minHeight: "40rem"
             }}>
 
             <Box

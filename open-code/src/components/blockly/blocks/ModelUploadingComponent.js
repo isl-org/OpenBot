@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Backdrop, Box, CircularProgress, Modal} from "@mui/material";
+import {Backdrop, Box, CircularProgress, Modal, useTheme} from "@mui/material";
 import styles from "../../navBar/navbar.module.css";
 import {Constants, errorToast, localStorageKeys, Models, Themes} from "../../../utils/constants";
 import {Images} from "../../../utils/images";
@@ -10,6 +10,7 @@ import {colors} from "../../../utils/color";
 import {StoreContext} from "../../../context/context";
 import {getConfigData, setConfigData} from "../../../services/workspace";
 import {uploadToGoogleDrive} from "../../../services/googleDrive";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 /**
  * function to upload new model (.tflite)
@@ -25,6 +26,7 @@ export function ModelUploadingComponent(params) {
     const [fileName, setFileName] = useState(localFileName ?? "");
     const [isDesktopLargerScreen, setIsDesktopLargerScreen] = useState(window.matchMedia("(min-height: 900px)").matches);
     const [fileUploadLoader, setFileUploadLoader] = useState(false);
+    const [modelClassDropdown, setModelClassDropdown] = useState("AUTOPILOT");
     const [modelDetails, setModelDetails] = useState({
         displayName: localFileName,
         type: "AUTOPILOT",
@@ -32,6 +34,7 @@ export function ModelUploadingComponent(params) {
         width: 322,
         height: 322
     })
+    const [handleTypeDependency, setHandleTypeDependency] = useState(["AUTOPILOT"]);
 
     //function to close the model
     const handleClose = () => {
@@ -75,13 +78,31 @@ export function ModelUploadingComponent(params) {
         }
     }
 
-    //function to handle model type
+    //function to handle model type and class dependency on type
     function handleTypeChange(e) {
+        if (e === "AUTOPILOT") {
+            setHandleTypeDependency([e]);
+            setModelClassDropdown(e);
+        } else if (e === "DETECTOR") {
+            setHandleTypeDependency(["MOBILENET", "EFFICIENTDET", "YOLOV4", "YOLOV5"]);
+            setModelClassDropdown("MOBILENET");
+        } else if (e === "NAVIGATION") {
+            setHandleTypeDependency([e]);
+            setModelClassDropdown(e);
+        }
         setModelDetails({
             ...modelDetails,
-            type: e
+            type: e,
+            class: modelClassDropdown
         })
     }
+
+    useEffect(() => {
+        setModelDetails({
+            ...modelDetails,
+            class: modelClassDropdown
+        })
+    }, [handleTypeDependency])
 
     //function to handle model class
     function handleClassChange(e) {
@@ -164,7 +185,6 @@ export function ModelUploadingComponent(params) {
                 alignItems: "center",
                 justifyContent: "center",
                 overflow: "scroll",
-                minHeight: "40rem"
             }}>
             <Box
                 className={styles.editProfileModal + " " + (theme === Themes.dark && styles.darkEditProfileModal)}>
@@ -192,18 +212,22 @@ export function ModelUploadingComponent(params) {
                     />
                     <SimpleInputComponent inputType={"dropdown"} inputTitle={"Type"}
                                           onDataChange={handleTypeChange} modelData={Models.type}
-                                          extraStyle={styles.inputExtraStyle}/>
+                                          extraStyle={styles.inputExtraStyle} extraInputStyle={styles.extraInputStyle}/>
                 </div>
                 <div style={{display: "flex"}}>
                     <SimpleInputComponent inputType={"dropdown"} inputTitle={"Class"}
-                                          modelData={Models.class}
+                                          modelClassDropdown={modelClassDropdown}
+                                          setModelClassDropdown={setModelClassDropdown}
+                                          modelData={handleTypeDependency}
                                           extraStyle={styles.inputExtraStyle}
                                           onDataChange={handleClassChange}
+                                          extraInputStyle={styles.extraInputStyle}
                     />
                     <SimpleInputComponent inputType={"dimensions"} inputTitle={"Input(w × h)"}
                                           onWidthDataChange={handleWidthChange}
                                           onHeightDataChange={handleHeightChange}
-                                          extraStyle={styles.inputExtraStyle}/>
+                                          extraInputStyle={styles.extraInputStyle}
+                                          extraStyle={styles.inputExtraStyle} extraMargin={styles.dropdownMargin}/>
 
                 </div>
                 <div className={styles.buttonSection}>
