@@ -101,40 +101,36 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
     holder.title.setAlpha((holder.mItem.pathType == Model.PATH_TYPE.URL) ? 0.7f : 1f);
   }
 
-  private void downloadFromDrive(ViewHolder holder){
-System.out.println("sanjeev kumar == " + holder);
+  private void downloadFromDrive(ViewHolder holder) {
     new DownloadFileTask(mContext, progress -> {
       holder.progressBar.setProgress(progress);
       // Update your progress bar or do any other UI updates based on progress.
-    }, new DownloadFileTask.OnDownloadCompleteListener() {
-      @Override
-      public void onDownloadComplete(File file) {
-        // Handle the downloaded file here, for example, write its content to a new file.
-        try {
-          File newFile = new File(
-                  holder.itemView.getContext().getFilesDir()
-                  + File.separator
-                  + holder.mItem.name);
-          InputStream inputStream = new FileInputStream(file);
-          OutputStream outputStream = new FileOutputStream(newFile);
-          byte[] buffer = new byte[4096];
-          int bytesRead;
-          while ((bytesRead = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
-          }
-          holder.imgDownload.setClickable(true);
-          holder.imgDownload.setVisibility(View.GONE);
-          holder.imgDelete.setVisibility(View.VISIBLE);
-          holder.progressBar.setProgress(0);
-          itemClickListener.onModelDownloaded(true, holder.mItem);
-          outputStream.close();
-          inputStream.close();
-        } catch (IOException e) {
-          holder.imgDownload.setClickable(true);
-          holder.progressBar.setProgress(0);
-          itemClickListener.onModelDownloaded(false, holder.mItem);
-          e.printStackTrace();
+    }, file -> {
+      // Handle the downloaded file here, for example, write its content to a new file.
+      try {
+        File newFile = new File(
+                holder.itemView.getContext().getFilesDir()
+                + File.separator
+                + holder.mItem.name);
+        InputStream inputStream = new FileInputStream(file);
+        OutputStream outputStream = new FileOutputStream(newFile);
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+          outputStream.write(buffer, 0, bytesRead);
         }
+        holder.imgDownload.setClickable(true);
+        holder.imgDownload.setVisibility(View.GONE);
+        holder.imgDelete.setVisibility(View.VISIBLE);
+        holder.progressBar.setProgress(0);
+        itemClickListener.onModelDownloaded(true, holder.mItem);
+        outputStream.close();
+        inputStream.close();
+      } catch (IOException e) {
+        holder.imgDownload.setClickable(true);
+        holder.progressBar.setProgress(0);
+        itemClickListener.onModelDownloaded(false, holder.mItem);
+        e.printStackTrace();
       }
     }).execute(holder.mItem.path);
 
