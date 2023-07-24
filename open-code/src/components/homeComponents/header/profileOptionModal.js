@@ -109,7 +109,6 @@ export function ProfileOptionModal(props) {
                                 setIsAutoSync(true);
                                 await autoSync().then(() => {
                                     setIsAutoSync(false);
-                                    // window.location.reload();
                                 })
                             } else {
                                 errorToast("Please sign-In to auto sync.")

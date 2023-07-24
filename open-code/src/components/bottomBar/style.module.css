@@ -62,10 +62,22 @@
     align-items: center;
     justify-content: center;
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 0.5rem 0 0 0.5rem;
     height: 3.1rem;
     width: 100%;
     background: rgb(0, 113, 197);
+    cursor: pointer;
+}
+
+.features {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 0 0.5rem 0.5rem 0;
+    height: 3.1rem;
+    width: 20%;
+    background-color: #005B9F;
     cursor: pointer;
 }
 
@@ -157,7 +169,6 @@
 
 .noSpace {
     display: flex;
-    justify-content: space-between;
 }
 
 .driveStyle {
@@ -176,9 +187,9 @@
 
 .langOption {
     height: 140px;
-    width: 200px;
+    width: 220px;
     position: absolute;
-    top: -155px;
+    top: -190px;
     left: -7vw;
     border: 1px solid rgba(0, 0, 0, 0.15);
     box-shadow: 0 4px 22px rgba(0, 0, 0, 0.08);
@@ -219,7 +230,6 @@
 .langIcon {
     width: 24px;
     height: 24px;
-    margin-left: 2px;
 }
 
 .pyFont {
@@ -239,14 +249,22 @@
     .langIcon {
         width: 18px;
         height: 18px;
-        margin-left: 2px;
     }
 
     .uploadCodeButton {
         height: 2.5rem;
         width: 55%;
-        border-radius: 0.4rem;
+        border-radius: 0.4rem 0 0 0.4rem;
         margin-left: 0.5rem;
+        margin-top: 0.40rem;
+    }
+
+    .features {
+        height: 2.5rem;
+        border-radius: 0 0.4rem 0.4rem 0;
+        width: 30%;
+        cursor: pointer;
+        margin-left: 0;
         margin-top: 0.40rem;
     }
 
@@ -319,10 +337,10 @@
     }
 
     .langOption {
-        height: 70px;
-        width: 120px;
-        top: -110px;
-        left: -20vw;
+        height: 95px;
+        width: 140px;
+        top: -135px;
+        left: -15vw;
     }
 
     .langItem {
@@ -336,6 +354,7 @@
     .langItem {
         font-size: 15px;
     }
+
 }
 
 
@@ -369,6 +388,12 @@
         height: 2.3rem;
         margin-left: 1.4rem;
         width: 100px;
+        margin-bottom: 0.3rem;
+    }
+
+    .features {
+        height: 2.3rem;
+        width: 20%;
         margin-bottom: 0.3rem;
     }
 
@@ -407,9 +432,9 @@
     }
 
     .langOption {
-        height: 90px;
+        height: 130px;
         width: 160px;
-        top: -125px;
+        top: -170px;
         left: -10vw;
     }
 
@@ -417,6 +442,10 @@
 
 
 @media (min-width: 768px) and (max-width: 1024px) and (min-height: 650px) {
+
+    .features {
+        width: 40%;
+    }
 
     .jsDivMargin {
         padding-right: 1rem;
@@ -442,11 +471,10 @@
         margin-top: 10px;
         margin-left: -17%;
         font-size: 24px;
-
     }
 
     .langOption {
-        height: 100px;
+        height: 140px;
         width: 160px;
     }
 
