@@ -290,7 +290,7 @@ function GenerateCodeButton(params) {
     const [isTabletQuery, setIsTabletQuery] = useState(window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches);
     const popUpRef = useRef(null);// Create a reference to the popup element for detecting clicks outside the popup.
     const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
-    const isDesktopSmallerScreen = useMediaQuery(themes.breakpoints.down('md'));
+    const isDesktopSmallerScreen = useMediaQuery(themes.breakpoints.down('lg'));
     const inputRef = useRef();
 
     const handleClick = (event) => {
@@ -345,49 +345,24 @@ function GenerateCodeButton(params) {
         };
     }, [popUpRef, arrowClick]);
 
-
     return (
         <div className={styles.iconMargin + " " + styles.noSpace}
-             style={{width: isMobile ? "23%" : isLandscape ? "25%" : "31%"}}>
+             style={{width: "25%"}}>
             {/*generate QR code*/}
             <button
                 className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
                 name={"uploadCode"} onClick={generateCode}>
-                <img alt={""}
-                     className={styles.iconDiv} src={Images.uploadIcon}/>
                 {isMobile || isLandscape || isTabletQuery.matches || isDesktopSmallerScreen ? (
                     ""
                 ) : (
                     <span className={styles.leftButton + " " + styles.iconMargin}>Upload Code </span>
                 )}
+                <img alt={""}
+                     className={styles.iconDiv} src={Images.uploadIcon}/>
             </button>
-
-            {/*dropdown language selection*/}
-            <div onClick={() => {
-                setCategory(language);
-                setDrawer(true);
-            }
-            } className={`${styles.uploadCodeButton}`} style={{width: isMobile && "70px", marginLeft: "1rem"}}>
-                {!isMobile && !isLandscape && !isTabletQuery.matches && !isDesktopSmallerScreen &&
-                    <img src={language === Constants.js ? Images.jsIconDarkTheme : Images.pyIconDarkTheme}
-                         alt={"lang"}
-                         style={{width: "1.5rem", height: "1.5rem"}}/>
-                }
-                {isMobile || isLandscape || isTabletQuery.matches || isDesktopSmallerScreen ? <span
-                        className={styles.leftButton + " " + styles.iconMargin}>{language === Constants.js ? "JS" : "Py"}</span> :
-                    <span
-                        className={styles.leftButton + " " + styles.iconMargin}>{language === Constants.js ? "Javascript" : "Python"}</span>}
-                <img ref={popUpRef}
-                     onClick={handleClick}
-                     src={openPopupArrow ? Images.downArrowIcon : Images.UpArrowIcon}
-                     style={{
-                         height: "1.3rem",
-                         width: "1.3rem",
-                         cursor: "pointer",
-                         paddingRight: isMobile ? "5px" : isLandscape ? "8px" : "",
-                         zIndex: "1"
-                     }}
-                     alt={"arrow"}/>
+            <div
+                className={`${styles.features}`} ref={popUpRef} onClick={handleClick}>
+                <img alt={"features"} className={styles.iconDiv} src={Images.darkDots}/>
             </div>
 
             <Popper ref={popUpRef} id={id} open={openPopupArrow} anchorEl={anchorEl}>
@@ -416,13 +391,14 @@ function GenerateCodeButton(params) {
                         }
                     </div>
                     <div onClick={() => inputRef.current?.click()}
-                         className={`${styles.langItem} ${styles.pyDivMargin} ${(theme.theme === "dark" ? navbarStyle.darkItem : navbarStyle.lightItem)}`}
+                         style={{marginTop: 0}}
+                         className={`${styles.langItem} ${styles.jsDivMargin} ${(theme.theme === "dark" ? navbarStyle.darkItem : navbarStyle.lightItem)}`}
                     >
                         <img alt="Icon" className={styles.langIcon}
-                             src={theme.theme === "dark" ? Images.pyIconDarkTheme : Images.pyIconLightTheme}/>
+                             src={theme.theme === "dark" ? Images.darkPlusIcon : Images.lightPlusIcon}/>
                         {theme.theme === "dark" ?
-                            <WhiteText extraStyle={styles.pyText} text={"Upload"}/> :
-                            <BlueText extraStyle={styles.pyText} text={"Upload"}/>
+                            <WhiteText text={"Add Model"}/> :
+                            <BlueText text={"Add Model"}/>
                         }
                         <input ref={inputRef} style={{display: "none"}} type="file"
                                accept=".tflite"

@@ -182,7 +182,12 @@ export function EditProfileModal(props) {
     return (
         <Modal
             open={isEditProfileModal}
-            style={{display: "flex", alignItems: "center", justifyContent: "center", overflow: "scroll"}}>
+            style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                overflow: "scroll",
+            }}>
 
             <Box
                 className={styles.editProfileModal + " " + (theme === Themes.dark && styles.darkEditProfileModal)}>

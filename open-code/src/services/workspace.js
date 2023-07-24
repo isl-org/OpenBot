@@ -1,12 +1,13 @@
-import {localStorageKeys} from "../utils/constants";
+import {Constants, localStorageKeys} from "../utils/constants";
 import {
     checkFileExistsInFolder,
     deleteFileFromGoogleDrive,
     fileRename,
     getAllFilesFromGoogleDrive,
-    getFolderId,
+    getFolderId, uploadToGoogleDrive,
 } from "./googleDrive";
 import configData from "../config.json"
+import {ModelUploadingComponent} from "../components/blockly/blocks/ModelUploadingComponent";
 
 /**
  * get project from drive when user signedIn
@@ -356,8 +357,19 @@ function filterModels(modelType) {
     }
 }
 
+/**
+ * function to auto sync models
+ * @returns {Promise<void>}
+ */
+async function autoSync() {
+    await setConfigData().then(async () => {
+            await uploadToGoogleDrive(localStorage.getItem(localStorageKeys.configData), Constants.json)
+        }
+    )
+}
 
 export {
+    autoSync,
     getDriveProjects,
     deleteProjectFromStorage,
     updateCurrentProject,
@@ -370,5 +382,5 @@ export {
     renameProject,
     setConfigData,
     filterModels,
-    getConfigData
+    getConfigData,
 }

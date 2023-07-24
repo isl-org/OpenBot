@@ -11,6 +11,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {useLocation} from "react-router-dom";
 import {getDateOfBirth, googleSigIn} from "../../../services/firebase";
 import {StoreContext} from "../../../context/context";
+import {autoSync} from "../../../services/workspace";
 
 
 /**
@@ -27,7 +28,8 @@ export function ProfileOptionModal(props) {
         setIsHelpCenterModal,
         setIsLogoutModal,
         setEditProfileLoaderOpen,
-        isDobChanged
+        isDobChanged,
+        isAutoSync, setIsAutoSync
     } = props
     const location = useLocation();
     const themes = useTheme();
@@ -100,6 +102,24 @@ export function ProfileOptionModal(props) {
                     <PopUpInRowText onClick={() => handleOnclick(setIsHelpCenterModal)} text={"How To Upload"}
                                     icon={theme === Themes.dark ? Images.helpIcon : Images.infoLight}/>
                 }
+                {(isOnPlaygroundPage && isMobile && isSignedIn) &&
+                    <PopUpInRowText onClick={async () => {
+                        if (isOnline) {
+                            if (localStorage.getItem("isSigIn") === "true") {
+                                setIsAutoSync(true);
+                                await autoSync().then(() => {
+                                    setIsAutoSync(false);
+                                })
+                            } else {
+                                errorToast("Please sign-In to auto sync.")
+                            }
+                        } else {
+                            errorToast(Constants.InternetOffMsg)
+                        }
+                    }} text={"Auto Sync"} isAutoSync={isAutoSync}
+                                    modelStyle={{width: "14px", height: "18px"}}
+                                    icon={theme === Themes.dark ? Images.darkSyncIcon : Images.lightSyncIcon}/>
+                }
                 {((isHomePage) || (isOnPlaygroundPage && isSignedIn)) &&
                     <PopUpInRowText onClick={() => handleOnclick(setIsLogoutModal)} text={"Logout"}
                                     icon={theme === Themes.dark ? Images.darkLogoutIcon : Images.logoutIcon}/>
@@ -122,13 +142,13 @@ export function ProfileOptionModal(props) {
  */
 function PopUpInRowText(params) {
     const theme = useContext(ThemeContext);
-    const {onClick, text, icon} = params
+    const {onClick, text, icon, modelStyle, isAutoSync} = params
 
     return (
         <div onClick={onClick}
              className={`${styles.item} ${styles.editProfileMargin}  ${(theme.theme === Themes.dark ? styles.darkItem : styles.lightItem)}`}>
             <img alt="icon" src={icon}
-                 className={styles.modalIcon}/>
+                 className={`${styles.modalIcon} ${isAutoSync && styles.sync}`} style={modelStyle}/>
             <span className={`${styles.inRowText}`}>
                 {theme.theme === Themes.dark ?
                     <WhiteText extraStyle={styles.modalText} styles text={text}/> :
