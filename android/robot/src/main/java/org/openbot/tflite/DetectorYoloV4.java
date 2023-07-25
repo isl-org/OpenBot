@@ -127,4 +127,42 @@ public class DetectorYoloV4 extends Detector {
     }
     return nms(recognitions);
   }
+
+  @Override
+  protected List<Recognition> getAllRecognitions(String classNameFirst, String classNameSecond) {
+    // Show the best detections.
+    // after scaling them back to the input size.
+    final ArrayList<ArrayList<Recognition>> allRecognitions = new ArrayList<>(getNumDetections());
+    allRecognitions.add(new ArrayList<>());
+    allRecognitions.add(new ArrayList<>());
+    for (int i = 0; i < getNumDetections(); ++i) {
+      float maxClass = 0;
+      int classId = -1;
+      final float[] classes = new float[labels.size()];
+      System.arraycopy(outputScores[0][i], 0, classes, 0, labels.size());
+      for (int c = 0; c < labels.size(); ++c) {
+        if (classes[c] > maxClass) {
+          classId = c;
+          maxClass = classes[c];
+        }
+      }
+      final float score = maxClass;
+      final float xPos = outputLocations[0][i][0];
+      final float yPos = outputLocations[0][i][1];
+      final float w = outputLocations[0][i][2];
+      final float h = outputLocations[0][i][3];
+      final RectF detection =
+              new RectF(
+                      Math.max(0, xPos - w / 2),
+                      Math.max(0, yPos - h / 2),
+                      Math.min(getImageSizeX() - 1, xPos + w / 2),
+                      Math.min(getImageSizeY() - 1, yPos + h / 2));
+      if (classId > -1 && labels.get(classId).contentEquals(classNameFirst)) {
+        allRecognitions.get(0).add(new Recognition("" + i, labels.get(classId), score, detection, classId));
+      } else if (classId > -1 && labels.get(classId).contentEquals(classNameSecond)) {
+        allRecognitions.get(0).add(new Recognition("" + i, labels.get(classId), score, detection, classId));
+      }
+    }
+    return multipleNMS(allRecognitions);
+  }
 }

@@ -148,4 +148,34 @@ public class DetectorDefault extends Detector {
     }
     return nms(recognitions);
   }
+
+  @Override
+  protected List<Recognition> getAllRecognitions(String classNameFirst, String classNameSecond) {
+    final ArrayList<ArrayList<Recognition>> allRecognitions = new ArrayList<>(getNumDetections());
+    allRecognitions.add(new ArrayList<>());
+    allRecognitions.add(new ArrayList<>());
+    for (int i = 0; i < getNumDetections(); ++i) {
+      final RectF detection =
+              new RectF(
+                      outputLocations[0][i][1] * getImageSizeY(),
+                      outputLocations[0][i][0] * getImageSizeX(),
+                      outputLocations[0][i][3] * getImageSizeY(),
+                      outputLocations[0][i][2] * getImageSizeX());
+      // SSD Mobilenet V1 Model assumes class 0 is background class
+      // in label file and class labels start from 1 to number_of_classes+1,
+      // while outputClasses correspond to class index from 0 to number_of_classes
+      int classId = (int) outputClasses[0][i];
+      int labelId = classId + 1;
+      if (labels.get(labelId).contentEquals(classNameFirst)) {
+        allRecognitions.get(0).add(
+                new Recognition("" + i, labels.get(labelId), outputScores[0][i], detection, classId));
+      }
+      if (labels.get(labelId).contentEquals(classNameSecond)) {
+        allRecognitions.get(0).add(
+                new Recognition("" + i, labels.get(labelId), outputScores[0][i], detection, classId));
+      }
+    }
+    return multipleNMS(allRecognitions);
+  }
+
 }

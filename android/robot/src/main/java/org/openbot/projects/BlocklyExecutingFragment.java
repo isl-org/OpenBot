@@ -218,6 +218,61 @@ public class BlocklyExecutingFragment extends CameraFragment {
     }
   }
 
+  private void followMultipleObject(Bitmap bitmap){
+    if (tracker == null) updateCropImageInfo();
+
+    ++frameNum;
+
+    if (computingNetwork) {
+      return;
+    }
+
+    computingNetwork = true;
+    if (handler != null) {
+      handler.post(()->{
+
+        final Canvas canvas = new Canvas(croppedBitmap);
+        if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
+          canvas.drawBitmap(
+                  CameraUtils.flipBitmapHorizontal(bitmap), frameToCropTransform, null);
+        } else {
+          canvas.drawBitmap(bitmap, frameToCropTransform, null);
+        }
+
+        if (detector != null) {
+          Timber.i("Running detection on image %s", frameNum);
+          final List<Detector.Recognition> results =
+                  detector.recognizeMultipleImage(croppedBitmap, "classTypeFirst", "classTypeSecond");
+          if (!results.isEmpty())
+            Timber.i(
+                    "Object: "
+                            + results.get(0).getLocation().centerX()
+                            + ", "
+                            + results.get(0).getLocation().centerY()
+                            + ", "
+                            + results.get(0).getLocation().height()
+                            + ", "
+                            + results.get(0).getLocation().width());
+
+          final List<Detector.Recognition> mappedRecognitions = new LinkedList<>();
+
+          for (final Detector.Recognition result : results) {
+            final RectF location = result.getLocation();
+            if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
+              cropToFrameTransform.mapRect(location);
+              result.setLocation(location);
+              mappedRecognitions.add(result);
+            }
+          }
+          tracker.trackResults(mappedRecognitions, frameNum);
+//          if (isFollow) vehicle.setControl(tracker.updateTarget());
+//          else vehicle.stopBot();
+        }
+        computingNetwork = false;
+      });
+    }
+  }
+
   private void updateCropImageInfo() {
     frameToCropTransform = null;
 

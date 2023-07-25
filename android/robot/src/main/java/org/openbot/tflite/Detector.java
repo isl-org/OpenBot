@@ -210,6 +210,41 @@ public abstract class Detector extends Network {
     List<Recognition> recognitions = getRecognitions(className);
     endTime = SystemClock.elapsedRealtime();
     Timber.v("Timecost for postprocessing: %s", (endTime - startTime));
+    return recognitions;
+  }
+
+  public List<Recognition> recognizeMultipleImage(final Bitmap bitmap, String classNameFirst, String classNameSecond)
+          throws IllegalArgumentException {
+    // Log this method so that it can be analyzed with systrace.
+    Trace.beginSection("recognizeImage");
+
+    Trace.beginSection("preprocessBitmap");
+    long startTime = SystemClock.elapsedRealtime();
+    convertBitmapToByteBuffer(bitmap);
+    long endTime = SystemClock.elapsedRealtime();
+    Timber.v("Timecost to convertBitmapToByteBuffer: %s", (endTime - startTime));
+
+    Trace.endSection(); // preprocessBitmap
+
+    // Copy the input data into TensorFlow.
+    Trace.beginSection("feed");
+    feedData();
+    Trace.endSection();
+
+    // Run the inference call.
+    Trace.beginSection("runInference");
+    startTime = SystemClock.elapsedRealtime();
+    runInference();
+    endTime = SystemClock.elapsedRealtime();
+    Trace.endSection();
+    Timber.v("Timecost to run model inference: %s", (endTime - startTime));
+
+    Trace.endSection(); // "recognizeImage"
+
+    startTime = SystemClock.elapsedRealtime();
+    List<Recognition> recognitions = getAllRecognitions(classNameFirst, classNameSecond);
+    endTime = SystemClock.elapsedRealtime();
+    Timber.v("Timecost for postprocessing: %s", (endTime - startTime));
 
     return recognitions;
   }
@@ -262,6 +297,55 @@ public abstract class Detector extends Network {
       }
     }
     return nmsList;
+  }
+
+  // multiple non maximum suppression
+  protected ArrayList<Recognition> multipleNMS(ArrayList<ArrayList<Recognition>> list) {
+    ArrayList<Recognition> multipleNMSList = new ArrayList<Recognition>();
+    for (int k = 0; k < labels.size(); k++) {
+      // 1. Find max confidence per class
+      PriorityQueue<Recognition> pq =
+              new PriorityQueue<Recognition>(
+                      50,
+                      new Comparator<Recognition>() {
+                        @Override
+                        public int compare(final Recognition lhs, final Recognition rhs) {
+                          // Intentionally reversed to put high confidence at the head of the queue.
+                          return Float.compare(rhs.getConfidence(), lhs.getConfidence());
+                        }
+                      });
+
+      for (int i = 0; i < list.size(); ++i) {
+        ArrayList<Recognition> row = list.get(i);
+        for (int j = 0; j < row.size(); j++) {
+          if (row.get(j).getClassId() == k) {
+            pq.add(row.get(j));
+          }
+          if (row.get(j).getClassId() == k) {
+            pq.add(row.get(j));
+          }
+        }
+      }
+
+      // 2. Do non maximum suppression
+      while (pq.size() > 0) {
+        // insert detection with max confidence
+        Recognition[] a = new Recognition[pq.size()];
+        Recognition[] detections = pq.toArray(a);
+        Recognition max = detections[0];
+        multipleNMSList.add(max);
+        pq.clear();
+
+        for (int j = 1; j < detections.length; j++) {
+          Recognition detection = detections[j];
+          RectF b = detection.getLocation();
+          if (box_iou(max.getLocation(), b) < mNmsThresh) {
+            pq.add(detection);
+          }
+        }
+      }
+    }
+    return multipleNMSList;
   }
 
   protected float box_iou(RectF a, RectF b) {
@@ -347,4 +431,5 @@ public abstract class Detector extends Network {
    * @return
    */
   protected abstract List<Recognition> getRecognitions(String className);
+  protected abstract List<Recognition> getAllRecognitions(String classNameFirst, String classNameSecond);
 }
