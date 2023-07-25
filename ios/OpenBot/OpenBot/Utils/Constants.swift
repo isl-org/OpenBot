@@ -84,7 +84,8 @@ struct Constants {
             ModeItem(label: Strings.freeRoam, icon: Images.freeRoam!, identifier: Strings.ScreenFreeRoam, color: Colors.freeRoamColor),
             ModeItem(label: Strings.dataCollection, icon: Images.dataCollection!, identifier: Strings.ScreenDataCollection, color: Colors.dataCollectionColor),
             ModeItem(label: Strings.controllerMapping, icon: Images.controllerMapping!, identifier: Strings.ScreenControllerMapping, color: Colors.controllerMappingColor),
-            ModeItem(label: Strings.robotInfo, icon: Images.robotInfoIcon!, identifier: Strings.ScreenRobotInfo, color: Colors.robotInfoColor)
+            ModeItem(label: Strings.robotInfo, icon: Images.robotInfoIcon!, identifier: Strings.ScreenRobotInfo, color: Colors.robotInfoColor),
+        ModeItem(label: "Web Server", icon: Images.robotInfoIcon!, identifier: "webserver", color: Colors.robotInfoColor)
         ],
         // AI
         [

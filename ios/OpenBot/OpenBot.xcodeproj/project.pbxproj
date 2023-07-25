@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3A3C9E0D29E803AC008758C9 /* projectCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A3C9E0C29E803AC008758C9 /* projectCollectionViewCell.xib */; };
 		3A70CA1229C98E5800E4192B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */; };
+		3A8EF46C2A6FD0FD00F60B3D /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 3A8EF46B2A6FD0FD00F60B3D /* Starscream */; };
 		3AA7193929DD42CF00DE8336 /* openCode.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AA7193829DD42CF00DE8336 /* openCode.storyboard */; };
 		4FEF40039118AB286DD8CB0C /* DetectorDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47209A4C03D66945462E /* DetectorDefault.swift */; };
 		4FEF403935216C3C68714E27 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47C56474B6324A408225 /* UIViewExtension.swift */; };
@@ -75,6 +76,7 @@
 		66AC721929B885C70022108A /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC721829B885C70022108A /* Navigation.swift */; };
 		66B3C59C2A1D673D0079BC16 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B3C59B2A1D673D0079BC16 /* UIButton.swift */; };
 		66E7A02C297697BE00283ED6 /* DetectorFloatYoloV5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */; };
+		727D30046D9A5661BEE56C65 /* WebSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31225838EF1891DA9EDA /* WebSocketManager.swift */; };
 		727D301B0DA9C7F9CC3203D6 /* BluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* BluetoothDataController.swift */; };
 		727D303C061B9CA823E99905 /* Projects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33AFAD7EDEC111578DE8 /* Projects.swift */; };
 		727D30A012E8F58F2DD21369 /* ServerCommunication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D384E16A0157F2B8C7084 /* ServerCommunication.swift */; };
@@ -99,6 +101,7 @@
 		727D37F0A374924D485368CD /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D38DAC31CD27C5DE891F4 /* Reachability.swift */; };
 		727D3825145AF7703ACAD6A2 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E5643531AC215E4101B /* UIButton.swift */; };
 		727D3928D96E5AD69D24DA6D /* ServerListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3937D1457F50C712CDD9 /* ServerListener.swift */; };
+		727D393DE8165D5D81CCA6AE /* WebServerFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33A5C4D9D21B66FC5108 /* WebServerFragment.swift */; };
 		727D397E28A6A94840B702D4 /* AlertFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30892A4485EAE638E24F /* AlertFragment.swift */; };
 		727D39E11C9EAFDC77200946 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3CF1C0FE6DE0D04C762A /* UIImageView.swift */; };
 		727D3A13757F3F2493E61977 /* ProjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30F6A969E2122927A95D /* ProjectCollectionViewCell.swift */; };
@@ -220,6 +223,7 @@
 		727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptedConstraint.swift; path = Adaptive/AdaptedConstraint.swift; sourceTree = "<group>"; };
 		727D30892A4485EAE638E24F /* AlertFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertFragment.swift; sourceTree = "<group>"; };
 		727D30F6A969E2122927A95D /* ProjectCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectCollectionViewCell.swift; sourceTree = "<group>"; };
+		727D31225838EF1891DA9EDA /* WebSocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketManager.swift; sourceTree = "<group>"; };
 		727D313C9325317487A840E7 /* JsEvaluator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsEvaluator.swift; sourceTree = "<group>"; };
 		727D3153BBE7A4D47749E6E8 /* GoogleSignInButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleSignInButton.swift; sourceTree = "<group>"; };
 		727D3157F2B5E5DBB1565EDD /* DataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLogger.swift; sourceTree = "<group>"; };
@@ -228,6 +232,7 @@
 		727D3278D9F8247EB0FF1B73 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRTCDelegates.swift; path = WebRTC/WebRTCDelegates.swift; sourceTree = "<group>"; };
 		727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sensorDataRetrieve.swift; sourceTree = "<group>"; };
+		727D33A5C4D9D21B66FC5108 /* WebServerFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServerFragment.swift; sourceTree = "<group>"; };
 		727D33AFAD7EDEC111578DE8 /* Projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Projects.swift; sourceTree = "<group>"; };
 		727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCCustomFrameCapture.swift; path = WebRTC/RTCCustomFrameCapture.swift; sourceTree = "<group>"; };
 		727D35EAA13908B142BC4773 /* WebViewFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewFragment.swift; sourceTree = "<group>"; };
@@ -294,6 +299,7 @@
 			files = (
 				BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */,
 				525632FAD7D5CA948A20F6B9 /* Pods_OpenBot.framework in Frameworks */,
+				3A8EF46C2A6FD0FD00F60B3D /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -528,6 +534,7 @@
 				727D356FCD75B6B73D8C5A7C /* runRobot */,
 				727D3AD9225580EC94775651 /* WebView */,
 				727D3DEDE1506A0363E8D959 /* Alert */,
+				727D395E131B59268FC75AF3 /* WebServer */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -680,6 +687,15 @@
 			path = QrScanner;
 			sourceTree = "<group>";
 		};
+		727D395E131B59268FC75AF3 /* WebServer */ = {
+			isa = PBXGroup;
+			children = (
+				727D33A5C4D9D21B66FC5108 /* WebServerFragment.swift */,
+				727D31225838EF1891DA9EDA /* WebSocketManager.swift */,
+			);
+			path = WebServer;
+			sourceTree = "<group>";
+		};
 		727D3AD9225580EC94775651 /* WebView */ = {
 			isa = PBXGroup;
 			children = (
@@ -785,6 +801,9 @@
 			dependencies = (
 			);
 			name = OpenBot;
+			packageProductDependencies = (
+				3A8EF46B2A6FD0FD00F60B3D /* Starscream */,
+			);
 			productName = OpenBot;
 			productReference = 4FEF46775439F2AC3ED4FE35 /* OpenBot.app */;
 			productType = "com.apple.product-type.application";
@@ -832,6 +851,9 @@
 				Base,
 			);
 			mainGroup = 4FEF4FDE69B20F82CA2C0196;
+			packageReferences = (
+				3A8EF46A2A6FD0FD00F60B3D /* XCRemoteSwiftPackageReference "Starscream" */,
+			);
 			productRefGroup = 4FEF4A209F128B8F5AC06E17 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1222,6 +1244,8 @@
 				727D397E28A6A94840B702D4 /* AlertFragment.swift in Sources */,
 				727D35D8CB673649BF1AD948 /* Endpoint.swift in Sources */,
 				727D3EB96F3F1D250E9D32E7 /* ServerItem.swift in Sources */,
+				727D393DE8165D5D81CCA6AE /* WebServerFragment.swift in Sources */,
+				727D30046D9A5661BEE56C65 /* WebSocketManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1562,6 +1586,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3A8EF46A2A6FD0FD00F60B3D /* XCRemoteSwiftPackageReference "Starscream" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daltoniam/Starscream.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3A8EF46B2A6FD0FD00F60B3D /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A8EF46A2A6FD0FD00F60B3D /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4FEF44CF03B950ABA7A3C2A8 /* Project object */;
 }
