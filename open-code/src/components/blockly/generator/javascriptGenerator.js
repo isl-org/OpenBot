@@ -290,3 +290,12 @@ javascriptGenerator['objectTracking'] = function (block, generator) {
     code += "follow('" + dropdown_class + "','" + dropdown_models + "');\n"
     return code;
 };
+
+javascriptGenerator['objectTrackingConditional'] = function (block, generator) {
+    let labels1 = block.getFieldValue('labels1');
+    let models = block.getFieldValue('models');
+    let labels2 = block.getFieldValue('labels2');
+    let code = "";
+    code += "followAndStop('" + labels1 + "','" + models + "','" + labels2 + "');\n"
+    return code;
+};

@@ -138,6 +138,7 @@ export const Toolbox = (props) => {
                 <Label text="Artificial Intelligence" web-class="Heading"></Label>
                 <Block type="objectTracking"/>
                 <Block type="autopilot"/>
+                <Block type="objectTrackingConditional"/>
                 <Block type="navigateXAndY"/>
                 <Block type="navigateForwardAndLeft"/>
             </Category>

@@ -1,4 +1,4 @@
-import {Constants, localStorageKeys} from "../utils/constants";
+import {Constants, Labels, localStorageKeys} from "../utils/constants";
 import {
     checkFileExistsInFolder,
     deleteFileFromGoogleDrive,
@@ -340,6 +340,7 @@ function getConfigData() {
  * @returns {unknown[]|undefined|null}
  */
 function filterModels(modelType) {
+    filterLabels()
     let modelsArray = []
     let updatedData = localStorage.getItem(localStorageKeys.configData)
     if (updatedData !== " " || null) {
@@ -355,6 +356,10 @@ function filterModels(modelType) {
     } else {
         return null;
     }
+}
+
+function filterLabels() {
+    return Labels.map((item) => [item, item]);
 }
 
 /**
@@ -383,4 +388,5 @@ export {
     setConfigData,
     filterModels,
     getConfigData,
+    filterLabels
 }
