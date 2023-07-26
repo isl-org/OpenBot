@@ -249,7 +249,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 // MARK: - PeerConnection Delegates
 extension WebRTCClient {
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
-        print("signaling state changed: ", stateChanged)
+        print("signaling state changed: ")
     }
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {

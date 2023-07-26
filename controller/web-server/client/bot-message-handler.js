@@ -17,7 +17,9 @@ export function BotMessageHandler (connection) {
   const errDisplay = new ErrorDisplay()
 
   this.handle = (msg) => {
+    console.log("msgType == ==============" + msg + connection)
     const msgType = Object.keys(msg)[0]
+    console.log("msgType == ==============",msgType)
     switch (msgType) {
       case 'VIDEO_PROTOCOL':
         if (msg.VIDEO_PROTOCOL !== 'WEBRTC') {

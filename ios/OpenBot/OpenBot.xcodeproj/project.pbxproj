@@ -10,6 +10,7 @@
 		3A3C9E0D29E803AC008758C9 /* projectCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A3C9E0C29E803AC008758C9 /* projectCollectionViewCell.xib */; };
 		3A70CA1229C98E5800E4192B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */; };
 		3A8EF46C2A6FD0FD00F60B3D /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 3A8EF46B2A6FD0FD00F60B3D /* Starscream */; };
+		3A8EF46F2A6FE22F00F60B3D /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 3A8EF46E2A6FE22F00F60B3D /* SocketIO */; };
 		3AA7193929DD42CF00DE8336 /* openCode.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AA7193829DD42CF00DE8336 /* openCode.storyboard */; };
 		4FEF40039118AB286DD8CB0C /* DetectorDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47209A4C03D66945462E /* DetectorDefault.swift */; };
 		4FEF403935216C3C68714E27 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47C56474B6324A408225 /* UIViewExtension.swift */; };
@@ -76,7 +77,7 @@
 		66AC721929B885C70022108A /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC721829B885C70022108A /* Navigation.swift */; };
 		66B3C59C2A1D673D0079BC16 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B3C59B2A1D673D0079BC16 /* UIButton.swift */; };
 		66E7A02C297697BE00283ED6 /* DetectorFloatYoloV5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */; };
-		727D30046D9A5661BEE56C65 /* WebSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D31225838EF1891DA9EDA /* WebSocketManager.swift */; };
+		727D30039B9108BC587A820E /* ServerWebrtcDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D37C7F3414E19F505AB0C /* ServerWebrtcDelegates.swift */; };
 		727D301B0DA9C7F9CC3203D6 /* BluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* BluetoothDataController.swift */; };
 		727D303C061B9CA823E99905 /* Projects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33AFAD7EDEC111578DE8 /* Projects.swift */; };
 		727D30A012E8F58F2DD21369 /* ServerCommunication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D384E16A0157F2B8C7084 /* ServerCommunication.swift */; };
@@ -122,6 +123,7 @@
 		727D3EB96F3F1D250E9D32E7 /* ServerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D5C91B30251F62FA65B /* ServerItem.swift */; };
 		727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */; };
 		727D3EFB9016C8224990ACE8 /* ProfileFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A89E5445B66EEB3177C /* ProfileFragment.swift */; };
+		727D3F785C662A5A6C00D835 /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A67A02F3F30135DFA43 /* SocketManager.swift */; };
 		727D3FA70675D0042BFBB89A /* ScannerFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E372C09E1BADA2A03FA /* ScannerFragment.swift */; };
 		BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9BAED728AF94A800EF3E48 /* GameController.framework */; };
 		DB5B604C1844E78F9C021354 /* Pods_OpenBot_OpenBotUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */; };
@@ -223,7 +225,6 @@
 		727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptedConstraint.swift; path = Adaptive/AdaptedConstraint.swift; sourceTree = "<group>"; };
 		727D30892A4485EAE638E24F /* AlertFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertFragment.swift; sourceTree = "<group>"; };
 		727D30F6A969E2122927A95D /* ProjectCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectCollectionViewCell.swift; sourceTree = "<group>"; };
-		727D31225838EF1891DA9EDA /* WebSocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketManager.swift; sourceTree = "<group>"; };
 		727D313C9325317487A840E7 /* JsEvaluator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsEvaluator.swift; sourceTree = "<group>"; };
 		727D3153BBE7A4D47749E6E8 /* GoogleSignInButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleSignInButton.swift; sourceTree = "<group>"; };
 		727D3157F2B5E5DBB1565EDD /* DataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLogger.swift; sourceTree = "<group>"; };
@@ -239,6 +240,7 @@
 		727D36143ED88C8E210BCEB1 /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		727D368915F3602E605FEA51 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		727D37586F16DE497CEA62CE /* SignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalingMessage.swift; sourceTree = "<group>"; };
+		727D37C7F3414E19F505AB0C /* ServerWebrtcDelegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerWebrtcDelegates.swift; sourceTree = "<group>"; };
 		727D383824EABABFDE0806CE /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		727D384384E67F20294222AC /* EditProfileFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileFragment.swift; sourceTree = "<group>"; };
 		727D384E16A0157F2B8C7084 /* ServerCommunication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCommunication.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 		727D39B76F53D6B069FF2A5C /* UiLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiLabel.swift; sourceTree = "<group>"; };
 		727D3A51A7A6155C22E62412 /* GifLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GifLoader.swift; sourceTree = "<group>"; };
 		727D3A55B16EF3CEDA3901BF /* BluetoothDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothDataController.swift; sourceTree = "<group>"; };
+		727D3A67A02F3F30135DFA43 /* SocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketManager.swift; sourceTree = "<group>"; };
 		727D3A89E5445B66EEB3177C /* ProfileFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileFragment.swift; sourceTree = "<group>"; };
 		727D3A8D7ACD08EF11740FC2 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		727D3AB3E741A78099D79575 /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
@@ -298,6 +301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */,
+				3A8EF46F2A6FE22F00F60B3D /* SocketIO in Frameworks */,
 				525632FAD7D5CA948A20F6B9 /* Pods_OpenBot.framework in Frameworks */,
 				3A8EF46C2A6FD0FD00F60B3D /* Starscream in Frameworks */,
 			);
@@ -691,7 +695,8 @@
 			isa = PBXGroup;
 			children = (
 				727D33A5C4D9D21B66FC5108 /* WebServerFragment.swift */,
-				727D31225838EF1891DA9EDA /* WebSocketManager.swift */,
+				727D3A67A02F3F30135DFA43 /* SocketManager.swift */,
+				727D37C7F3414E19F505AB0C /* ServerWebrtcDelegates.swift */,
 			);
 			path = WebServer;
 			sourceTree = "<group>";
@@ -803,6 +808,7 @@
 			name = OpenBot;
 			packageProductDependencies = (
 				3A8EF46B2A6FD0FD00F60B3D /* Starscream */,
+				3A8EF46E2A6FE22F00F60B3D /* SocketIO */,
 			);
 			productName = OpenBot;
 			productReference = 4FEF46775439F2AC3ED4FE35 /* OpenBot.app */;
@@ -853,6 +859,7 @@
 			mainGroup = 4FEF4FDE69B20F82CA2C0196;
 			packageReferences = (
 				3A8EF46A2A6FD0FD00F60B3D /* XCRemoteSwiftPackageReference "Starscream" */,
+				3A8EF46D2A6FE22F00F60B3D /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
 			);
 			productRefGroup = 4FEF4A209F128B8F5AC06E17 /* Products */;
 			projectDirPath = "";
@@ -1245,7 +1252,8 @@
 				727D35D8CB673649BF1AD948 /* Endpoint.swift in Sources */,
 				727D3EB96F3F1D250E9D32E7 /* ServerItem.swift in Sources */,
 				727D393DE8165D5D81CCA6AE /* WebServerFragment.swift in Sources */,
-				727D30046D9A5661BEE56C65 /* WebSocketManager.swift in Sources */,
+				727D3F785C662A5A6C00D835 /* SocketManager.swift in Sources */,
+				727D30039B9108BC587A820E /* ServerWebrtcDelegates.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1596,6 +1604,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		3A8EF46D2A6FE22F00F60B3D /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1603,6 +1619,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3A8EF46A2A6FD0FD00F60B3D /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
+		};
+		3A8EF46E2A6FE22F00F60B3D /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A8EF46D2A6FE22F00F60B3D /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -8,38 +8,49 @@
  */
 
 import { ErrorDisplay } from './error-display.js'
-
-export function Connection () {
-  const connectToServer = async () => {
-    const ws = new WebSocket(`ws://${window.location.hostname}:8000/ws`)
+import io from 'socket.io-client';
+export function Connection() {
+  const connectToServer = () => {
+    const socket = io.connect('http://localhost:8000'); // Use the Socket.IO library to connect
 
     return new Promise((resolve, reject) => {
-      const timer = setInterval(() => {
-        if (ws.readyState === 1) {
-          clearInterval(timer)
-          resolve(ws)
-        }
-      }, 10)
-    })
-  }
+      socket.on('connect', () => {
+        resolve(socket);
+      });
+    });
+  };
 
   this.start = async (onData) => {
-    let ws = await connectToServer()
-    const errDisplay = new ErrorDisplay()
+    let socket = await connectToServer();
+    const errDisplay = new ErrorDisplay();
 
-    ws.onmessage = webSocketMessage => onData(webSocketMessage.data)
-    ws.onclose = () => errDisplay.set('Disconnected from the server. To reconnect, reload this page.')
-    ws.onopen = () => errDisplay.reset()
+    socket.on('msg', (message) => onData(message));// No need to access .data as Socket.IO sends the message directly
+    socket.on('signalingMessage', (message) => onData(message));// No need to access .data as Socket.IO sends the message directly
 
-    this.send = data => {
-      if (ws) {
-        ws.send(data)
+    socket.on('msg',(data)=>{
+      onData(data);
+      console.log("data received")
+    })
+    socket.on('signalingMessage',(signalingMessage)=>{
+      onData(signalingMessage);
+    })
+    socket.on('disconnect', () => {
+      errDisplay.set('Disconnected from the server. To reconnect, reload this page.');
+    });
+
+    socket.on('connect', () => {
+      errDisplay.reset();
+    });
+
+    this.send = (data) => {
+      if (socket) {
+        socket.emit('chatMessage', data); // Emit 'chatMessage' event to the server
       }
-    }
+    };
 
     this.stop = () => {
-      ws.close()
-      ws = null
-    }
-  }
+      socket.close();
+      socket = null;
+    };
+  };
 }

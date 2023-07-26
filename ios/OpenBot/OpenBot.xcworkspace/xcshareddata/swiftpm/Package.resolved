@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "socket.io-client-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/socketio/socket.io-client-swift",
+      "state" : {
+        "branch" : "master",
+        "revision" : "a1ed825835a2d8c2555938e96557ccc05e4bebf3"
+      }
+    },
+    {
       "identity" : "starscream",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/daltoniam/Starscream",
