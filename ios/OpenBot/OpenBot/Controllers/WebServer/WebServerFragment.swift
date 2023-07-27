@@ -9,11 +9,15 @@ class WebServerFragment: UIViewController {
     var mSocket = WebSocketManager.shared.socket
     var gameController = GameController.shared
     let webSocketMessageHandler = WebSocketMessageHandler()
+    @IBOutlet weak var CommandLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad();
+        self.CommandLabel.textColor = .red;
+        CommandLabel.textAlignment = .center;
         // Listen for socket connection status changes
         mSocket?.on(clientEvent: .connect) { (dataArray, ack) in
             print("Socket connected.")
+
             // Emit events or perform other actions that require a connection
         }
 
@@ -30,10 +34,13 @@ class WebServerFragment: UIViewController {
 
                 let decoder = JSONDecoder()
                 let message = try decoder.decode(serverMessage.self, from: jsonData)
-
+                print("got message at timestamp =============",Date().millisecondsSince1970)
                 // Now you can access the decoded data
                 print("Left value:", message.driveCmd.l)
                 print("Right value:", message.driveCmd.r)
+                DispatchQueue.main.async {
+                    self.CommandLabel.text = dataReceived;
+                }
                 self.webSocketMessageHandler.driveCommand(control:Control(left: message.driveCmd.l, right: message.driveCmd.r));
             } catch {
                 print("Error decoding JSON:", error)
@@ -44,6 +51,9 @@ class WebServerFragment: UIViewController {
         mSocket?.on("cmd", callback: { (dataArray, ack) in
             let dataReceived = dataArray[0] as! String
             print(dataReceived)
+           DispatchQueue.main.async {
+               self.CommandLabel.text = dataReceived;
+           }
             switch dataReceived {
             case  "INDICATOR_LEFT" :
                 self.webSocketMessageHandler.indicatorLeft()
@@ -69,12 +79,6 @@ class WebServerFragment: UIViewController {
 
         WebSocketManager.shared.connectSocket()
     }
-
-    @IBAction func sendCommand(_ sender: Any) {
-        mSocket?.emit("cmd", "fvewjfwebjfc");
-    }
-
-
 }
 
 struct serverMessage: Decodable {

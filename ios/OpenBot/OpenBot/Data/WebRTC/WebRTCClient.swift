@@ -185,8 +185,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
     /// MARK: - Signaling Offer/Answer
     private func makeOffer(onSuccess: @escaping (RTCSessionDescription) -> Void) {
         peerConnection?.offer(for: RTCMediaConstraints.init(mandatoryConstraints: nil, optionalConstraints: nil)) { (sdp, err) in
-            if let error = err {
-                print("error with make offer")
+            if let error = err {("error with make offer")
                 print(error)
                 return
             }
