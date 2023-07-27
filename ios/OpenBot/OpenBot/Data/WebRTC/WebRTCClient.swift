@@ -229,7 +229,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
     // MARK: - Connection Events
     private func onConnected() {
         isConnected = true
-
         DispatchQueue.main.async {
             self.delegate?.didConnectWebRTC()
         }
@@ -249,11 +248,9 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 // MARK: - PeerConnection Delegates
 extension WebRTCClient {
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
-        print("signaling state changed: ")
     }
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
-
         switch newState {
         case .connected, .completed:
             if !isConnected {

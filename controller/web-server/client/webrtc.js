@@ -34,7 +34,6 @@ export function WebRTC (connection) {
                 throw Error(e);
               })
             })
-         // doAnswer()
         break
 
       case 'candidate':
@@ -61,7 +60,7 @@ export function WebRTC (connection) {
   const doAnswer = async () => {
     const answer = await peerConnection.createAnswer()
     console.log("answer is ===========" + answer.toString());
-    await peerConnection.setLocalDescription(answer);
+    await peerConnection.setLocalDescription(new RTCPeerConnection());
     connection.send(JSON.stringify({ webrtc_event: answer }))
   }
 

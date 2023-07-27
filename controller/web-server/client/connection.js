@@ -11,7 +11,7 @@ import { ErrorDisplay } from './error-display.js'
 import io from 'socket.io-client';
 export function Connection() {
   const connectToServer = () => {
-    const socket = io.connect('http://localhost:8000'); // Use the Socket.IO library to connect
+    const socket = io.connect('https://four-sleet-yarn.glitch.me/'); // Use the Socket.IO library to connect
 
     return new Promise((resolve, reject) => {
       socket.on('connect', () => {

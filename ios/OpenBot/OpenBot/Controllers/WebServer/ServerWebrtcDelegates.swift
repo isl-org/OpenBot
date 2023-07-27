@@ -19,7 +19,7 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
 
     /// callback to check whether the ice connection is changed.
     func didIceConnectionStateChanged(iceConnectionState: RTCIceConnectionState) {
-        print("ice connection state is : ");
+        print("ice connection state is : ",iceConnectionState);
     }
 
     /// callback function to open data channel
@@ -29,11 +29,11 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
 
     /// callback function to check data is available
     func didReceiveData(data: Data) {
-        print("data received");
+        print("data received",data);
     }
     /// callback function message string received
     func didReceiveMessage(message: String) {
-        print("message is : ");
+        print("message is : ",message);
 
     }
 

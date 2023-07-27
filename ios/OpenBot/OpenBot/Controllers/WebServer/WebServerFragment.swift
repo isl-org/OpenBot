@@ -7,6 +7,8 @@ import UIKit
 
 class WebServerFragment: UIViewController {
     var mSocket = WebSocketManager.shared.socket
+    var gameController = GameController.shared
+    let webSocketMessageHandler = WebSocketMessageHandler()
     override func viewDidLoad() {
         super.viewDidLoad();
         // Listen for socket connection status changes
@@ -20,38 +22,66 @@ class WebServerFragment: UIViewController {
             // Handle disconnection if needed
         }
 
-        mSocket?.on("counter") { (dataArray, ack) in
-            let dataReceived = dataArray[0] as? Int
-            print("data received", dataReceived ?? "No data received")
-            if let dataReceived = dataReceived {
+        mSocket?.on("driveCmd", callback: { (dataArray, ack) in
+            let dataReceived = dataArray[0] as! String
+            do {
+                print("dataReceived ================= ", dataReceived);
+                let jsonData = Data(dataReceived.utf8)
 
+                let decoder = JSONDecoder()
+                let message = try decoder.decode(serverMessage.self, from: jsonData)
+
+                // Now you can access the decoded data
+                print("Left value:", message.driveCmd.l)
+                print("Right value:", message.driveCmd.r)
+                self.webSocketMessageHandler.driveCommand(control:Control(left: message.driveCmd.l, right: message.driveCmd.r));
+            } catch {
+                print("Error decoding JSON:", error)
             }
-        }
-        mSocket?.on("chatMessage", callback: {(dataArray,ack) in
-            let dataReceived = dataArray[0]
             print("data received", dataReceived ?? "No data received")
+        })
+
+        mSocket?.on("cmd", callback: { (dataArray, ack) in
+            let dataReceived = dataArray[0] as! String
+            print(dataReceived)
+            switch dataReceived {
+            case  "INDICATOR_LEFT" :
+                self.webSocketMessageHandler.indicatorLeft()
+                break;
+            case "INDICATOR_RIGHT" :
+                self.webSocketMessageHandler.indicatorRight();
+                break
+            case "INDICATOR_STOP" :
+                self.webSocketMessageHandler.cancelIndicator();
+            case "SPEED_DOWN" :
+                self.webSocketMessageHandler.speedDown();
+                break;
+            case "SPEED_UP" :
+                self.webSocketMessageHandler.speedUp();
+                break;
+            case "DRIVE_MODE" :
+                self.webSocketMessageHandler.driveMode();
+                break
+            default:
+                break;
+            }
         })
 
         WebSocketManager.shared.connectSocket()
     }
 
     @IBAction func sendCommand(_ sender: Any) {
-        sendMessage();
-        ServerWebrtcDelegate();
+        mSocket?.emit("cmd", "fvewjfwebjfc");
     }
 
-    /// function to parse the message for the connection and send it.
-    func sendMessage() {
-        var msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
-        mSocket?.emit("msg", msg);
-        msg = JSON.toString(VideoProtocolEvent(status: .init(VIDEO_PROTOCOL: "WEBRTC")));
-        mSocket?.emit("msg", msg);
-        msg = JSON.toString(VideoServerUrlEvent(status: .init(VIDEO_SERVER_URL: "")));
-        mSocket?.emit("msg", msg);
-        msg = JSON.toString(VideoCommandEvent(status: .init(VIDEO_COMMAND: "START")));
-        mSocket?.emit("msg", msg);
-        msg = JSON.toString(VehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true)));
-        mSocket?.emit("msg", msg);
-    }
 
+}
+
+struct serverMessage: Decodable {
+    var driveCmd: serverCommand
+}
+
+struct serverCommand: Decodable {
+    var l: Float
+    var r: Float
 }

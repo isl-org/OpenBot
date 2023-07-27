@@ -123,6 +123,7 @@
 		727D3EB96F3F1D250E9D32E7 /* ServerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D5C91B30251F62FA65B /* ServerItem.swift */; };
 		727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */; };
 		727D3EFB9016C8224990ACE8 /* ProfileFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A89E5445B66EEB3177C /* ProfileFragment.swift */; };
+		727D3F551E6CB92280B819E2 /* WebSocketMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3504130197C59EB15178 /* WebSocketMessageHandler.swift */; };
 		727D3F785C662A5A6C00D835 /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A67A02F3F30135DFA43 /* SocketManager.swift */; };
 		727D3FA70675D0042BFBB89A /* ScannerFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E372C09E1BADA2A03FA /* ScannerFragment.swift */; };
 		BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9BAED728AF94A800EF3E48 /* GameController.framework */; };
@@ -235,6 +236,7 @@
 		727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sensorDataRetrieve.swift; sourceTree = "<group>"; };
 		727D33A5C4D9D21B66FC5108 /* WebServerFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServerFragment.swift; sourceTree = "<group>"; };
 		727D33AFAD7EDEC111578DE8 /* Projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Projects.swift; sourceTree = "<group>"; };
+		727D3504130197C59EB15178 /* WebSocketMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketMessageHandler.swift; sourceTree = "<group>"; };
 		727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCCustomFrameCapture.swift; path = WebRTC/RTCCustomFrameCapture.swift; sourceTree = "<group>"; };
 		727D35EAA13908B142BC4773 /* WebViewFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewFragment.swift; sourceTree = "<group>"; };
 		727D36143ED88C8E210BCEB1 /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
@@ -697,6 +699,7 @@
 				727D33A5C4D9D21B66FC5108 /* WebServerFragment.swift */,
 				727D3A67A02F3F30135DFA43 /* SocketManager.swift */,
 				727D37C7F3414E19F505AB0C /* ServerWebrtcDelegates.swift */,
+				727D3504130197C59EB15178 /* WebSocketMessageHandler.swift */,
 			);
 			path = WebServer;
 			sourceTree = "<group>";
@@ -1254,6 +1257,7 @@
 				727D393DE8165D5D81CCA6AE /* WebServerFragment.swift in Sources */,
 				727D3F785C662A5A6C00D835 /* SocketManager.swift in Sources */,
 				727D30039B9108BC587A820E /* ServerWebrtcDelegates.swift in Sources */,
+				727D3F551E6CB92280B819E2 /* WebSocketMessageHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

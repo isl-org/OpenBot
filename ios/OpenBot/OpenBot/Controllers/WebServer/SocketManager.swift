@@ -8,7 +8,7 @@ class WebSocketManager : NSObject {
 
     static let shared = WebSocketManager()
     var socket: SocketIOClient!
-    let manager = SocketManager(socketURL: URL(string: "http://192.168.1.11:8000")!, config: [.log(true), .compress])
+    let manager = SocketManager(socketURL: URL(string: "https://four-sleet-yarn.glitch.me/")!, config: [.log(true), .compress])
 
     override init() {
         super.init()
