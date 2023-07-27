@@ -371,6 +371,18 @@ public class BotFunctions implements SensorEventListener {
   }
 
   @JavascriptInterface
+  public void followAndStop(String startObject, String modelName, String stopObject) {
+    mActivity.runOnUiThread(() -> {
+      binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT);
+      binding.jsCommand.setText("Follow " + startObject + " using " + modelName + "stop when see " + stopObject);
+    });
+    BlocklyExecutingFragment.modelName = modelName;
+    BlocklyExecutingFragment.startObject = startObject;
+    BlocklyExecutingFragment.stopObject = stopObject;
+    BlocklyExecutingFragment.isFollowMultipleObject = true;
+  }
+
+  @JavascriptInterface
   public void enableAutopilot(String modelName) {
     mActivity.runOnUiThread(() -> {
       binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT);

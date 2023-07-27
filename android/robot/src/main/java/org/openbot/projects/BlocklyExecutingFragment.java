@@ -47,8 +47,11 @@ public class BlocklyExecutingFragment extends CameraFragment {
   private boolean isRunJSCommand = false;
   public static boolean isFollow = false;
   public static boolean isAutopilot = false;
+  public static boolean isFollowMultipleObject = false;
   public static String classType = "person";
   public static String modelName = "";
+  public static String startObject = "person";
+  public static String stopObject = "person";
   private Detector detector;
   private Autopilot autopilot;
   private Model setModel;
@@ -127,6 +130,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
   protected void processFrame(Bitmap bitmap, ImageProxy imageProxy) {
     if (isFollow) startFollowObject(bitmap);
     if (isAutopilot) startAutopilot(bitmap);
+    if (isFollowMultipleObject) followMultipleObject(bitmap);
   }
 
   private Model getModel() {
@@ -222,15 +226,10 @@ public class BlocklyExecutingFragment extends CameraFragment {
     if (tracker == null) updateCropImageInfo();
 
     ++frameNum;
-
     if (computingNetwork) {
       return;
     }
-
     computingNetwork = true;
-    if (handler != null) {
-      handler.post(()->{
-
         final Canvas canvas = new Canvas(croppedBitmap);
         if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
           canvas.drawBitmap(
@@ -242,7 +241,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
         if (detector != null) {
           Timber.i("Running detection on image %s", frameNum);
           final List<Detector.Recognition> results =
-                  detector.recognizeMultipleImage(croppedBitmap, "classTypeFirst", "classTypeSecond");
+                  detector.recognizeMultipleImage(croppedBitmap, startObject, stopObject);
           if (!results.isEmpty())
             Timber.i(
                     "Object: "
@@ -252,25 +251,32 @@ public class BlocklyExecutingFragment extends CameraFragment {
                             + ", "
                             + results.get(0).getLocation().height()
                             + ", "
-                            + results.get(0).getLocation().width());
+                            + results.get(0).getLocation().width()
+            );
 
           final List<Detector.Recognition> mappedRecognitions = new LinkedList<>();
 
           for (final Detector.Recognition result : results) {
             final RectF location = result.getLocation();
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
+              double startDistance = 0;
+              double stopDistance = 0;
+              if (result.getTitle().equals(startObject)) startDistance = Math.sqrt(Math.pow(location.centerX() - location.left, 2));
+              if (result.getTitle().equals(stopObject)) stopDistance = Math.sqrt(Math.pow(location.centerY() - location.right, 2));
+              System.out.println("sanjeev get location == " + (startDistance > stopDistance) + ", " + startDistance + ", " + stopDistance);
+
               cropToFrameTransform.mapRect(location);
               result.setLocation(location);
               mappedRecognitions.add(result);
             }
           }
           tracker.trackResults(mappedRecognitions, frameNum);
-//          if (isFollow) vehicle.setControl(tracker.updateTarget());
-//          else vehicle.stopBot();
+          if (!results.toString().contains(stopObject)) {
+            if (isFollowMultipleObject) vehicle.setControl(tracker.updateTarget());
+            else vehicle.stopBot();
+          } else vehicle.stopBot();
         }
         computingNetwork = false;
-      });
-    }
   }
 
   private void updateCropImageInfo() {
@@ -307,7 +313,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
 
     try {
       Timber.d("Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-      if (isFollow) {
+      if (isFollow || isFollowMultipleObject) {
         detector = Detector.create(requireActivity(), model, device, numThreads);
         assert detector != null;
         croppedBitmap =
@@ -414,5 +420,8 @@ public class BlocklyExecutingFragment extends CameraFragment {
     assert speedMode != null;
     preferencesManager.setSpeedMode(speedMode.getValue());
     vehicle.setSpeedMultiplier(speedMode.getValue());
+    isFollow = false;
+    isAutopilot = false;
+    isFollowMultipleObject = false;
   }
 }
