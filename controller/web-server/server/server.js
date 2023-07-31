@@ -1,21 +1,29 @@
+const WebSocket = require('ws');
 
-
-const express = require('express');
-const http = require('http');
-const socketIO = require('socket.io');
-const cors = require('cors');
-const app = express();
-const server = http.createServer(app);
-const io = require('./connection'); // Import the bot_connection module
-
-const port = 8000;
-app.use(cors());
-
-io.start(server); // Start the connection with the Socket.IO server
-
-server.listen(port, () => {
-    console.log(`Socket.IO server listening on port ${port}`);
+const wss = new WebSocket.Server({ port: 8080 }, () => {
+    console.log("Signaling server is now listening on port 8080")
 });
 
-// You can now use the io object for other operations in this file if needed.
-// For example, you can handle other routes or events using io object.
+// Broadcast to all.
+wss.broadcast = (ws, data) => {
+    wss.clients.forEach((client) => {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+            client.send(data);
+        }
+    });
+};
+
+wss.on('connection', (ws) => {
+    console.log(`Client connected. Total connected clients: ${wss.clients.size}`)
+
+    ws.on("message", function message(data, isBinary) {
+        const message = isBinary ? data : data.toString();
+        // Continue as before.
+        console.log(message + "\n\n");
+        wss.broadcast(ws, message);
+    });
+
+    ws.onclose = () => {
+        console.log(`Client disconnected. Total connected clients: ${wss.clients.size}`)
+    }
+});

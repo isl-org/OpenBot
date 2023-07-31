@@ -5,7 +5,7 @@
 import Foundation
 import SocketIO
 class WebSocketManager : NSObject {
-
+    var isConnected :Bool = false;
     static let shared = WebSocketManager()
     var socket: SocketIOClient!
     let manager = SocketManager(socketURL: URL(string: "https://openbot-web-socket-server.onrender.com/")!, config: [.log(true), .compress])

@@ -7,7 +7,7 @@
  * Date: Mon Nov 29 2021
  */
 
-import {ErrorDisplay} from "./error-display";
+import { ErrorDisplay } from './error-display.js'
 
 export function Connection () {
   const connectToServer = async () => {

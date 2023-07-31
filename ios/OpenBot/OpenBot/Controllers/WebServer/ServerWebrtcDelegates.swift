@@ -9,7 +9,7 @@ import WebRTC
 
 /// function to create webRTC Delegate
 class ServerWebrtcDelegate: WebRTCClientDelegate {
-    var mSocket = WebSocketManager.shared.socket
+    var mSocket = NativeWebSocket.shared;
     var useCustomCapturer: Bool = true
 
     /// callback to check the generate candidate and send to the controller
@@ -70,12 +70,16 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
     func sendCandidate(iceCandidate: RTCIceCandidate) {
         let candidate = Candidate(candidate: iceCandidate.sdp, label: iceCandidate.sdpMLineIndex, id: iceCandidate.sdpMid!, type: "candidate");
         let signalingMessage = JSON.toString(CandidateEvent(status: .init(WEB_RTC_EVENT: candidate)));
-        mSocket?.emit("signalingMessage", signalingMessage)
+        let data  = signalingMessage.data(using: .utf8);
+
+        mSocket.send(data: data!);
     }
 
     /// function to read the message from the controller connection
     @objc func websocketDidReceiveMessage(_ notification: Notification) {
-        let text: Data = notification.object as! Data;
+        print("hello websocketDidReceiveMessage");
+        let msg =  notification.object as! String
+        let text: Data = msg.data(using: .utf8)! ;
         do {
             let signalingMessage = try JSONDecoder().decode(AnswerEvent.self, from: text)
             if signalingMessage.webrtc_event.type == "offer" {
@@ -102,6 +106,7 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
             type = "answer"
         }
         let signalingMessage = JSON.toString(OfferEvent(status: .init(WEB_RTC_EVENT: .init(type: type, sdp: sessionDescription.sdp))));
-        mSocket?.emit("signalingMessage", signalingMessage)
+        let data = signalingMessage.data(using: .utf8);
+        mSocket.send(data: data!);
     }
 }

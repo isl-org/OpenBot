@@ -122,6 +122,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     /// function to receive the answer to create the descriptor and set description.
     func receiveAnswer(answerSDP: RTCSessionDescription) {
+        print("Receiving answer");
         peerConnection!.setRemoteDescription(answerSDP) { (err) in
             if let error = err {
                 print("failed to set remote answer SDP")

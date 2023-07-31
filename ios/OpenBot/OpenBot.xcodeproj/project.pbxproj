@@ -106,10 +106,12 @@
 		727D397E28A6A94840B702D4 /* AlertFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30892A4485EAE638E24F /* AlertFragment.swift */; };
 		727D39E11C9EAFDC77200946 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3CF1C0FE6DE0D04C762A /* UIImageView.swift */; };
 		727D3A13757F3F2493E61977 /* ProjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30F6A969E2122927A95D /* ProjectCollectionViewCell.swift */; };
+		727D3A6C79B27AE7C7AF4FB3 /* StartScreamProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3B926BD1220C4BD68EEA /* StartScreamProvider.swift */; };
 		727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */; };
 		727D3AC020F4956E20B53A9A /* UITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D5655D02C86CD08281C /* UITextField.swift */; };
 		727D3B42755B3A6BF1C5202F /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3189735FC4F7A4E4A6C1 /* Browser.swift */; };
 		727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */; };
+		727D3C40C6A407C68234FEE8 /* WebSocketProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D00B90949673E13A46F /* WebSocketProvider.swift */; };
 		727D3CCBA2ED9D056786AAC1 /* ProjectFragement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D326C57B2AFC7F2AEEDB1 /* ProjectFragement.swift */; };
 		727D3D05C58FC97350145FFD /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D388488E1FFD98E542061 /* Authentication.swift */; };
 		727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B02AB471D9F31B0747 /* Font.swift */; };
@@ -119,6 +121,7 @@
 		727D3E26C05E5911CC9BF342 /* Readme.md in Sources */ = {isa = PBXBuildFile; fileRef = 727D300DE421E6957CB4CD67 /* Readme.md */; };
 		727D3E359F26636BBDC6E3A4 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3C4EBE89B9B6E537BE8B /* Device.swift */; };
 		727D3E6881E8758C94FF74F4 /* GifLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A51A7A6155C22E62412 /* GifLoader.swift */; };
+		727D3E6B3D9FD6E167F939B0 /* NativeWebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D372D5B218FDC793841D6 /* NativeWebSocket.swift */; };
 		727D3E780CA6260A927019BD /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D368915F3602E605FEA51 /* Client.swift */; };
 		727D3EB96F3F1D250E9D32E7 /* ServerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D5C91B30251F62FA65B /* ServerItem.swift */; };
 		727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */; };
@@ -241,6 +244,7 @@
 		727D35EAA13908B142BC4773 /* WebViewFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewFragment.swift; sourceTree = "<group>"; };
 		727D36143ED88C8E210BCEB1 /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		727D368915F3602E605FEA51 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		727D372D5B218FDC793841D6 /* NativeWebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeWebSocket.swift; sourceTree = "<group>"; };
 		727D37586F16DE497CEA62CE /* SignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalingMessage.swift; sourceTree = "<group>"; };
 		727D37C7F3414E19F505AB0C /* ServerWebrtcDelegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerWebrtcDelegates.swift; sourceTree = "<group>"; };
 		727D383824EABABFDE0806CE /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
@@ -258,8 +262,10 @@
 		727D3A89E5445B66EEB3177C /* ProfileFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileFragment.swift; sourceTree = "<group>"; };
 		727D3A8D7ACD08EF11740FC2 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		727D3AB3E741A78099D79575 /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
+		727D3B926BD1220C4BD68EEA /* StartScreamProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartScreamProvider.swift; sourceTree = "<group>"; };
 		727D3C4EBE89B9B6E537BE8B /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		727D3CF1C0FE6DE0D04C762A /* UIImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
+		727D3D00B90949673E13A46F /* WebSocketProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketProvider.swift; sourceTree = "<group>"; };
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
 		727D3D5655D02C86CD08281C /* UITextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextField.swift; sourceTree = "<group>"; };
 		727D3D5C91B30251F62FA65B /* ServerItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerItem.swift; sourceTree = "<group>"; };
@@ -425,6 +431,7 @@
 				727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */,
 				727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */,
 				727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */,
+				727D3ED563CA0B036B196BB0 /* WebSocketProvider */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -737,6 +744,16 @@
 				727D384384E67F20294222AC /* EditProfileFragment.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		727D3ED563CA0B036B196BB0 /* WebSocketProvider */ = {
+			isa = PBXGroup;
+			children = (
+				727D372D5B218FDC793841D6 /* NativeWebSocket.swift */,
+				727D3B926BD1220C4BD68EEA /* StartScreamProvider.swift */,
+				727D3D00B90949673E13A46F /* WebSocketProvider.swift */,
+			);
+			path = WebSocketProvider;
 			sourceTree = "<group>";
 		};
 		727D3F1F46201738BE703091 /* Project */ = {
@@ -1258,6 +1275,9 @@
 				727D3F785C662A5A6C00D835 /* SocketManager.swift in Sources */,
 				727D30039B9108BC587A820E /* ServerWebrtcDelegates.swift in Sources */,
 				727D3F551E6CB92280B819E2 /* WebSocketMessageHandler.swift in Sources */,
+				727D3E6B3D9FD6E167F939B0 /* NativeWebSocket.swift in Sources */,
+				727D3A6C79B27AE7C7AF4FB3 /* StartScreamProvider.swift in Sources */,
+				727D3C40C6A407C68234FEE8 /* WebSocketProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
