@@ -10,7 +10,7 @@ import UIKit
 /**
  Class to evaluate the JS code inside openBot
  */
-class jsEvaluator  {
+class jsEvaluator {
 
 
     private var command: String = "";
@@ -246,6 +246,10 @@ class jsEvaluator  {
                     self.runOpenBotThreadClass?.enableAutopilot(model: modelName);
                 }
 
+                let followAndStop: @convention(block) (String, String, String) -> Void = { (object1, model, object2) in
+                    self.runOpenBotThreadClass?.followAndStop(object1: object1, model: model, object2: object2);
+                }
+
                 context.setObject(moveForward,
                         forKeyedSubscript: Strings.moveForward as NSString)
                 context.setObject(loop,
@@ -340,6 +344,8 @@ class jsEvaluator  {
                         forKeyedSubscript: "setSpeed" as NSString)
                 context.setObject(enableAutopilot,
                         forKeyedSubscript: "enableAutopilot" as NSString);
+                context.setObject(followAndStop,
+                        forKeyedSubscript: "followAndStop" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -489,6 +495,7 @@ class jsEvaluator  {
             print("inside stop robot")
             NotificationCenter.default.post(name: .commandName, object: "Stop");
             runRobot.isObjectTracking = false;
+            runRobot.isMultipleObjectTracking = false;
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
             while (bluetooth.peri != nil && bluetooth.speedometer != "w0.00,0.00") {
@@ -894,7 +901,7 @@ class jsEvaluator  {
                 return
             }
             NotificationCenter.default.post(name: .commandName, object: object);
-            print(object,model);
+            print(object, model);
             runRobot.enableObjectTracking(object: object, model: model);
         }
 
@@ -902,8 +909,15 @@ class jsEvaluator  {
             if isCancelled {
                 return
             }
-            print(model);
             runRobot.enableAutopilot(model: model);
+        }
+
+        func followAndStop(object1: String, model: String, object2: String) {
+            if isCancelled {
+                return
+            }
+            NotificationCenter.default.post(name: .commandName, object: [object1, object2]);
+            runRobot.enableMultipleObjectTracking(object1: object1, model: model, object2: object2);
         }
     }
 }

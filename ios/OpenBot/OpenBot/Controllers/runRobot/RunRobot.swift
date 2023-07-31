@@ -22,6 +22,8 @@ class runRobot: CameraController {
     private var useDynamicSpeed: Bool = false
     static var isObjectTracking: Bool = false
     static var isAutopilot: Bool = false;
+    static var isMultipleObjectTracking: Bool = false
+
 
     /**
       override function calls when view of controller loaded
@@ -45,6 +47,7 @@ class runRobot: CameraController {
     }
 
     var temp = 0;
+
     override func createCameraView() {
         if temp > 0 {
             return;
@@ -86,15 +89,15 @@ class runRobot: CameraController {
     @objc func updateCommandMsg(_ notification: Notification) {
         DispatchQueue.main.async {
             runRobot.detector?.setSelectedClass(newClass: notification.object as! String)
-            let message = notification.object as! String
-            // Update UI periodically to show all the received messages
-            if self.count > 1 {
-                return;
-            }
-            self.count = self.count + 1;
-            DispatchQueue.main.async {
-                self.commandMessage.text = message;
-            }
+        }
+        let message = notification.object as! String;
+        // Update UI periodically to show all the received messages
+        if self.count > 1 {
+            return;
+        }
+        self.count = self.count + 1;
+        DispatchQueue.main.async {
+            self.commandMessage.text = message;
         }
     }
 
@@ -102,7 +105,7 @@ class runRobot: CameraController {
     @IBOutlet weak var runRobotConstraints: NSLayoutConstraint!
     let factor = 0.8;
 
-    /**
+/**
      override function calls when the current orientation changed
      - Parameters:
        - size:
@@ -113,7 +116,7 @@ class runRobot: CameraController {
         updateConstraints();
     }
 
-    /**
+/**
      Function calls on cancel button of screen tapped. This stop the execution of blockly code
      */
     @objc func cancel() {
@@ -122,7 +125,7 @@ class runRobot: CameraController {
         stopCar()
     }
 
-    /**
+/**
      Function to setup the navigation bar
      */
     func setupNavigationBarItem() {
@@ -133,7 +136,7 @@ class runRobot: CameraController {
         }
     }
 
-    /**
+/**
      Function to remove current viewController from navigation stack
      - Parameter sender:
      */
@@ -143,7 +146,7 @@ class runRobot: CameraController {
     }
 
 
-    /**
+/**
      Function to update the constraints of image
      */
     fileprivate func updateConstraints() {
@@ -157,6 +160,7 @@ class runRobot: CameraController {
     func stopCar() {
         runRobot.isObjectTracking = false
         runRobot.isAutopilot = false
+        runRobot.isMultipleObjectTracking = false
         bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
         bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
         let indicatorValues = "i0,0\n";
@@ -164,7 +168,7 @@ class runRobot: CameraController {
     }
 
     func sendControl(control: Control) {
-        if runRobot.isAutopilot || runRobot.isObjectTracking {
+        if runRobot.isAutopilot || runRobot.isObjectTracking || runRobot.isMultipleObjectTracking {
             createCameraView();
         }
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
@@ -229,7 +233,7 @@ class runRobot: CameraController {
 
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
 
-        if (runRobot.isObjectTracking || runRobot.isAutopilot) {
+        if (runRobot.isObjectTracking || runRobot.isAutopilot || runRobot.isMultipleObjectTracking) {
             let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
             print("inside capture ")
             bufferWidth = CVPixelBufferGetWidth(pixelBuffer!)
@@ -245,6 +249,8 @@ class runRobot: CameraController {
             inferenceQueue.async {
                 if runRobot.isObjectTracking {
                     self.runObjectTracking(imagePixelBuffer: imagePixelBuffer);
+                } else if runRobot.isMultipleObjectTracking {
+                    self.runMultipleObjectTracking(imagePixelBuffer: imagePixelBuffer);
                 } else {
                     self.runAutopilot(imagePixelBuffer: imagePixelBuffer);
                 }
@@ -254,7 +260,6 @@ class runRobot: CameraController {
     }
 
     static func enableObjectTracking(object: String, model: String) {
-        print("inside test");
         DispatchQueue.main.async {
             runRobot.isObjectTracking = true;
 
@@ -274,10 +279,21 @@ class runRobot: CameraController {
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: RuntimeDevice.CPU, numThreads: 1);
     }
 
+    static func enableMultipleObjectTracking(object1: String, model: String, object2: String) {
+        print("inside test");
+        DispatchQueue.main.async {
+            runRobot.isMultipleObjectTracking = true;
+
+        }
+        let currentModel = Common.returnModelItem(modelName: model)
+        print("running ,model ========================", currentModel);
+        detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: .CPU, numThreads: 1) as? Detector
+    }
+
 
     func runObjectTracking(imagePixelBuffer: CVPixelBuffer) {
         self.isInferenceQueueBusy = true
-        let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer);
+        let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, detectionType: "single");
         if res != nil {
             if (res!.count > 0) {
                 self.result = self.updateTarget(res!.first!.getLocation())
@@ -304,6 +320,36 @@ class runRobot: CameraController {
         self.isInferenceQueueBusy = false
     }
 
+    func runMultipleObjectTracking(imagePixelBuffer: CVPixelBuffer) {
+        self.isInferenceQueueBusy = true
+        let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, detectionType: "multiple")
+        print("res in multiple detection::::;", res)
+        if res != nil {
+            if (res!.count > 0) {
+                self.result = self.updateTarget(res!.first!.getLocation())
+            } else {
+                self.result = Control(left: 0, right: 0)
+            }
+            guard let controlResult = self.result else {
+                return
+            }
+
+            DispatchQueue.main.async {
+                if (res!.count > 0) {
+                    for item in res! {
+                        if (item.getConfidence() > self.MINIMUM_CONFIDENCE_TF_OD_API) {
+                            self.sendControl(control: controlResult)
+                        } else {
+                            self.sendControl(control: Control())
+                        }
+                    }
+                }
+            }
+        }
+        self.isInferenceQueueBusy = false
+    }
+
+
     func runAutopilot(imagePixelBuffer: CVPixelBuffer) {
         self.isInferenceQueueBusy = true
         let startTime = Date().millisecondsSince1970
@@ -317,5 +363,6 @@ class runRobot: CameraController {
         sendControl(control: controlResult)
         isInferenceQueueBusy = false
     }
+
 }
 
