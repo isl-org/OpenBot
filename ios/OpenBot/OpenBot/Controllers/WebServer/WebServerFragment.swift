@@ -15,6 +15,7 @@ class WebServerFragment: CameraController {
         super.viewDidLoad();
         self.CommandLabel.textColor = .red;
         CommandLabel.textAlignment = .center;
+        NotificationCenter.default.addObserver(self, selector: #selector(flipCamera), name: .switchCamera, object: nil);
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -49,6 +50,10 @@ class WebServerFragment: CameraController {
         }
 
     }
+
+    @objc func flipCamera(_ notification: NSNotification) {
+            switchCameraView()
+    }
 }
 
 
@@ -61,7 +66,7 @@ struct serverCommand: Decodable {
     var r: Float
 }
 
-struct serverCmd : Decodable{
-    var command : String
+struct serverCmd: Decodable {
+    var command: String
 }
 

@@ -12,6 +12,7 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
     var mSocket = NativeWebSocket.shared;
     var useCustomCapturer: Bool = true
     let webSocketMsgHandler = WebSocketMessageHandler();
+
     /// callback to check the generate candidate and send to the controller
     func didGenerateCandidate(iceCandidate: RTCIceCandidate) {
         sendCandidate(iceCandidate: iceCandidate)
@@ -84,34 +85,34 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
         let text: Data = msg.data(using: .utf8)!;
         if msg.contains("driveCmd") {
             let cmd = try! jsonDecoder.decode(serverMessage.self, from: text);
-                self.webSocketMsgHandler.driveCommand(control:Control(left: cmd.driveCmd.l, right: cmd.driveCmd.r));
-        }
-        else if msg.contains("command"){
+            self.webSocketMsgHandler.driveCommand(control: Control(left: cmd.driveCmd.l, right: cmd.driveCmd.r));
+        } else if msg.contains("command") {
             let cmd = try! jsonDecoder.decode(serverCmd.self, from: text)
             print(cmd.command);
             switch cmd.command {
-            case  "INDICATOR_LEFT" :
+            case "INDICATOR_LEFT":
                 self.webSocketMsgHandler.indicatorLeft()
                 break;
-            case "INDICATOR_RIGHT" :
+            case "INDICATOR_RIGHT":
                 self.webSocketMsgHandler.indicatorRight();
                 break
-            case "INDICATOR_STOP" :
+            case "INDICATOR_STOP":
                 self.webSocketMsgHandler.cancelIndicator();
-            case "SPEED_DOWN" :
+            case "SPEED_DOWN":
                 self.webSocketMsgHandler.speedDown();
                 break;
-            case "SPEED_UP" :
+            case "SPEED_UP":
                 self.webSocketMsgHandler.speedUp();
                 break;
-            case "DRIVE_MODE" :
-                self.webSocketMsgHandler.driveMode();
-                break
+            case "DRIVE_MODE":
+                self.webSocketMsgHandler.driveMode()
+            case "SWITCH_CAMERA":
+                NotificationCenter.default.post(name: .switchCamera, object: nil);
+                break;
             default:
                 break;
             }
-        }
-        else {
+        } else {
             do {
                 let signalingMessage = try JSONDecoder().decode(AnswerEvent.self, from: text)
                 if signalingMessage.webrtc_event.type == "offer" {

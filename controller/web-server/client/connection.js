@@ -40,6 +40,7 @@ export function Connection () {
     this.send = data => {
       if (ws) {
         console.log(Date.now())
+        console.log("sending switch camera command",data);
         ws.send(data)
       }
     }
