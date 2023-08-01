@@ -16,10 +16,13 @@ export function BotMessageHandler (connection) {
   const buttons = new Buttons(connection)
   const errDisplay = new ErrorDisplay()
 
-  this.handle = (msg) => {
-    console.log("msgType == ==============" + msg + connection)
+  this.handle = (msg,connection) => {
+    console.log("msgType =======" , msg ,)
+    if(msg === undefined || msg === null){
+      return
+    }
+
     const msgType = Object.keys(msg)[0]
-    console.log("msgType == ==============",msgType)
     switch (msgType) {
       case 'VIDEO_PROTOCOL':
         if (msg.VIDEO_PROTOCOL !== 'WEBRTC') {

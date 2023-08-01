@@ -1,4 +1,3 @@
-//command.js
 /*
  * Developed for the OpenBot project (https://openbot.org) by:
  *
@@ -8,12 +7,11 @@
  * Date: Mon Nov 29 2021
  */
 
-const {io, sendData} = require("./connection");
-
 function Commands (sendToBot) {
     const commandHandler = new CommandHandler(sendToBot)
+
     this.getCommandHandler = () => {
-        return new CommandHandler(sendToBot);
+        return commandHandler
     }
 }
 
@@ -52,9 +50,9 @@ function CommandHandler (sendToBot) {
     const left = new DriveValue()
     const right = new DriveValue()
     const commandReducer = new DriveCommandReducer()
+
     this.sendCommand = (command) => {
-        console.log("command ==========" + command);
-        sendToBot("cmd",command)
+        sendToBot(`{command: ${command} }`)
     }
 
     const sendDriveCommand = (left, right) => {
@@ -92,7 +90,6 @@ function CommandHandler (sendToBot) {
     }
 
     this.goForward = () => {
-        console.log("go forward");
         sendDriveCommand(left.max(), right.max())
     }
 
@@ -113,8 +110,7 @@ function DriveCommandReducer () {
         lastCommand = commandAsJson
 
         const strCommand = JSON.stringify(commandAsJson)
-        sendToBot("driveCmd",strCommand)
-        console.log("strCommand is ========", strCommand);
+        sendToBot(strCommand)
     }
 
     const isEqual = (current, last) => {

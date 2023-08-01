@@ -11,7 +11,7 @@ import WebRTC
 class ServerWebrtcDelegate: WebRTCClientDelegate {
     var mSocket = NativeWebSocket.shared;
     var useCustomCapturer: Bool = true
-
+    let webSocketMsgHandler = WebSocketMessageHandler();
     /// callback to check the generate candidate and send to the controller
     func didGenerateCandidate(iceCandidate: RTCIceCandidate) {
         sendCandidate(iceCandidate: iceCandidate)
@@ -19,7 +19,7 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
 
     /// callback to check whether the ice connection is changed.
     func didIceConnectionStateChanged(iceConnectionState: RTCIceConnectionState) {
-        print("ice connection state is : ",iceConnectionState);
+        print("ice connection state is : ", iceConnectionState);
     }
 
     /// callback function to open data channel
@@ -29,11 +29,12 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
 
     /// callback function to check data is available
     func didReceiveData(data: Data) {
-        print("data received",data);
+        print("data received", data);
     }
+
     /// callback function message string received
     func didReceiveMessage(message: String) {
-        print("message is : ",message);
+        print("message is : ", message);
 
     }
 
@@ -70,31 +71,38 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
     func sendCandidate(iceCandidate: RTCIceCandidate) {
         let candidate = Candidate(candidate: iceCandidate.sdp, label: iceCandidate.sdpMLineIndex, id: iceCandidate.sdpMid!, type: "candidate");
         let signalingMessage = JSON.toString(CandidateEvent(status: .init(WEB_RTC_EVENT: candidate)));
-        let data  = signalingMessage.data(using: .utf8);
+        let data = signalingMessage.data(using: .utf8);
 
         mSocket.send(data: data!);
     }
 
     /// function to read the message from the controller connection
     @objc func websocketDidReceiveMessage(_ notification: Notification) {
-        print("hello websocketDidReceiveMessage");
-        let msg =  notification.object as! String
-        let text: Data = msg.data(using: .utf8)! ;
-        do {
-            let signalingMessage = try JSONDecoder().decode(AnswerEvent.self, from: text)
-            if signalingMessage.webrtc_event.type == "offer" {
-                webRTCClient.receiveOffer(offerSDP: RTCSessionDescription(type: .offer, sdp: (signalingMessage.webrtc_event.sdp)), onCreateAnswer: { (answerSDP: RTCSessionDescription) -> Void in
-                    self.sendSDP(sessionDescription: answerSDP)
-                })
-            } else if signalingMessage.webrtc_event.type == "answer" {
-                webRTCClient.receiveAnswer(answerSDP: RTCSessionDescription(type: .answer, sdp: (signalingMessage.webrtc_event.sdp)))
-            } else if signalingMessage.webrtc_event.type == "candidate" {
-            }
-        } catch {
-            print(error)
-
+        print("hello websocketDidReceiveMessage", notification.object as! String);
+        let msg = notification.object as! String
+        let text: Data = msg.data(using: .utf8)!;
+        if msg.contains("driveCmd") {
+            let jsonDecoder = JSONDecoder();
+            let cmd = try! jsonDecoder.decode(serverMessage.self, from: text);
+                self.webSocketMsgHandler.driveCommand(control:Control(left: cmd.driveCmd.l, right: cmd.driveCmd.r));
         }
+        else {
+            do {
+                let signalingMessage = try JSONDecoder().decode(AnswerEvent.self, from: text)
+                if signalingMessage.webrtc_event.type == "offer" {
+                    webRTCClient.receiveOffer(offerSDP: RTCSessionDescription(type: .offer, sdp: (signalingMessage.webrtc_event.sdp)), onCreateAnswer: { (answerSDP: RTCSessionDescription) -> Void in
+                        self.sendSDP(sessionDescription: answerSDP)
+                    })
+                } else if signalingMessage.webrtc_event.type == "answer" {
+                    webRTCClient.receiveAnswer(answerSDP: RTCSessionDescription(type: .answer, sdp: (signalingMessage.webrtc_event.sdp)))
+                } else if signalingMessage.webrtc_event.type == "candidate" {
+                }
 
+            } catch {
+                print(error)
+                print("yaha hai error");
+            }
+        }
     }
 
     ///function to send the offer/answer SDP to the controller

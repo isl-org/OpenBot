@@ -7,12 +7,12 @@
  * Date: Mon Nov 29 2021
  */
 
-import {ErrorDisplay} from "./error-display";
+import { ErrorDisplay } from './error-display.js'
 
 export function Connection () {
   const connectToServer = async () => {
     // const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`)
-    const ws = new WebSocket('ws://time-small-carnation.glitch.me');
+    const ws = new WebSocket('ws://inconclusive-warm-shamrock.glitch.me');
     return new Promise((resolve, reject) => {
       const timer = setInterval(() => {
         if (ws.readyState === 1) {
@@ -39,6 +39,7 @@ export function Connection () {
 
     this.send = data => {
       if (ws) {
+        console.log(Date.now())
         ws.send(data)
       }
     }

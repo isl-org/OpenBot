@@ -19,21 +19,12 @@ export function WebRTC (connection) {
     }
 
     const { RTCSessionDescription, RTCIceCandidate } = window
-    // const webRtcEvent = JSON.parse(data)
     const webRtcEvent = data
-    console.log("webRtcEvent ==============",data)
+
     switch (webRtcEvent.type) {
       case 'offer':
-        peerConnection.setRemoteDescription(new RTCSessionDescription({sdp: webRtcEvent.sdp, type: 'offer'}))
-            .then((data)=>{
-              console.log("able to create remote desctiption")
-              doAnswer().then(()=>{
-                console.log("able to create answer",webRtcEvent)
-              }).catch((e)=>{
-                console.log("not able to create answer",webRtcEvent)
-                throw Error(e);
-              })
-            })
+        peerConnection.setRemoteDescription(new RTCSessionDescription({ sdp: webRtcEvent.sdp, type: 'offer' }))
+        doAnswer()
         break
 
       case 'candidate':
@@ -44,13 +35,10 @@ export function WebRTC (connection) {
             sdpMLineIndex: webRtcEvent.label
           })
 
-          peerConnection.addIceCandidate(candidate).then(()=>{
-            console.log("iced candidate added")
-          }).catch((e)=>{
-            console.log("failed to add ice candidate ")
-          })
+          peerConnection.addIceCandidate(candidate)
         }
         break
+
       case 'bye':
         this.stop()
         break
@@ -59,8 +47,7 @@ export function WebRTC (connection) {
 
   const doAnswer = async () => {
     const answer = await peerConnection.createAnswer()
-    console.log("answer is ===========" + answer.toString());
-    await peerConnection.setLocalDescription(answer);
+    await peerConnection.setLocalDescription(answer)
     connection.send(JSON.stringify({ webrtc_event: answer }))
   }
 
@@ -73,6 +60,7 @@ export function WebRTC (connection) {
 
     video.srcObject = new MediaStream()
     video.srcObject.getTracks().forEach(track => peerConnection.addTrack(track))
+
     peerConnection.ontrack = event => {
       video.srcObject = event.streams[0]
     }

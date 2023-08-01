@@ -1,10 +1,9 @@
 {
   "name": "web-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "web server with ios and android app connection",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "prestart": "cd server && npm install",
     "start": "run-p dev:server dev:start-server",
     "start-nohup": "nohup npm run start",
@@ -14,6 +13,10 @@
     "build": "snowpack build",
     "lint": "npx eslint server/*.js --fix && npx eslint client/*.js --fix"
   },
+  "keywords": [
+    "webrtc",
+    "websocket"
+  ],
   "author": "Nitish Pratap",
   "devDependencies": {
     "eslint": "^7.32.0",
@@ -27,6 +30,6 @@
   },
   "license": "ISC",
   "dependencies": {
-    "socket.io-client": "^4.7.1"
+    "ws": "^8.13.0"
   }
 }

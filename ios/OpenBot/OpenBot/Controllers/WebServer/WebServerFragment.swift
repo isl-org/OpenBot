@@ -14,7 +14,7 @@ class WebServerFragment: CameraController {
     override func viewDidLoad() {
         super.viewDidLoad();
         self.CommandLabel.textColor = .red;
-//        CommandLabel.textAlignment = .center;
+        CommandLabel.textAlignment = .center;
 //        // Listen for socket connection status changes
 //        mSocket?.on(clientEvent: .connect) { (dataArray, ack) in
 //            print("Socket connected.")
