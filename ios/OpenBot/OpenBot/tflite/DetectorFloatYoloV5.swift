@@ -202,21 +202,7 @@ class DetectorFloatYoloV5: Detector {
 
             let score: Float = maxClass * confidence
             if (score > getObjThresh()) {
-                if (classId > -1 && classA == labels[classId]) {
-                    let xPos = out[i][0]
-                    let yPos = out[i][1]
-                    let w = out[i][2]
-                    let h = out[i][3]
-                    let scaleX = CGFloat(width) / CGFloat(getImageSizeX())
-                    let scaleY = CGFloat(height) / CGFloat(getImageSizeY())
-                    //let scale = min(scaleX, scaleY)
-                    let dx = (CGFloat(width) - scaleX * CGFloat(getImageSizeX())) / 2
-                    let dy = (CGFloat(height) - scaleY * CGFloat(getImageSizeY())) / 2
-                    let transform = CGAffineTransform.identity.translatedBy(x: dx, y: dy).scaledBy(x: scaleX, y: scaleY)
-                    let detection = CGRect(x: CGFloat(max(0, xPos - w / 2)), y: CGFloat(max(0, yPos - h / 2)), width: CGFloat(w), height: CGFloat(h)).applying(transform);
-                    recognitions.append(Recognition(id: String(i), title: labels[classId], confidence: score, location: detection, classId: classId));
-                }
-                if (classId > -1 && classB == labels[classId]) {
+                if (classId > -1 && (classA == labels[classId] || classB == labels[classId])) {
                     let xPos = out[i][0]
                     let yPos = out[i][1]
                     let w = out[i][2]

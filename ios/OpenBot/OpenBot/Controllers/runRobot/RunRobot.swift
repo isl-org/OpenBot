@@ -35,6 +35,7 @@ class runRobot: CameraController {
         stopRobot.addTarget(self, action: #selector(cancel), for: .touchUpInside);
         stopRobot.layer.cornerRadius = 10;
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandMsg), name: .commandName, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(updateCommandObject), name: .commandObject, object: nil);
         setupNavigationBarItem()
         updateConstraints();
         let modelItems = Common.loadAllModelItemsFromBundle()
@@ -98,6 +99,12 @@ class runRobot: CameraController {
         self.count = self.count + 1;
         DispatchQueue.main.async {
             self.commandMessage.text = message;
+        }
+    }
+
+    @objc func updateCommandObject(_ notification: Notification) {
+        DispatchQueue.main.async {
+            runRobot.detector?.setMultipleSelectedClass(newClasses: notification.object as! [String])
         }
     }
 
@@ -323,7 +330,6 @@ class runRobot: CameraController {
     func runMultipleObjectTracking(imagePixelBuffer: CVPixelBuffer) {
         self.isInferenceQueueBusy = true
         let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, detectionType: "multiple")
-        print("res in multiple detection::::;", res)
         if res != nil {
             if (res!.count > 0) {
                 self.result = self.updateTarget(res!.first!.getLocation())
@@ -336,9 +342,36 @@ class runRobot: CameraController {
 
             DispatchQueue.main.async {
                 if (res!.count > 0) {
-                    for item in res! {
-                        if (item.getConfidence() > self.MINIMUM_CONFIDENCE_TF_OD_API) {
+                    if let objects = runRobot.detector?.returnMultipleSelectedClass() {
+                        let filteredObjects = res!.filter { i in
+                            if i.getConfidence() > self.MINIMUM_CONFIDENCE_TF_OD_API {
+                                return i.getTitle() == objects[1] || i.getTitle() == objects[0]
+                            } else {
+                                return false
+                            }
+                        }
+                        let stopObject = filteredObjects.filter {
+                            $0.getTitle() == objects[1]
+                        }
+                        let runObject = filteredObjects.filter {
+                            $0.getTitle() == objects[0]
+                        }
+                        if (stopObject.count == 0 && runObject.count > 0) {
                             self.sendControl(control: controlResult)
+                        } else if (stopObject.count > 0 && runObject.count > 0) {
+                            for i in stopObject {
+                                for j in runObject {
+                                    var getStopObjectPos = sqrt(pow(i.getLocation().midX - i.getLocation().minY, 2))
+                                    var getStartObjectPos = sqrt(pow(j.getLocation().midX - j.getLocation().minY, 2))
+                                    if (getStopObjectPos > getStartObjectPos) {
+                                        self.sendControl(control: controlResult)
+                                    } else {
+                                        self.sendControl(control: Control())
+                                    }
+                                }
+                            }
+                        } else if (stopObject.count > 0 && runObject.count == 0) {
+                            self.sendControl(control: Control())
                         } else {
                             self.sendControl(control: Control())
                         }

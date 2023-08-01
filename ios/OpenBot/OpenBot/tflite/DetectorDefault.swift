@@ -199,10 +199,7 @@ class DetectorDefault: Detector {
             // while outputClasses correspond to class index from 0 to number_of_classes
             let classId: Int = Int(outputClasses![i]);
             let labelId: Int = classId + 1;
-            if (classA == labels[labelId]) {
-                recognitions.append(Recognition(id: String(i), title: labels[labelId], confidence: outputScores![i], location: detection, classId: classId));
-            }
-            if (classB == labels[labelId]) {
+            if (classA == labels[labelId] || classB == labels[labelId]) {
                 recognitions.append(Recognition(id: String(i), title: labels[labelId], confidence: outputScores![i], location: detection, classId: classId));
             }
         }

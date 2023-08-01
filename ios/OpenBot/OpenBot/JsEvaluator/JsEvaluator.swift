@@ -916,7 +916,8 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
-            NotificationCenter.default.post(name: .commandName, object: [object1, object2]);
+            NotificationCenter.default.post(name: .commandObject, object: [object1, object2]);
+            NotificationCenter.default.post(name: .commandName, object: "follow and stop");
             runRobot.enableMultipleObjectTracking(object1: object1, model: model, object2: object2);
         }
     }
