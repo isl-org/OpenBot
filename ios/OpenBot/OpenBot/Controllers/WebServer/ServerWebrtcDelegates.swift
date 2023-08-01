@@ -80,11 +80,36 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
     @objc func websocketDidReceiveMessage(_ notification: Notification) {
         print("hello websocketDidReceiveMessage", notification.object as! String);
         let msg = notification.object as! String
+        let jsonDecoder = JSONDecoder();
         let text: Data = msg.data(using: .utf8)!;
         if msg.contains("driveCmd") {
-            let jsonDecoder = JSONDecoder();
             let cmd = try! jsonDecoder.decode(serverMessage.self, from: text);
                 self.webSocketMsgHandler.driveCommand(control:Control(left: cmd.driveCmd.l, right: cmd.driveCmd.r));
+        }
+        else if msg.contains("command"){
+            let cmd = try! jsonDecoder.decode(serverCmd.self, from: text)
+            print(cmd.command);
+            switch cmd.command {
+            case  "INDICATOR_LEFT" :
+                self.webSocketMsgHandler.indicatorLeft()
+                break;
+            case "INDICATOR_RIGHT" :
+                self.webSocketMsgHandler.indicatorRight();
+                break
+            case "INDICATOR_STOP" :
+                self.webSocketMsgHandler.cancelIndicator();
+            case "SPEED_DOWN" :
+                self.webSocketMsgHandler.speedDown();
+                break;
+            case "SPEED_UP" :
+                self.webSocketMsgHandler.speedUp();
+                break;
+            case "DRIVE_MODE" :
+                self.webSocketMsgHandler.driveMode();
+                break
+            default:
+                break;
+            }
         }
         else {
             do {
