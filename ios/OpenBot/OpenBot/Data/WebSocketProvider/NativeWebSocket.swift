@@ -5,8 +5,8 @@
 import Foundation
 @available(iOS 13.0, *)
 class NativeWebSocket: NSObject, WebSocketProvider {
-//    let url =  URL(string: "ws://192.168.1.11:8080/ws")!
-    let url = URL(string: "ws://inconclusive-warm-shamrock.glitch.me")!;
+    let url =  URL(string: "ws://192.168.1.16:8080/ws")!
+//    let url = URL(string: "ws://inconclusive-warm-shamrock.glitch.me")!;
     static let shared : NativeWebSocket = NativeWebSocket();
     var delegate: WebSocketProviderDelegate?
     private var socket: URLSessionWebSocketTask?
@@ -30,15 +30,12 @@ class NativeWebSocket: NSObject, WebSocketProvider {
 
 
     private func readMessage() {
-        print("inside read message");
         self.socket?.receive { [weak self] message in
             guard let self = self else { return }
             switch message {
             case .success(.data(let data)):
-                print("data de bhae");
                 self.delegate?.webSocket(self, didReceiveData: data)
                 self.readMessage()
-
             case .success(.string(let text)):
                 print("Received text message",text , Date().millisecondsSince1970)
                 // Process the text message if needed

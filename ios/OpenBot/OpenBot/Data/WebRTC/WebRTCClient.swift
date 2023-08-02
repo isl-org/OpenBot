@@ -40,7 +40,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     override init() {
         super.init()
-        print("line number 43");
         peerConnection?.delegate = self
     }
 
@@ -51,7 +50,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     // MARK: - Public functions
     func setup(videoTrack: Bool, audioTrack: Bool, dataChannel: Bool, customFrameCapturer: Bool) {
-        print("line number 53");
         channels.video = videoTrack
         channels.audio = audioTrack
         channels.datachannel = dataChannel
@@ -60,8 +58,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
         let videoDecoderFactory = RTCDefaultVideoDecoderFactory()
         peerConnectionFactory = RTCPeerConnectionFactory(encoderFactory: videoEncoderFactory, decoderFactory: videoDecoderFactory)
         setupLocalTracks()
-        print("line number 61");
-
     }
 
     func captureCurrentFrame(sampleBuffer: CMSampleBuffer) {
@@ -78,7 +74,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     /// MARK: Connect with peer connection after successful data match
     func connect(onSuccess: @escaping (RTCSessionDescription) -> Void) {
-        print("line number 80");
         peerConnection = setupPeerConnection()
         peerConnection!.delegate = self
 
@@ -104,7 +99,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     /// MARK: Signaling Event; to receive offer from the connection and start sending audio and video tracks.
     func receiveOffer(offerSDP: RTCSessionDescription, onCreateAnswer: @escaping (RTCSessionDescription) -> Void) {
-        print("inside receive offer");
         if (peerConnection == nil) {
             peerConnection = setupPeerConnection()
             peerConnection!.delegate = self
@@ -116,7 +110,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
             }
             if channels.datachannel {
                 dataChannel = setupDataChannel()
-                print("dataChennel is ===------->" , dataChannel);
             }
 
         }
@@ -132,7 +125,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     /// function to receive the answer to create the descriptor and set description.
     func receiveAnswer(answerSDP: RTCSessionDescription) {
-        print("Receiving answer");
         peerConnection!.setRemoteDescription(answerSDP) { (err) in
             if let error = err {
                 print("failed to set remote answer SDP")
@@ -144,13 +136,11 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     /// function to receive the candidate and add it to the connection.
     func receiveCandidate(candidate: RTCIceCandidate) {
-        print("line number 142");
         peerConnection!.add(candidate)
     }
 
     /// function to create the connection
     private func setupPeerConnection() -> RTCPeerConnection {
-        print("line number 148");
         let rtcConf = RTCConfiguration()
         rtcConf.iceServers = [RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"])]
         let mediaConstraints = RTCMediaConstraints.init(mandatoryConstraints: nil, optionalConstraints: nil)
@@ -160,7 +150,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     //MARK: - Local Media
     private func setupLocalTracks() {
-        print("line number 158");
         if channels.video == true {
             localVideoTrack = createVideoTrack()
         }
@@ -171,7 +160,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     /// function to create the video track for the video.
     private func createAudioTrack() -> RTCAudioTrack {
-        print("line number 169");
         let audioConstrains = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
         let audioSource = peerConnectionFactory.audioSource(with: audioConstrains)
         let audioTrack = peerConnectionFactory.audioTrack(with: audioSource, trackId: "audio0")
@@ -181,7 +169,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     /// function to create the video track to send to the controller device
     private func createVideoTrack() -> RTCVideoTrack {
-        print("line number 179");
         let videoSource = peerConnectionFactory.videoSource()
         if customFrameCapturer {
             videoCapturer = RTCCustomFrameCapturer(delegate: videoSource)
@@ -192,11 +179,9 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     /// MARK: - Local Data
     private func setupDataChannel() -> RTCDataChannel {
-        print("line number 190");
         let dataChannelConfig = RTCDataChannelConfiguration()
         dataChannelConfig.channelId = 0
         let _dataChannel = peerConnection?.dataChannel(forLabel: "dataChannel", configuration: dataChannelConfig)
-        print("inside setup data channel");
         return _dataChannel!
     }
 
@@ -319,7 +304,6 @@ extension WebRTCClient {
 
     // Assume you have a function to send messages on the other end
     func sendMessage(message: String) {
-        print("sending message");
         if let dataChannel = webRTCClient.remoteDataChannel {
             let data = Data(message.utf8)
             let buffer = RTCDataBuffer(data: data, isBinary: false)
@@ -329,7 +313,6 @@ extension WebRTCClient {
 
     // Implement this function to handle received messages from the data channel
     func peerConnection(_ peerConnection: RTCPeerConnection, didReceiveMessageWith buffer: RTCDataBuffer) {
-        print("inside  line 331")
         if buffer.isBinary {
             // Handle binary data if needed
         } else {

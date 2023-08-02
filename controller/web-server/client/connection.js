@@ -11,8 +11,8 @@ import { ErrorDisplay } from './error-display.js'
 
 export function Connection () {
   const connectToServer = async () => {
-    // const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`)
-    const ws = new WebSocket('ws://inconclusive-warm-shamrock.glitch.me');
+    const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`)
+    // const ws = new WebSocket('ws://inconclusive-warm-shamrock.glitch.me');
     return new Promise((resolve, reject) => {
       const timer = setInterval(() => {
         if (ws.readyState === 1) {

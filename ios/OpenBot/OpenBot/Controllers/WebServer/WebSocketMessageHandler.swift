@@ -8,7 +8,7 @@ class WebSocketMessageHandler {
     var audioPlayer = AudioPlayer.shared
     var gameController = GameController.shared
     init(){
-        print("init of message handler");
+        print("");
     }
     func indicatorLeft(){
         gameController.setIndicator(keyCommand: .LEFT)

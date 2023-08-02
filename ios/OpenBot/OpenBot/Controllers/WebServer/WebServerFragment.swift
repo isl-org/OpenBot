@@ -44,7 +44,6 @@ class WebServerFragment: CameraController {
     }
 
     override func captureOutput(_ output: AVFoundation.AVCaptureOutput, didOutput sampleBuffer: CoreMedia.CMSampleBuffer, from connection: AVFoundation.AVCaptureConnection) {
-//        print(webRTCClient.isConnected);
         if webRTCClient.isConnected {
             webRTCClient.captureCurrentFrame(sampleBuffer: sampleBuffer)
         }

@@ -80,7 +80,6 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
 
     /// function to read the message from the controller connection
     @objc func websocketDidReceiveMessage(_ notification: Notification) {
-        print("hello websocketDidReceiveMessage", notification.object as! String);
         let msg = notification.object as! String
         let jsonDecoder = JSONDecoder();
         let text: Data = msg.data(using: .utf8)!;
@@ -127,7 +126,6 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
 
             } catch {
                 print(error)
-                print("yaha hai error");
             }
         }
     }

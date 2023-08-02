@@ -11,17 +11,19 @@ const wss = new WebSocket.Server({ port: 8080 }, () => {
 
 // Broadcast to all.
 wss.broadcast = (ws, data) => {
+    let obj = JSON.parse(data);
+    let key = Object.keys(obj)[0];
+    //discarding the keypress
+    if(key === "KEYPRESS"){
+        return;
+    }
     wss.clients.forEach((client) => {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
-            console.log("data is ------>",data, typeof(data))
-            let x = JSON.parse(data)
-            console.log("x -------->",x);
             client.send(data);
         }
     });
 };
 const sendToBot = (message) => {
-    console.log("message is ------>",message)
     wss.broadcast(ws, message);
 }
 
@@ -32,7 +34,6 @@ wss.on('connection', (ws) => {
 
     ws.on("message", function message(data, isBinary) {
         const message = isBinary ? data : data.toString();
-        console.log("message is ====== " + message + "\n\n");
         wss.broadcast(ws, message);
         console.log(JSON.parse(data));
         let obj = JSON.parse(data);

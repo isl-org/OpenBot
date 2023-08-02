@@ -10,10 +10,7 @@
 
 function RemoteKeyboard (commandHandler) {
     const pressedKeys = new Set()
-    console.log("commandHandler =======", commandHandler)
-
     this.processKey = keyPress => {
-        console.log("keyPress is =============" , keyPress);
         switch (keyPress?.type) {
             case 'keyup':
                 // keep track of what keys are currently pressed
