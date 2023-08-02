@@ -30,6 +30,7 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
 
     /// callback function to check data is available
     func didReceiveData(data: Data) {
+        print(Date().millisecondsSince1970)
         print("data received", data);
     }
 
