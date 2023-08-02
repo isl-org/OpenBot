@@ -26,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -213,7 +214,7 @@ public abstract class Detector extends Network {
     return recognitions;
   }
 
-  public List<Recognition> recognizeMultipleImage(final Bitmap bitmap, String classNameFirst, String classNameSecond)
+  public ArrayList<ArrayList<Recognition>> recognizeMultipleImage(final Bitmap bitmap, String classNameFirst, String classNameSecond)
           throws IllegalArgumentException {
     // Log this method so that it can be analyzed with systrace.
     Trace.beginSection("recognizeImage");
@@ -242,7 +243,7 @@ public abstract class Detector extends Network {
     Trace.endSection(); // "recognizeImage"
 
     startTime = SystemClock.elapsedRealtime();
-    List<Recognition> recognitions = getAllRecognitions(classNameFirst, classNameSecond);
+    ArrayList<ArrayList<Recognition>> recognitions = getAllRecognitions(classNameFirst, classNameSecond);
     endTime = SystemClock.elapsedRealtime();
     Timber.v("Timecost for postprocessing: %s", (endTime - startTime));
 
@@ -300,48 +301,50 @@ public abstract class Detector extends Network {
   }
 
   // multiple non maximum suppression
-  protected ArrayList<Recognition> multipleNMS(ArrayList<ArrayList<Recognition>> list) {
-    ArrayList<Recognition> multipleNMSList = new ArrayList<Recognition>();
+  protected ArrayList<ArrayList<Recognition>> multipleNMS(ArrayList<ArrayList<Recognition>> list) {
+    ArrayList<ArrayList<Recognition>> multipleNMSList = new ArrayList<>();
+    multipleNMSList.add(new ArrayList<>());
+    multipleNMSList.add(new ArrayList<>());
+    PriorityQueue<Recognition> pq =
+            new PriorityQueue<Recognition> (
+                    50,
+                    new Comparator<Recognition>() {
+                      @Override
+                      public int compare(final Recognition lhs, final Recognition rhs) {
+                        // Intentionally reversed to put high confidence at the head of the queue.
+                        return Float.compare(rhs.getConfidence(), lhs.getConfidence());
+                      }
+                    });
     for (int k = 0; k < labels.size(); k++) {
       // 1. Find max confidence per class
-      PriorityQueue<Recognition> pq =
-              new PriorityQueue<Recognition>(
-                      50,
-                      new Comparator<Recognition>() {
-                        @Override
-                        public int compare(final Recognition lhs, final Recognition rhs) {
-                          // Intentionally reversed to put high confidence at the head of the queue.
-                          return Float.compare(rhs.getConfidence(), lhs.getConfidence());
-                        }
-                      });
-
       for (int i = 0; i < list.size(); ++i) {
         ArrayList<Recognition> row = list.get(i);
         for (int j = 0; j < row.size(); j++) {
           if (row.get(j).getClassId() == k) {
             pq.add(row.get(j));
           }
-          if (row.get(j).getClassId() == k) {
-            pq.add(row.get(j));
-          }
         }
       }
+    }
 
-      // 2. Do non maximum suppression
-      while (pq.size() > 0) {
-        // insert detection with max confidence
-        Recognition[] a = new Recognition[pq.size()];
-        Recognition[] detections = pq.toArray(a);
-        Recognition max = detections[0];
-        multipleNMSList.add(max);
-        pq.clear();
+    // 2. Do non maximum suppression
+    while (pq.size() > 0) {
+      // insert detection with max confidence
+      Recognition[] a = new Recognition[pq.size()];
+      Recognition[] detections = pq.toArray(a);
+      Recognition startMax = detections[0];
+      multipleNMSList.get(0).add(startMax);
+      if(detections.length > 1) {
+        Recognition stopMax = detections[1];
+        multipleNMSList.get(1).add(stopMax);
+      }
+      pq.clear();
 
-        for (int j = 1; j < detections.length; j++) {
-          Recognition detection = detections[j];
-          RectF b = detection.getLocation();
-          if (box_iou(max.getLocation(), b) < mNmsThresh) {
-            pq.add(detection);
-          }
+      for (int j = 1; j < detections.length; j++) {
+        Recognition detection = detections[j];
+        RectF b = detection.getLocation();
+        if (box_iou(startMax.getLocation(), b) < mNmsThresh) {
+          pq.add(detection);
         }
       }
     }
@@ -431,5 +434,5 @@ public abstract class Detector extends Network {
    * @return
    */
   protected abstract List<Recognition> getRecognitions(String className);
-  protected abstract List<Recognition> getAllRecognitions(String classNameFirst, String classNameSecond);
+  protected abstract ArrayList<ArrayList<Recognition>> getAllRecognitions(String classNameFirst, String classNameSecond);
 }

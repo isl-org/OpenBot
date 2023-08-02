@@ -34,6 +34,7 @@ import org.openbot.utils.Enums;
 import org.openbot.utils.FileUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -240,41 +241,28 @@ public class BlocklyExecutingFragment extends CameraFragment {
 
         if (detector != null) {
           Timber.i("Running detection on image %s", frameNum);
-          final List<Detector.Recognition> results =
+          final ArrayList<ArrayList<Detector.Recognition>> results =
                   detector.recognizeMultipleImage(croppedBitmap, startObject, stopObject);
-          if (!results.isEmpty())
-            Timber.i(
-                    "Object: "
-                            + results.get(0).getLocation().centerX()
-                            + ", "
-                            + results.get(0).getLocation().centerY()
-                            + ", "
-                            + results.get(0).getLocation().height()
-                            + ", "
-                            + results.get(0).getLocation().width()
-            );
-
           final List<Detector.Recognition> mappedRecognitions = new LinkedList<>();
-
-          for (final Detector.Recognition result : results) {
-            final RectF location = result.getLocation();
-            if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
-              double startDistance = 0;
-              double stopDistance = 0;
-              if (result.getTitle().equals(startObject)) startDistance = Math.sqrt(Math.pow(location.centerX() - location.left, 2));
-              if (result.getTitle().equals(stopObject)) stopDistance = Math.sqrt(Math.pow(location.centerY() - location.right, 2));
-              System.out.println("sanjeev get location == " + (startDistance > stopDistance) + ", " + startDistance + ", " + stopDistance);
-
-              cropToFrameTransform.mapRect(location);
-              result.setLocation(location);
-              mappedRecognitions.add(result);
+          double startDistance = 0;
+          double stopDistance = 0;
+          for (final ArrayList<Detector.Recognition> result : results) {
+            if (!result.isEmpty()){
+              final RectF location = result.get(0).getLocation();
+              if (location != null && result.get(0).getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
+                if (result.size() > 1){
+                  if (result.get(0).getTitle().equals(startObject)) startDistance = Math.sqrt(Math.pow(location.centerX() - location.left, 2));
+                  if (result.get(1).getTitle().equals(stopObject)) stopDistance = Math.sqrt(Math.pow(location.centerY() - location.right, 2));
+                }
+                cropToFrameTransform.mapRect(location);
+                result.get(0).setLocation(location);
+                mappedRecognitions.add(result.get(0));
+              }
             }
           }
           tracker.trackResults(mappedRecognitions, frameNum);
-          if (!results.toString().contains(stopObject)) {
-            if (isFollowMultipleObject) vehicle.setControl(tracker.updateTarget());
-            else vehicle.stopBot();
-          } else vehicle.stopBot();
+          if ((startDistance >= stopDistance) && isFollowMultipleObject) vehicle.setControl(tracker.updateTarget());
+          else vehicle.stopBot();
         }
         computingNetwork = false;
   }

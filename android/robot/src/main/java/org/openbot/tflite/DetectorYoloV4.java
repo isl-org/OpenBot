@@ -129,7 +129,7 @@ public class DetectorYoloV4 extends Detector {
   }
 
   @Override
-  protected List<Recognition> getAllRecognitions(String classNameFirst, String classNameSecond) {
+  protected ArrayList<ArrayList<Recognition>> getAllRecognitions(String classNameFirst, String classNameSecond) {
     // Show the best detections.
     // after scaling them back to the input size.
     final ArrayList<ArrayList<Recognition>> allRecognitions = new ArrayList<>(getNumDetections());
@@ -160,7 +160,7 @@ public class DetectorYoloV4 extends Detector {
       if (classId > -1 && labels.get(classId).contentEquals(classNameFirst)) {
         allRecognitions.get(0).add(new Recognition("" + i, labels.get(classId), score, detection, classId));
       } else if (classId > -1 && labels.get(classId).contentEquals(classNameSecond)) {
-        allRecognitions.get(0).add(new Recognition("" + i, labels.get(classId), score, detection, classId));
+        allRecognitions.get(1).add(new Recognition("" + i, labels.get(classId), score, detection, classId));
       }
     }
     return multipleNMS(allRecognitions);
