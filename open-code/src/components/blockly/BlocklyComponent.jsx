@@ -61,7 +61,7 @@ function BlocklyComponent(props) {
         setIsError(false);
         if (projectName !== undefined) {
             setCurrentProjectXml(Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
-            updateCurrentProject(projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())),"code");
+            updateCurrentProject(projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
         }
 
     }, []);

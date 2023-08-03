@@ -106,7 +106,7 @@ async function deleteProjectFromStorage(projectName) {
  * @param projectName
  * @param code
  */
-function updateCurrentProject(projectName, code, updateType) {
+function updateCurrentProject(projectName, code) {
     let project = {
         storage: "local",
         projectName: projectName,
@@ -115,18 +115,13 @@ function updateCurrentProject(projectName, code, updateType) {
         time: FormatDate().currentTime,
         updatedTime: new Date(),
     };
-    if (updateType === "code") {
-        project = {
-            ...project,
-            projectName: getCurrentProject().projectName,
-        }
-    }
     //current project will first get store in current
     localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
     //now will check current project is in all project or not.
     const found = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
         return project.projectName === getCurrentProject().projectName
     })
+
     //current project is not in local so will save it in local
     if (!found) {
         //add current project in local
@@ -285,7 +280,7 @@ async function renameProject(projectName, oldName, screen) {
             data = Object.assign(data, {projectName: projectName});
             // Update current project in Google Drive if it has the old project name
             if (oldName === getCurrentProject()?.projectName) {
-                updateCurrentProject(projectName, data.xmlValue, "name")
+                updateCurrentProject(projectName, data.xmlValue)
             }
             // Check if XML and JS files for the project exist and rename them if necessary
             const xmlFileExists = await checkFileExistsInFolder(await getFolderId(), oldName, "xml");
@@ -299,7 +294,7 @@ async function renameProject(projectName, oldName, screen) {
         } else {
             if (oldName === getCurrentProject()?.projectName) {
                 data = Object.assign(data, {projectName: projectName});
-                updateCurrentProject(projectName, data.xmlValue, "name")
+                updateCurrentProject(projectName, data.xmlValue)
             }
         }
 
