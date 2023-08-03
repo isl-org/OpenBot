@@ -17,6 +17,7 @@ public class FeatureList {
   public static final String CONTROLLER = "Controller";
   public static final String CONTROLLER_MAPPING = "Controller Mapping";
   public static final String ROBOT_INFO = "Robot Info";
+  public static final String FREE_ROAM_SERVER = "Free Roam Server";
 
   // Game
   public static final String GAME = "Game";
@@ -75,6 +76,7 @@ public class FeatureList {
     subCategories.add(new SubCategory(DATA_COLLECTION, R.drawable.ic_storage, "#93C47D"));
     subCategories.add(new SubCategory(CONTROLLER_MAPPING, R.drawable.ic_controller, "#7268A6"));
     subCategories.add(new SubCategory(ROBOT_INFO, R.drawable.ic_openbot_space, "#4B7BFF"));
+    subCategories.add(new SubCategory(FREE_ROAM_SERVER, R.drawable.ic_server, "#1BBFBF"));
     categories.add(new Category(GENERAL, subCategories));
 
     subCategories = new ArrayList<>();

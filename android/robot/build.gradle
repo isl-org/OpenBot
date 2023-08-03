@@ -166,4 +166,7 @@ dependencies {
     // BLE
     implementation 'com.github.Ficat:EasyBle:v2.0.2'
     implementation 'com.github.Ficat:EasyPermissions:v2.1.0'
+
+    // Socket Server
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
 }
