@@ -106,15 +106,20 @@ async function deleteProjectFromStorage(projectName) {
  * @param projectName
  * @param code
  */
-function updateCurrentProject(projectName, code) {
-
-    const project = {
+function updateCurrentProject(projectName, code, updateType) {
+    let project = {
         storage: "local",
         projectName: projectName,
         xmlValue: code,
         updatedDate: FormatDate().currentDate,
         time: FormatDate().currentTime,
         updatedTime: new Date(),
+    };
+    if (updateType === "code") {
+        project = {
+            ...project,
+            projectName: getCurrentProject().projectName,
+        }
     }
     //current project will first get store in current
     localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
@@ -280,7 +285,7 @@ async function renameProject(projectName, oldName, screen) {
             data = Object.assign(data, {projectName: projectName});
             // Update current project in Google Drive if it has the old project name
             if (oldName === getCurrentProject()?.projectName) {
-                updateCurrentProject(projectName, data.xmlValue)
+                updateCurrentProject(projectName, data.xmlValue, "name")
             }
             // Check if XML and JS files for the project exist and rename them if necessary
             const xmlFileExists = await checkFileExistsInFolder(await getFolderId(), oldName, "xml");
@@ -294,7 +299,7 @@ async function renameProject(projectName, oldName, screen) {
         } else {
             if (oldName === getCurrentProject()?.projectName) {
                 data = Object.assign(data, {projectName: projectName});
-                updateCurrentProject(projectName, data.xmlValue)
+                updateCurrentProject(projectName, data.xmlValue, "name")
             }
         }
 
