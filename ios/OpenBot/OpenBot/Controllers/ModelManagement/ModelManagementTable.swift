@@ -467,6 +467,7 @@ class ModelManagementTable: UITableViewController {
     /// Stop the rotation if needed
     @objc func stopRotatingImageView() {
         autoSyncIcon.layer.removeAnimation(forKey: "rotationAnimation");
+        viewWillAppear(true)
     }
 }
 
