@@ -55,7 +55,6 @@ class WebServerFragment: CameraController {
     }
 }
 
-
 struct serverMessage: Decodable {
     var driveCmd: serverCommand
 }
