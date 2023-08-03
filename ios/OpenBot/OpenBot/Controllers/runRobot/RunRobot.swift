@@ -361,8 +361,8 @@ class runRobot: CameraController {
                         } else if (stopObject.count > 0 && runObject.count > 0) {
                             for i in stopObject {
                                 for j in runObject {
-                                    var getStopObjectPos = sqrt(pow(i.getLocation().midX - i.getLocation().minY, 2))
-                                    var getStartObjectPos = sqrt(pow(j.getLocation().midX - j.getLocation().minY, 2))
+                                    let getStopObjectPos = sqrt(pow(i.getLocation().midX - i.getLocation().minY, 2))
+                                    let getStartObjectPos = sqrt(pow(j.getLocation().midX - j.getLocation().minY, 2))
                                     if (getStopObjectPos > getStartObjectPos) {
                                         self.sendControl(control: controlResult)
                                     } else {

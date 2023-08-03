@@ -305,11 +305,6 @@ class ModelManagementTable: UITableViewController {
             downloadModel(modelName: models[indexOfSelectedModel])
             break;
         }
-        do {
-            try saveConfigJsonToDrive()
-        } catch {
-            print("Error in saving file to drive");
-        }
     }
 
     /// function to show alert(prompt) on the screen
@@ -386,8 +381,13 @@ class ModelManagementTable: UITableViewController {
             }
         }
         let model = Common.returnModelItem(modelName: modelName);
-        Common.modifyModel(model: model, isDelete: true);
-        tableView.reloadRows(at: [selectedIndex], with: .bottom)
+        do {
+            try Common.saveConfigFileToDocument(modelItems: Common.modifyModel(model: model, isDelete: true))
+            try Authentication.googleAuthentication.saveConfigJsonToDrive();
+        } catch {
+            print("unable to save config file to document");
+        }
+        tableView.reloadRows(at: [selectedIndex], with: .bottom);
     }
 
     @objc func updateConnect(_ notification: Notification) {
@@ -433,27 +433,6 @@ class ModelManagementTable: UITableViewController {
             blankScreen.removeFromSuperview();
         }
         updateModelItemList(type: "All")
-    }
-
-    /**
-     Function to save config file to drive
-     - Throws:
-     */
-    private func saveConfigJsonToDrive() throws {
-        let allModels: [ModelItem] = Common.loadAllModelItems()
-        if GIDSignIn.sharedInstance.currentUser != nil {
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = [.withoutEscapingSlashes]
-            do {
-                let jsonData = try encoder.encode(allModels)
-                if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    if let data = jsonString.data(using: .utf8) {
-                        Authentication().updateModelListFile(fileData: data)
-                    }
-                }
-            }
-        } else {
-        }
     }
 
     /**
