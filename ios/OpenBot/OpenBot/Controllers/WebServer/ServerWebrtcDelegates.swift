@@ -83,8 +83,10 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
         let msg = notification.object as! String
         let jsonDecoder = JSONDecoder();
         let text: Data = msg.data(using: .utf8)!;
+        print("inside websocketDidReceiveMessage")
         if msg.contains("driveCmd") {
             let cmd = try! jsonDecoder.decode(serverMessage.self, from: text);
+            print(cmd.driveCmd.l);
             self.webSocketMsgHandler.driveCommand(control: Control(left: cmd.driveCmd.l, right: cmd.driveCmd.r));
         } else if msg.contains("command") {
             let cmd = try! jsonDecoder.decode(serverCmd.self, from: text)

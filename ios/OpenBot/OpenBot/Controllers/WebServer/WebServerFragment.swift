@@ -21,7 +21,7 @@ class WebServerFragment: CameraController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         sendMessage();
-        ServerWebrtcDelegate();
+        _ = ServerWebrtcDelegate();
     }
 
     /// function to parse the message for the connection and send it.
@@ -57,6 +57,7 @@ class WebServerFragment: CameraController {
 
 struct serverMessage: Decodable {
     var driveCmd: serverCommand
+    var id : String
 }
 
 struct serverCommand: Decodable {
@@ -66,5 +67,6 @@ struct serverCommand: Decodable {
 
 struct serverCmd: Decodable {
     var command: String
+    var id : String
 }
 

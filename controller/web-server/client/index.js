@@ -10,14 +10,17 @@
 import { Connection } from './connection.js'
 import { Keyboard } from './keyboard.js'
 import { BotMessageHandler } from './bot-message-handler'
-
+import {Commands} from './commands'
+import {RemoteKeyboard} from './remote_keyboard';
 (async () => {
   const connection = new Connection()
   const keyboard = new Keyboard()
   const botMessageHandler = new BotMessageHandler(connection)
 
   const onData = data => {
-    console.log("data is ----- >",data, typeof(data))
+    console.log("data is --->",data)
+    let msg = JSON.parse(data)
+    console.log("status is ===>",msg.status)
     botMessageHandler.handle(JSON.parse(data).status, connection)
   }
 
@@ -26,11 +29,36 @@ import { BotMessageHandler } from './bot-message-handler'
   }
 
   await connection.start(onData)
-
-  const onKeyPress = (key) => {
-    // Send keypress to server
-    connection.send(JSON.stringify({ KEYPRESS: key }))
+const sendToBot = (key)=>{
+  console.log(key)
+  let msg = JSON.parse(key);
+let commands = {}
+  if(msg.driveCmd !== undefined){
+    commands = {
+      driveCmd : msg.driveCmd,
+      id : '123456789'
+    }
   }
+  else{
+    commands = {
+      command : msg.command,
+      id : '123456789'
+    }
+  }
+
+  console.log(commands)
+  connection.send(JSON.stringify(commands))
+}
+  const onKeyPress = (key) => {
+    const command = new Commands(sendToBot);
+    const remoteKeyboard = new RemoteKeyboard(command.getCommandHandler());
+    // Send keypress to server
+    let keyPressObj = { KEYPRESS: key }
+    console.log(keyPressObj);
+    remoteKeyboard.processKey(keyPressObj.KEYPRESS)
+  }
+
+
 
   keyboard.start(onKeyPress, onQuit)
 })()

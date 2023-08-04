@@ -3,16 +3,17 @@
 //
 
 import Foundation
+
 @available(iOS 13.0, *)
 class NativeWebSocket: NSObject, WebSocketProvider {
-    let url =  URL(string: "ws://192.168.1.30:8080/ws")!
+    let url = URL(string: "ws://192.168.1.30:8080/ws")!
 //    let url = URL(string: "ws://inconclusive-warm-shamrock.glitch.me")!;
-    static let shared : NativeWebSocket = NativeWebSocket();
+    static let shared: NativeWebSocket = NativeWebSocket();
     var delegate: WebSocketProviderDelegate?
     private var socket: URLSessionWebSocketTask?
     private lazy var urlSession: URLSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
 
-   override init() {
+    override init() {
         super.init()
         connect();
     }
@@ -25,23 +26,30 @@ class NativeWebSocket: NSObject, WebSocketProvider {
     }
 
     func send(data: Data) {
-        self.socket?.send(.data(data)) { _ in }
+        self.socket?.send(.data(data)) { _ in
+        }
     }
 
 
     private func readMessage() {
         self.socket?.receive { [weak self] message in
-            guard let self = self else { return }
+            guard let self = self else {
+                return
+            }
             switch message {
             case .success(.data(let data)):
                 self.delegate?.webSocket(self, didReceiveData: data)
                 self.readMessage()
             case .success(.string(let text)):
-                print("Received text message",text , Date().millisecondsSince1970)
+                print("Received text message", text, Date().millisecondsSince1970)
                 // Process the text message if needed
+                if text.contains("request-id") {
+                    let response = try! JSONEncoder().encode(responseId(id: "123456789"));
+                    send(data: response);
+                }
                 self.delegate?.webSocket(self, didReceiveData: text);
                 NotificationCenter.default.post(name: .updateDataFromControllerApp, object: text);
-                webRTCClient.sendMessage(message: "Nitish hu mai \(Date().millisecondsSince1970)");
+//                webRTCClient.sendMessage(message: "Nitish hu mai \(Date().millisecondsSince1970)");
                 self.readMessage()
 
             case .success:
@@ -62,7 +70,7 @@ class NativeWebSocket: NSObject, WebSocketProvider {
 }
 
 @available(iOS 13.0, *)
-extension NativeWebSocket: URLSessionWebSocketDelegate, URLSessionDelegate  {
+extension NativeWebSocket: URLSessionWebSocketDelegate, URLSessionDelegate {
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
         self.delegate?.webSocketDidConnect(self)
     }
@@ -70,4 +78,12 @@ extension NativeWebSocket: URLSessionWebSocketDelegate, URLSessionDelegate  {
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
         self.disconnect()
     }
+}
+
+struct requestId: Decodable {
+    var id: String
+}
+
+struct responseId: Encodable {
+    var id: String
 }

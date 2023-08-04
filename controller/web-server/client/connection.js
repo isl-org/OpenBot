@@ -8,45 +8,71 @@
  */
 
 import { ErrorDisplay } from './error-display.js'
+import {Commands} from "./commands";
+import {RemoteKeyboard} from "./remote_keyboard";
 
-export function Connection () {
+export function Connection() {
   const connectToServer = async () => {
-    const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`)
-    // const ws = new WebSocket('ws://inconclusive-warm-shamrock.glitch.me');
+    const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`);
     return new Promise((resolve, reject) => {
       const timer = setInterval(() => {
         if (ws.readyState === 1) {
-          clearInterval(timer)
-          resolve(ws)
+          clearInterval(timer);
+          resolve(ws);
         }
-      }, 10)
-    })
-  }
+      }, 10);
+    });
+  };
+
+  const sendToBot = (message) => {
+    this.send(message);
+  };
+
+  const sendId = () => {
+    const response = {
+      id: '123456789'
+    };
+    this.send(JSON.stringify(response));
+  };
 
   this.start = async (onData) => {
-    let ws = await connectToServer()
-    const errDisplay = new ErrorDisplay()
+    let ws = await connectToServer();
+    const errDisplay = new ErrorDisplay();
+    let idSent = false;
 
-    ws.onmessage = (message) =>{
-      console.log("Message is ======= " + message + "\n");
-      wss.broadcast(ws, message.data);
-    }
-
-    ws.onmessage = webSocketMessage => onData(webSocketMessage.data)
-
-    ws.onclose = () => errDisplay.set('Disconnected from the server. To reconnect, reload this page.')
-    ws.onopen = () => errDisplay.reset()
-
-    this.send = data => {
-      if (ws) {
-        console.log(Date.now())
-        ws.send(data)
+    ws.onmessage = (webSocketMessage) => {
+      let msg = JSON.parse(webSocketMessage.data);
+      if (Object.keys(msg)[0] === 'id' && !idSent) {
+        console.log("sending id");
+        sendId();
+        idSent = true;
+      } else {
+        console.log(webSocketMessage.data);
+        onData(webSocketMessage.data);
       }
-    }
+    };
+
+    ws.onclose = () => {
+      console.log('Disconnected from the server. To reconnect, reload this page.');
+      errDisplay.set('Disconnected from the server. To reconnect, reload this page.')
+      idSent = false;
+    };
+
+    ws.onopen = () => {
+      console.log('Connection established.');
+      errDisplay.reset();
+      idSent = false;
+    };
+
+    this.send = (data) => {
+      if (ws) {
+        ws.send(data);
+      }
+    };
 
     this.stop = () => {
-      ws.close()
-      ws = null
-    }
-  }
+      ws.close();
+      ws = null;
+    };
+  };
 }
