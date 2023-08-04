@@ -7,23 +7,41 @@ let rooms = new Map();
 wss.on('connection', (ws) => {
     console.log(`Client connected. Total connected clients: ${wss.clients.size}`);
     askIdOfClient(ws);
-
     ws.on("message", function message(data, isBinary) {
         const message = isBinary ? data : data.toString();
         console.log(JSON.parse(message));
         let msg = JSON.parse(message);
         if(Object.keys(msg)[0] === 'id'){
             createOrJoinRoom(msg.id,ws);
+            return
         }
         else if(Object.keys(msg)[0] === 'driveCmd'){
-
+            let driveCmd = msg.driveCmd
+            console.log(driveCmd)
         }
         else if('command'){
 
         }
-
-        sendToBot(ws,message);
+        if(msg.id === undefined){
+            sendToBot(ws,message);
+            return;
+        }
+        // sendToBot(ws,message);
+        console.log("msg.id ====",msg)
+        sendToRoom(msg.id,message)
     });
+
+    const sendToRoom = (id,message)=>{
+        console.log("id is ====>",id);
+        let room = rooms.get(id);
+        console.log()
+        console.log("roogfcghm ===>",rooms)
+        let tempWs = room.clients[0];
+        let wwww = room.clients[1];
+        // wss.broadcast(tempWs, message);
+        wss.broadcast(wwww, message);
+
+    }
 
     ws.onclose = () => {
         console.log(`Client disconnected. Total connected clients: ${wss.clients.size}`);

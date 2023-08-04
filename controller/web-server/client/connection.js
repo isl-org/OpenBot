@@ -13,7 +13,8 @@ import {RemoteKeyboard} from "./remote_keyboard";
 
 export function Connection() {
   const connectToServer = async () => {
-    const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`);
+    // const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`);
+    const ws = new WebSocket(`ws://verdant-imported-peanut.glitch.me`);
     return new Promise((resolve, reject) => {
       const timer = setInterval(() => {
         if (ws.readyState === 1) {
@@ -37,6 +38,12 @@ export function Connection() {
 
   this.start = async (onData) => {
     let ws = await connectToServer();
+    this.send = (data) => {
+      if (ws) {
+        ws.send(data);
+      }
+    };
+    sendId();
     const errDisplay = new ErrorDisplay();
     let idSent = false;
 
@@ -64,11 +71,7 @@ export function Connection() {
       idSent = false;
     };
 
-    this.send = (data) => {
-      if (ws) {
-        ws.send(data);
-      }
-    };
+
 
     this.stop = () => {
       ws.close();

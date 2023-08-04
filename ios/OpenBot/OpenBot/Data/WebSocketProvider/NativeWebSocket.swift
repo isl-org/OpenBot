@@ -6,8 +6,10 @@ import Foundation
 
 @available(iOS 13.0, *)
 class NativeWebSocket: NSObject, WebSocketProvider {
-    let url = URL(string: "ws://192.168.1.30:8080/ws")!
+//    let url = URL(string: "ws://192.168.1.30:8080/ws")!
 //    let url = URL(string: "ws://inconclusive-warm-shamrock.glitch.me")!;
+    let url = URL(string: "ws://verdant-imported-peanut.glitch.me")!;
+
     static let shared: NativeWebSocket = NativeWebSocket();
     var delegate: WebSocketProviderDelegate?
     private var socket: URLSessionWebSocketTask?
