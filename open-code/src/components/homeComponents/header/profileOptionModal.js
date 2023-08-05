@@ -34,7 +34,7 @@ export function ProfileOptionModal(props) {
     const location = useLocation();
     const themes = useTheme();
     const {theme, toggleTheme, setUser} = useContext(ThemeContext);
-    const {isOnline, setIsDob, isDob} = useContext(StoreContext);
+    const {isOnline, setIsDob, isDob, setIsAutoSyncEnabled} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const isSignedIn = localStorage.getItem("isSigIn") === "true";
     const isHomePage = location.pathname === PathName.home;
@@ -109,6 +109,7 @@ export function ProfileOptionModal(props) {
                                 setIsAutoSync(true);
                                 await autoSync().then(() => {
                                     setIsAutoSync(false);
+                                    setIsAutoSyncEnabled(true);
                                 })
                             } else {
                                 errorToast("Please sign-In to auto sync.")
