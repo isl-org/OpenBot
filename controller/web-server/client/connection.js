@@ -13,8 +13,9 @@ import {RemoteKeyboard} from "./remote_keyboard";
 
 export function Connection() {
   const connectToServer = async () => {
-    // const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`);
-    const ws = new WebSocket(`ws://verdant-imported-peanut.glitch.me`);
+    const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`);
+    // const ws = new WebSocket(`ws://verdant-imported-peanut.glitch.me`);
+    // const ws = new WebSocket(`ws://verdant-imported-peanut.glitch.me`);
     return new Promise((resolve, reject) => {
       const timer = setInterval(() => {
         if (ws.readyState === 1) {
@@ -31,7 +32,7 @@ export function Connection() {
 
   const sendId = () => {
     const response = {
-      id: '123456789'
+      roomId: '123456789'
     };
     this.send(JSON.stringify(response));
   };
@@ -49,7 +50,7 @@ export function Connection() {
 
     ws.onmessage = (webSocketMessage) => {
       let msg = JSON.parse(webSocketMessage.data);
-      if (Object.keys(msg)[0] === 'id' && !idSent) {
+      if (Object.keys(msg)[0] === 'roomId' && !idSent) {
         console.log("sending id");
         sendId();
         idSent = true;

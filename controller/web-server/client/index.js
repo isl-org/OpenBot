@@ -36,13 +36,13 @@ let commands = {}
   if(msg.driveCmd !== undefined){
     commands = {
       driveCmd : msg.driveCmd,
-      id : '123456789'
+      roomId : '123456789'
     }
   }
   else{
     commands = {
       command : msg.command,
-      id : '123456789'
+      roomId : '123456789'
     }
   }
 

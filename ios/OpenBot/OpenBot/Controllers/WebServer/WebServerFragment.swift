@@ -10,11 +10,12 @@ class WebServerFragment: CameraController {
     var gameController = GameController.shared
     @IBOutlet weak var CommandLabel: UILabel!
     let mSocket = NativeWebSocket.shared;
-
+    let roomId : String = "123456789"
     override func viewDidLoad() {
         super.viewDidLoad();
         self.CommandLabel.textColor = .red;
         CommandLabel.textAlignment = .center;
+        NotificationCenter.default.addObserver(self, selector: #selector(websocketDidReceiveMessage), name: .updateDataFromControllerApp, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(flipCamera), name: .switchCamera, object: nil);
     }
 
@@ -26,19 +27,20 @@ class WebServerFragment: CameraController {
 
     /// function to parse the message for the connection and send it.
     func sendMessage() {
-        var msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
+        var msg = JSON.toString(ServerConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true"), roomId: roomId));
+        print(msg);
         var data = msg.data(using: .utf8);
         mSocket.send(data: data!);
-        msg = JSON.toString(VideoProtocolEvent(status: .init(VIDEO_PROTOCOL: "WEBRTC")));
+        msg = JSON.toString(ServerVideoProtocolEvent(status: .init(VIDEO_PROTOCOL: "WEBRTC"), roomId: roomId));
         data = msg.data(using: .utf8);
         mSocket.send(data: data!);
-        msg = JSON.toString(VideoServerUrlEvent(status: .init(VIDEO_SERVER_URL: "")));
+        msg = JSON.toString(ServerVideoServerUrlEvent(status: .init(VIDEO_SERVER_URL: ""), roomId: roomId));
         data = msg.data(using: .utf8);
         mSocket.send(data: data!);
-        msg = JSON.toString(VideoCommandEvent(status: .init(VIDEO_COMMAND: "START")));
+        msg = JSON.toString(ServerVideoCommandEvent(status: .init(VIDEO_COMMAND: "START"), roomId: roomId));
         data = msg.data(using: .utf8);
         mSocket.send(data: data!);
-        msg = JSON.toString(VehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true)));
+        msg = JSON.toString(ServerVehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true), roomId: roomId));
         data = msg.data(using: .utf8);
         mSocket.send(data: data!);
     }
@@ -50,14 +52,25 @@ class WebServerFragment: CameraController {
 
     }
 
+
     @objc func flipCamera(_ notification: NSNotification) {
-            switchCameraView()
+        switchCameraView()
     }
+
+    @objc func websocketDidReceiveMessage(_ notification: Notification) {
+        let msg = notification.object as! String
+        DispatchQueue.main.async {
+            self.CommandLabel.text = msg
+        }
+
+    }
+
+
 }
 
 struct serverMessage: Decodable {
     var driveCmd: serverCommand
-    var id : String
+    var roomId: String
 }
 
 struct serverCommand: Decodable {
@@ -67,6 +80,7 @@ struct serverCommand: Decodable {
 
 struct serverCmd: Decodable {
     var command: String
-    var id : String
+    var roomId: String
 }
+
 

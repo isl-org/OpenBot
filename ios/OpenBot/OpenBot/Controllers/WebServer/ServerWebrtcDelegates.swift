@@ -12,6 +12,7 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
     var mSocket = NativeWebSocket.shared;
     var useCustomCapturer: Bool = true
     let webSocketMsgHandler = WebSocketMessageHandler();
+    let roomId = "123456789"
 
     /// callback to check the generate candidate and send to the controller
     func didGenerateCandidate(iceCandidate: RTCIceCandidate) {
@@ -72,7 +73,7 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
     /// - Parameter iceCandidate:
     func sendCandidate(iceCandidate: RTCIceCandidate) {
         let candidate = Candidate(candidate: iceCandidate.sdp, label: iceCandidate.sdpMLineIndex, id: iceCandidate.sdpMid!, type: "candidate");
-        let signalingMessage = JSON.toString(CandidateEvent(status: .init(WEB_RTC_EVENT: candidate)));
+        let signalingMessage = JSON.toString(ServerCandidateEvent(status: .init(WEB_RTC_EVENT: candidate), roomId: roomId));
         let data = signalingMessage.data(using: .utf8);
 
         mSocket.send(data: data!);
@@ -118,11 +119,13 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
             do {
                 let signalingMessage = try JSONDecoder().decode(AnswerEvent.self, from: text)
                 if signalingMessage.webrtc_event.type == "offer" {
+                    print("offer")
                     webRTCClient.receiveOffer(offerSDP: RTCSessionDescription(type: .offer, sdp: (signalingMessage.webrtc_event.sdp)), onCreateAnswer: { (answerSDP: RTCSessionDescription) -> Void in
                         self.sendSDP(sessionDescription: answerSDP)
                     })
                 } else if signalingMessage.webrtc_event.type == "answer" {
-                    webRTCClient.receiveAnswer(answerSDP: RTCSessionDescription(type: .answer, sdp: (signalingMessage.webrtc_event.sdp)))
+                    print("answer")
+                    webRTCClient.receiveAnswer(answerSDP: RTCSessionDescription(type: .answer, sdp: (signalingMessage.webrtc_event.sdp)));
                 } else if signalingMessage.webrtc_event.type == "candidate" {
                 }
 
@@ -140,7 +143,7 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
         } else if sessionDescription.type == .answer {
             type = "answer"
         }
-        let signalingMessage = JSON.toString(OfferEvent(status: .init(WEB_RTC_EVENT: .init(type: type, sdp: sessionDescription.sdp))));
+        let signalingMessage = JSON.toString(ServerOfferEvent(status: .init(WEB_RTC_EVENT: .init(type: type, sdp: sessionDescription.sdp)), roomId: roomId ));
         let data = signalingMessage.data(using: .utf8);
         mSocket.send(data: data!);
     }

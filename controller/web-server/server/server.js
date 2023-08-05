@@ -11,67 +11,75 @@ wss.on('connection', (ws) => {
         const message = isBinary ? data : data.toString();
         console.log(JSON.parse(message));
         let msg = JSON.parse(message);
-        if(Object.keys(msg)[0] === 'id'){
-            createOrJoinRoom(msg.id,ws);
-            return
-        }
-        else if(Object.keys(msg)[0] === 'driveCmd'){
-            let driveCmd = msg.driveCmd
-            console.log(driveCmd)
-        }
-        else if('command'){
 
-        }
-        if(msg.id === undefined){
-            sendToBot(ws,message);
+        if (Object.keys(msg)[0] === 'roomId') {
+            createOrJoinRoom(msg.roomId, ws);
             return;
         }
-        // sendToBot(ws,message);
-        console.log("msg.id ====",msg)
-        sendToRoom(msg.id,message)
+        else if (Object.keys(msg)[0] === 'driveCmd') {
+            let driveCmd = msg.driveCmd;
+            console.log(driveCmd);
+        }
+        else if ('command') {
+            // You may add additional checks for different message types.
+        }
+
+        if (msg.roomId === undefined) {
+            console.log(msg,"sending to undefined");
+            sendToBot(ws, message);
+            return;
+        }
+
+        // Broadcast the message to clients within the same room based on the roomId.
+        sendToRoom(msg.roomId, message);
     });
 
-    const sendToRoom = (id,message)=>{
-        console.log("id is ====>",id);
-        let room = rooms.get(id);
-        console.log()
-        console.log("roogfcghm ===>",rooms)
-        let tempWs = room.clients[0];
-        let wwww = room.clients[1];
-        // wss.broadcast(tempWs, message);
-        wss.broadcast(wwww, message);
 
+    const sendToRoom = (roomId, message) => {
+        console.log("roomId is ====>", roomId);
+        let room = rooms.get(roomId);
+
+        if (room) {
+            console.log("room is ===>", rooms);
+
+            // Broadcast the message to all non-null clients in the room.
+            broadcastToRoom(room, message);
+        } else {
+            console.log("Room not found for roomId:", roomId);
+        }
     }
+
 
     ws.onclose = () => {
         console.log(`Client disconnected. Total connected clients: ${wss.clients.size}`);
+        rooms.clear();
     };
 });
 
-// Function to ask for client's id
+// Function to ask for client's roomId
 const askIdOfClient = (ws) => {
-    console.log("Asking for client's id");
+    console.log("Asking for client's roomId");
     let request = {
-        id: "request-id"
+        roomId: "request-roomId"
     };
     ws.send(JSON.stringify(request));
 };
 
-const createOrJoinRoom = (id, ws) => {
-
-    console.log("inside creating room");
-    // Check if the room with the given id exists
-    if (!rooms.has(id) || rooms.get(id).clients[1] !== null) {
+const createOrJoinRoom = (roomId, ws) => {
+    // Check if the room with the given roomId exists
+    if (!rooms.has(roomId) || rooms.get(roomId).clients[1] !== null) {
         // Room does not exist or is full (has two clients already)
+        console.log("creating room first time");
         let room = {
             clients: [ws, null]
         };
-        rooms.set(id, room);
+        rooms.set(roomId, room);
     } else {
         // Room exists and has space for the new client
-        let room = rooms.get(id);
+        console.log("joining to the room");
+        let room = rooms.get(roomId);
         room.clients[1] = ws;
-        rooms.set(id, room);
+        rooms.set(roomId, room);
     }
 };
 
@@ -88,6 +96,19 @@ wss.broadcast = (ws, data) => {
     });
 };
 
-const sendToBot = (ws,message) => {
-    wss.broadcast(ws, message);
+// Broadcast to all clients in a specific room.
+const broadcastToRoom = (room, message) => {
+    room.clients.forEach((client) => {
+        if (client && client.readyState === WebSocket.OPEN) {
+            client.send(message);
+        }
+    });
 };
+
+const sendToBot = (ws, message) => {
+    wss.clients.forEach((client) => {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+            client.send(message);
+        }
+    });
+}

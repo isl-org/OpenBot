@@ -92,6 +92,7 @@
 		727D34C317885120CF1DBC27 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D36143ED88C8E210BCEB1 /* AudioPlayer.swift */; };
 		727D34E3CC491BD7758C572F /* WebRTCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */; };
 		727D354EAA4CA78176DD1064 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D383824EABABFDE0806CE /* Toast.swift */; };
+		727D3595B21D2EC9BDAEDF5C /* ServerSignalingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D38A3775D7B740BFEAE65 /* ServerSignalingMessage.swift */; };
 		727D35D8CB673649BF1AD948 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3AB3E741A78099D79575 /* Endpoint.swift */; };
 		727D36856575D19091290CFF /* WebViewFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35EAA13908B142BC4773 /* WebViewFragment.swift */; };
 		727D36915DB88577316D9C46 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A8D7ACD08EF11740FC2 /* Connection.swift */; };
@@ -251,6 +252,7 @@
 		727D384384E67F20294222AC /* EditProfileFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileFragment.swift; sourceTree = "<group>"; };
 		727D384E16A0157F2B8C7084 /* ServerCommunication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCommunication.swift; sourceTree = "<group>"; };
 		727D388488E1FFD98E542061 /* Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
+		727D38A3775D7B740BFEAE65 /* ServerSignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSignalingMessage.swift; sourceTree = "<group>"; };
 		727D38DAC31CD27C5DE891F4 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		727D3937D1457F50C712CDD9 /* ServerListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerListener.swift; sourceTree = "<group>"; };
 		727D3946DB74E63117B32AF4 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
@@ -707,6 +709,7 @@
 				727D3A67A02F3F30135DFA43 /* SocketManager.swift */,
 				727D37C7F3414E19F505AB0C /* ServerWebrtcDelegates.swift */,
 				727D3504130197C59EB15178 /* WebSocketMessageHandler.swift */,
+				727D38A3775D7B740BFEAE65 /* ServerSignalingMessage.swift */,
 			);
 			path = WebServer;
 			sourceTree = "<group>";
@@ -1278,6 +1281,7 @@
 				727D3E6B3D9FD6E167F939B0 /* NativeWebSocket.swift in Sources */,
 				727D3A6C79B27AE7C7AF4FB3 /* StartScreamProvider.swift in Sources */,
 				727D3C40C6A407C68234FEE8 /* WebSocketProvider.swift in Sources */,
+				727D3595B21D2EC9BDAEDF5C /* ServerSignalingMessage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
