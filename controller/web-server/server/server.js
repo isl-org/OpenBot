@@ -9,11 +9,12 @@ wss.on('connection', (ws) => {
     askIdOfClient(ws);
     ws.on("message", function message(data, isBinary) {
         const message = isBinary ? data : data.toString();
-        console.log(JSON.parse(message));
+        // console.log(JSON.parse(message));
         let msg = JSON.parse(message);
 
         if (Object.keys(msg)[0] === 'roomId') {
             createOrJoinRoom(msg.roomId, ws);
+            ws.id = msg.roomId;
             return;
         }
         else if (Object.keys(msg)[0] === 'driveCmd') {
@@ -25,7 +26,7 @@ wss.on('connection', (ws) => {
         }
 
         if (msg.roomId === undefined) {
-            console.log(msg,"sending to undefined");
+            console.log("sending to undefined");
             sendToBot(ws, message);
             return;
         }
@@ -50,10 +51,18 @@ wss.on('connection', (ws) => {
     }
 
 
-    ws.onclose = () => {
+    ws.onclose = (socket) => {
         console.log(`Client disconnected. Total connected clients: ${wss.clients.size}`);
-        rooms.clear();
+        let room = rooms.get(ws.id);
+        if (room === undefined){
+            return
+        }
+        room[0]?.close()
+        rooms[1]?.close();
+        rooms.delete(ws.id);
+        console.log(rooms)
     };
+
 });
 
 // Function to ask for client's roomId
@@ -76,7 +85,7 @@ const createOrJoinRoom = (roomId, ws) => {
         rooms.set(roomId, room);
     } else {
         // Room exists and has space for the new client
-        console.log("joining to the room");
+        console.log("joining to the room",rooms);
         let room = rooms.get(roomId);
         room.clients[1] = ws;
         rooms.set(roomId, room);

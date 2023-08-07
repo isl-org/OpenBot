@@ -6,11 +6,11 @@ import Foundation
 
 @available(iOS 13.0, *)
 class NativeWebSocket: NSObject, WebSocketProvider {
-    let url = URL(string: "ws://192.168.1.5:8080/ws")!
+//    let url = URL(string: "ws://192.168.1.12:8080/ws")!
 //    let url = URL(string: "ws://inconclusive-warm-shamrock.glitch.me")!;
-//    let url = URL(string: "ws://verdant-imported-peanut.glitch.me")!;
+    let url = URL(string: "ws://verdant-imported-peanut.glitch.me")!;
 
-
+    let roomId : String = "123456789"
     static let shared: NativeWebSocket = NativeWebSocket();
     var delegate: WebSocketProviderDelegate?
     private var socket: URLSessionWebSocketTask?
@@ -48,7 +48,7 @@ class NativeWebSocket: NSObject, WebSocketProvider {
                 print("Received text message", text, Date().millisecondsSince1970)
                 // Process the text message if needed
                 if text.contains("request-roomId") {
-                    let response = try! JSONEncoder().encode(responseId(roomId: "123456789"));
+                    let response = try! JSONEncoder().encode(responseId(roomId: roomId));
                     send(data: response);
                 }
                 self.delegate?.webSocket(self, didReceiveData: text);
