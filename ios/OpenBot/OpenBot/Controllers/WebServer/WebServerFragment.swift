@@ -5,12 +5,12 @@
 import Foundation
 import UIKit
 import AVFoundation
-
+import FirebaseAuth
 class WebServerFragment: CameraController {
     var gameController = GameController.shared
     @IBOutlet weak var CommandLabel: UILabel!
     let mSocket = NativeWebSocket.shared;
-    let roomId : String = "123456789"
+    let roomId : String =  Auth.auth().currentUser?.email ?? ""
     override func viewDidLoad() {
         super.viewDidLoad();
         self.CommandLabel.textColor = .red;

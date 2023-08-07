@@ -3,14 +3,15 @@
 //
 
 import Foundation
-
+import GoogleSignIn
+import FirebaseAuth
 @available(iOS 13.0, *)
 class NativeWebSocket: NSObject, WebSocketProvider {
 //    let url = URL(string: "ws://192.168.1.12:8080/ws")!
 //    let url = URL(string: "ws://inconclusive-warm-shamrock.glitch.me")!;
     let url = URL(string: "ws://verdant-imported-peanut.glitch.me")!;
 
-    let roomId : String = "123456789"
+    let roomId : String = Auth.auth().currentUser?.email ?? ""
     static let shared: NativeWebSocket = NativeWebSocket();
     var delegate: WebSocketProviderDelegate?
     private var socket: URLSessionWebSocketTask?

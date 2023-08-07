@@ -30,6 +30,7 @@
   },
   "license": "ISC",
   "dependencies": {
+    "firebase": "^10.1.0",
     "ws": "^8.13.0"
   }
 }

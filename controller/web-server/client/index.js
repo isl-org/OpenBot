@@ -12,10 +12,14 @@ import { Keyboard } from './keyboard.js'
 import { BotMessageHandler } from './bot-message-handler'
 import {Commands} from './commands'
 import {RemoteKeyboard} from './remote_keyboard';
+import { googleSigIn } from "./authentication/authentication";
+
+const connection = new Connection();
 (async () => {
-  const connection = new Connection()
+
   const keyboard = new Keyboard()
   const botMessageHandler = new BotMessageHandler(connection)
+
 
   const onData = data => {
     console.log("data is --->",data)
@@ -36,13 +40,13 @@ let commands = {}
   if(msg.driveCmd !== undefined){
     commands = {
       driveCmd : msg.driveCmd,
-      roomId : '123456789'
+      roomId : signedInUser.email
     }
   }
   else{
     commands = {
       command : msg.command,
-      roomId : '123456789'
+      roomId : signedInUser.email
     }
   }
 
@@ -62,3 +66,33 @@ let commands = {}
 
   keyboard.start(onKeyPress, onQuit)
 })()
+
+export let  signedInUser = null;
+function handleSignInButtonClick() {
+
+  googleSigIn()
+      .then((user) => {
+        // Use the user data or store it in a variable for later use
+        signedInUser = user;
+        console.log("Signed-in user:", user);
+        console.log(signedInUser.email)
+       sendId();
+
+      })
+      .catch((error) => {
+        // Handle any errors that might occur during sign-in
+        console.error("Error signing in:", error);
+      });
+}
+function sendId() {
+  const response = {
+    roomId: signedInUser.email
+  };
+  console.log(connection);
+  connection.send(JSON.stringify(response));
+  console.log("id has been sent");
+}
+
+// Add an event listener to the button
+const signInButton = document.getElementById("google-signin-button");
+signInButton.addEventListener("click", handleSignInButtonClick);

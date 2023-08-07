@@ -10,7 +10,7 @@
 import { ErrorDisplay } from './error-display.js'
 import {Commands} from "./commands";
 import {RemoteKeyboard} from "./remote_keyboard";
-
+import {signedInUser} from "./index";
 export function Connection() {
   const connectToServer = async () => {
     // const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`);
@@ -30,12 +30,7 @@ export function Connection() {
     this.send(message);
   };
 
-  const sendId = () => {
-    const response = {
-      roomId: '123456789'
-    };
-    this.send(JSON.stringify(response));
-  };
+
 
   this.start = async (onData) => {
     let ws = await connectToServer();
@@ -44,15 +39,12 @@ export function Connection() {
         ws.send(data);
       }
     };
-    sendId();
     const errDisplay = new ErrorDisplay();
     let idSent = false;
 
     ws.onmessage = (webSocketMessage) => {
       let msg = JSON.parse(webSocketMessage.data);
       if (Object.keys(msg)[0] === 'roomId' && !idSent) {
-        console.log("sending id");
-        sendId();
         idSent = true;
       } else {
         console.log(webSocketMessage.data);
