@@ -17,14 +17,10 @@ export function BotMessageHandler(connection) {
     const errDisplay = new ErrorDisplay()
 
     webRtc.onDataMessageReceived((message) => {
-        console.log('Received message: ', message + "\t" , Date.now(),webRtc.dataChannel);
-        webRtc.dataChannel.send("gfwdcvwqhdbvwhgdcwgh");
-        webRtc.send("jai shree ram");
-
+        // Do something on data received;
     });
 
     this.handle = (msg, connection) => {
-        console.log("msgType =======", msg,)
         if (msg === undefined || msg === null) {
             return
         }
@@ -55,6 +51,11 @@ export function BotMessageHandler(connection) {
             case 'WEB_RTC_EVENT':
                 webRtc.handle(msg.WEB_RTC_EVENT, connection)
                 break
+            case 'driveCmd' :
+                webRtc.send(JSON.stringify(msg));
+
+            case "command" :
+                webRtc.send(JSON.stringify(msg));
 
             default:
                 // Process other status information here

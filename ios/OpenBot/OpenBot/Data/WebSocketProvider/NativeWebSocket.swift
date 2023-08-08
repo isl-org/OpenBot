@@ -55,10 +55,6 @@ class NativeWebSocket: NSObject, WebSocketProvider {
                 }
                 self.delegate?.webSocket(self, didReceiveData: text);
                 NotificationCenter.default.post(name: .updateDataFromControllerApp, object: text);
-                print(Date().millisecondsSince1970)
-                if (webRTCClient != nil) {
-                    webRTCClient.sendMessage(message: "Nitish hu mai \(Date().millisecondsSince1970)");
-                }
                 self.readMessage()
 
             case .success:

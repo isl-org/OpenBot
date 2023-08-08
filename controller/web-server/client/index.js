@@ -13,7 +13,7 @@ import { BotMessageHandler } from './bot-message-handler'
 import {Commands} from './commands'
 import {RemoteKeyboard} from './remote_keyboard';
 import { googleSigIn } from "./authentication/authentication";
-
+import {WebRTC} from './webrtc.js'
 const connection = new Connection();
 (async () => {
 
@@ -33,6 +33,7 @@ const connection = new Connection();
   }
 
   await connection.start(onData)
+  const webRtc = new WebRTC(connection)
 const sendToBot = (key)=>{
   console.log(key)
   let msg = JSON.parse(key);
@@ -49,7 +50,9 @@ let commands = {}
       roomId : signedInUser.email
     }
   }
-  connection.send(JSON.stringify(commands))
+  // connection.send(JSON.stringify(commands)) //This is for sending via socket)
+      botMessageHandler.handle(commands,connection); // This is for sending via webRtc
+
 }
   const onKeyPress = (key) => {
     const command = new Commands(sendToBot);

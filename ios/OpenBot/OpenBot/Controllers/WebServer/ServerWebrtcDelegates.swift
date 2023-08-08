@@ -31,9 +31,64 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
 
     /// callback function to check data is available
     func didReceiveData(data: Data) {
-        print("data received", data);
-        let message = JSON.toString(data);
-        print(message,Date().millisecondsSince1970);
+
+        let msg = String(data: data, encoding: .utf8)
+        if msg == nil{
+            return
+        }
+        let message = msg!.replacingOccurrences(of: "\\", with: "")
+        print("data received", message);
+        NotificationCenter.default.post(name: .updateDataFromControllerApp, object: message);
+        let jsonDecoder = JSONDecoder();
+        let text: Data = message.data(using: .utf8)!;
+        if message.contains("driveCmd") {
+            let cmd = try! jsonDecoder.decode(serverMessage.self, from: text);
+            print(cmd.driveCmd.l);
+            self.webSocketMsgHandler.driveCommand(control: Control(left: cmd.driveCmd.l, right: cmd.driveCmd.r));
+        } else if message.contains("command") {
+            let cmd = try! jsonDecoder.decode(serverCmd.self, from: text)
+            print(cmd.command);
+            switch cmd.command {
+            case "INDICATOR_LEFT":
+                self.webSocketMsgHandler.indicatorLeft()
+                break;
+            case "INDICATOR_RIGHT":
+                self.webSocketMsgHandler.indicatorRight();
+                break
+            case "INDICATOR_STOP":
+                self.webSocketMsgHandler.cancelIndicator();
+            case "SPEED_DOWN":
+                self.webSocketMsgHandler.speedDown();
+                break;
+            case "SPEED_UP":
+                self.webSocketMsgHandler.speedUp();
+                break;
+            case "DRIVE_MODE":
+                self.webSocketMsgHandler.driveMode()
+            case "SWITCH_CAMERA":
+                NotificationCenter.default.post(name: .switchCamera, object: nil);
+                break;
+            default:
+                break;
+            }
+        } else {
+            do {
+                let signalingMessage = try JSONDecoder().decode(AnswerEvent.self, from: text)
+                if signalingMessage.webrtc_event.type == "offer" {
+                    print("offer")
+                    webRTCClient.receiveOffer(offerSDP: RTCSessionDescription(type: .offer, sdp: (signalingMessage.webrtc_event.sdp)), onCreateAnswer: { (answerSDP: RTCSessionDescription) -> Void in
+                        self.sendSDP(sessionDescription: answerSDP)
+                    })
+                } else if signalingMessage.webrtc_event.type == "answer" {
+                    print("answer")
+                    webRTCClient.receiveAnswer(answerSDP: RTCSessionDescription(type: .answer, sdp: (signalingMessage.webrtc_event.sdp)));
+                } else if signalingMessage.webrtc_event.type == "candidate" {
+                }
+
+            } catch {
+                print(error)
+            }
+        }
     }
 
     /// callback function message string received

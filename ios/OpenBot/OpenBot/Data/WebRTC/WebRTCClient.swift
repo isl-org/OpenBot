@@ -338,7 +338,6 @@ extension WebRTCClient : RTCDataChannelDelegate {
     }
 
     func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
-        print("dzfgchvjbknlm")
         delegate?.didReceiveData(data: buffer.data);
     }
 
