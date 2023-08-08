@@ -51,6 +51,14 @@ export const BottomBar = () => {
         setIsError, setCategory,
     } = useContext(StoreContext);
 
+    //handling error states on playground
+    function handleError(errorMessage) {
+        setDrawer(false);
+        setIsLoader(false);
+        setIsError(true);
+        setError(errorMessage);
+    }
+
     //generate javascript or python code and upload to google drive
     const generateCode = () => {
         if (isOnline) {
@@ -69,17 +77,18 @@ export const BottomBar = () => {
                 let objectTrackingConditionEnabled = objectTrackingConditional?.filter(obj => obj.disabled === false)
                 let objectTrackingEnabledBlocks = objectTracking?.filter(obj => obj.disabled === false) //filtering objectTracking connected blocks
                 let autopilotEnabledBlocks = autopilot?.filter(obj => obj.disabled === false) //filtering autopilot connected blocks
-
+                let object_1;
+                let object_2;
+                if (objectTrackingConditionEnabled.length > 0) {
+                    object_1 = objectTrackingConditionEnabled[0].getFieldValue("labels1")
+                    object_2 = objectTrackingConditionEnabled[0].getFieldValue("labels2")
+                }
                 if ((start.length === 0 && forever.length === 0)) {
-                    setDrawer(false);
-                    setIsLoader(false);
-                    setIsError(true);
-                    setError(Errors.error1)
+                    handleError(Errors.error1);
                 } else if ([objectTrackingEnabledBlocks?.length > 0, autopilotEnabledBlocks?.length > 0, objectTrackingConditionEnabled?.length > 0].filter(Boolean).length > 1) {
-                    setDrawer(false);
-                    setIsLoader(false);
-                    setIsError(true);
-                    setError(Errors.error2)
+                    handleError(Errors.error2);
+                } else if (object_1 === object_2) {
+                    handleError(Errors.error3)
                 } else {
                     if (start.length > 0)
                         code += "\nstart();";
@@ -114,8 +123,6 @@ export const BottomBar = () => {
                         setIsLoader(false);
                         errorToast("Failed to Upload");
                     })
-
-
                 }
             } else {
                 errorToast("Please sign-In to upload code.")
