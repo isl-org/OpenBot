@@ -107,21 +107,21 @@ async function deleteProjectFromStorage(projectName) {
  * @param code
  */
 function updateCurrentProject(projectName, code) {
-
-    const project = {
+    let project = {
         storage: "local",
         projectName: projectName,
         xmlValue: code,
         updatedDate: FormatDate().currentDate,
         time: FormatDate().currentTime,
         updatedTime: new Date(),
-    }
+    };
     //current project will first get store in current
     localStorage.setItem(localStorageKeys.currentProject, JSON.stringify(project))
     //now will check current project is in all project or not.
     const found = JSON.parse(localStorage?.getItem(localStorageKeys.allProjects))?.find((project) => {
         return project.projectName === getCurrentProject().projectName
     })
+
     //current project is not in local so will save it in local
     if (!found) {
         //add current project in local

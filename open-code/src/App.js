@@ -19,6 +19,9 @@ function App() {
     const [theme, setTheme] = useState(onPageLoad);
     const [internetOn, setInternetOn] = useState(window.navigator.onLine);
     const [user, setUser] = useState();
+    const [isSessionExpireModal, setIsSessionExpireModal] = useState(false);
+    const [isSessionExpire, setIsSessionExpire] = useState(false);
+    const [isTimeoutId, setTimeoutId] = useState(false);
     let isAndroid = /Android/i.test(navigator.userAgent);
 
     useEffect(() => {
@@ -61,6 +64,9 @@ function App() {
         let timeoutId;
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (user) {
+                if (isTimeoutId) {
+                    clearTimeout(timeoutId)
+                }
                 // User is signed in.
                 user.getIdTokenResult()
                     .then((idTokenResult) => {
@@ -70,8 +76,7 @@ function App() {
                             clearTimeout(timeoutId);
                         }
                         timeoutId = setTimeout(async () => {
-                            alert('Your session has expired. You have been signed out.')
-                            await googleSignOut().then();
+                            setIsSessionExpire(true);
                         }, sessionTimeoutMs);
                     })
                     .catch((error) => {
@@ -87,7 +92,16 @@ function App() {
             unsubscribe();
             clearTimeout(timeoutId);
         }
-    }, []);
+    }, [isTimeoutId]);
+
+    useEffect(() => {
+        if (isSessionExpire) {
+            alert('Your session has expired. You have been signed out.')
+            googleSignOut().then();
+            // setIsSessionExpireModal(true);
+            setIsSessionExpire(false);
+        }
+    }, [isSessionExpire])
 
 
     //check if user prefer theme is saved or not if not then saved it to system theme
@@ -112,7 +126,10 @@ function App() {
 
     return (
         <ThemeContext.Provider value={{theme, toggleTheme}}>
-            <StoreProvider isOnline={internetOn} user={user} setUser={setUser}>
+            <StoreProvider isOnline={internetOn} isSessionExpireModal={isSessionExpireModal}
+                           setIsSessionExpireModal={setIsSessionExpireModal} user={user} setUser={setUser}
+                           setIsSessionExpire={setIsSessionExpire} isTimeoutId={isTimeoutId}
+                           setTimeoutId={setTimeoutId}>
                 <div id={theme}>
                     <RouterComponent/>
                 </div>

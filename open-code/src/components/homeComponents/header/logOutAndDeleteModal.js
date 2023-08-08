@@ -17,7 +17,16 @@ import {Constants, errorToast} from "../../../utils/constants";
  */
 export function PopUpModal(props) {
     const {theme} = useContext(ThemeContext)
-    const {setVariable, headerText, buttonText, containText, handleButtonClick, deleteLoader,inlineStyle} = props;
+    const {
+        setVariable,
+        headerText,
+        buttonText,
+        containText,
+        handleButtonClick,
+        deleteLoader,
+        inlineStyle,
+        googleSignOut
+    } = props;
     const {isOnline} = useContext(StoreContext);
     const [open, setOpen] = useState(true);
 
@@ -51,7 +60,10 @@ export function PopUpModal(props) {
                                 text={containText}/>
                         </div>
                         <div className={styles.logoutButtonsDiv}>
-                            <BlueButton onClick={handleClose} buttonName={"Cancel"}
+                            <BlueButton onClick={() => {
+                                handleClose()
+                                googleSignOut()
+                            }} buttonName={"Cancel"}
                                         buttonStyle={styles.buttonStyle}
                                         extraStyle={styles.logoutButtonsExtraStyle + " " + styles.cancelExtraStyle}/>
                             <BlueButton onClick={() => handleRightButton()} buttonType={"contained"}

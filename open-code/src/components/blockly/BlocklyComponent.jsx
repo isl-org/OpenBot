@@ -38,8 +38,6 @@ function BlocklyComponent(props) {
     const {
         projectName,
         currentProjectXml,
-        fileId,
-        folderId,
         setDrawer,
         setWorkspace,
         setIsError,
@@ -63,7 +61,7 @@ function BlocklyComponent(props) {
         setIsError(false);
         if (projectName !== undefined) {
             setCurrentProjectXml(Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
-            updateCurrentProject(projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())), fileId, folderId);
+            updateCurrentProject(projectName, Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
         }
 
     }, []);
@@ -133,13 +131,16 @@ function BlocklyComponent(props) {
     }
 
     useEffect(() => {
-        setIsAutoSyncEnabled(false);
         setCategory(Constants.js);
         checkQRCode().catch(err => {
             console.log(err);
         });
-
     }, [])
+
+    //updating auto sync state to render blockly component
+    useEffect(() => {
+        setIsAutoSyncEnabled(false);
+    }, [isAutoSyncEnabled])
 
     useEffect(() => {
         // Create the primary workspace instance
