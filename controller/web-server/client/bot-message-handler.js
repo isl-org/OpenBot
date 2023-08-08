@@ -17,8 +17,10 @@ export function BotMessageHandler(connection) {
     const errDisplay = new ErrorDisplay()
 
     webRtc.onDataMessageReceived((message) => {
-        console.log('Received message: ', message + "\t" , Date.now());
+        console.log('Received message: ', message + "\t" , Date.now(),webRtc.dataChannel);
+        webRtc.dataChannel.send("gfwdcvwqhdbvwhgdcwgh");
         webRtc.send("jai shree ram");
+
     });
 
     this.handle = (msg, connection) => {

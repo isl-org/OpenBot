@@ -49,8 +49,6 @@ let commands = {}
       roomId : signedInUser.email
     }
   }
-
-  console.log(commands)
   connection.send(JSON.stringify(commands))
 }
   const onKeyPress = (key) => {

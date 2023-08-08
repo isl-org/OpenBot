@@ -62,8 +62,15 @@ export function WebRTC(connection) {
         onDataMessageReceivedCallback(message);
       }
     };
-
-
+    this.dataChannel.onopen = (event) => {
+      console.log("Data channel is open");
+      const messageString = "Hello, iOS!";
+      const encoder = new TextEncoder();
+      const messageData = encoder.encode(messageString);
+      // Send the message data through the data channel
+      this.dataChannel.send(messageData);
+      this.dataChannel.send("erdtfygukhiljk");
+    };
 
     const video = document.getElementById('video');
 
@@ -84,13 +91,15 @@ export function WebRTC(connection) {
     peerConnection = null;
   };
 
+
   this.send = (message) => {
     console.log("inside this of webrtc",message , this.dataChannel);
     this.dataChannel.send("gbrte")
     if (this.dataChannel) {
       console.log("dataChennel ------>" , )
-      this.dataChannel.send("ertyfguhijokl;sxhsvahcas");
-      this.dataChannel.send(message);
+      const encoder = new TextEncoder();
+      const messageData = encoder.encode(message);
+      this.dataChannel.send(messageData);
       console.log("abcd",Date.now())
     } else {
       console.log('WebRTC: Data channel is not open. Cannot send message.');

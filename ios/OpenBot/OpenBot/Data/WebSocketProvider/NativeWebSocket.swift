@@ -5,13 +5,14 @@
 import Foundation
 import GoogleSignIn
 import FirebaseAuth
+
 @available(iOS 13.0, *)
 class NativeWebSocket: NSObject, WebSocketProvider {
-//    let url = URL(string: "ws://192.168.1.12:8080/ws")!
+    let url = URL(string: "ws://192.168.1.9:8080/ws")!
 //    let url = URL(string: "ws://inconclusive-warm-shamrock.glitch.me")!;
-    let url = URL(string: "ws://verdant-imported-peanut.glitch.me")!;
+//    let url = URL(string: "ws://verdant-imported-peanut.glitch.me")!;
 
-    let roomId : String = Auth.auth().currentUser?.email ?? ""
+    let roomId: String = Auth.auth().currentUser?.email ?? ""
     static let shared: NativeWebSocket = NativeWebSocket();
     var delegate: WebSocketProviderDelegate?
     private var socket: URLSessionWebSocketTask?
@@ -54,7 +55,10 @@ class NativeWebSocket: NSObject, WebSocketProvider {
                 }
                 self.delegate?.webSocket(self, didReceiveData: text);
                 NotificationCenter.default.post(name: .updateDataFromControllerApp, object: text);
-//                webRTCClient.sendMessage(message: "Nitish hu mai \(Date().millisecondsSince1970)");
+                print(Date().millisecondsSince1970)
+                if (webRTCClient != nil) {
+                    webRTCClient.sendMessage(message: "Nitish hu mai \(Date().millisecondsSince1970)");
+                }
                 self.readMessage()
 
             case .success:

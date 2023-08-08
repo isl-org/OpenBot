@@ -26,6 +26,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
     private var localView: UIView!
     private var remoteStream: RTCMediaStream?
     private var dataChannel: RTCDataChannel?
+    private var localDataChannel: RTCDataChannel?
     private var remoteDataChannel: RTCDataChannel?
     private var channels: (video: Bool, audio: Bool, datachannel: Bool) = (false, false, false)
     private var customFrameCapturer: Bool = true
@@ -85,6 +86,8 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
         }
         if channels.datachannel {
             dataChannel = setupDataChannel();
+            dataChannel?.delegate = self
+            localDataChannel = dataChannel;
             print("data channel is ======>",dataChannel);
         }
         makeOffer(onSuccess: onSuccess)
@@ -110,6 +113,8 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
             }
             if channels.datachannel {
                 dataChannel = setupDataChannel()
+                dataChannel?.delegate = self
+                localDataChannel = dataChannel;
             }
 
         }
@@ -245,6 +250,16 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
             self.delegate?.didDisconnectWebRTC()
         }
     }
+
+//    func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
+//        print("didReciveMessage")
+//    }
+//    func dataChannel(_ dataChannel: RTCDataChannel, didChangeBufferedAmount amount: UInt64) {
+//        print("didChangeAmount")
+//    }
+//    func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
+//        print("didChangeDataChannel")
+//    }
 }
 
 // MARK: - PeerConnection Delegates
@@ -291,7 +306,11 @@ extension WebRTCClient {
     func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
         remoteDataChannel = dataChannel
         delegate?.didOpenDataChannel()
+        dataChannel.delegate = self
     }
+
+
+
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
     }
@@ -311,16 +330,20 @@ extension WebRTCClient {
         }
     }
 
-    // Implement this function to handle received messages from the data channel
-    func peerConnection(_ peerConnection: RTCPeerConnection, didReceiveMessageWith buffer: RTCDataBuffer) {
-        if buffer.isBinary {
-            // Handle binary data if needed
-        } else {
-            if let message = String(data: buffer.data, encoding: .utf8) {
-                // Handle the received text message
-                delegate?.didReceiveMessage(message: message)
-            }
-        }
+}
+
+extension WebRTCClient : RTCDataChannelDelegate {
+    func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
+        debugPrint("dataChannel did change state: \(dataChannel.readyState)")
+    }
+
+    func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
+        print("dzfgchvjbknlm")
+        delegate?.didReceiveData(data: buffer.data);
+    }
+
+     func dataChannel(_ dataChannel: RTCDataChannel, didChangeBufferedAmount amount: UInt64) {
+        print("did changed buffer amount");
     }
 
 
