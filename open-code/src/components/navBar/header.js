@@ -4,17 +4,19 @@ import {useLocation, useNavigate} from "react-router-dom";
 import styles from "./navbar.module.css";
 import {Images} from "../../utils/images";
 import {StoreContext} from "../../context/context";
-import {auth, googleSignOut} from "../../services/firebase";
+import {auth, googleSigIn, googleSignOut} from "../../services/firebase";
 import {HelpCenterModal} from "../homeComponents/header/helpCenterModal";
 import {EditProfileModal} from "../homeComponents/header/editProfileModal";
 import {PopUpModal} from "../homeComponents/header/logOutAndDeleteModal";
 import {ProfileOptionModal} from "../homeComponents/header/profileOptionModal";
-import {Constants, errorToast, PathName} from "../../utils/constants";
+import {Constants, errorToast, localStorageKeys, PathName} from "../../utils/constants";
 import {LogoSection, ProfileSignIn, ProjectName, ProjectNamePopUp} from "../homeComponents/header/headerComponents";
 import {Backdrop, CircularProgress, useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {autoSync, deleteProjectFromStorage} from "../../services/workspace";
 import {colors} from "../../utils/color";
+import {signOut} from "firebase/auth";
+import configData from "../../config.json";
 
 /**
  * Open-code's header which contains logo, project name on playground screen and help button, profile signIn
@@ -23,7 +25,17 @@ import {colors} from "../../utils/color";
  */
 export function Header() {
     const {theme, toggleTheme} = useContext(ThemeContext);
-    const {projectName, setProjectName, user, setUser, isDob, isOnline} = useContext(StoreContext);
+    const {
+        projectName,
+        setProjectName,
+        user,
+        setUser,
+        isDob,
+        isOnline,
+        isSessionExpireModal,
+        setIsSessionExpireModal,
+        setTimeoutId
+    } = useContext(StoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [deleteProject, setDeleteProject] = useState(false);
     const [isHelpCenterModal, setIsHelpCenterModal] = useState(false)
@@ -66,6 +78,34 @@ export function Header() {
         googleSignOut().then(() => {
             setIsLogoutModal(false);
         })
+    }
+
+    const handleSignIn = () => {
+        if (isOnline) {
+            signOut(auth).then(() => {
+                localStorage.setItem("isSigIn", "false")
+                localStorage.setItem(localStorageKeys.accessToken, " ");
+                localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData));
+                googleSigIn().then(response => {
+                    setTimeoutId(true);
+                    setIsSessionExpireModal(false);
+                    setUser({
+                        photoURL: response?.user.photoURL,
+                        displayName: response?.user.displayName,
+                        email: response?.user.email
+                    });
+                    window.location.reload()
+                }).catch((error) => {
+                    console.log("signIn error: ", error)
+                    setIsSessionExpireModal(false);
+                });
+            }).catch((error) => {
+                console.log("Sign-out error ", error)
+            });
+
+        } else {
+            errorToast(Constants.InternetOffMsg)
+        }
     }
 
     //Loader while getting date of birth
@@ -142,6 +182,16 @@ export function Header() {
                     {/*help icon pop up*/}
                     {isHelpCenterModal && <HelpCenterModal isHelpCenterModal={isHelpCenterModal}
                                                            setIsHelpCenterModal={setIsHelpCenterModal}/>}
+                    {/*Session expire pop up*/}
+                    {isSessionExpireModal && <PopUpModal setVariable={setIsSessionExpireModal}
+                                                         headerText={"Session Expired"}
+                                                         containText={"Your session has expired.Please login again to continue."}
+                                                         buttonText={"Login"}
+                                                         googleSignOut={() => {
+                                                             googleSignOut().then();
+                                                         }
+                                                         }
+                                                         handleButtonClick={handleSignIn}/>}
                 </div>
             </div>
         </div>
@@ -186,7 +236,6 @@ function RightSection(params) {
                                  await autoSync().then(() => {
                                      setIsAutoSyncEnabled(true);
                                      setIsAutoSync(false);
-                                     // window.location.reload();
                                  })
                              } else {
                                  errorToast("Please sign-In to auto sync.")

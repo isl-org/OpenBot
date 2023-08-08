@@ -4,7 +4,17 @@ import {Constants, localStorageKeys} from "../utils/constants";
 
 export const StoreContext = createContext(null);
 
-export default ({children, isOnline, user, setUser}) => {
+export default ({
+                    children,
+                    isOnline,
+                    user,
+                    setUser,
+                    isSessionExpireModal,
+                    setIsSessionExpireModal,
+                    setIsSessionExpire,
+                    isTimeoutId,
+                    setTimeoutId
+                }) => {
     let savedProjectName = null
     let savedProjectXml = null
     let savedFileId = null
@@ -46,7 +56,9 @@ export default ({children, isOnline, user, setUser}) => {
         isError, setIsError, isOnline,
         isSignIn, setIsSignIn,
         isDob, setIsDob,
-        isAutoSyncEnabled, setIsAutoSyncEnabled
+        isAutoSyncEnabled, setIsAutoSyncEnabled,
+        isSessionExpireModal, setIsSessionExpireModal,
+        setIsSessionExpire, isTimeoutId, setTimeoutId
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }
