@@ -12,6 +12,7 @@
     <script src="index.js" type="module"></script>
     <script src="buttons.js" type="module"></script>
     <script src="./authentication/authentication.js" type="module"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body>
@@ -29,12 +30,14 @@
         <div>
             <span id="error-message" style="color: white;"></span>
         </div>
-        <div id="google-signin-button" style="display: flex; align-items: center;">
-            <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
-                <button>Sign In</button>
+<!--        <div id="google-signin-button" style="display: flex; align-items: center;">-->
+            <div class="g-id-badge" data-type="standard" data-shape="square" data-theme="dark" data-text="sign_in_with" data-size="large" data-logo_alignment="left">
+                <button type="button" class="google-sign-in-button" >
+                    Sign in with Google
+                </button>
             </div>
         </div>
-    </div>
+<!--    </div>-->
 
     <div id="video-panel" style="display:flex; align-items: center; justify-content: center; height: calc(100vh - 5rem);">
 
@@ -53,7 +56,6 @@
             <ul id="command-list" style="list-style-type: none; background: white; border-radius: 4px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15); padding: 15px; margin: 0; width: fit-content; max-height: 100%; min-height: 100%; min-width: 200px; overflow-y: auto;">
                 <h3>Controls</h3>
             </ul>
-
         </div>
     </div>
 

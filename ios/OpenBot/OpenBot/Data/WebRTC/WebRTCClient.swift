@@ -147,7 +147,11 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
     /// function to create the connection
     private func setupPeerConnection() -> RTCPeerConnection {
         let rtcConf = RTCConfiguration()
-        rtcConf.iceServers = [RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"])]
+        rtcConf.iceServers = [RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302",
+                                                        "stun:stun1.l.google.com:19302",
+                                                        "stun:stun2.l.google.com:19302",
+                                                        "stun:stun3.l.google.com:19302",
+                                                        "stun:stun4.l.google.com:19302"])]
         let mediaConstraints = RTCMediaConstraints.init(mandatoryConstraints: nil, optionalConstraints: nil)
         let pc = peerConnectionFactory.peerConnection(with: rtcConf, constraints: mediaConstraints, delegate: nil)
         return pc
@@ -250,16 +254,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
             self.delegate?.didDisconnectWebRTC()
         }
     }
-
-//    func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
-//        print("didReciveMessage")
-//    }
-//    func dataChannel(_ dataChannel: RTCDataChannel, didChangeBufferedAmount amount: UInt64) {
-//        print("didChangeAmount")
-//    }
-//    func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
-//        print("didChangeDataChannel")
-//    }
 }
 
 // MARK: - PeerConnection Delegates

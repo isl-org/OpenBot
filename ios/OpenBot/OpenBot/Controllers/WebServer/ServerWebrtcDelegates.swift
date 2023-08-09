@@ -31,7 +31,6 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
 
     /// callback function to check data is available
     func didReceiveData(data: Data) {
-
         let msg = String(data: data, encoding: .utf8)
         if msg == nil{
             return
@@ -141,6 +140,17 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
         let jsonDecoder = JSONDecoder();
         let text: Data = msg.data(using: .utf8)!;
         print("inside websocketDidReceiveMessage")
+
+
+
+        //returning because of webrtc command transfer
+        if (msg.contains("driveCmd") || msg.contains("command")){
+            print("returning");
+            return;
+        }
+
+
+
         if msg.contains("driveCmd") {
             let cmd = try! jsonDecoder.decode(serverMessage.self, from: text);
             print(cmd.driveCmd.l);

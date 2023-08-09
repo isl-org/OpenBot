@@ -29,8 +29,6 @@ export function googleSigIn() {
                 const token = credential.accessToken;
                 // The signed-in user info.
                 const user = result.user;
-                // IdP data available using getAdditionalUserInfo(result)
-                console.log(user.email);
                 resolve(user);
             })
             .catch((error) => {

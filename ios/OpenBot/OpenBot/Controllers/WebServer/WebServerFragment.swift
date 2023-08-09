@@ -62,10 +62,7 @@ class WebServerFragment: CameraController {
         DispatchQueue.main.async {
             self.CommandLabel.text = msg
         }
-
     }
-
-
 }
 
 struct serverMessage: Decodable {

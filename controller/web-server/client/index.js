@@ -69,21 +69,29 @@ let commands = {}
 })()
 
 export let  signedInUser = null;
+
+  const signInButton = document.getElementsByClassName("google-sign-in-button")[0];
+  signInButton.addEventListener("click", handleSignInButtonClick);
 function handleSignInButtonClick() {
-
-  googleSigIn()
-      .then((user) => {
-        // Use the user data or store it in a variable for later use
-        signedInUser = user;
-        console.log("Signed-in user:", user);
-        console.log(signedInUser.email)
-       sendId();
-
-      })
-      .catch((error) => {
-        // Handle any errors that might occur during sign-in
-        console.error("Error signing in:", error);
-      });
+   if (signedInUser === null) {
+     googleSigIn()
+         .then((user) => {
+           // Use the user data or store it in a variable for later use
+           signedInUser = user;
+           console.log("Signed-in user:", user);
+           console.log(signedInUser.email)
+           let signInBtn = document.getElementsByClassName("google-sign-in-button")[0]
+           signInBtn.innerText = user.displayName
+           sendId();
+         })
+         .catch((error) => {
+           // Handle any errors that might occur during sign-in
+           console.error("Error signing in:", error);
+         });
+   }
+   else{
+     signOut();
+   }
 }
 function sendId() {
   const response = {
@@ -94,6 +102,13 @@ function sendId() {
   console.log("id has been sent");
 }
 
+function signOut(){
+  console.log("sign out");
+  signedInUser.signOut;
+  signedInUser = null;
+  let signInBtn = document.getElementsByClassName("google-sign-in-button")[0]
+  signInBtn.innerText = "Sign in with Google"
+}
+
 // Add an event listener to the button
-const signInButton = document.getElementById("google-signin-button");
-signInButton.addEventListener("click", handleSignInButtonClick);
+
