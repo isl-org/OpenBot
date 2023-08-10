@@ -162,3 +162,45 @@ video::-webkit-media-controls-timeline {
             0 2px 4px rgba(0, 0, 0, .25),
             0 0 0 3px #c8dafc;
 }
+
+.logout{
+    margin-left: 15px;
+    margin-top: 15px;
+
+}
+
+.video-container {
+    position: relative;
+}
+
+.logout-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    background-color: #f8f9fb;
+    border: solid 1px black;
+    border-radius: 10px;
+    display: none;
+}
+.logout-message{
+    margin-top: 20px; /* Adjust the margin value as needed */
+}
+.logout-message p{
+    margin-bottom: 15px;
+}
+
+.logout-buttons{
+    margin: 3.5rem 15px 15px 8rem;
+    gap: 2rem;
+}
+
+.logout-buttons button{
+    width: 100px;
+    height: 40px;
+    border: 1px solid #0071C5;
+    border-radius: 5px;
+}
+.logout-buttons  :hover{
+    background-color: #0071C5;
+}

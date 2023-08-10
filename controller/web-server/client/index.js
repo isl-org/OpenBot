@@ -71,6 +71,10 @@ export let signedInUser = JSON.parse(localStorage.getItem("user"));
 
 const signInButton = document.getElementsByClassName("google-sign-in-button")[0];
 signInButton.addEventListener("click", handleSignInButtonClick);
+const cancelButton = document.getElementById("logout-cancel-button");
+const okButton = document.getElementById("logout-ok-button");
+cancelButton.addEventListener("click", handleCancelButtonClick);
+okButton.addEventListener("click", handleOkButtonClick);
 
 function handleSignInButtonClick() {
     if (localStorage.getItem("isSignIn") === "false") {
@@ -83,7 +87,7 @@ function handleSignInButtonClick() {
                 let signInBtn = document.getElementsByClassName("google-sign-in-button")[0]
                 signInBtn.innerText = user.displayName
                 localStorage.setItem("user", JSON.stringify(user));
-                localStorage.setItem("isSignIn",true.toString());
+                localStorage.setItem("isSignIn", true.toString());
                 sendId();
             })
             .catch((error) => {
@@ -91,7 +95,7 @@ function handleSignInButtonClick() {
                 console.error("Error signing in:", error);
             });
     } else {
-        signOut();
+        showLogoutWrapper();
     }
 }
 
@@ -108,13 +112,32 @@ function signOut() {
     console.log("sign out");
     signedInUser.signOut;
     signedInUser = null;
-    localStorage.setItem("user",null);
-    localStorage.setItem("isSignIn",false.toString());
+    localStorage.setItem("user", null);
+    localStorage.setItem("isSignIn", false.toString());
     let signInBtn = document.getElementsByClassName("google-sign-in-button")[0]
     signInBtn.innerText = "Sign in with Google"
 }
 
-window.onbeforeunload = function(event) {
-    localStorage.setItem("user",null);
-    localStorage.setItem("isSignIn",false.toString());
+function handleCancelButtonClick() {
+hideLogoutWrapper()
+}
+
+function hideLogoutWrapper(){
+    const logout = document.getElementsByClassName("logout-wrapper")[0];
+    logout.style.display = 'none';
+}
+
+function showLogoutWrapper(){
+    const logout = document.getElementsByClassName("logout-wrapper")[0];
+    logout.style.display = 'block';
+}
+
+function handleOkButtonClick() {
+    hideLogoutWrapper();
+    signOut();
+}
+
+window.onbeforeunload = function (event) {
+    localStorage.setItem("user", null);
+    localStorage.setItem("isSignIn", false.toString());
 };
