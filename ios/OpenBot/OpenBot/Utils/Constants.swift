@@ -27,6 +27,7 @@ struct Images {
     static let closeIcon = UIImage(named: "closeIcon")
     static let phoneIcon = UIImage(named: "phone")
     static let gamepadIcon = UIImage(named: "gamepad")
+    static let webIcon = UIImage(systemName: "globe");
     static let slowIcon = UIImage(named: "slow")
     static let mediumIcon = UIImage(named: "medium")
     static let fastIcon = UIImage(named: "fast")
@@ -115,7 +116,7 @@ enum SpeedMode: Float {
 
 /// The different control interfaces of an OpenBot (either by gamepad or using another phone/computer)
 enum ControlMode {
-    case PHONE, GAMEPAD
+    case PHONE, GAMEPAD, WEB
 }
 
 /// The different speed modes of an OpenBot
