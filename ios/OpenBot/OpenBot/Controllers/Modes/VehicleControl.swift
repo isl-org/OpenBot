@@ -4,9 +4,10 @@
 
 import Foundation
 import UIKit
+import FirebaseAuth
 
 class VehicleControl: UIView {
-    var controlMode: ControlMode = ControlMode.PHONE;
+    var controlMode: ControlMode = ControlMode.WEB;
     var speedMode: SpeedMode = SpeedMode.SLOW;
     var driveMode: DriveMode = DriveMode.DUAL;
     var speedLabel = UILabel()
@@ -15,6 +16,8 @@ class VehicleControl: UIView {
     let gameController = GameController.shared
     var downSwipe: Bool = false
     let audioPlayer = AudioPlayer.shared;
+    let mSocket = NativeWebSocket.shared;
+    let roomId: String = Auth.auth().currentUser?.email ?? ""
 
     /// initializing function
     override init(frame: CGRect) {
@@ -78,26 +81,45 @@ class VehicleControl: UIView {
 
     /// function to update the control mode of the game
     @objc func updateControlMode(_ sender: UIView) {
+        print("inside updateControlMode");
         if (isButtonEnable) {
             if (controlMode == ControlMode.GAMEPAD) {
+                print("inside gamepad")
                 controlMode = ControlMode.PHONE;
                 driveMode = DriveMode.DUAL;
                 createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
                 createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: false);
-
                 client.start();
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
                 client.send(message: msg);
+                _ = WebRTCDelegates();
 
-            } else {
+            }
+            else if(controlMode == ControlMode.PHONE) {
+                controlMode = ControlMode.WEB;
+                driveMode = DriveMode.GAME;
+                print("inside phone")
+                createAndUpdateButton(iconName: Images.webIcon!.withTintColor(.white), leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
+                createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
+                let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
+                client.send(message: msg);
+                if(webRTCClient != nil){
+                    webRTCClient.disconnect();
+                }
+                sendMessage();
+                _ = ServerWebrtcDelegate();
+            }
+            else{
                 controlMode = ControlMode.GAMEPAD;
                 driveMode = DriveMode.GAME;
+                print("inside else")
                 createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
                 createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
                 client.send(message: msg);
-
-
+                if(webRTCClient != nil){
+                    webRTCClient.disconnect();
+                }
             }
             gameController.selectedControlMode = controlMode
         }
@@ -232,5 +254,25 @@ class VehicleControl: UIView {
     @objc func updateDrive(_ notification: Notification) {
         updateDriveMode(self)
         audioPlayer.playDriveMode(driveMode: driveMode);
+    }
+
+    /// function to parse the message for the connection and send it.
+    func sendMessage() {
+        var msg = JSON.toString(ServerConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true"), roomId: roomId));
+        print(msg);
+        var data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoProtocolEvent(status: .init(VIDEO_PROTOCOL: "WEBRTC"), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoServerUrlEvent(status: .init(VIDEO_SERVER_URL: ""), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoCommandEvent(status: .init(VIDEO_COMMAND: "START"), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
     }
 }
