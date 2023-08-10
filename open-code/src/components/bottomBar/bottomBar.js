@@ -77,8 +77,8 @@ export const BottomBar = () => {
                 let objectTrackingConditionEnabled = objectTrackingConditional?.filter(obj => obj.disabled === false)
                 let objectTrackingEnabledBlocks = objectTracking?.filter(obj => obj.disabled === false) //filtering objectTracking connected blocks
                 let autopilotEnabledBlocks = autopilot?.filter(obj => obj.disabled === false) //filtering autopilot connected blocks
-                let object_1;
-                let object_2;
+                let object_1 = "object_1";
+                let object_2 = "object_2";
                 if (objectTrackingConditionEnabled.length > 0) {
                     object_1 = objectTrackingConditionEnabled[0].getFieldValue("labels1")
                     object_2 = objectTrackingConditionEnabled[0].getFieldValue("labels2")
