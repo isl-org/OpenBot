@@ -496,6 +496,7 @@ class jsEvaluator {
             NotificationCenter.default.post(name: .commandName, object: "Stop");
             runRobot.isObjectTracking = false;
             runRobot.isMultipleObjectTracking = false;
+            runRobot.isPointGoalNavigation = false;
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
             while (bluetooth.peri != nil && bluetooth.speedometer != "w0.00,0.00") {
@@ -885,9 +886,13 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
+            let a: String = String(forward)
+            let b: String = String(left)
+            runRobot.enablePointGoalNavigation(forward: forward, left: left)
+            NotificationCenter.default.post(name: .commandName, object: "reach goal");
+            NotificationCenter.default.post(name: .commandObject, object: [a, b]);
             print(forward, left);
         }
-
 
         func reachPosition(x: Double, y: Double) {
             if isCancelled {

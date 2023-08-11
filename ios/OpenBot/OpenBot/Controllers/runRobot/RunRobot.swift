@@ -5,8 +5,11 @@
 import Foundation
 import UIKit
 import AVFoundation
+import SceneKit
+import ARKit
+import simd
 
-class runRobot: CameraController {
+class runRobot: CameraController, ARSCNViewDelegate {
     @IBOutlet weak var stopRobot: UIButton!
     @IBOutlet weak var commandMessage: UILabel!
     let bluetooth = bluetoothDataController.shared
@@ -14,6 +17,7 @@ class runRobot: CameraController {
     private var bufferWidth = 0
     private var result: Control?
     static var detector: Detector?
+    static var pointGoalFragment: PointGoalFragment?
     static var autopilot: Autopilot?;
     private let inferenceQueue = DispatchQueue(label: "openbot.runRobot.inferencequeue");
     private var isInferenceQueueBusy = false
@@ -23,6 +27,18 @@ class runRobot: CameraController {
     static var isObjectTracking: Bool = false
     static var isAutopilot: Bool = false;
     static var isMultipleObjectTracking: Bool = false
+    static var isPointGoalNavigation: Bool = false
+    var tempPixelBuffer: CVPixelBuffer!
+    var sceneView: ARSCNView!
+    let blueDress = try! YCbCrImageBufferConverter()
+    private var isNavQueueBusy = false
+    private let navQueue = DispatchQueue(label: "openbot.navigation.navqueue")
+    private var distance: Float = 0
+    static var navigation: Navigation?
+    private var isReached: Bool = false
+    var marker = SCNNode()
+    private var startingPoint = SCNNode()
+    private var endingPoint: SCNNode!
 
 
     /**
@@ -45,6 +61,7 @@ class runRobot: CameraController {
             let autopilotModel = modelItems.first(where: { $0.type == TYPE.AUTOPILOT.rawValue });
             runRobot.autopilot = Autopilot(model: Model.fromModelItem(item: autopilotModel ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: 1);
         }
+        runRobot.navigation = Navigation(model: Model.fromModelItem(item: Common.returnNavigationModel()), device: RuntimeDevice.CPU, numThreads: 1)
     }
 
     var temp = 0;
@@ -105,9 +122,45 @@ class runRobot: CameraController {
     @objc func updateCommandObject(_ notification: Notification) {
         DispatchQueue.main.async {
             runRobot.detector?.setMultipleSelectedClass(newClasses: notification.object as! [String])
+//            runRobot().markGoalPosition(positions: notification.object as! [String])
         }
     }
 
+    func markGoalPosition(positions: [String]) {
+        sceneView = ARSCNView(frame: view.bounds)
+        sceneView.debugOptions = []
+        view.addSubview(sceneView)
+        let scene = SCNScene()
+        sceneView.scene = scene
+        sceneView.delegate = self
+        sceneView.showsStatistics = true
+        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        let configuration = ARWorldTrackingConfiguration()
+        sceneView.session.run(configuration)
+        isReached = false
+        let forwardDistance = Double(positions[0]) ?? 0
+        let LeftDistance = Double(positions[1]) ?? 0
+        let camera = sceneView.pointOfView!
+        let cameraTransform = camera.transform
+        _ = SCNVector3(-cameraTransform.m31, -cameraTransform.m32, -cameraTransform.m33)
+        let markerInCameraFrame = SCNVector3(Float(-LeftDistance), 0.0, Float(-forwardDistance))
+        let markerInWorldFrame = markerInCameraFrame.transformed(by: cameraTransform)
+        marker = SCNNode(geometry: SCNPlane(width: 0.1, height: 0.1))
+        marker.position = markerInWorldFrame
+        let imageMaterial = SCNMaterial()
+        imageMaterial.diffuse.contents = Images.gmapMarker
+        marker.geometry?.firstMaterial = imageMaterial
+        sceneView.scene.rootNode.addChildNode(marker)
+        startingPoint.position = sceneView.pointOfView?.position ?? camera.position
+        endingPoint = marker
+        calculateRoute()
+    }
+
+
+    func calculateRoute() {
+        _ = simd_distance(startingPoint.simdPosition, endingPoint.simdPosition)
+        _ = simd_normalize(endingPoint.simdPosition - startingPoint.simdPosition)
+    }
 
     @IBOutlet weak var runRobotConstraints: NSLayoutConstraint!
     let factor = 0.8;
@@ -168,6 +221,7 @@ class runRobot: CameraController {
         runRobot.isObjectTracking = false
         runRobot.isAutopilot = false
         runRobot.isMultipleObjectTracking = false
+        runRobot.isPointGoalNavigation = false
         bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
         bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
         let indicatorValues = "i0,0\n";
@@ -175,7 +229,7 @@ class runRobot: CameraController {
     }
 
     func sendControl(control: Control) {
-        if runRobot.isAutopilot || runRobot.isObjectTracking || runRobot.isMultipleObjectTracking {
+        if runRobot.isAutopilot || runRobot.isObjectTracking || runRobot.isMultipleObjectTracking || runRobot.isPointGoalNavigation {
             createCameraView();
         }
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
@@ -269,8 +323,6 @@ class runRobot: CameraController {
     static func enableObjectTracking(object: String, model: String) {
         DispatchQueue.main.async {
             runRobot.isObjectTracking = true;
-
-
         }
         let currentModel = Common.returnModelItem(modelName: model)
         print("running ,model ========================", currentModel);
@@ -290,13 +342,98 @@ class runRobot: CameraController {
         print("inside test");
         DispatchQueue.main.async {
             runRobot.isMultipleObjectTracking = true;
-
         }
         let currentModel = Common.returnModelItem(modelName: model)
         print("running ,model ========================", currentModel);
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: .CPU, numThreads: 1) as? Detector
     }
 
+
+    static func enablePointGoalNavigation(forward: Double, left: Double) {
+        print("inside test");
+        DispatchQueue.main.async {
+            runRobot.isPointGoalNavigation = true;
+        }
+        navigation = Navigation(model: Model.fromModelItem(item: Common.returnNavigationModel()), device: RuntimeDevice.CPU, numThreads: 1)
+    }
+
+    func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
+        if (runRobot.isPointGoalNavigation) {
+            createCameraView();
+            guard let currentFrame = sceneView.session.currentFrame else {
+                return
+            }
+            let pixelBuffer = currentFrame.capturedImage
+            if sceneView.pointOfView?.position != nil {
+                processPixelBuffer(pixelBuffer, sceneView.pointOfView!)
+                tempPixelBuffer = pixelBuffer
+            }
+        }
+    }
+
+    func processPixelBuffer(_ pixelBuffer: CVPixelBuffer, _ currentPosition: SCNNode) {
+        guard !isNavQueueBusy else {
+            return
+        }
+        if endingPoint == nil {
+            return
+        }
+        navQueue.async { [self] in
+            isNavQueueBusy = true
+            let startPose = Pose(tx: currentPosition.position.x, ty: currentPosition.position.y, tz: currentPosition.position.z, qx: currentPosition.orientation.x, qy: currentPosition.orientation.y, qz: currentPosition.orientation.z, qw: currentPosition.orientation.w)
+            let endPose = Pose(tx: endingPoint.position.x, ty: endingPoint.position.y, tz: endingPoint.position.z, qx: endingPoint.orientation.x, qy: endingPoint.orientation.y, qz: endingPoint.orientation.z, qw: endingPoint.orientation.w)
+            let yaw = runRobot.pointGoalFragment?.computeDeltaYaw(pose: startPose, goalPose: endPose) ?? 0
+            print(endPose);
+            let converted = try! blueDress.convertToBGRA(imageBuffer: pixelBuffer)
+            let refCon = NSMutableData()
+            var timingInfo: CMSampleTimingInfo = .invalid
+            var formatDescription: CMVideoFormatDescription? = nil
+            CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: converted, formatDescriptionOut: &formatDescription)
+
+            var output: CMSampleBuffer? = nil
+            let status = CMSampleBufferCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: converted, dataReady: true, makeDataReadyCallback: nil, refcon: refCon.mutableBytes, formatDescription: formatDescription!, sampleTiming: &timingInfo, sampleBufferOut: &output)
+
+            // extract the image buffer from the sample buffer
+            let pixelBufferBGRA: CVPixelBuffer? = CMSampleBufferGetImageBuffer(output!)
+            result = runRobot.navigation?.recognizeImage(pixelBuffer: pixelBufferBGRA!, goalDistance: distance, goalSin: sin(yaw), goalCos: cos(yaw))
+            guard let controlResult = result else {
+                return
+            }
+            if isReached {
+                sendControl(control: Control())
+            } else {
+                sendControl(control: controlResult)
+            }
+
+            isNavQueueBusy = false
+        }
+    }
+
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        if (runRobot.isPointGoalNavigation) {
+            guard let camera = sceneView.pointOfView else {
+                return
+            }
+            checkCameraPosition(position: camera.presentation.simdPosition)
+        }
+    }
+
+    // Define a distance threshold for triggering the event
+    let distanceThreshold: Float = 0.15 // adjust this value as needed
+
+    func checkCameraPosition(position: simd_float3) {
+        if endingPoint != nil && isReached != true {
+            distance = simd_distance(position, endingPoint.simdPosition)
+            if distance <= distanceThreshold {
+                DispatchQueue.main.async {
+                    print("goal reached")
+                    self.sceneView.session.pause()
+                    self.isReached = true
+                    self.marker.removeFromParentNode()
+                }
+            }
+        }
+    }
 
     func runObjectTracking(imagePixelBuffer: CVPixelBuffer) {
         self.isInferenceQueueBusy = true
