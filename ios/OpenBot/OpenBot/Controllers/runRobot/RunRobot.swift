@@ -9,7 +9,7 @@ import SceneKit
 import ARKit
 import simd
 
-class runRobot: CameraController, ARSCNViewDelegate {
+class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     @IBOutlet weak var stopRobot: UIButton!
     @IBOutlet weak var commandMessage: UILabel!
     let bluetooth = bluetoothDataController.shared
@@ -39,7 +39,6 @@ class runRobot: CameraController, ARSCNViewDelegate {
     var marker = SCNNode()
     private var startingPoint = SCNNode()
     private var endingPoint: SCNNode!
-
 
     /**
       override function calls when view of controller loaded
@@ -126,7 +125,8 @@ class runRobot: CameraController, ARSCNViewDelegate {
         }
     }
 
-    func markGoalPosition(positions: [String]) {
+
+    func pointGoalCamera(completion: @escaping () -> Void) {
         sceneView = ARSCNView(frame: view.bounds)
         sceneView.debugOptions = []
         view.addSubview(sceneView)
@@ -137,23 +137,31 @@ class runRobot: CameraController, ARSCNViewDelegate {
         sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         let configuration = ARWorldTrackingConfiguration()
         sceneView.session.run(configuration)
-        isReached = false
-        let forwardDistance = Double(positions[0]) ?? 0
-        let LeftDistance = Double(positions[1]) ?? 0
-        let camera = sceneView.pointOfView!
-        let cameraTransform = camera.transform
-        _ = SCNVector3(-cameraTransform.m31, -cameraTransform.m32, -cameraTransform.m33)
-        let markerInCameraFrame = SCNVector3(Float(-LeftDistance), 0.0, Float(-forwardDistance))
-        let markerInWorldFrame = markerInCameraFrame.transformed(by: cameraTransform)
-        marker = SCNNode(geometry: SCNPlane(width: 0.1, height: 0.1))
-        marker.position = markerInWorldFrame
-        let imageMaterial = SCNMaterial()
-        imageMaterial.diffuse.contents = Images.gmapMarker
-        marker.geometry?.firstMaterial = imageMaterial
-        sceneView.scene.rootNode.addChildNode(marker)
-        startingPoint.position = sceneView.pointOfView?.position ?? camera.position
-        endingPoint = marker
-        calculateRoute()
+        completion()
+    }
+
+
+    func markGoalPosition(positions: [String]) {
+        pointGoalCamera {
+            self.isReached = false
+            let forwardDistance = Double(positions[0]) ?? 0
+            let LeftDistance = Double(positions[1]) ?? 0
+            let camera = self.sceneView.pointOfView!
+            let cameraTransform = camera.transform
+            _ = SCNVector3(-cameraTransform.m31, -cameraTransform.m32, -cameraTransform.m33)
+            let markerInCameraFrame = SCNVector3(Float(-LeftDistance), 0.0, Float(-forwardDistance))
+            let markerInWorldFrame = markerInCameraFrame.transformed(by: cameraTransform)
+            self.marker = SCNNode(geometry: SCNPlane(width: 0.1, height: 0.1))
+            self.marker.position = markerInWorldFrame
+            let imageMaterial = SCNMaterial()
+            imageMaterial.diffuse.contents = Images.gmapMarker
+            self.marker.geometry?.firstMaterial = imageMaterial
+            self.sceneView.scene.rootNode.addChildNode(self.marker)
+            self.startingPoint.position = self.sceneView.pointOfView?.position ?? camera.position
+            self.endingPoint = self.marker
+            print("starting point", self.startingPoint)
+            self.calculateRoute()
+        }
     }
 
 
@@ -229,7 +237,7 @@ class runRobot: CameraController, ARSCNViewDelegate {
     }
 
     func sendControl(control: Control) {
-        if runRobot.isAutopilot || runRobot.isObjectTracking || runRobot.isMultipleObjectTracking || runRobot.isPointGoalNavigation {
+        if runRobot.isAutopilot || runRobot.isObjectTracking || runRobot.isMultipleObjectTracking {
             createCameraView();
         }
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
@@ -357,9 +365,10 @@ class runRobot: CameraController, ARSCNViewDelegate {
         navigation = Navigation(model: Model.fromModelItem(item: Common.returnNavigationModel()), device: RuntimeDevice.CPU, numThreads: 1)
     }
 
+
     func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
+        print("in renderer")
         if (runRobot.isPointGoalNavigation) {
-            createCameraView();
             guard let currentFrame = sceneView.session.currentFrame else {
                 return
             }
