@@ -39,6 +39,9 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     var marker = SCNNode()
     private var startingPoint = SCNNode()
     private var endingPoint: SCNNode!
+    private var forward: Double = 0
+    private var left: Double = 0
+    var configuration = ARWorldTrackingConfiguration()
 
     /**
       override function calls when view of controller loaded
@@ -78,7 +81,51 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if (runRobot.isPointGoalNavigation) {
+            pointGoalCamera {
+                let camera = self.sceneView.pointOfView!
+                let cameraTransform = camera.transform
+                _ = SCNVector3(-cameraTransform.m31, -cameraTransform.m32, -cameraTransform.m33)
+                let markerInCameraFrame = SCNVector3(Float(-self.left), 0.0, Float(-self.forward))
+                let markerInWorldFrame = markerInCameraFrame.transformed(by: cameraTransform)
+                self.marker = SCNNode(geometry: SCNPlane(width: 0.1, height: 0.1))
+                self.marker.position = markerInWorldFrame
+                let imageMaterial = SCNMaterial()
+                imageMaterial.diffuse.contents = Images.gmapMarker
+                self.marker.geometry?.firstMaterial = imageMaterial
+                self.sceneView.scene.rootNode.addChildNode(self.marker)
+                self.startingPoint.position = self.sceneView.pointOfView?.position ?? camera.position
+                self.endingPoint = self.marker
+                self.calculateRoute()
+            }
+        }
     }
+
+
+    func session(_ session: ARSession, didFailWithError error: Error) {
+        // Present an error message to the user
+        print("Session failed. Changing worldAlignment property.")
+        print(error.localizedDescription)
+        if let arError = error as? ARError {
+            switch arError.errorCode {
+            case 102:
+                configuration.worldAlignment = .gravity
+                restartSessionWithoutDelete()
+            default:
+                restartSessionWithoutDelete()
+            }
+        }
+    }
+
+    func restartSessionWithoutDelete() {
+        // Restart session with a different worldAlignment - prevents bug from crashing app
+        self.sceneView.session.pause()
+
+        self.sceneView.session.run(configuration, options: [
+            .resetTracking,
+            .removeExistingAnchors])
+    }
+
 
     /**
      override function calls after current controller view disappear
@@ -89,6 +136,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.post(name: .cancelThread, object: nil)
+        sceneView?.session.pause()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -142,25 +190,11 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
 
 
     func markGoalPosition(positions: [String]) {
-        pointGoalCamera {
-            self.isReached = false
-            let forwardDistance = Double(positions[0]) ?? 0
-            let LeftDistance = Double(positions[1]) ?? 0
-            let camera = self.sceneView.pointOfView!
-            let cameraTransform = camera.transform
-            _ = SCNVector3(-cameraTransform.m31, -cameraTransform.m32, -cameraTransform.m33)
-            let markerInCameraFrame = SCNVector3(Float(-LeftDistance), 0.0, Float(-forwardDistance))
-            let markerInWorldFrame = markerInCameraFrame.transformed(by: cameraTransform)
-            self.marker = SCNNode(geometry: SCNPlane(width: 0.1, height: 0.1))
-            self.marker.position = markerInWorldFrame
-            let imageMaterial = SCNMaterial()
-            imageMaterial.diffuse.contents = Images.gmapMarker
-            self.marker.geometry?.firstMaterial = imageMaterial
-            self.sceneView.scene.rootNode.addChildNode(self.marker)
-            self.startingPoint.position = self.sceneView.pointOfView?.position ?? camera.position
-            self.endingPoint = self.marker
-            self.calculateRoute()
-        }
+        isReached = false
+        let forwardDistance = Double(positions[0]) ?? 0
+        let LeftDistance = Double(positions[1]) ?? 0
+        forward = forwardDistance
+        left = LeftDistance
     }
 
 
@@ -365,7 +399,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
 
 
     func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
-        print("in renderer")
         if (runRobot.isPointGoalNavigation) {
             guard let currentFrame = sceneView.session.currentFrame else {
                 return
