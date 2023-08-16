@@ -121,7 +121,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     @objc func updateCommandObject(_ notification: Notification) {
         DispatchQueue.main.async {
             runRobot.detector?.setMultipleSelectedClass(newClasses: notification.object as! [String])
-//            runRobot().markGoalPosition(positions: notification.object as! [String])
+            self.markGoalPosition(positions: notification.object as! [String]);
         }
     }
 
@@ -159,7 +159,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             self.sceneView.scene.rootNode.addChildNode(self.marker)
             self.startingPoint.position = self.sceneView.pointOfView?.position ?? camera.position
             self.endingPoint = self.marker
-            print("starting point", self.startingPoint)
             self.calculateRoute()
         }
     }
@@ -304,7 +303,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
 
         if (runRobot.isObjectTracking || runRobot.isAutopilot || runRobot.isMultipleObjectTracking) {
             let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
-            print("inside capture ")
             bufferWidth = CVPixelBufferGetWidth(pixelBuffer!)
             bufferHeight = CVPixelBufferGetHeight(pixelBuffer!)
             guard let imagePixelBuffer = pixelBuffer else {
