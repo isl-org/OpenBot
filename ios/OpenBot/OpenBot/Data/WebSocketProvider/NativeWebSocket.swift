@@ -47,7 +47,7 @@ class NativeWebSocket: NSObject, WebSocketProvider {
                 self.delegate?.webSocket(self, didReceiveData: data)
                 self.readMessage()
             case .success(.string(let text)):
-                print("Received text message", text, Date().millisecondsSince1970)
+//                print("Received text message", text, Date().millisecondsSince1970)
                 // Process the text message if needed
                 if text.contains("request-roomId") {
                     let response = try! JSONEncoder().encode(responseId(roomId: roomId));

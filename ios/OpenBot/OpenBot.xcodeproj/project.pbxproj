@@ -103,7 +103,6 @@
 		727D37F0A374924D485368CD /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D38DAC31CD27C5DE891F4 /* Reachability.swift */; };
 		727D3825145AF7703ACAD6A2 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E5643531AC215E4101B /* UIButton.swift */; };
 		727D3928D96E5AD69D24DA6D /* ServerListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3937D1457F50C712CDD9 /* ServerListener.swift */; };
-		727D393DE8165D5D81CCA6AE /* WebServerFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33A5C4D9D21B66FC5108 /* WebServerFragment.swift */; };
 		727D397E28A6A94840B702D4 /* AlertFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30892A4485EAE638E24F /* AlertFragment.swift */; };
 		727D39E11C9EAFDC77200946 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3CF1C0FE6DE0D04C762A /* UIImageView.swift */; };
 		727D3A13757F3F2493E61977 /* ProjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30F6A969E2122927A95D /* ProjectCollectionViewCell.swift */; };
@@ -238,7 +237,6 @@
 		727D3278D9F8247EB0FF1B73 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRTCDelegates.swift; path = WebRTC/WebRTCDelegates.swift; sourceTree = "<group>"; };
 		727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sensorDataRetrieve.swift; sourceTree = "<group>"; };
-		727D33A5C4D9D21B66FC5108 /* WebServerFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServerFragment.swift; sourceTree = "<group>"; };
 		727D33AFAD7EDEC111578DE8 /* Projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Projects.swift; sourceTree = "<group>"; };
 		727D3504130197C59EB15178 /* WebSocketMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketMessageHandler.swift; sourceTree = "<group>"; };
 		727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCCustomFrameCapture.swift; path = WebRTC/RTCCustomFrameCapture.swift; sourceTree = "<group>"; };
@@ -705,7 +703,6 @@
 		727D395E131B59268FC75AF3 /* WebServer */ = {
 			isa = PBXGroup;
 			children = (
-				727D33A5C4D9D21B66FC5108 /* WebServerFragment.swift */,
 				727D3A67A02F3F30135DFA43 /* SocketManager.swift */,
 				727D37C7F3414E19F505AB0C /* ServerWebrtcDelegates.swift */,
 				727D3504130197C59EB15178 /* WebSocketMessageHandler.swift */,
@@ -1274,7 +1271,6 @@
 				727D397E28A6A94840B702D4 /* AlertFragment.swift in Sources */,
 				727D35D8CB673649BF1AD948 /* Endpoint.swift in Sources */,
 				727D3EB96F3F1D250E9D32E7 /* ServerItem.swift in Sources */,
-				727D393DE8165D5D81CCA6AE /* WebServerFragment.swift in Sources */,
 				727D3F785C662A5A6C00D835 /* SocketManager.swift in Sources */,
 				727D30039B9108BC587A820E /* ServerWebrtcDelegates.swift in Sources */,
 				727D3F551E6CB92280B819E2 /* WebSocketMessageHandler.swift in Sources */,

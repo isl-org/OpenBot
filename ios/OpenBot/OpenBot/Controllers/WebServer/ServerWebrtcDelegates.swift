@@ -130,7 +130,7 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
         let candidate = Candidate(candidate: iceCandidate.sdp, label: iceCandidate.sdpMLineIndex, id: iceCandidate.sdpMid!, type: "candidate");
         let signalingMessage = JSON.toString(ServerCandidateEvent(status: .init(WEB_RTC_EVENT: candidate), roomId: roomId));
         let data = signalingMessage.data(using: .utf8);
-
+        print("sending to server ->",signalingMessage);
         mSocket.send(data: data!);
     }
 
@@ -139,7 +139,7 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
         let msg = notification.object as! String
         let jsonDecoder = JSONDecoder();
         let text: Data = msg.data(using: .utf8)!;
-        print("inside websocketDidReceiveMessage")
+        print("inside websocketDidReceiveMessage",msg)
 
 
 
@@ -148,8 +148,6 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
             print("returning");
             return;
         }
-
-
 
         if msg.contains("driveCmd") {
             let cmd = try! jsonDecoder.decode(serverMessage.self, from: text);
@@ -211,6 +209,22 @@ class ServerWebrtcDelegate: WebRTCClientDelegate {
         }
         let signalingMessage = JSON.toString(ServerOfferEvent(status: .init(WEB_RTC_EVENT: .init(type: type, sdp: sessionDescription.sdp)), roomId: roomId ));
         let data = signalingMessage.data(using: .utf8);
+        print("sending to server ->",signalingMessage);
         mSocket.send(data: data!);
     }
 }
+struct serverMessage: Decodable {
+    var driveCmd: serverCommand
+    var roomId: String
+}
+
+struct serverCommand: Decodable {
+    var l: Float
+    var r: Float
+}
+
+struct serverCmd: Decodable {
+    var command: String
+    var roomId: String
+}
+

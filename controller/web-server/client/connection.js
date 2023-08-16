@@ -36,7 +36,7 @@ export function Connection() {
     let ws = await connectToServer();
     this.send = (data) => {
       if (ws) {
-        console.log(Date.now())
+        console.log(("sending to server" + data));
         ws.send(data);
       }
     };

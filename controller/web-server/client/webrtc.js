@@ -31,7 +31,7 @@ export function WebRTC(connection) {
           sdpMid: webRtcEvent.id,
           sdpMLineIndex: webRtcEvent.label,
         });
-
+            console.log("inside candidate");
         peerConnection.addIceCandidate(candidate);
         break;
       }
@@ -45,6 +45,7 @@ export function WebRTC(connection) {
   const doAnswer = async () => {
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
+    console.log("Sending to server ->" + { webrtc_event: answer })
     connection.send(JSON.stringify({ webrtc_event: answer }));
   };
 
