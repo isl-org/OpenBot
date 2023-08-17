@@ -69,23 +69,25 @@ export const BottomBar = () => {
                 let code = javascriptGenerator.workspaceToCode(
                     workspace
                 );
-                const start = workspace.getBlocksByType("start")
-                const forever = workspace.getBlocksByType("forever")
-                const objectTracking = workspace.getBlocksByType("objectTracking")
-                const autopilot = workspace.getBlocksByType("autopilot")
-                const objectTrackingConditional = workspace.getBlocksByType("objectTrackingConditional")
-                let objectTrackingConditionEnabled = objectTrackingConditional?.filter(obj => obj.disabled === false)
+                const start = workspace.getBlocksByType("start");
+                const forever = workspace.getBlocksByType("forever");
+                const objectTracking = workspace.getBlocksByType("objectTracking");
+                const autopilot = workspace.getBlocksByType("autopilot");
+                const multipleObjectTracking = workspace.getBlocksByType("multipleObjectTracking")
+                const pointGoalNavigation = workspace.getBlocksByType("navigateForwardAndLeft")
+                let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false)  //filtering multiple objectTracking connected blocks
                 let objectTrackingEnabledBlocks = objectTracking?.filter(obj => obj.disabled === false) //filtering objectTracking connected blocks
                 let autopilotEnabledBlocks = autopilot?.filter(obj => obj.disabled === false) //filtering autopilot connected blocks
+                let pointGoalNavigationEnabledBlocks = pointGoalNavigation?.filter(obj => obj.disabled === false) //filtering pointGoalNavigation connected blocks
                 let object_1 = "object_1";
                 let object_2 = "object_2";
-                if (objectTrackingConditionEnabled.length > 0) {
-                    object_1 = objectTrackingConditionEnabled[0].getFieldValue("labels1")
-                    object_2 = objectTrackingConditionEnabled[0].getFieldValue("labels2")
+                if (multipleObjectTrackingEnabledBlocks.length > 0) {
+                    object_1 = multipleObjectTrackingEnabledBlocks[0].getFieldValue("labels1")
+                    object_2 = multipleObjectTrackingEnabledBlocks[0].getFieldValue("labels2")
                 }
                 if ((start.length === 0 && forever.length === 0)) {
                     handleError(Errors.error1);
-                } else if ([objectTrackingEnabledBlocks?.length > 0, autopilotEnabledBlocks?.length > 0, objectTrackingConditionEnabled?.length > 0].filter(Boolean).length > 1) {
+                } else if ([objectTrackingEnabledBlocks?.length > 0, autopilotEnabledBlocks?.length > 0, multipleObjectTrackingEnabledBlocks?.length > 0, pointGoalNavigationEnabledBlocks?.length > 0].filter(Boolean).length > 1) {
                     handleError(Errors.error2);
                 } else if (object_1 === object_2) {
                     handleError(Errors.error3)

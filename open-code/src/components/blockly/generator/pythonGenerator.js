@@ -250,14 +250,6 @@ pythonGenerator['navigateForwardAndLeft'] = function (block) {
     return code;
 };
 
-pythonGenerator['navigateXAndY'] = function (block) {
-    let positionX = block.getFieldValue('x');
-    let positionY = block.getFieldValue('y');
-    let code = '';
-    code += "reachPosition(" + positionX + "," + positionY + ")\n";
-    return code;
-};
-
 pythonGenerator['objectTracking'] = function (block) {
     const dropdown_class = block.getFieldValue('class');
     const dropdown_models = block.getFieldValue('models');
@@ -266,7 +258,7 @@ pythonGenerator['objectTracking'] = function (block) {
     return code;
 };
 
-pythonGenerator['objectTrackingConditional'] = function (block, generator) {
+pythonGenerator['multipleObjectTracking'] = function (block, generator) {
     let labels1 = block.getFieldValue('labels1');
     let models = block.getFieldValue('models');
     let labels2 = block.getFieldValue('labels2');
