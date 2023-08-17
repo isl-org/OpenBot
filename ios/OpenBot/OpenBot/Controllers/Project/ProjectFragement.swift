@@ -31,6 +31,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     var fileName: String = String()
     var projectId: String = String()
     var isLoading: Bool = false
+    weak var jsEval : jsEvaluator?
 
     /**
        Function calls after view will loaded.
@@ -77,6 +78,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated);
+        jsEval = nil
     }
 
     /**
@@ -460,7 +462,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         let viewController = (storyboard.instantiateViewController(withIdentifier: "runOpenBot"));
         navigationController?.pushViewController(viewController, animated: true);
         bottomSheet.removeFromSuperview();
-        _ = jsEvaluator(jsCode: command);
+        jsEval = jsEvaluator(jsCode: command);
     }
 
     /**

@@ -23,6 +23,7 @@ class scannerFragment: CameraController {
     var border = UIImageView();
     let firstHalfView = UIView();
     var projectName: String = "";
+    weak var jsEval : jsEvaluator?
 
 /**
     Method calls after view will load and initialize the UI and camera
@@ -254,7 +255,7 @@ class scannerFragment: CameraController {
         let viewController = (storyboard.instantiateViewController(withIdentifier: "runOpenBot"));
         navigationController?.pushViewController(viewController, animated: true);
         whiteSheet.removeFromSuperview();
-        _ = jsEvaluator(jsCode: commands);
+        jsEval = jsEvaluator(jsCode: commands);
     }
 
     /**

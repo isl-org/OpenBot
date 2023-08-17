@@ -11,8 +11,6 @@ import UIKit
  Class to evaluate the JS code inside openBot
  */
 class jsEvaluator {
-
-
     private var command: String = "";
     private var vehicleControl: Control = Control();
     let semaphore = DispatchSemaphore(value: 0);
@@ -20,17 +18,17 @@ class jsEvaluator {
     var jsContext: JSContext!;
     var runOpenBotThreadClass: runOpenBotThread?
     var cancelLoop: Bool = false;
+    private let inferenceQueue = DispatchQueue(label: "openbot.jsEvaluator.inferencequeue")
 
     /**
      initializer of jsEvaluator class
      - Parameter jsCode:
      */
-
     init(jsCode: String) {
         command = jsCode;
         setupCommand()
         initializeJS();
-        evaluateJavaScript()
+        evaluateJavaScript();
         NotificationCenter.default.addObserver(self, selector: #selector(cancelThread), name: .cancelThread, object: nil)
         print("Js code is ", jsCode);
     }
@@ -39,7 +37,11 @@ class jsEvaluator {
         if command.contains("forever()") {
             command = command.replacingOccurrences(of: "function forever (){ while(true){ ", with: "function forever (){ while(!" + String(self.cancelLoop) + "){ pause(0.03); ")
         }
+    }
 
+    deinit {
+        print("called in deinit");
+        runOpenBotThreadClass = nil
     }
 
     /**
@@ -51,8 +53,11 @@ class jsEvaluator {
 
 
     @objc func cancelThread() {
+        print("cancle thread");
         cancelLoop = true;
+        jsContext = nil;
         runOpenBotThreadClass?.cancel()
+        runOpenBotThreadClass = nil
         bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
     }
 
@@ -60,11 +65,14 @@ class jsEvaluator {
      function defined for all the methods of openBot blockly
      */
     func evaluateJavaScript() {
+        print("inside evaluateJavaScript",jsContext);
         self.runOpenBotThreadClass = runOpenBotThread();
+        print("runOpenBotThreadClass =====>",runOpenBotThreadClass);
         runOpenBotThreadClass?.start();
-        DispatchQueue.global(qos: .background).async {
+        inferenceQueue.async {
+            print("hello global que");
             if let context = JSContext() {
-
+                print("inside context");
                 let moveForward: @convention(block) (Float) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.moveForward(speed: speed);
 
@@ -89,7 +97,7 @@ class jsEvaluator {
                 }
                 let pause: @convention(block) (Double) -> Void = { (time) in
                     self.wait(forTime: time)
-                    self.semaphore.wait()
+                    jsEvaluator.runOpenBotThread.sleep(forTimeInterval:time / 1000);
                 }
                 let moveBackward: @convention(block) (Float) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.moveBackward(speed: speed);
@@ -370,12 +378,6 @@ class jsEvaluator {
         if forTime != 0.03 {
             NotificationCenter.default.post(name: .commandName, object: "wait for \(forTime)");
         }
-        DispatchQueue.global(qos: .background).async {
-            let command = Control(left: 0, right: 0);
-            self.sendControl(control: command);
-            Thread.sleep(forTimeInterval: forTime / 1000);
-            self.semaphore.signal()
-        }
     }
 
     /**
@@ -422,7 +424,7 @@ class jsEvaluator {
         }
 
         /**
-         Strat of block
+         Start of block
          */
         func startBlock() {
             if isCancelled {
