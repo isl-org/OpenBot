@@ -68,6 +68,9 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
 
     var temp = 0;
 
+    /**
+     override function to create camera view behind stopRobot
+     */
     override func createCameraView() {
         if temp > 0 {
             return;
@@ -79,10 +82,14 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         temp = temp + 1;
     }
 
+    /**
+     override function calls after controller view is presented
+     - Parameter animated:
+     */
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if (runRobot.isPointGoalNavigation) {
-            pointGoalCamera {
+            pointGoalCameraView {
                 let camera = self.sceneView.pointOfView!
                 let cameraTransform = camera.transform
                 _ = SCNVector3(-cameraTransform.m31, -cameraTransform.m32, -cameraTransform.m33)
@@ -101,7 +108,12 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
     }
 
-
+    /**
+     function to restart point goal navigation session when detected error
+     - Parameters:
+       - session:
+       - error:
+     */
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
         print("Session failed. Changing worldAlignment property.")
@@ -117,15 +129,11 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
     }
 
+    // Restart session with a different worldAlignment - prevents bug from crashing app
     func restartSessionWithoutDelete() {
-        // Restart session with a different worldAlignment - prevents bug from crashing app
-        self.sceneView.session.pause()
-
-        self.sceneView.session.run(configuration, options: [
-            .resetTracking,
-            .removeExistingAnchors])
+        sceneView.session.pause()
+        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
     }
-
 
     /**
      override function calls after current controller view disappear
@@ -139,6 +147,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         sceneView?.session.pause()
     }
 
+    /**
+     override function when view of controller disappears
+     - Parameter animated:
+     */
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         stopCar();
@@ -151,6 +163,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      */
     var count: Int = 0;
 
+    /**
+     function to update commands on screen
+     - Parameter notification:
+     */
     @objc func updateCommandMsg(_ notification: Notification) {
         DispatchQueue.main.async {
             runRobot.detector?.setSelectedClass(newClass: notification.object as! String)
@@ -166,18 +182,25 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
     }
 
+    /**
+     function to update the input objects for classes
+     - Parameter notification:
+     */
     @objc func updateCommandObject(_ notification: Notification) {
         DispatchQueue.main.async {
             runRobot.detector?.setMultipleSelectedClass(newClasses: notification.object as! [String])
-            self.markGoalPosition(positions: notification.object as! [String]);
+            self.setVectorPositions(positions: notification.object as! [String]);
         }
     }
 
-
-    func pointGoalCamera(completion: @escaping () -> Void) {
+    /**
+     function to create camera view for point goal navigation
+     - Parameter completion:
+     */
+    func pointGoalCameraView(completion: @escaping () -> Void) {
         sceneView = ARSCNView(frame: view.bounds)
         sceneView.debugOptions = []
-        view.addSubview(sceneView)
+        view.insertSubview(sceneView, belowSubview: stopRobot)
         let scene = SCNScene()
         sceneView.scene = scene
         sceneView.delegate = self
@@ -188,8 +211,11 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         completion()
     }
 
-
-    func markGoalPosition(positions: [String]) {
+    /**
+     function to set positions for navigation
+     - Parameter positions:
+     */
+    func setVectorPositions(positions: [String]) {
         isReached = false
         let forwardDistance = Double(positions[0]) ?? 0
         let LeftDistance = Double(positions[1]) ?? 0
@@ -197,7 +223,9 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         left = LeftDistance
     }
 
-
+    /**
+     function to calculate the route to the point
+     */
     func calculateRoute() {
         _ = simd_distance(startingPoint.simdPosition, endingPoint.simdPosition)
         _ = simd_normalize(endingPoint.simdPosition - startingPoint.simdPosition)
@@ -206,7 +234,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     @IBOutlet weak var runRobotConstraints: NSLayoutConstraint!
     let factor = 0.8;
 
-/**
+    /**
      override function calls when the current orientation changed
      - Parameters:
        - size:
@@ -215,9 +243,16 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         updateConstraints();
+        if (runRobot.isPointGoalNavigation) {
+            if currentOrientation == .portrait {
+                sceneView.frame.size = CGSize(width: width, height: height);
+            } else {
+                sceneView.frame.size = CGSize(width: height, height: width);
+            }
+        }
     }
 
-/**
+    /**
      Function calls on cancel button of screen tapped. This stop the execution of blockly code
      */
     @objc func cancel() {
@@ -226,7 +261,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         stopCar()
     }
 
-/**
+    /**
      Function to setup the navigation bar
      */
     func setupNavigationBarItem() {
@@ -237,7 +272,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
     }
 
-/**
+    /**
      Function to remove current viewController from navigation stack
      - Parameter sender:
      */
@@ -247,7 +282,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     }
 
 
-/**
+    /**
      Function to update the constraints of image
      */
     fileprivate func updateConstraints() {
@@ -258,6 +293,9 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
     }
 
+    /**
+     function to stop ongoing robot commands
+     */
     func stopCar() {
         runRobot.isObjectTracking = false
         runRobot.isAutopilot = false
@@ -269,6 +307,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         bluetooth.sendDataFromJs(payloadData: indicatorValues)
     }
 
+    /**
+     function to send output controls to openBot
+     - Parameter control:
+     */
     func sendControl(control: Control) {
         if runRobot.isAutopilot || runRobot.isObjectTracking || runRobot.isMultipleObjectTracking {
             createCameraView();
@@ -284,6 +326,11 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
     }
 
+    /**
+      function to update target class when object moves
+     - Parameter detection:
+     - Returns:
+     */
     func updateTarget(_ detection: CGRect) -> Control {
 
         // Left and right wheels control values
@@ -333,6 +380,13 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         return Control(left: left, right: right)
     }
 
+    /**
+     called after camera capture each frame
+     - Parameters:
+       - output:
+       - sampleBuffer:
+       - connection:
+     */
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
 
         if (runRobot.isObjectTracking || runRobot.isAutopilot || runRobot.isMultipleObjectTracking) {
@@ -360,6 +414,12 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
     }
 
+    /**
+     function to enable object tracking
+     - Parameters:
+       - object:
+       - model:
+     */
     static func enableObjectTracking(object: String, model: String) {
         DispatchQueue.main.async {
             runRobot.isObjectTracking = true;
@@ -369,6 +429,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: .CPU, numThreads: 1) as? Detector
     }
 
+    /**
+     function to enable autopilot
+     - Parameter model:
+     */
     static func enableAutopilot(model: String) {
         print("inside enableAutopilot")
         DispatchQueue.main.async {
@@ -378,6 +442,13 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: RuntimeDevice.CPU, numThreads: 1);
     }
 
+    /**
+     function to enable multiple object tracking
+     - Parameters:
+       - object1:
+       - model:
+       - object2:
+     */
     static func enableMultipleObjectTracking(object1: String, model: String, object2: String) {
         print("inside test");
         DispatchQueue.main.async {
@@ -388,7 +459,12 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: .CPU, numThreads: 1) as? Detector
     }
 
-
+    /**
+     function to enable point goal navigation
+     - Parameters:
+       - forward:
+       - left:
+     */
     static func enablePointGoalNavigation(forward: Double, left: Double) {
         print("inside test");
         DispatchQueue.main.async {
@@ -397,7 +473,13 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         navigation = Navigation(model: Model.fromModelItem(item: Common.returnNavigationModel()), device: RuntimeDevice.CPU, numThreads: 1)
     }
 
-
+    /**
+     delegate revoke when SceneKit node corresponding to a new AR anchor has been added to the scene
+     - Parameters:
+       - renderer:
+       - scene:
+       - time:
+     */
     func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
         if (runRobot.isPointGoalNavigation) {
             guard let currentFrame = sceneView.session.currentFrame else {
@@ -411,6 +493,12 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
     }
 
+    /**
+     function to process the buffer and send buffer to navigation.tflite to give result
+     - Parameters:
+       - pixelBuffer:
+       - currentPosition:
+     */
     func processPixelBuffer(_ pixelBuffer: CVPixelBuffer, _ currentPosition: SCNNode) {
         guard !isNavQueueBusy else {
             return
@@ -449,6 +537,12 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
     }
 
+    /**
+     delegate revoke when SceneKit node corresponding to a new AR anchor has been added to the scene
+     - Parameters:
+       - renderer:
+       - time:
+     */
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         if (runRobot.isPointGoalNavigation) {
             guard let camera = sceneView.pointOfView else {
@@ -461,12 +555,17 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     // Define a distance threshold for triggering the event
     let distanceThreshold: Float = 0.15 // adjust this value as needed
 
+    /**
+     function to check openBot is reached at point or not
+     - Parameter position:
+     */
     func checkCameraPosition(position: simd_float3) {
         if endingPoint != nil && isReached != true {
             distance = simd_distance(position, endingPoint.simdPosition)
             if distance <= distanceThreshold {
                 DispatchQueue.main.async {
                     print("goal reached")
+                    runRobot.pointGoalFragment?.createReachMessage()
                     self.sceneView.session.pause()
                     self.isReached = true
                     self.marker.removeFromParentNode()
@@ -475,6 +574,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
     }
 
+    /**
+     function to send control to robot according to object tracking
+     - Parameter imagePixelBuffer:
+     */
     func runObjectTracking(imagePixelBuffer: CVPixelBuffer) {
         self.isInferenceQueueBusy = true
         let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, detectionType: "single");
@@ -487,7 +590,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             guard let controlResult = self.result else {
                 return
             }
-
             DispatchQueue.main.async {
                 if (res!.count > 0) {
                     for item in res! {
@@ -504,6 +606,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         self.isInferenceQueueBusy = false
     }
 
+    /**
+     function to send control to robot according to multiple object tracking
+     - Parameter imagePixelBuffer:
+     */
     func runMultipleObjectTracking(imagePixelBuffer: CVPixelBuffer) {
         self.isInferenceQueueBusy = true
         let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, detectionType: "multiple")
@@ -559,7 +665,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         self.isInferenceQueueBusy = false
     }
 
-
+    /**
+     function to send control to robot according to autopilot
+     - Parameter imagePixelBuffer:
+     */
     func runAutopilot(imagePixelBuffer: CVPixelBuffer) {
         self.isInferenceQueueBusy = true
         let startTime = Date().millisecondsSince1970
