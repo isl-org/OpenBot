@@ -767,33 +767,7 @@ Blockly.Blocks["navigateForwardAndLeft"] = {
     }
 };
 
-Blockly.Blocks["navigateXAndY"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "reach to x coordinate at %1 and y coordinate at %2 ",
-            "args0": [
-                {
-                    "type": "field_number",
-                    "name": "x",
-                    "value": 0
-                },
-                {
-                    "type": "field_number",
-                    "name": "y",
-                    "value": 0
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["objectTrackingConditional"] = {
+Blockly.Blocks["multipleObjectTracking"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
