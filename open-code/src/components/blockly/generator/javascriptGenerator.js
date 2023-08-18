@@ -267,10 +267,11 @@ javascriptGenerator['autopilot'] = function (block) {
 };
 
 javascriptGenerator['navigateForwardAndLeft'] = function (block) {
+    let forward_position = block.getFieldValue('forward');
     let left_position = block.getFieldValue('left');
-    let right_position = block.getFieldValue('right');
+    let dropdown_navigation_models = block.getFieldValue('navigation_models');
     let code = '';
-    code += "reachGoal(" + left_position + "," + right_position + ");\n";
+    code += "reachGoal(" + forward_position + "," + left_position + ",'" + dropdown_navigation_models + "');\n";
     return code;
 };
 
