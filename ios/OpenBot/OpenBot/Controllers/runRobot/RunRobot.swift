@@ -54,6 +54,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         stopRobot.layer.cornerRadius = 10;
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandMsg), name: .commandName, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandObject), name: .commandObject, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(createCamera), name: .createCameraView, object: nil);
         setupNavigationBarItem()
         updateConstraints();
         let modelItems = Common.loadAllModelItemsFromBundle()
@@ -65,19 +66,22 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
         runRobot.navigation = Navigation(model: Model.fromModelItem(item: Common.returnNavigationModel()), device: RuntimeDevice.CPU, numThreads: 1)
     }
-
     var temp = 0;
+
 
     /**
      override function to create camera view behind stopRobot
      */
     override func createCameraView() {
+        print("temp is =======>",temp);
         if temp > 0 {
             return;
         }
         DispatchQueue.main.async {
+            print("inside dispatch queue");
             super.createCameraView();
             self.view.sendSubviewToBack(super.cameraView);
+            print("super cameraview",super.cameraView);
         }
         temp = temp + 1;
     }
@@ -153,7 +157,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      */
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        stopCar();
         NotificationCenter.default.removeObserver(self);
     }
 
@@ -191,6 +194,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             runRobot.detector?.setMultipleSelectedClass(newClasses: notification.object as! [String])
             self.setVectorPositions(positions: notification.object as! [String]);
         }
+    }
+    @objc func createCamera(_ notification: Notification) {
+        print("inside create camera");
+       createCameraView();
     }
 
     /**
@@ -682,6 +689,5 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         sendControl(control: controlResult)
         isInferenceQueueBusy = false
     }
-
 }
 

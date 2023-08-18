@@ -8,7 +8,7 @@ import GoogleSignIn
 import GoogleAPIClientForREST
 import GTMSessionFetcher
 
-class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,autopilotDelegate {
     @IBOutlet weak var baseView = UIView()
     var animationView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4));
     @IBOutlet weak var qrScannerIcon: UIView!
@@ -463,6 +463,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         navigationController?.pushViewController(viewController, animated: true);
         bottomSheet.removeFromSuperview();
         jsEval = jsEvaluator(jsCode: command);
+        jsEval?.delegate = self
+
     }
 
     /**
@@ -732,6 +734,10 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
             rootViewController.present(alertController, animated: true, completion: nil)
         }
     }
+
+    func didPerformAction() {
+        NotificationCenter.default.post(name: .createCameraView, object: nil);
+    }
 }
 
 extension UserDefaults {
@@ -809,6 +815,8 @@ extension UserDefaults {
         defaults.synchronize()
     }
 }
+
+
 
 
 

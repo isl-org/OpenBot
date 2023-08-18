@@ -19,6 +19,7 @@ class jsEvaluator {
     var runOpenBotThreadClass: runOpenBotThread?
     var cancelLoop: Bool = false;
     private let inferenceQueue = DispatchQueue(label: "openbot.jsEvaluator.inferencequeue")
+    weak var delegate: autopilotDelegate?
 
     /**
      initializer of jsEvaluator class
@@ -65,14 +66,10 @@ class jsEvaluator {
      function defined for all the methods of openBot blockly
      */
     func evaluateJavaScript() {
-        print("inside evaluateJavaScript",jsContext);
         self.runOpenBotThreadClass = runOpenBotThread();
-        print("runOpenBotThreadClass =====>",runOpenBotThreadClass);
         runOpenBotThreadClass?.start();
         inferenceQueue.async {
-            print("hello global que");
             if let context = JSContext() {
-                print("inside context");
                 let moveForward: @convention(block) (Float) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.moveForward(speed: speed);
 
@@ -252,6 +249,7 @@ class jsEvaluator {
 
                 let enableAutopilot: @convention(block) (String) -> Void = { (modelName) in
                     self.runOpenBotThreadClass?.enableAutopilot(model: modelName);
+                    self.delegate?.didPerformAction();
                 }
 
                 let followAndStop: @convention(block) (String, String, String) -> Void = { (object1, model, object2) in
@@ -929,3 +927,8 @@ class jsEvaluator {
         }
     }
 }
+
+protocol autopilotDelegate: AnyObject {
+    func didPerformAction()
+}
+

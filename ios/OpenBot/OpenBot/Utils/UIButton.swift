@@ -37,6 +37,4 @@ class CustomButton: UIButton {
         setTitleColor(traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black, for: .normal);
         addTarget(nil, action: selector, for: .touchUpInside);
     }
-
-
 }
