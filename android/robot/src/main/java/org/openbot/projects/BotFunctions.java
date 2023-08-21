@@ -8,10 +8,25 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.webkit.JavascriptInterface;
+
+import com.google.ar.core.Pose;
+import com.google.ar.core.exceptions.CameraNotAvailableException;
+import com.google.ar.core.exceptions.NotTrackingException;
+import com.google.ar.core.exceptions.UnavailableApkTooOldException;
+import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
+import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
+import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
+
+import java.io.IOException;
 import java.util.Objects;
+
 import org.openbot.databinding.FragmentBlocklyExecutingBinding;
 import org.openbot.env.AudioPlayer;
 import org.openbot.env.SharedPreferencesManager;
+import org.openbot.pointGoalNavigation.ArCore;
+import org.openbot.tflite.Model;
+import org.openbot.tflite.Navigation;
+import org.openbot.tflite.Network;
 import org.openbot.utils.Enums;
 import org.openbot.vehicle.Vehicle;
 import timber.log.Timber;
@@ -24,6 +39,7 @@ public class BotFunctions implements SensorEventListener {
   private final FragmentBlocklyExecutingBinding binding;
   private final Activity mActivity;
   private final Context mContext;
+  private ArCore arCore;
   private final SensorManager sensorManager;
   private final Sensor accelerometerSensor;
   private final Sensor gyroscopeSensor;
@@ -42,7 +58,8 @@ public class BotFunctions implements SensorEventListener {
       SharedPreferencesManager getSharedPreferencesManager,
       Context getContext,
       FragmentBlocklyExecutingBinding getBinding,
-      Activity getActivity) {
+      Activity getActivity,
+      ArCore arCore) {
     vehicle = getVehicle;
     audioPlayer = getAudioPlayer;
     sharedPreferencesManager = getSharedPreferencesManager;
@@ -53,6 +70,7 @@ public class BotFunctions implements SensorEventListener {
     binding = getBinding;
     mActivity = getActivity;
     mContext = getContext;
+    this.arCore = arCore;
   }
 
   /** openBot Movement functions */
@@ -355,8 +373,10 @@ public class BotFunctions implements SensorEventListener {
   }
 
   @JavascriptInterface
-  public void reachGoal(int leftSpeed, int rightSpeed) {
-    Timber.tag("Ai Blocks").i(leftSpeed + ", " + rightSpeed);
+  public void reachGoal(float forward, float left) {
+    Timber.tag("Ai Blocks").i(forward + ", " + left);
+    mActivity.runOnUiThread(() -> binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT));
+    startPointGoal(-forward, -left);
   }
 
   @JavascriptInterface
@@ -428,4 +448,66 @@ public class BotFunctions implements SensorEventListener {
 
   @Override
   public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+  private void startPointGoal(float goalX, float goalZ) {
+    setupArCore();
+    while (arCore.getStartPose() == null) startDriving(goalX, goalZ);
+  }
+
+  private void setupArCore() {
+    try {
+      arCore.resume();
+    } catch (java.lang.SecurityException e) {
+      e.printStackTrace();
+    } catch (UnavailableSdkTooOldException e) {
+      e.printStackTrace();
+    } catch (UnavailableDeviceNotCompatibleException e) {
+      e.printStackTrace();
+    } catch (UnavailableArcoreNotInstalledException e) {
+      e.printStackTrace();
+    } catch (UnavailableApkTooOldException e) {
+      e.printStackTrace();
+    } catch (CameraNotAvailableException e) {
+      e.printStackTrace();
+    }
+
+//    showInfoDialog(
+//            "ARCore failure. Make sure that your device is compatible and the ARCore SDK is installed.");
+  }
+
+  private void startDriving(float goalX, float goalZ) {
+    Timber.i("setting goal at (" + goalX + ", " + goalZ + ")");
+    try {
+      arCore.detachAnchors();
+      arCore.setStartAnchorAtCurrentPose();
+      Pose startPose = arCore.getStartPose();
+      if (startPose == null) {
+//        showInfoDialog(getString(R.string.no_initial_ar_core_pose));
+        return;
+      }
+      arCore.setTargetAnchor(startPose.compose(Pose.makeTranslation(goalX, 0.0f, goalZ)));
+    } catch (NotTrackingException e) {
+      e.printStackTrace();
+//      showInfoDialog(getString(R.string.tracking_lost));
+      return;
+    }
+    Model model =
+            new Model(
+                    0,
+                    Model.CLASS.NAVIGATION,
+                    Model.TYPE.GOALNAV,
+                    "navigation.tflite",
+                    Model.PATH_TYPE.ASSET,
+                    "networks/navigation.tflite",
+                    "160x90");
+
+    try {
+      BlocklyExecutingFragment.navigationPolicy = new Navigation(mActivity, model, Network.Device.CPU, 1);
+    } catch (IOException e) {
+      e.printStackTrace();
+//      showInfoDialog("Navigation policy could not be initialized.");
+      return;
+    }
+    BlocklyExecutingFragment.isRunning = true;
+  }
 }

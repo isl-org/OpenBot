@@ -1,5 +1,10 @@
 package org.openbot.projects;
 
+import static org.openbot.pointGoalNavigation.PointGoalNavigationFragment.computeDeltaYaw;
+import static org.openbot.pointGoalNavigation.PointGoalNavigationFragment.convertRGBFrameToScaledBitmap;
+
+import static java.lang.Math.abs;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -10,6 +15,7 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +26,29 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageProxy;
 
+import com.google.ar.core.Pose;
+import com.google.ar.core.TrackingFailureReason;
+
+import org.openbot.R;
 import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentBlocklyExecutingBinding;
 import org.openbot.env.ImageUtils;
 import org.openbot.env.SharedPreferencesManager;
+import org.openbot.pointGoalNavigation.ArCore;
+import org.openbot.pointGoalNavigation.ArCoreListener;
+import org.openbot.pointGoalNavigation.CameraIntrinsics;
+import org.openbot.pointGoalNavigation.ImageFrame;
+import org.openbot.pointGoalNavigation.NavigationPoses;
 import org.openbot.tflite.Autopilot;
 import org.openbot.tflite.Detector;
 import org.openbot.tflite.Model;
+import org.openbot.tflite.Navigation;
 import org.openbot.tflite.Network;
 import org.openbot.tracking.MultiBoxTracker;
 import org.openbot.utils.CameraUtils;
 import org.openbot.utils.Enums;
 import org.openbot.utils.FileUtils;
+import org.openbot.vehicle.Control;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +57,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class BlocklyExecutingFragment extends CameraFragment {
+public class BlocklyExecutingFragment extends CameraFragment implements ArCoreListener {
 
   private FragmentBlocklyExecutingBinding binding;
   private WebView myWebView;
@@ -65,6 +82,9 @@ public class BlocklyExecutingFragment extends CameraFragment {
   private long frameNum = 0;
   private boolean computingNetwork = false;
   private Handler handler;
+  private ArCore arCore;
+  public static Navigation navigationPolicy;
+  public static boolean isRunning = false;
   private Matrix cropToFrameTransform;
   public static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
 
@@ -77,7 +97,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());
     // initialise web view to execute javascript block codes.
-    myWebView = new WebView(getContext());
+    myWebView = new WebView(requireContext());
     // enable JavaScript in the web-view.
     myWebView.getSettings().setJavaScriptEnabled(true);
     if (savedInstanceState == null) {
@@ -98,6 +118,9 @@ public class BlocklyExecutingFragment extends CameraFragment {
   @Override
   public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    Handler mainHandler = new Handler(Looper.getMainLooper());
+    arCore = new ArCore(requireContext(), binding.GLSurfaceView, mainHandler);
+    arCore.setArCoreListener(this);
     binding.stopCarBtn.setOnClickListener(
         v -> {
           myWebView.destroy();
@@ -355,7 +378,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
   @SuppressLint("SetJavaScriptEnabled")
   private void restartJSCommand() {
     // initialise web view to execute javascript block codes.
-    myWebView = new WebView(getContext());
+    myWebView = new WebView(requireContext());
     // enable JavaScript in the web-view.
     myWebView.getSettings().setJavaScriptEnabled(true);
     if (myWebView != null && BarCodeScannerFragment.finalCode != null) {
@@ -382,7 +405,8 @@ public class BlocklyExecutingFragment extends CameraFragment {
                     sharedPreferencesManager,
                     requireContext(),
                     binding,
-                    requireActivity()),
+                    requireActivity(),
+                    arCore),
                 "Android");
             // execute the JavaScript code in the web-view.
             myWebView.evaluateJavascript(finalCode, null);
@@ -402,6 +426,7 @@ public class BlocklyExecutingFragment extends CameraFragment {
     myWebView.destroy();
     vehicle.setIndicator(0);
     vehicle.stopBot();
+    arCore.pause();
     // if previous speed multiplier value is not 0, set the speed multiplier back to its previous
     // value when you go back from this screen.
     Enums.SpeedMode speedMode = Enums.SpeedMode.getByID(preferencesManager.getSpeedMode());
@@ -411,5 +436,63 @@ public class BlocklyExecutingFragment extends CameraFragment {
     isFollow = false;
     isAutopilot = false;
     isFollowMultipleObject = false;
+  }
+
+  @Override
+  public void onArCoreUpdate(NavigationPoses navigationPoses, ImageFrame rgb, CameraIntrinsics cameraIntrinsics, long timestamp) {
+    if (isRunning) {
+      float goalDistance =
+              computeDistance(navigationPoses.getTargetPose(), navigationPoses.getCurrentPose());
+
+      if (goalDistance < 0.15f) {
+        vehicle.stopBot();
+        audioPlayer.playFromStringID(R.string.goal_reached);
+//        showInfoDialog(getString(R.string.goal_reached));
+      } else {
+        float deltaYaw =
+                computeDeltaYaw(navigationPoses.getCurrentPose(), navigationPoses.getTargetPose());
+
+        Bitmap bitmap = convertRGBFrameToScaledBitmap(rgb, 160.f / 480.f);
+        bitmap = Bitmap.createBitmap(bitmap, 0, 30, 160, 90);
+
+        Control control =
+                navigationPolicy.recognizeImage(
+                        bitmap, goalDistance, (float) Math.sin(deltaYaw), (float) Math.cos(deltaYaw));
+
+        Timber.d("control: (" + control.getLeft() + ", " + control.getRight() + ")");
+        vehicle.setControl(control);
+      }
+    }
+  }
+
+  @Override
+  public void onArCoreTrackingFailure(long timestamp, TrackingFailureReason trackingFailureReason) {
+
+  }
+
+  @Override
+  public void onArCoreSessionPaused(long timestamp) {
+
+  }
+
+  private static float computeDistance(Pose goalPose, Pose robotPose) {
+    Float dx = abs(goalPose.tx() - robotPose.tx());
+    Float dz = abs(goalPose.tz() - robotPose.tz());
+
+    return (float) Math.sqrt(dx * dx + dz * dz);
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+
+    arCore.closeSession();
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+
+    arCore.removeArCoreListener();
   }
 }

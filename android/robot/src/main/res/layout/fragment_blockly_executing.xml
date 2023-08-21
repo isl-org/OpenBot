@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
+    <android.opengl.GLSurfaceView
+        android:id="@+id/GLSurfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
     <ImageView
         android:id="@+id/blockly_bot_image"
         android:layout_width="200dp"
