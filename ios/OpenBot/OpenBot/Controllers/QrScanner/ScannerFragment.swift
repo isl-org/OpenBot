@@ -9,7 +9,7 @@ import AVFoundation
 /**
  class for qrScanner
  */
-class scannerFragment: CameraController {
+class scannerFragment: CameraController,autopilotDelegate {
     var previewLayer = AVCaptureVideoPreviewLayer();
     var whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds)
     @IBOutlet weak var cancelBtn: UIView!
@@ -349,6 +349,10 @@ class scannerFragment: CameraController {
 
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
+    }
+
+    func didPerformAction() {
+        NotificationCenter.default.post(name: .createCameraView, object: nil);
     }
 
 
