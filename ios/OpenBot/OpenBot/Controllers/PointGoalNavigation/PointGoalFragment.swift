@@ -332,7 +332,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
             let startPose = Pose(tx: currentPosition.position.x, ty: currentPosition.position.y, tz: currentPosition.position.z, qx: currentPosition.orientation.x, qy: currentPosition.orientation.y, qz: currentPosition.orientation.z, qw: currentPosition.orientation.w)
             let endPose = Pose(tx: endingPoint.position.x, ty: endingPoint.position.y, tz: endingPoint.position.z, qx: endingPoint.orientation.x, qy: endingPoint.orientation.y, qz: endingPoint.orientation.z, qw: endingPoint.orientation.w)
             let yaw = computeDeltaYaw(pose: startPose, goalPose: endPose)
-
+            print("startPose ===== \(startPose.qx) , endPose ======> \(endPose.qx) , yaw ====> \(yaw)")
             let converted = try! blueDress.convertToBGRA(imageBuffer: pixelBuffer)
 
             let refCon = NSMutableData()
@@ -466,8 +466,9 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     /// - Parameter control:
     func sendControl(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-            let left = control.getLeft() * SpeedMode.NORMAL.rawValue
-            let right = control.getRight() * SpeedMode.NORMAL.rawValue
+            let left = control.getLeft() * gameController.selectedSpeedMode.rawValue
+            let right = control.getRight() * gameController.selectedSpeedMode.rawValue
+            print("left -> \(control.getLeft()) , right ----> \(control.getRight())")
             vehicleControl = control
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
             NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)))

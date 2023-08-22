@@ -17,7 +17,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     private var bufferWidth = 0
     private var result: Control?
     static var detector: Detector?
-    static var pointGoalFragment: PointGoalFragment?
     static var autopilot: Autopilot?;
     private let inferenceQueue = DispatchQueue(label: "openbot.runRobot.inferencequeue");
     private var isInferenceQueueBusy = false
@@ -73,15 +72,12 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      override function to create camera view behind stopRobot
      */
     override func createCameraView() {
-        print("temp is =======>",temp);
         if temp > 0 {
             return;
         }
         DispatchQueue.main.async {
-            print("inside dispatch queue");
             super.createCameraView();
             self.view.sendSubviewToBack(super.cameraView);
-            print("super cameraview",super.cameraView);
         }
         temp = temp + 1;
     }
@@ -432,7 +428,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             runRobot.isObjectTracking = true;
         }
         let currentModel = Common.returnModelItem(modelName: model)
-        print("running ,model ========================", currentModel);
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: .CPU, numThreads: 1) as? Detector
     }
 
@@ -441,7 +436,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      - Parameter model:
      */
     static func enableAutopilot(model: String) {
-        print("inside enableAutopilot")
         DispatchQueue.main.async {
             runRobot.isAutopilot = true;
         }
@@ -457,12 +451,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
        - object2:
      */
     static func enableMultipleObjectTracking(object1: String, model: String, object2: String) {
-        print("inside test");
         DispatchQueue.main.async {
             runRobot.isMultipleObjectTracking = true;
         }
         let currentModel = Common.returnModelItem(modelName: model)
-        print("running ,model ========================", currentModel);
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: .CPU, numThreads: 1) as? Detector
     }
 
@@ -473,7 +465,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
        - left:
      */
     static func enablePointGoalNavigation(forward: Double, left: Double) {
-        print("inside test");
         DispatchQueue.main.async {
             runRobot.isPointGoalNavigation = true;
         }
@@ -517,8 +508,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             isNavQueueBusy = true
             let startPose = Pose(tx: currentPosition.position.x, ty: currentPosition.position.y, tz: currentPosition.position.z, qx: currentPosition.orientation.x, qy: currentPosition.orientation.y, qz: currentPosition.orientation.z, qw: currentPosition.orientation.w)
             let endPose = Pose(tx: endingPoint.position.x, ty: endingPoint.position.y, tz: endingPoint.position.z, qx: endingPoint.orientation.x, qy: endingPoint.orientation.y, qz: endingPoint.orientation.z, qw: endingPoint.orientation.w)
-            let yaw = runRobot.pointGoalFragment?.computeDeltaYaw(pose: startPose, goalPose: endPose) ?? 0
-            print(endPose);
+            let yaw = computeDeltaYaw(pose: startPose, goalPose: endPose)
             let converted = try! blueDress.convertToBGRA(imageBuffer: pixelBuffer)
             let refCon = NSMutableData()
             var timingInfo: CMSampleTimingInfo = .invalid
@@ -571,8 +561,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             distance = simd_distance(position, endingPoint.simdPosition)
             if distance <= distanceThreshold {
                 DispatchQueue.main.async {
-                    print("goal reached")
-                    runRobot.pointGoalFragment?.createReachMessage()
                     self.sceneView.session.pause()
                     self.isReached = true
                     self.marker.removeFromParentNode()
@@ -688,6 +676,33 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
         sendControl(control: controlResult)
         isInferenceQueueBusy = false
+    }
+
+    /// function to calculate the delta yaw for device position and goal position
+    ///
+    /// - Parameters:
+    ///   - pose: device position
+    ///   - goalPose: destination position
+    /// - Returns:
+    func computeDeltaYaw(pose: Pose, goalPose: Pose) -> Float {
+        // compute robot forward axis (global coordinate system)
+        let forward: [Float] = [0.0, 0.0, -1.0]
+        let forwardRotated = pose.rotateVector(vector: forward)
+
+        // distance vector to goal (global coordinate system)
+        let dx = goalPose.tx - pose.tx
+        let dz = goalPose.tz - pose.tz
+
+        let yaw = atan2(forwardRotated[2], forwardRotated[0]) - atan2(dz, dx)
+
+        // fit to range (-pi, pi]
+        var resultYaw = yaw
+        if (resultYaw > Float.pi) {
+            resultYaw -= 2 * Float.pi
+        } else if (resultYaw <= -Float.pi) {
+            resultYaw += 2 * Float.pi
+        }
+        return resultYaw
     }
 }
 
