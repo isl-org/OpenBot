@@ -292,3 +292,9 @@ javascriptGenerator['multipleObjectTracking'] = function (block, generator) {
     code += "followAndStop('" + labels1 + "','" + models + "','" + labels2 + "');\n"
     return code;
 };
+
+javascriptGenerator['stopAI'] = function () {
+    let code = '';
+    code += "stopAI();\n";
+    return code;
+};

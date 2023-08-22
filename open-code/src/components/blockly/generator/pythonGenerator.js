@@ -267,3 +267,9 @@ pythonGenerator['multipleObjectTracking'] = function (block, generator) {
     code += "followAndStop('" + labels1 + "','" + models + "','" + labels2 + "')\n";
     return code;
 };
+
+pythonGenerator['stopAI'] = function () {
+    let code = '';
+    code += "stopAI()\n";
+    return code;
+};

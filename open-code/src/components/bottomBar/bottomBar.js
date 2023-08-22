@@ -59,6 +59,41 @@ export const BottomBar = () => {
         setError(errorMessage);
     }
 
+    function handleAllChildBlocks(array, child) {
+        if (array.length > 0) {
+            for (let i = 0; i < array.length; i++) {
+                child.push(array[i].type)
+                handleAllChildBlocks(array[i].childBlocks_, child)
+            }
+        }
+        return child;
+    }
+
+    function handlingMultipleAIBlocks(start) {
+        let child = []
+        const aiBlocks = ["objectTracking", "autopilot", "multipleObjectTracking", "navigateForwardAndLeft"];
+        let a = []
+        let c = []
+        if (start.length !== 0) {
+            if (start[0].childBlocks_.length > 0) {
+                a = handleAllChildBlocks(start[0].childBlocks_, child)
+                if (a.length > 0) {
+                    for (let i = 0; i < a.length; i++) {
+                        if (aiBlocks.includes(a[i])) {
+                            c.push(a[i]);
+                        } else if (a[i] === "stopAI") {
+                            c.pop();
+                        }
+                        if (c.length > 1) {
+                            return;
+                        }
+                    }
+                }
+                return c;
+            }
+        }
+    }
+
     //generate javascript or python code and upload to google drive
     const generateCode = () => {
         if (isOnline) {
@@ -79,6 +114,7 @@ export const BottomBar = () => {
                 let objectTrackingEnabledBlocks = objectTracking?.filter(obj => obj.disabled === false) //filtering objectTracking connected blocks
                 let autopilotEnabledBlocks = autopilot?.filter(obj => obj.disabled === false) //filtering autopilot connected blocks
                 let pointGoalNavigationEnabledBlocks = pointGoalNavigation?.filter(obj => obj.disabled === false) //filtering pointGoalNavigation connected blocks
+                let a = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
                 let object_1 = "object_1";
                 let object_2 = "object_2";
                 if (multipleObjectTrackingEnabledBlocks.length > 0) {
@@ -87,7 +123,7 @@ export const BottomBar = () => {
                 }
                 if ((start.length === 0 && forever.length === 0)) {
                     handleError(Errors.error1);
-                } else if ([objectTrackingEnabledBlocks?.length > 0, autopilotEnabledBlocks?.length > 0, multipleObjectTrackingEnabledBlocks?.length > 0, pointGoalNavigationEnabledBlocks?.length > 0].filter(Boolean).length > 1) {
+                } else if (a === undefined) {
                     handleError(Errors.error2);
                 } else if (object_1 === object_2) {
                     handleError(Errors.error3)

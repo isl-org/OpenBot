@@ -797,3 +797,24 @@ Blockly.Blocks["multipleObjectTracking"] = {
         });
     }
 };
+
+Blockly.Blocks["stopAI"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "%1",
+            "args0": [
+                {
+                    "type": "field_label_serializable",
+                    "name": "movement_stop",
+                    "text": "stop AI detection"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 345,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};

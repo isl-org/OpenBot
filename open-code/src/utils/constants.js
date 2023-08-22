@@ -77,7 +77,7 @@ export const Constants = {
 
 export const Errors = {
     error1: "No start or forever block present in the playground.",
-    error2: "More than one AI blocks enabled in the playground.",
+    error2: "Detected adjacent AI blocks. Please review the Start block configuration.",
     error3: "Identical objects for AI block that follow and stop."
 }
 
