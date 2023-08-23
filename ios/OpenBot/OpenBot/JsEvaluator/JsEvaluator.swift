@@ -20,6 +20,7 @@ class jsEvaluator {
     var cancelLoop: Bool = false;
     private let inferenceQueue = DispatchQueue(label: "openbot.jsEvaluator.inferencequeue")
     weak var delegate: autopilotDelegate?
+    // Define your functions as closures
 
     /**
      initializer of jsEvaluator class
@@ -31,6 +32,7 @@ class jsEvaluator {
         initializeJS();
         evaluateJavaScript();
         NotificationCenter.default.addObserver(self, selector: #selector(cancelThread), name: .cancelThread, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(startTask), name: .startTask, object: nil);
         print("Js code is ", jsCode);
     }
 
@@ -94,7 +96,7 @@ class jsEvaluator {
                 }
                 let pause: @convention(block) (Double) -> Void = { (time) in
                     self.wait(forTime: time)
-                    jsEvaluator.runOpenBotThread.sleep(forTimeInterval:time / 1000);
+                    jsEvaluator.runOpenBotThread.sleep(forTimeInterval: time / 1000);
                 }
                 let moveBackward: @convention(block) (Float) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.moveBackward(speed: speed);
@@ -256,6 +258,16 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.followAndStop(object1: object1, model: model, object2: object2);
                 }
 
+                let enableMultipleAI : @convention(block) (String, String, String , String) ->  Void = { (autoPilotModelName, task, object, detectorModel) in
+                    print(autoPilotModelName, task, object, detectorModel);
+//                    enableAutopilot(autoPilotModelName);
+                    self.runOpenBotThreadClass?.startMultipleAI(autoPilotModelName: autoPilotModelName, task: task, object: object, detectorModel: detectorModel);
+                }
+
+                let stopAI : @convention(block) () -> Void = { () in
+                    self.runOpenBotThreadClass?.stopAI()
+                }
+
                 context.setObject(moveForward,
                         forKeyedSubscript: Strings.moveForward as NSString)
                 context.setObject(loop,
@@ -352,6 +364,10 @@ class jsEvaluator {
                         forKeyedSubscript: "enableAutopilot" as NSString);
                 context.setObject(followAndStop,
                         forKeyedSubscript: "followAndStop" as NSString);
+                context.setObject(enableMultipleAI,
+                        forKeyedSubscript: "enableMultipleAI" as NSString);
+                context.setObject(stopAI,
+                        forKeyedSubscript: "stopAI" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -404,6 +420,7 @@ class jsEvaluator {
          function to send controls to openBot
          - Parameter control:
          */
+
         func sendControl(control: Control) {
             if isCancelled {
                 bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n")
@@ -924,6 +941,18 @@ class jsEvaluator {
             NotificationCenter.default.post(name: .commandObject, object: [object1, object2]);
             NotificationCenter.default.post(name: .commandName, object: "follow and stop");
             runRobot.enableMultipleObjectTracking(object1: object1, model: model, object2: object2);
+        }
+
+        func startMultipleAI(autoPilotModelName : String , task : String, object : String, detectorModel : String){
+            if isCancelled {
+                return
+            }
+            runRobot.enableMultipleAI(autoPilotModel: autoPilotModelName, task: task, object: object, detectorModel: detectorModel);
+            NotificationCenter.default.post(name: .createCameraView, object: task);
+        }
+
+        func stopAI(){
+            runRobot.stopAI();
         }
     }
 }

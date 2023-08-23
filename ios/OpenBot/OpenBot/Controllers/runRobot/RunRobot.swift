@@ -26,6 +26,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     static var isObjectTracking: Bool = false
     static var isAutopilot: Bool = false;
     static var isMultipleObjectTracking: Bool = false
+    static var isMultipleAi: Bool = false
     static var isPointGoalNavigation: Bool = false
     var tempPixelBuffer: CVPixelBuffer!
     var sceneView: ARSCNView!
@@ -41,6 +42,8 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     private var forward: Double = 0
     private var left: Double = 0
     var configuration = ARWorldTrackingConfiguration()
+    var task : String  = ""
+
 
     /**
       override function calls when view of controller loaded
@@ -65,6 +68,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
         runRobot.navigation = Navigation(model: Model.fromModelItem(item: Common.returnNavigationModel()), device: RuntimeDevice.CPU, numThreads: 1)
     }
+
     var temp = 0;
 
 
@@ -191,9 +195,12 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             self.setVectorPositions(positions: notification.object as! [String]);
         }
     }
+
     @objc func createCamera(_ notification: Notification) {
-        print("inside create camera");
-       createCameraView();
+        if notification.object != nil {
+            task = notification.object as! String
+        }
+        createCameraView();
     }
 
     /**
@@ -304,6 +311,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         runRobot.isAutopilot = false
         runRobot.isMultipleObjectTracking = false
         runRobot.isPointGoalNavigation = false
+        runRobot.isMultipleAi = false
         bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
         bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
         let indicatorValues = "i0,0\n";
@@ -392,7 +400,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      */
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
 
-        if (runRobot.isObjectTracking || runRobot.isAutopilot || runRobot.isMultipleObjectTracking) {
+        if (runRobot.isObjectTracking || runRobot.isAutopilot || runRobot.isMultipleObjectTracking || runRobot.isMultipleAi) {
             let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
             bufferWidth = CVPixelBufferGetWidth(pixelBuffer!)
             bufferHeight = CVPixelBufferGetHeight(pixelBuffer!)
@@ -409,8 +417,11 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
                     self.runObjectTracking(imagePixelBuffer: imagePixelBuffer);
                 } else if runRobot.isMultipleObjectTracking {
                     self.runMultipleObjectTracking(imagePixelBuffer: imagePixelBuffer);
+                } else if runRobot.isAutopilot {
+                    self.runAutopilot(imagePixelBuffer: imagePixelBuffer);
                 } else {
                     self.runAutopilot(imagePixelBuffer: imagePixelBuffer);
+                    self.runObjectTrackingForMultipleAI(imagePixelBuffer: imagePixelBuffer);
                 }
             }
 
@@ -516,7 +527,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: converted, formatDescriptionOut: &formatDescription)
 
             var output: CMSampleBuffer? = nil
-            let status = CMSampleBufferCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: converted, dataReady: true, makeDataReadyCallback: nil, refcon: refCon.mutableBytes, formatDescription: formatDescription!, sampleTiming: &timingInfo, sampleBufferOut: &output)
+            _ = CMSampleBufferCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: converted, dataReady: true, makeDataReadyCallback: nil, refcon: refCon.mutableBytes, formatDescription: formatDescription!, sampleTiming: &timingInfo, sampleBufferOut: &output)
 
             // extract the image buffer from the sample buffer
             let pixelBufferBGRA: CVPixelBuffer? = CMSampleBufferGetImageBuffer(output!)
@@ -590,6 +601,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
                     for item in res! {
                         if (item.getConfidence() > self.MINIMUM_CONFIDENCE_TF_OD_API) {
                             print("confidence is :=============", item.getConfidence());
+                            if (item.getConfidence() > 0.70) {
+                                self.bluetooth.sendData(payload: "i1,0\n")
+                                self.stopCar();
+                            }
                             self.sendControl(control: controlResult)
                         } else {
                             self.sendControl(control: Control())
@@ -617,7 +632,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             guard let controlResult = self.result else {
                 return
             }
-
             DispatchQueue.main.async {
                 if (res!.count > 0) {
                     if let objects = runRobot.detector?.returnMultipleSelectedClass() {
@@ -666,7 +680,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      */
     func runAutopilot(imagePixelBuffer: CVPixelBuffer) {
         self.isInferenceQueueBusy = true
-        let startTime = Date().millisecondsSince1970
         self.result = runRobot.autopilot?.recognizeImage(pixelBuffer: imagePixelBuffer, indicator: 0) ?? Control();
         guard let controlResult = self.result else {
             return
@@ -703,6 +716,51 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             resultYaw += 2 * Float.pi
         }
         return resultYaw
+    }
+
+    static func enableMultipleAI(autoPilotModel: String, task: String, object: String, detectorModel: String) {
+        DispatchQueue.main.async {
+            runRobot.isMultipleAi = true;
+        }
+        let objectTrackingModel = Common.returnModelItem(modelName: detectorModel);
+        let auto = Common.returnModelItem(modelName: autoPilotModel);
+        detector = try! Detector.create(model: Model.fromModelItem(item: objectTrackingModel), device: .CPU, numThreads: 1) as? Detector
+        autopilot = Autopilot(model: Model.fromModelItem(item: auto), device: RuntimeDevice.CPU, numThreads: 1);
+    }
+
+    func runMultipleAI(imagePixelBuffer: CVPixelBuffer) {
+        runAutopilot(imagePixelBuffer: imagePixelBuffer);
+        runObjectTrackingForMultipleAI(imagePixelBuffer: imagePixelBuffer);
+
+    }
+
+
+    func runObjectTrackingForMultipleAI(imagePixelBuffer: CVPixelBuffer) {
+        self.isInferenceQueueBusy = true
+        let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, detectionType: "single");
+        if res != nil {
+            DispatchQueue.main.async {
+                if (res!.count > 0) {
+                    for item in res! {
+                        if (item.getConfidence() > self.MINIMUM_CONFIDENCE_TF_OD_API) {
+                            self.stopCar();
+                            _ = jsEvaluator(jsCode: self.task);
+                        } else {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        self.isInferenceQueueBusy = false
+
+    }
+
+    static func stopAI() {
+        isObjectTracking = false
+        isAutopilot = false;
+        isMultipleObjectTracking = false
+        isMultipleAi = false
     }
 }
 

@@ -464,7 +464,6 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         bottomSheet.removeFromSuperview();
         jsEval = jsEvaluator(jsCode: command);
         jsEval?.delegate = self
-
     }
 
     /**
