@@ -818,3 +818,68 @@ Blockly.Blocks["stopAI"] = {
         });
     }
 };
+
+Blockly.Blocks["multipleAIDetection"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "enable autopilot using %1 , do %2 after detecting %3 using %4",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "autopilot_models",
+                    "options": filterModels("AUTOPILOT", "CMDNAV") ?? [[
+                        "CIL-Mobile-Cmd",
+                        "CIL-Mobile-Cmd"
+                    ],
+                    ]
+                },
+                {
+                    "type": "field_dropdown",
+                    "name": "actions",
+                    "options": [
+                        [
+                            "left indicator on",
+                            "leftIndicatorOn()"
+                        ],
+                        [
+                            "move forward",
+                            "moveForward(200)"
+                        ],
+                        [
+                            "move backward",
+                            "moveBackward(230)"
+                        ],
+                        [
+                            "LED brightness on",
+                            "toggleLed(ON)"
+                        ]
+                    ]
+                },
+                {
+                    "type": "field_dropdown",
+                    "name": "labels",
+                    "options": filterLabels()
+                },
+                {
+                    "type": "field_dropdown",
+                    "name": "objectTracking_models",
+                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
+                        [
+                            "MobileNetV1-300",
+                            "MobileNetV1-300"
+                        ]
+                    ]
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+
+

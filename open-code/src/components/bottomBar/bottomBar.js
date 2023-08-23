@@ -82,7 +82,7 @@ export const BottomBar = () => {
      */
     function handlingMultipleAIBlocks(start) {
         let child = []
-        const aiBlocks = ["objectTracking", "autopilot", "multipleObjectTracking", "navigateForwardAndLeft"];
+        const aiBlocks = ["objectTracking", "autopilot", "multipleObjectTracking", "navigateForwardAndLeft", "multipleAIDetection"];
         let allChildBlocks = []
         let configuredAIBlocks = []
         if (start.length !== 0) {
