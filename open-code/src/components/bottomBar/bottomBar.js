@@ -82,7 +82,7 @@ export const BottomBar = () => {
      */
     function handlingMultipleAIBlocks(start) {
         let child = []
-        const aiBlocks = ["objectTracking", "autopilot", "multipleObjectTracking", "navigateForwardAndLeft"];
+        const aiBlocks = ["objectTracking", "autopilot", "multipleObjectTracking", "navigateForwardAndLeft", "multipleAIDetection"];
         let allChildBlocks = []
         let configuredAIBlocks = []
         if (start.length !== 0) {
@@ -121,7 +121,7 @@ export const BottomBar = () => {
                 const forever = workspace.getBlocksByType("forever");
                 const multipleObjectTracking = workspace.getBlocksByType("multipleObjectTracking");
                 let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false);  //filtering multiple objectTracking connected blocks
-                let a = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
+                let isAIBlocksAdjacent = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
                 let object_1 = "object_1";
                 let object_2 = "object_2";
                 if (multipleObjectTrackingEnabledBlocks.length > 0) {
@@ -130,7 +130,7 @@ export const BottomBar = () => {
                 }
                 if ((start.length === 0 && forever.length === 0)) {
                     handleError(Errors.error1);
-                } else if (a === true && start.length > 0) {
+                } else if (isAIBlocksAdjacent === true && start.length > 0) {
                     handleError(Errors.error2);
                 } else if (object_1 === object_2) {
                     handleError(Errors.error3)

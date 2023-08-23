@@ -298,3 +298,13 @@ javascriptGenerator['stopAI'] = function () {
     code += "stopAI();\n";
     return code;
 };
+
+javascriptGenerator['multipleAIDetection'] = function (block, generator) {
+    let autopilot_models = block.getFieldValue('autopilot_models');
+    let actions = block.getFieldValue('actions');
+    let labels = block.getFieldValue('labels');
+    let objectTracking_models = block.getFieldValue('objectTracking_models');
+    let code = "";
+    code += "enableMultipleAI('" + autopilot_models + "','" + actions + "','" + labels + "','" + objectTracking_models + "');\n"
+    return code;
+};
