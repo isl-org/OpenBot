@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Backdrop, Box, CircularProgress, Modal, useTheme} from "@mui/material";
+import {Backdrop, Box, CircularProgress, Modal} from "@mui/material";
 import styles from "../../navBar/navbar.module.css";
 import {Constants, errorToast, localStorageKeys, Models, Themes} from "../../../utils/constants";
 import {Images} from "../../../utils/images";
@@ -10,7 +10,6 @@ import {colors} from "../../../utils/color";
 import {StoreContext} from "../../../context/context";
 import {getConfigData, setConfigData} from "../../../services/workspace";
 import {uploadToGoogleDrive} from "../../../services/googleDrive";
-import useMediaQuery from "@mui/material/useMediaQuery";
 
 /**
  * function to upload new model (.tflite)

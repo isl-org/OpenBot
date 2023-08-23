@@ -59,6 +59,54 @@ export const BottomBar = () => {
         setError(errorMessage);
     }
 
+    /**
+     * handling child blocks inside start block
+     * @param array
+     * @param child
+     * @returns {*}
+     */
+    function handleAllChildBlocks(array, child) {
+        if (array.length > 0) {
+            for (let i = 0; i < array.length; i++) {
+                child.push(array[i].type)
+                handleAllChildBlocks(array[i].childBlocks_, child)
+            }
+        }
+        return child;
+    }
+
+    /**
+     * handling adjacent AI blocks error
+     * @param start
+     * @returns {boolean}
+     */
+    function handlingMultipleAIBlocks(start) {
+        let child = []
+        const aiBlocks = ["objectTracking", "autopilot", "multipleObjectTracking", "navigateForwardAndLeft"];
+        let allChildBlocks = []
+        let configuredAIBlocks = []
+        if (start.length !== 0) {
+            if (start[0].childBlocks_.length > 0) {
+                allChildBlocks = handleAllChildBlocks(start[0].childBlocks_, child)
+                if (allChildBlocks.length > 0) {
+                    for (let i = 0; i < allChildBlocks.length; i++) {
+                        if (aiBlocks.includes(allChildBlocks[i])) {
+                            configuredAIBlocks.push(allChildBlocks[i]);
+                        } else if (allChildBlocks[i] === "stopAI") {
+                            configuredAIBlocks.pop();
+                        }
+                        if (configuredAIBlocks.length > 1) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            } else {
+                return false;
+            }
+        }
+    }
+
     //generate javascript or python code and upload to google drive
     const generateCode = () => {
         if (isOnline) {
@@ -71,14 +119,9 @@ export const BottomBar = () => {
                 );
                 const start = workspace.getBlocksByType("start");
                 const forever = workspace.getBlocksByType("forever");
-                const objectTracking = workspace.getBlocksByType("objectTracking");
-                const autopilot = workspace.getBlocksByType("autopilot");
-                const multipleObjectTracking = workspace.getBlocksByType("multipleObjectTracking")
-                const pointGoalNavigation = workspace.getBlocksByType("navigateForwardAndLeft")
-                let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false)  //filtering multiple objectTracking connected blocks
-                let objectTrackingEnabledBlocks = objectTracking?.filter(obj => obj.disabled === false) //filtering objectTracking connected blocks
-                let autopilotEnabledBlocks = autopilot?.filter(obj => obj.disabled === false) //filtering autopilot connected blocks
-                let pointGoalNavigationEnabledBlocks = pointGoalNavigation?.filter(obj => obj.disabled === false) //filtering pointGoalNavigation connected blocks
+                const multipleObjectTracking = workspace.getBlocksByType("multipleObjectTracking");
+                let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false);  //filtering multiple objectTracking connected blocks
+                let a = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
                 let object_1 = "object_1";
                 let object_2 = "object_2";
                 if (multipleObjectTrackingEnabledBlocks.length > 0) {
@@ -87,7 +130,7 @@ export const BottomBar = () => {
                 }
                 if ((start.length === 0 && forever.length === 0)) {
                     handleError(Errors.error1);
-                } else if ([objectTrackingEnabledBlocks?.length > 0, autopilotEnabledBlocks?.length > 0, multipleObjectTrackingEnabledBlocks?.length > 0, pointGoalNavigationEnabledBlocks?.length > 0].filter(Boolean).length > 1) {
+                } else if (a === true && start.length > 0) {
                     handleError(Errors.error2);
                 } else if (object_1 === object_2) {
                     handleError(Errors.error3)
@@ -244,7 +287,7 @@ export const BottomBar = () => {
                 {isError && <div style={{display: "flex", flexDirection: "column"}}
                                  className={styles.errorDiv}>
                     <div>Compilation failed due to following error(s).</div>
-                    <div className={styles.errorItems}>error 1 : &nbsp;&nbsp; {error}</div>
+                    <div className={styles.errorItems}>error : &nbsp;&nbsp; {error}</div>
                 </div>
                 }
                 {isLoader &&

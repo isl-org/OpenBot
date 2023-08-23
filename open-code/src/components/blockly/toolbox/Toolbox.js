@@ -1,5 +1,5 @@
 import React from 'react';
-import {Block, Button, Category, Field, Label, Shadow, Value} from "../index";
+import {Block, Category, Field, Label, Shadow, Value} from "../index";
 import {controlsBlocks, loopBlocks} from "../blocks/generalBlocks";
 import {controlBlocksType, loopBlocksType} from "../../../utils/constants";
 import '../generator/javascriptGenerator';
@@ -140,6 +140,7 @@ export const Toolbox = (props) => {
                 <Block type="autopilot"/>
                 <Block type="multipleObjectTracking"/>
                 <Block type="navigateForwardAndLeft"/>
+                <Block type="stopAI"/>
             </Category>
         </>
     );

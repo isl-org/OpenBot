@@ -7,7 +7,6 @@ import {
     getFolderId, uploadToGoogleDrive,
 } from "./googleDrive";
 import configData from "../config.json"
-import {ModelUploadingComponent} from "../components/blockly/blocks/ModelUploadingComponent";
 
 /**
  * get project from drive when user signedIn
@@ -339,12 +338,12 @@ function getConfigData() {
  * @param modelType
  * @returns {unknown[]|undefined|null}
  */
-function filterModels(modelType) {
+function filterModels(modelType, assetType) {
     filterLabels()
     let modelsArray = []
     let updatedData = localStorage.getItem(localStorageKeys.configData)
     if (updatedData !== " " || null) {
-        let data = JSON.parse(updatedData)?.filter(obj => (obj.type === modelType && obj.pathType === "FILE") || obj.pathType === "ASSET")
+        let data = JSON.parse(updatedData)?.filter(obj => (obj.type === modelType && obj.pathType === "FILE") || (obj.pathType === "ASSET" && obj.type === assetType))
         if (data?.length === 0) {
             return null
         } else if (data?.length > 0) {

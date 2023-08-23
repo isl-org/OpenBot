@@ -684,14 +684,7 @@ Blockly.Blocks["objectTracking"] = {
                 {
                     "type": "field_dropdown",
                     "name": "models",
-                    "options": filterModels("DETECTOR") ?? [[
-                        "CIL-Mobile-Cmd",
-                        "CIL-Mobile-Cmd"
-                    ],
-                        [
-                            "PilotNet-Goal",
-                            "PilotNet-Goal"
-                        ],
+                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
                         [
                             "MobileNetV1-300",
                             "MobileNetV1-300"
@@ -717,18 +710,10 @@ Blockly.Blocks["autopilot"] = {
                 {
                     "type": "field_dropdown",
                     "name": "autopilot models",
-                    "options": filterModels("AUTOPILOT") ?? [[
+                    "options": filterModels("AUTOPILOT", "CMDNAV") ?? [[
                         "CIL-Mobile-Cmd",
                         "CIL-Mobile-Cmd"
                     ],
-                        [
-                            "PilotNet-Goal",
-                            "PilotNet-Goal"
-                        ],
-                        [
-                            "MobileNetV1-300",
-                            "MobileNetV1-300"
-                        ]
                     ]
                 }
             ],
@@ -745,17 +730,27 @@ Blockly.Blocks["navigateForwardAndLeft"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "reach to forward at %1 (cm) and left at %2 (cm)",
+            "message0": "reach to forward at %1 (cm) and left at %2 (cm) using %3",
             "args0": [
+                {
+                    "type": "field_number",
+                    "name": "forward",
+                    "value": 0
+                },
                 {
                     "type": "field_number",
                     "name": "left",
                     "value": 0
                 },
                 {
-                    "type": "field_number",
-                    "name": "right",
-                    "value": 0
+                    "type": "field_dropdown",
+                    "name": "navigation_models",
+                    "options": filterModels("NAVIGATION", "GOALNAV") ?? [
+                        [
+                            "PilotNet-Goal",
+                            "PilotNet-Goal"
+                        ],
+                    ]
                 }
             ],
             "previousStatement": null,
@@ -781,14 +776,7 @@ Blockly.Blocks["multipleObjectTracking"] = {
                 {
                     "type": "field_dropdown",
                     "name": "models",
-                    "options": filterModels("DETECTOR") ?? [[
-                        "CIL-Mobile-Cmd",
-                        "CIL-Mobile-Cmd"
-                    ],
-                        [
-                            "PilotNet-Goal",
-                            "PilotNet-Goal"
-                        ],
+                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
                         [
                             "MobileNetV1-300",
                             "MobileNetV1-300"
@@ -804,6 +792,27 @@ Blockly.Blocks["multipleObjectTracking"] = {
             "previousStatement": null,
             "nextStatement": null,
             "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+Blockly.Blocks["stopAI"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "%1",
+            "args0": [
+                {
+                    "type": "field_label_serializable",
+                    "name": "movement_stop",
+                    "text": "stop AI detection"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 345,
             "tooltip": "",
             "helpUrl": ""
         });
