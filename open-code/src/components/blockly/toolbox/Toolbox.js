@@ -140,8 +140,8 @@ export const Toolbox = (props) => {
                 <Block type="autopilot"/>
                 <Block type="multipleObjectTracking"/>
                 <Block type="navigateForwardAndLeft"/>
-                <Block type="stopAI"/>
                 <Block type="multipleAIDetection"/>
+                <Block type="stopAI"/>
             </Category>
         </>
     );
