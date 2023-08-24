@@ -679,6 +679,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      - Parameter imagePixelBuffer:
      */
     func runAutopilot(imagePixelBuffer: CVPixelBuffer) {
+        let startTime = returnCurrentTimeStampSince1970()
         self.isInferenceQueueBusy = true
         self.result = runRobot.autopilot?.recognizeImage(pixelBuffer: imagePixelBuffer, indicator: 0) ?? Control();
         guard let controlResult = self.result else {
@@ -689,6 +690,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
         sendControl(control: controlResult)
         isInferenceQueueBusy = false
+        print("Time for autopilot is -----> \(returnCurrentTimeStampSince1970() - startTime)")
     }
 
     /// function to calculate the delta yaw for device position and goal position
@@ -718,6 +720,14 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         return resultYaw
     }
 
+    /**
+     A static method used to initialize the object tracking and autopilot
+     - Parameters:
+       - autoPilotModel:
+       - task:
+       - object:
+       - detectorModel:
+     */
     static func enableMultipleAI(autoPilotModel: String, task: String, object: String, detectorModel: String) {
         DispatchQueue.main.async {
             runRobot.isMultipleAi = true;
@@ -728,14 +738,13 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         autopilot = Autopilot(model: Model.fromModelItem(item: auto), device: RuntimeDevice.CPU, numThreads: 1);
     }
 
-    func runMultipleAI(imagePixelBuffer: CVPixelBuffer) {
-        runAutopilot(imagePixelBuffer: imagePixelBuffer);
-        runObjectTrackingForMultipleAI(imagePixelBuffer: imagePixelBuffer);
 
-    }
-
-
+    /**
+     Function to run autopilot and Object tracking simultaneously
+     - Parameter imagePixelBuffer:
+     */
     func runObjectTrackingForMultipleAI(imagePixelBuffer: CVPixelBuffer) {
+        let startTime = returnCurrentTimeStampSince1970();
         self.isInferenceQueueBusy = true
         let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, detectionType: "single");
         if res != nil {
@@ -753,9 +762,12 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             }
         }
         self.isInferenceQueueBusy = false
-
+        print("Time for objectTracking is -----> \(returnCurrentTimeStampSince1970() - startTime)")
     }
 
+    /**
+     Function to stop the AI Blocks
+     */
     static func stopAI() {
         isObjectTracking = false
         isAutopilot = false;

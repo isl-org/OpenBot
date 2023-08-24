@@ -246,7 +246,6 @@ class jsEvaluator {
                     default:
                         self.runOpenBotThreadClass?.setLedBrightness(factor: 100);
                     }
-
                 }
 
                 let enableAutopilot: @convention(block) (String) -> Void = { (modelName) in
@@ -258,13 +257,13 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.followAndStop(object1: object1, model: model, object2: object2);
                 }
 
-                let enableMultipleAI : @convention(block) (String, String, String , String) ->  Void = { (autoPilotModelName, task, object, detectorModel) in
+                let enableMultipleAI: @convention(block) (String, String, String, String) -> Void = { (autoPilotModelName, task, object, detectorModel) in
                     print(autoPilotModelName, task, object, detectorModel);
 //                    enableAutopilot(autoPilotModelName);
                     self.runOpenBotThreadClass?.startMultipleAI(autoPilotModelName: autoPilotModelName, task: task, object: object, detectorModel: detectorModel);
                 }
 
-                let stopAI : @convention(block) () -> Void = { () in
+                let stopAI: @convention(block) () -> Void = { () in
                     self.runOpenBotThreadClass?.stopAI()
                 }
 
@@ -899,6 +898,13 @@ class jsEvaluator {
             print(model);
         }
 
+        /**
+         Function for starting point goal navigation via blockly
+         - Parameters:
+           - forward:
+           - left:
+         */
+
         func reachGoal(forward: Double, left: Double) {
             if isCancelled {
                 return
@@ -911,6 +917,12 @@ class jsEvaluator {
             print(forward, left);
         }
 
+        /**
+         Function for starting point goal navigation via blockly
+         - Parameters:
+           - x:
+           - y:
+         */
         func reachPosition(x: Double, y: Double) {
             if isCancelled {
                 return
@@ -918,6 +930,12 @@ class jsEvaluator {
             print(x, y);
         }
 
+        /**
+         Function for staring object detection via blockly
+         - Parameters:
+           - object:
+           - model:
+         */
         func follow(object: String, model: String) {
             if isCancelled {
                 return
@@ -927,6 +945,10 @@ class jsEvaluator {
             runRobot.enableObjectTracking(object: object, model: model);
         }
 
+    /**
+     A method that call static method enableAutopilot to initialize autopilot
+     - Parameter model:
+     */
         func enableAutopilot(model: String) {
             if isCancelled {
                 return
@@ -934,6 +956,13 @@ class jsEvaluator {
             runRobot.enableAutopilot(model: model);
         }
 
+        /**
+            Function for follow and stop
+         - Parameters:
+           - object1:
+           - model:
+           - object2:
+         */
         func followAndStop(object1: String, model: String, object2: String) {
             if isCancelled {
                 return
@@ -943,7 +972,15 @@ class jsEvaluator {
             runRobot.enableMultipleObjectTracking(object1: object1, model: model, object2: object2);
         }
 
-        func startMultipleAI(autoPilotModelName : String , task : String, object : String, detectorModel : String){
+        /**
+         Function to start multiple AI
+         - Parameters:
+           - autoPilotModelName: name of autopilot model
+           - task: task to perform after detecting object
+           - object: target object for detector
+           - detectorModel: name of object tracking model
+         */
+        func startMultipleAI(autoPilotModelName: String, task: String, object: String, detectorModel: String) {
             if isCancelled {
                 return
             }
@@ -951,12 +988,18 @@ class jsEvaluator {
             NotificationCenter.default.post(name: .createCameraView, object: task);
         }
 
-        func stopAI(){
+        /**
+         Function to call static method of runRobot class to stop AI block
+         */
+        func stopAI() {
             runRobot.stopAI();
         }
     }
 }
 
+/**
+ Protocol to create autopilot delegate
+ */
 protocol autopilotDelegate: AnyObject {
     func didPerformAction()
 }
