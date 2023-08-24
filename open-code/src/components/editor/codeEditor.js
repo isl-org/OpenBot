@@ -59,6 +59,7 @@ function CodeEditor(params) {
         editor.session.setMode(mode);
         editor.setValue(code);
         const gutterEl = editor.renderer.$gutter;
+        editor.renderer.$printMarginEl.style.width = "0px"
         gutterEl.style.color = theme === "dark" ? "white" : "black";
         gutterEl.style.width = "70px";
         const cursor = editor.renderer.$cursorLayer.cursor;
@@ -71,7 +72,7 @@ function CodeEditor(params) {
     }, [workspace, currentProjectXml, category, drawer, theme]);
 
     return (<div>
-        <div style={{zIndex: 2, position: "absolute", top:isLandscape?"100%":"30%"}}>
+        <div style={{zIndex: 2, position: "absolute", top: isLandscape ? "100%" : "30%"}}>
             <RightSlider/></div>
         <div ref={editorRef} style={{
             position: "absolute",
@@ -79,7 +80,7 @@ function CodeEditor(params) {
             height: '100%',
             width: '100%',
             backgroundColor: theme === "dark" ? "#202020" : '#FFFFFF',
-            fontSize: isMobile ? "13px" :isLandscape?"13px": isTabletQuery ? "19px" : "15px"
+            fontSize: isMobile ? "13px" : isLandscape ? "13px" : isTabletQuery ? "19px" : "15px"
         }}/>
     </div>)
 }
