@@ -819,11 +819,12 @@ Blockly.Blocks["stopAI"] = {
     }
 };
 
+
 Blockly.Blocks["multipleAIDetection"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "enable autopilot using %1 , do %2 after detecting %3 using %4",
+            "message0": "enable autopilot using %1 , %2 on detecting %3 using %4 %5  Do %6",
             "args0": [
                 {
                     "type": "field_dropdown",
@@ -835,26 +836,7 @@ Blockly.Blocks["multipleAIDetection"] = {
                     ]
                 },
                 {
-                    "type": "field_dropdown",
-                    "name": "actions",
-                    "options": [
-                        [
-                            "left indicator on",
-                            "leftIndicatorOn()"
-                        ],
-                        [
-                            "move forward",
-                            "moveForward(200)"
-                        ],
-                        [
-                            "move backward",
-                            "moveBackward(230)"
-                        ],
-                        [
-                            "LED brightness on",
-                            "toggleLed(ON)"
-                        ]
-                    ]
+                    "type": "input_dummy"
                 },
                 {
                     "type": "field_dropdown",
@@ -870,6 +852,13 @@ Blockly.Blocks["multipleAIDetection"] = {
                             "MobileNetV1-300"
                         ]
                     ]
+                },
+                {
+                    "type": "input_dummy"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "tasks"
                 }
             ],
             "previousStatement": null,
@@ -880,6 +869,3 @@ Blockly.Blocks["multipleAIDetection"] = {
         });
     }
 };
-
-
-

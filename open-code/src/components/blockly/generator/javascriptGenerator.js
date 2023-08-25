@@ -299,12 +299,12 @@ javascriptGenerator['stopAI'] = function () {
     return code;
 };
 
-javascriptGenerator['multipleAIDetection'] = function (block, generator) {
+javascriptGenerator['multipleAIDetection'] = function (block) {
     let autopilot_models = block.getFieldValue('autopilot_models');
-    let actions = block.getFieldValue('actions');
     let labels = block.getFieldValue('labels');
     let objectTracking_models = block.getFieldValue('objectTracking_models');
+    let tasks = javascriptGenerator.statementToCode(block, 'tasks');
     let code = "";
-    code += "enableMultipleAI('" + autopilot_models + "','" + actions + "','" + labels + "','" + objectTracking_models + "');\n"
+    code += "enableMultipleAI('" + autopilot_models + "','" + tasks + "','" + labels + "','" + objectTracking_models + "');\n"
     return code;
 };
