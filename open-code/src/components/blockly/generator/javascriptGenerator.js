@@ -24,16 +24,32 @@ import {javascriptGenerator} from 'blockly/javascript';
  * @returns {string}
  */
 
-javascriptGenerator['soundType'] = function (block) {
-    let dropdown_type = block.getFieldValue('type');
-    let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
-
-    let code = '';
-    code += "playSoundSpeed(" + "'" + dropdown_type + "'" + ");\n" + value_name;
-
+//Javascript generated function for start block
+javascriptGenerator['start'] = function (block) {
+    const statements_start_blocks = javascriptGenerator.statementToCode(block, 'start_blocks');
+    let code = "";
+    code += "function start(){\n" + statements_start_blocks + "}";
     return code;
 };
 
+//Javascript generated function for forever block
+javascriptGenerator['forever'] = function (block) {
+    const statements_start_blocks = javascriptGenerator.statementToCode(block, 'forever_loop_blocks');
+    let code = "";
+    code += "function forever (){\n while(true){\n" + statements_start_blocks + "}\n}";
+    return code;
+};
+
+//Javascript generated function for type of sound block
+javascriptGenerator['soundType'] = function (block) {
+    let dropdown_type = block.getFieldValue('type');
+    let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
+    let code = '';
+    code += "playSoundSpeed(" + "'" + dropdown_type + "'" + ");\n" + value_name;
+    return code;
+};
+
+//Javascript generated function for type of drive sound block
 javascriptGenerator['soundMode'] = function (block) {
     let dropdown_mode_type = block.getFieldValue('mode_type');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
@@ -42,7 +58,7 @@ javascriptGenerator['soundMode'] = function (block) {
     return code;
 };
 
-
+//Javascript generated function for forward and backward movement block
 javascriptGenerator['forward&BackwardAtSpeed'] = function (block) {
     let dropdown_direction_type = block.getFieldValue('direction_type');
     let number_specified_amount = block.getFieldValue('slider');
@@ -51,7 +67,7 @@ javascriptGenerator['forward&BackwardAtSpeed'] = function (block) {
     return code;
 };
 
-
+//Javascript generated function for left and right movement block
 javascriptGenerator['left&RightAtSpeed'] = function (block) {
     let dropdown_direction_type = block.getFieldValue('direction_type');
     let number_specified_amount = block.getFieldValue('slider');
@@ -60,6 +76,7 @@ javascriptGenerator['left&RightAtSpeed'] = function (block) {
     return code;
 };
 
+//Javascript generated function for circle movement block
 javascriptGenerator['moveLeft&Right'] = function (block) {
     let number_left_distance = block.getFieldValue('left_distance');
     let number_right_distance = block.getFieldValue('right_distance');
@@ -69,24 +86,28 @@ javascriptGenerator['moveLeft&Right'] = function (block) {
     return code;
 };
 
+//Javascript generated function for stop movement block
 javascriptGenerator['movementStop'] = function () {
     let code = '';
     code += "stopRobot();\n"
     return code;
 };
 
+//Javascript generated function for sonar reading block
 javascriptGenerator['sonarReading'] = function () {
     let code = '';
     code += "sonarReading();\n";
     return code;
 };
 
+//Javascript generated function for speed movement block
 javascriptGenerator['speedReading'] = function () {
     let code = '';
     code += "speedReading()";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
+//Javascript generated function for wheel odometer block
 javascriptGenerator['wheelOdometerSensors'] = function (block) {
     let dropdown_wheel_sensors = block.getFieldValue('wheel_sensors');
     let code = '';
@@ -94,27 +115,14 @@ javascriptGenerator['wheelOdometerSensors'] = function (block) {
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
-
+//Javascript generated function for voltage divider reading block
 javascriptGenerator['voltageDividerReading'] = function () {
     let code = '';
     code += "voltageDividerReading()";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
-javascriptGenerator['start'] = function (block) {
-    const statements_start_blocks = javascriptGenerator.statementToCode(block, 'start_blocks');
-    let code = "";
-    code += "function start(){\n" + statements_start_blocks + "}";
-    return code;
-};
-
-javascriptGenerator['forever'] = function (block) {
-    const statements_start_blocks = javascriptGenerator.statementToCode(block, 'forever_loop_blocks');
-    let code = "";
-    code += "function forever (){\n while(true){\n" + statements_start_blocks + "}\n}";
-    return code;
-};
-
+//Javascript generated function for gyroscope reading block
 javascriptGenerator['gyroscope_reading'] = function (block) {
     let code = '';
     let dropdown_type = block.getFieldValue('axis');
@@ -135,6 +143,7 @@ javascriptGenerator['gyroscope_reading'] = function (block) {
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
+//Javascript generated function for acceleration reading block
 javascriptGenerator['acceleration_reading'] = function (block) {
     let code = "";
     let dropdown_type = block.getFieldValue('axis');
@@ -155,6 +164,7 @@ javascriptGenerator['acceleration_reading'] = function (block) {
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
+//Javascript generated function for magnetic reading block
 javascriptGenerator['magnetic_reading'] = function (block) {
     let code = "";
     let dropdown_type = block.getFieldValue('axis');
@@ -175,6 +185,7 @@ javascriptGenerator['magnetic_reading'] = function (block) {
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
+//Javascript generated function for static speed block
 javascriptGenerator['speedControl'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
     let code = '';
@@ -182,7 +193,7 @@ javascriptGenerator['speedControl'] = function (block) {
     return code;
 };
 
-
+//Javascript generated function for changing controller mode block
 javascriptGenerator['controllerMode'] = function (block) {
     let dropdown_controller = block.getFieldValue('controller');
     let code = '';
@@ -190,7 +201,7 @@ javascriptGenerator['controllerMode'] = function (block) {
     return code;
 };
 
-
+//Javascript generated function for changing drive mode block
 javascriptGenerator['driveModeControls'] = function (block) {
     let dropdown_driveModeControls = block.getFieldValue('controller');
     let code = '';
@@ -198,13 +209,14 @@ javascriptGenerator['driveModeControls'] = function (block) {
     return code;
 };
 
+//Javascript generated function for sensing bumper block
 javascriptGenerator['bumper'] = function () {
     let code = "";
     code += "bumperCollision()";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
-
+//Javascript generated function for setting led brightness block
 javascriptGenerator['brightness'] = function (block) {
     let value = block.getFieldValue('slider');
     let code = "";
@@ -212,6 +224,7 @@ javascriptGenerator['brightness'] = function (block) {
     return code
 };
 
+//Javascript generated function for wait block
 javascriptGenerator['wait'] = function (block) {
     let value = block.getFieldValue('time');
     let code = "";
@@ -219,12 +232,14 @@ javascriptGenerator['wait'] = function (block) {
     return code
 };
 
+//Javascript generated function for sonar reading block
 javascriptGenerator['sonarReading'] = function () {
     let code = "";
     code += "sonarReading() ";
     return [code, javascriptGenerator.ORDER_NONE];
 };
 
+//Javascript generated function for indicators block
 javascriptGenerator['indicators'] = function (block) {
     const dropdown_side = block.getFieldValue('side');
     const toggleState = block.getFieldValue('TOGGLE_STATE');
@@ -242,6 +257,7 @@ javascriptGenerator['indicators'] = function (block) {
     return code;
 };
 
+//Javascript generated function for switching brightness block
 javascriptGenerator['brightnessHighOrLow'] = function (block) {
     const toggleState = block.getFieldValue('TOGGLE_STATE');
 
@@ -258,7 +274,7 @@ javascriptGenerator['brightnessHighOrLow'] = function (block) {
     return code;
 };
 
-
+//Javascript generated function for AI autopilot block
 javascriptGenerator['autopilot'] = function (block) {
     let dropdown_autopilot_models = block.getFieldValue('autopilot models');
     let code = '';
@@ -266,6 +282,7 @@ javascriptGenerator['autopilot'] = function (block) {
     return code;
 };
 
+//Javascript generated function for AI point goal navigation block
 javascriptGenerator['navigateForwardAndLeft'] = function (block) {
     let forward_position = block.getFieldValue('forward');
     let left_position = block.getFieldValue('left');
@@ -275,7 +292,7 @@ javascriptGenerator['navigateForwardAndLeft'] = function (block) {
     return code;
 };
 
-
+//Javascript generated function for AI object tracking block
 javascriptGenerator['objectTracking'] = function (block, generator) {
     const dropdown_class = block.getFieldValue('class');
     const dropdown_models = block.getFieldValue('models');
@@ -284,6 +301,7 @@ javascriptGenerator['objectTracking'] = function (block, generator) {
     return code;
 };
 
+//Javascript generated function for AI multiple object tracking block
 javascriptGenerator['multipleObjectTracking'] = function (block, generator) {
     let labels1 = block.getFieldValue('labels1');
     let models = block.getFieldValue('models');
@@ -293,12 +311,14 @@ javascriptGenerator['multipleObjectTracking'] = function (block, generator) {
     return code;
 };
 
+//Javascript generated function for stop AI block
 javascriptGenerator['stopAI'] = function () {
     let code = '';
     code += "stopAI();\n";
     return code;
 };
 
+//Javascript generated function for multiple AI detection block
 javascriptGenerator['multipleAIDetection'] = function (block) {
     let autopilot_models = block.getFieldValue('autopilot_models');
     let labels = block.getFieldValue('labels');

@@ -50,16 +50,7 @@ export function Header() {
     const location = useLocation();
     let navigate = useNavigate();
 
-    useEffect(() => {
-        auth.onAuthStateChanged(function (currentUser) {
-            setUser({
-                photoURL: currentUser?.photoURL,
-                displayName: currentUser?.displayName,
-                email: currentUser?.email,
-            });
-        })
-    }, [isEditProfileModal, setUser])
-
+    //handle click event for opening rename popup
     const handleClick = (event) => {
         setOpen(!open); // open and close popup
         setAnchorEl(anchorEl ? null : event.currentTarget); //popup event
@@ -80,6 +71,7 @@ export function Header() {
         })
     }
 
+    //function to handle sign in
     const handleSignIn = () => {
         if (isOnline) {
             signOut(auth).then(() => {
@@ -121,6 +113,16 @@ export function Header() {
             </div>
         );
     }
+
+    useEffect(() => {
+        auth.onAuthStateChanged(function (currentUser) {
+            setUser({
+                photoURL: currentUser?.photoURL,
+                displayName: currentUser?.displayName,
+                email: currentUser?.email,
+            });
+        })
+    }, [isEditProfileModal, setUser])
 
     return (
         <div>

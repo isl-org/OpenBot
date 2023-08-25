@@ -40,6 +40,7 @@ function CodeEditor(params) {
         window.addEventListener("resize", handleOrientationChange);
     }, []);
 
+    //handle the toggling between javascript and python editor
     useEffect(() => {
         const editor = ace.edit(editorRef.current);
         let code;
@@ -52,7 +53,6 @@ function CodeEditor(params) {
             code = javascriptGenerator.workspaceToCode(workspace);
             mode = "ace/mode/javascript";
         }
-
         editor.session.setMode(mode);
         editor.setReadOnly(true);
         editor.setTheme(theme === "dark" ? "ace/theme/one_dark" : "ace/theme/textmate");
@@ -68,7 +68,6 @@ function CodeEditor(params) {
         return () => {
             editor.destroy();
         };
-
     }, [workspace, currentProjectXml, category, drawer, theme]);
 
     return (<div>

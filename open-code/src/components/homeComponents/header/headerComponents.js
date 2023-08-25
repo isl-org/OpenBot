@@ -17,7 +17,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {Images} from "../../../utils/images";
 import {StoreContext} from "../../../context/context";
 
-
 /**
  * Display logo with openCode text (Header's Left side)
  * @returns {JSX.Element}
@@ -46,7 +45,6 @@ export function LogoSection() {
     )
 }
 
-
 /**
  * Project Name with Arrow
  * @param params
@@ -69,7 +67,6 @@ export function ProjectName(params) {
     )
 }
 
-
 /**
  * This component renders the pop-up for renaming and deleting a project
  * @param {Object} params - The component parameters
@@ -91,7 +88,6 @@ export function ProjectNamePopUp(params) {
     const inputRef = useRef(null);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
-
 
     // Update rename project state variable when the project name changes
     useEffect(() => {
@@ -182,7 +178,6 @@ export function ProjectNamePopUp(params) {
     )
 }
 
-
 /**
  * EditProjectPopUp is a popup component that shows options to rename or delete a project file.
  * @param params
@@ -252,7 +247,6 @@ export function EditProjectPopUp(params) {
     )
 }
 
-
 /**
  * Profile signIn option if not signed in or else show profile icon with name
  * @param params
@@ -283,7 +277,6 @@ export function ProfileSignIn(params) {
             errorToast(Constants.InternetOffMsg);
         }
     }
-
     return (
         localStorage.getItem("isSigIn") === "true" ?
             //signIn then show Image and down Arrow
@@ -297,10 +290,8 @@ export function ProfileSignIn(params) {
                 <button onClick={() => handleSignIn()} className={`${styles.buttonIcon} ${styles.iconMargin}`}>
                     <span>Sign in</span>
                 </button>
-
     )
 }
-
 
 /**
  * Component render Image with arrow  which is clickable

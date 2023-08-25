@@ -13,7 +13,6 @@ import {getDateOfBirth, googleSigIn} from "../../../services/firebase";
 import {StoreContext} from "../../../context/context";
 import {autoSync} from "../../../services/workspace";
 
-
 /**
  * profile option modal have edit profile, how to upload, change theme, signIn and logout option
  * @param props
@@ -44,15 +43,18 @@ export function ProfileOptionModal(props) {
     const date = new Date()
     let currentDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
 
+    //handle closing for modal
     const handleClose = () => {
         setIsProfileModal(false)
     }
 
+    //handle click event for closing modal
     const handleOnclick = (setVariable) => {
         handleClose()
         setVariable(true)
     }
 
+    //function to handle sign in
     const handleSignIn = () => {
         if (isOnline) {
             googleSigIn().then(response => {

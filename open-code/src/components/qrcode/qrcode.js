@@ -7,6 +7,11 @@ import {StoreContext} from "../../context/context";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+/**
+ * functional component for qr code
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const QrCode = () => {
     const [blockCode, setBlockCode] = useState(undefined);
     const {code, generate} = useContext(StoreContext);

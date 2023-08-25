@@ -45,12 +45,14 @@ function Card(props) {
     const inputRef = useRef(null);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
-
-
     let navigate = useNavigate();
+
+    //function to open existing project
     const openExistingProject = () => {
         navigate(`playground`);
     }
+
+    //function to handle click event
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
         setOpenPopUp(!openPopUp);
@@ -107,6 +109,9 @@ function Card(props) {
         setDeleteLoader(false);
     }
 
+    /**
+     * function to handle deleting the project
+     */
     const handleDeleteProject = () => {
         setDeleteLoader(true);
         deleteProjectFromStorage(projectData.projectName).then((res) => {
@@ -188,7 +193,6 @@ function Card(props) {
     )
         ;
 }
-
 export default Card;
 
 

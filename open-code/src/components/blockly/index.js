@@ -56,17 +56,17 @@ const Shadow = (p) => {
     return React.createElement("shadow", props, children);
 };
 
-const Label=(p)=>{
+const Label = (p) => {
     const {children, ...props} = p;
     props.is = "blockly";
     return React.createElement("label", props, children);
 }
 
-const Button=(p)=>{
+const Button = (p) => {
     const {children, ...props} = p;
     props.is = "blockly";
     return React.createElement("button", props, children);
 }
 
 
-export {Block, Category, Value, Field, Shadow,Label,Button}
+export {Block, Category, Value, Field, Shadow, Label, Button}

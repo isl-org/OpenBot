@@ -20,7 +20,7 @@ import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {getCurrentProject} from "../../services/workspace";
 import navbarStyle from "../navBar/navbar.module.css"
 import BlueText from "../fonts/blueText";
-import {ModelUploadingComponent} from "../blockly/blocks/ModelUploadingComponent";
+import {ModelUploadingComponent} from "./modelUploadingComponent";
 
 /**
  * Bottom Bar contains generate code, upload on drive icon , zoom in-out and undo redo functionality.
@@ -38,7 +38,6 @@ export const BottomBar = () => {
     const isDesktopSmallerScreen = useMediaQuery(themes.breakpoints.down('md'));
     const [isAIModelComponent, setIsAIModelComponent] = useState(false);
     const [file, setFile] = useState(null);
-
     const [error, setError] = useState("");
     const {
         isOnline,
@@ -107,7 +106,9 @@ export const BottomBar = () => {
         }
     }
 
-    //generate javascript or python code and upload to google drive
+    /**
+     * function to generate javascript or python code and upload to google drive, also handles error while compiling
+     */
     const generateCode = () => {
         if (isOnline) {
             if (localStorage.getItem("isSigIn") === "true") {
@@ -247,7 +248,6 @@ export const BottomBar = () => {
         setTimeout(() => {
             setButtonActive(false);
         }, 100);
-
     };
 
     //loader when uploading to google drive.

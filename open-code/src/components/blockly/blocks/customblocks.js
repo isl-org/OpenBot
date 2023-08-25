@@ -9,10 +9,59 @@ import "./field_toggle";
 import {filterLabels, filterModels} from "../../../services/workspace";
 
 /**
- * Defining blocks and their behaviour
+ * Defining blocks with structure and their behaviour
  * @type {{previousStatement: null, nextStatement: null, type: string, message0: string, args0: [{date: string, name: string, type: string}]}}
  */
 
+//Blockly json structure for start block
+Blockly.Blocks["start"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "%1 %2",
+            "args0": [
+                {
+                    "type": "field_label_serializable",
+                    "name": "start",
+                    "text": "start"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "start_blocks"
+                }
+            ],
+            "colour": 210,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+//Blockly json structure for forever block
+Blockly.Blocks["forever"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "%1 %2",
+            "args0": [
+                {
+                    "type": "field_label_serializable",
+                    "name": "forever",
+                    "text": "forever"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "forever_loop_blocks"
+                }
+            ],
+            "colour": 210,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+//Blockly json structure for wait block
 Blockly.Blocks["wait"] = {
     init: function () {
         this.jsonInit({
@@ -40,6 +89,7 @@ Blockly.Blocks["wait"] = {
     }
 };
 
+//Blockly json structure for type of sound block
 Blockly.Blocks["soundType"] = {
     init: function () {
         this.jsonInit({
@@ -74,6 +124,7 @@ Blockly.Blocks["soundType"] = {
     }
 };
 
+//Blockly json structure for type of drive sound block
 Blockly.Blocks["soundMode"] = {
     init: function () {
         this.jsonInit({
@@ -108,7 +159,7 @@ Blockly.Blocks["soundMode"] = {
     }
 };
 
-
+//Blockly json structure for forward and backward movement block
 Blockly.Blocks["forward&BackwardAtSpeed"] = {
     init: function () {
         this.jsonInit({
@@ -147,6 +198,7 @@ Blockly.Blocks["forward&BackwardAtSpeed"] = {
     }
 };
 
+//Blockly json structure for left and right movement block
 Blockly.Blocks["left&RightAtSpeed"] = {
     init: function () {
         this.jsonInit({
@@ -185,6 +237,7 @@ Blockly.Blocks["left&RightAtSpeed"] = {
     }
 };
 
+//Blockly json structure for circle movement block
 Blockly.Blocks["moveLeft&Right"] = {
     init: function () {
         this.jsonInit({
@@ -227,6 +280,7 @@ Blockly.Blocks["moveLeft&Right"] = {
     }
 };
 
+//Blockly json structure for stop block
 Blockly.Blocks["movementStop"] = {
     init: function () {
         this.jsonInit({
@@ -249,7 +303,7 @@ Blockly.Blocks["movementStop"] = {
     }
 };
 
-
+//Blockly json structure for sonar reading block
 Blockly.Blocks["sonarReading"] = {
     init: function () {
         this.jsonInit({
@@ -263,7 +317,7 @@ Blockly.Blocks["sonarReading"] = {
     }
 };
 
-
+//Blockly json structure for speed reading block
 Blockly.Blocks["speedReading"] = {
     init: function () {
         this.jsonInit({
@@ -277,6 +331,7 @@ Blockly.Blocks["speedReading"] = {
     }
 };
 
+//Blockly json structure for voltage divider reading block
 Blockly.Blocks["voltageDividerReading"] = {
     init: function () {
         this.jsonInit({
@@ -290,7 +345,7 @@ Blockly.Blocks["voltageDividerReading"] = {
     }
 };
 
-
+//Blockly json structure for wheel odometer block
 Blockly.Blocks["wheelOdometerSensors"] = {
     init: function () {
         this.jsonInit({
@@ -320,53 +375,7 @@ Blockly.Blocks["wheelOdometerSensors"] = {
     }
 };
 
-
-Blockly.Blocks["start"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "%1 %2",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "start",
-                    "text": "start"
-                },
-                {
-                    "type": "input_statement",
-                    "name": "start_blocks"
-                }
-            ],
-            "colour": 210,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-Blockly.Blocks["forever"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "%1 %2",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "forever",
-                    "text": "forever"
-                },
-                {
-                    "type": "input_statement",
-                    "name": "forever_loop_blocks"
-                }
-            ],
-            "colour": 210,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
+//Blockly json structure for gyroscope reading block
 Blockly.Blocks["gyroscope_reading"] = {
     init: function () {
         this.jsonInit({
@@ -400,7 +409,7 @@ Blockly.Blocks["gyroscope_reading"] = {
     }
 };
 
-
+//Blockly json structure for acceleration reading block
 Blockly.Blocks["acceleration_reading"] = {
     init: function () {
         this.jsonInit({
@@ -434,6 +443,7 @@ Blockly.Blocks["acceleration_reading"] = {
     }
 };
 
+//Blockly json structure for magnetic reading block
 Blockly.Blocks["magnetic_reading"] = {
     init: function () {
         this.jsonInit({
@@ -467,6 +477,7 @@ Blockly.Blocks["magnetic_reading"] = {
     }
 };
 
+//Blockly json structure for static speed block
 Blockly.Blocks["speedControl"] = {
     init: function () {
         this.jsonInit({
@@ -501,6 +512,7 @@ Blockly.Blocks["speedControl"] = {
     }
 };
 
+//Blockly json structure for changing controller mode block
 Blockly.Blocks["controllerMode"] = {
     init: function () {
         this.jsonInit({
@@ -532,7 +544,7 @@ Blockly.Blocks["controllerMode"] = {
     }
 };
 
-
+//Blockly json structure for changing drive mode block
 Blockly.Blocks["driveModeControls"] = {
     init: function () {
         this.jsonInit({
@@ -568,6 +580,7 @@ Blockly.Blocks["driveModeControls"] = {
     }
 };
 
+//Blockly json structure for sensing bumper block
 Blockly.Blocks["bumper"] = {
     init: function () {
         this.jsonInit({
@@ -581,7 +594,7 @@ Blockly.Blocks["bumper"] = {
     }
 };
 
-
+//Blockly json structure for setting led brightness block
 Blockly.Blocks["brightness"] = {
     init: function () {
         this.jsonInit({
@@ -607,6 +620,7 @@ Blockly.Blocks["brightness"] = {
     }
 };
 
+//Blockly json structure for indicators block
 Blockly.Blocks["indicators"] = {
     init: function () {
         this.jsonInit({
@@ -645,7 +659,7 @@ Blockly.Blocks["indicators"] = {
     }
 };
 
-
+//Blockly json structure for switching brightness block
 Blockly.Blocks["brightnessHighOrLow"] = {
     init: function () {
         this.jsonInit({
@@ -669,7 +683,7 @@ Blockly.Blocks["brightnessHighOrLow"] = {
     }
 };
 
-
+//Blockly json structure for AI object tracking block
 Blockly.Blocks["objectTracking"] = {
     init: function () {
         this.jsonInit({
@@ -701,6 +715,7 @@ Blockly.Blocks["objectTracking"] = {
     }
 };
 
+//Blockly json structure for AI autopilot block
 Blockly.Blocks["autopilot"] = {
     init: function () {
         this.jsonInit({
@@ -726,6 +741,7 @@ Blockly.Blocks["autopilot"] = {
     }
 };
 
+//Blockly json structure for AI point goal navigation block
 Blockly.Blocks["navigateForwardAndLeft"] = {
     init: function () {
         this.jsonInit({
@@ -762,6 +778,7 @@ Blockly.Blocks["navigateForwardAndLeft"] = {
     }
 };
 
+//Blockly json structure for AI multiple object tracking block
 Blockly.Blocks["multipleObjectTracking"] = {
     init: function () {
         this.jsonInit({
@@ -798,6 +815,7 @@ Blockly.Blocks["multipleObjectTracking"] = {
     }
 };
 
+//Blockly json structure for stop AI detection block
 Blockly.Blocks["stopAI"] = {
     init: function () {
         this.jsonInit({
@@ -819,7 +837,7 @@ Blockly.Blocks["stopAI"] = {
     }
 };
 
-
+//Blockly json structure for multiple AI detection block
 Blockly.Blocks["multipleAIDetection"] = {
     init: function () {
         this.jsonInit({

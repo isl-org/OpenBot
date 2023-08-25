@@ -244,7 +244,6 @@ export function EditProfileModal(props) {
 
 }
 
-
 /**
  * Alert UI
  * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<{}> & React.RefAttributes<unknown>>}
