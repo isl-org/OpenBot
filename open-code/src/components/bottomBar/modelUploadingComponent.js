@@ -1,15 +1,15 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Backdrop, Box, CircularProgress, Modal} from "@mui/material";
-import styles from "../../navBar/navbar.module.css";
-import {Constants, errorToast, localStorageKeys, Models, Themes} from "../../../utils/constants";
-import {Images} from "../../../utils/images";
-import SimpleInputComponent from "../../inputComponent/simpleInputComponent";
-import BlueButton from "../../buttonComponent/blueButtonComponent";
-import {ThemeContext} from "../../../App";
-import {colors} from "../../../utils/color";
-import {StoreContext} from "../../../context/context";
-import {getConfigData, setConfigData} from "../../../services/workspace";
-import {uploadToGoogleDrive} from "../../../services/googleDrive";
+import styles from "../navBar/navbar.module.css";
+import {Constants, errorToast, localStorageKeys, Models, Themes} from "../../utils/constants";
+import {Images} from "../../utils/images";
+import SimpleInputComponent from "../inputComponent/simpleInputComponent";
+import BlueButton from "../buttonComponent/blueButtonComponent";
+import {ThemeContext} from "../../App";
+import {colors} from "../../utils/color";
+import {StoreContext} from "../../context/context";
+import {getConfigData, setConfigData} from "../../services/workspace";
+import {uploadToGoogleDrive} from "../../services/googleDrive";
 
 /**
  * function to upload new model (.tflite)
@@ -40,15 +40,6 @@ export function ModelUploadingComponent(params) {
         setIsAIModelComponent(false)
     }
 
-    useEffect(() => {
-        const handleOrientationChange = () => {
-            setIsDesktopLargerScreen(
-                window.matchMedia("(min-height: 900px)").matches
-            );
-        };
-        window.addEventListener("resize", handleOrientationChange);
-    }, []);
-
     //Loader on submit button
     function SimpleBackdrop() {
         return (
@@ -62,7 +53,6 @@ export function ModelUploadingComponent(params) {
             </div>
         );
     }
-
 
     //function to handle file name
     function handleTfliteNameChange(e) {
@@ -96,13 +86,6 @@ export function ModelUploadingComponent(params) {
         })
     }
 
-    useEffect(() => {
-        setModelDetails({
-            ...modelDetails,
-            class: modelClassDropdown
-        })
-    }, [handleTypeDependency])
-
     //function to handle model class
     function handleClassChange(e) {
         setModelDetails({
@@ -127,6 +110,21 @@ export function ModelUploadingComponent(params) {
         })
     }
 
+    useEffect(() => {
+        const handleOrientationChange = () => {
+            setIsDesktopLargerScreen(
+                window.matchMedia("(min-height: 900px)").matches
+            );
+        };
+        window.addEventListener("resize", handleOrientationChange);
+    }, []);
+
+    useEffect(() => {
+        setModelDetails({
+            ...modelDetails,
+            class: modelClassDropdown
+        })
+    }, [handleTypeDependency])
 
     /**
      * function to save and add new model

@@ -13,8 +13,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {checkFileExistsInFolder, getFolderId, getShareableLink} from "../../services/googleDrive";
 import {RightDrawer} from "../drawer/drawer";
 import {useLocation} from "react-router-dom";
-
-
 Blockly.setLocale(locale);
 
 /**
@@ -66,6 +64,7 @@ function BlocklyComponent(props) {
 
     }, []);
 
+    //function to enable all child blocks
     const enableAllChildBlocks = (block) => {
         if (block) {
             block.setEnabled(true);
@@ -75,6 +74,8 @@ function BlocklyComponent(props) {
             }
         }
     };
+
+    //function to disable all  child blocks
     const disableChildBlocks = (blocks) => {
         if (blocks.length > 1) {
             for (let i = 1; i < blocks.length; i++) {
@@ -82,6 +83,8 @@ function BlocklyComponent(props) {
             }
         }
     };
+
+    //handling all child blocks for enabling and disabling
     const handlingBlocks = (event, blockType) => {
         let existingBlocks = primaryWorkspace.current.getBlocksByType(blockType);
         if (event.type === Blockly.Events.CREATE && event.blockId) {
@@ -105,8 +108,8 @@ function BlocklyComponent(props) {
         });
     }, []);
 
+    //function to check qr code availability and display drive link
     const checkQRCode = async () => {
-
         if (localStorage.getItem("isSigIn") === "true") {
             if (isOnline) {
                 let folderId = await getFolderId();

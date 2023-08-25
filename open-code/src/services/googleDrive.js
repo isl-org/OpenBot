@@ -238,8 +238,6 @@ export function CreateFile(data, folderId, metadataFields, headers, requestBody)
             errorToast("error in upload")
             console.error(error);
         });
-
-
 }
 
 
@@ -464,6 +462,7 @@ export const makeFolderPublic = async (folderId, accessToken) => {
         errorToast("Something went wrong")
     );
 };
+
 
 /**
  * function to upload model file to drive

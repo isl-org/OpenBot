@@ -9,11 +9,17 @@ import darkCarousal2 from "../assets/images/scan_qr_code_dark.gif";
 import lightCarousal3 from "../assets/images/openBot_car_light.gif";
 import darkCarousal3 from "../assets/images/openBot_car_dark.gif";
 
-
+/**
+ * Blockly control and loop blocks
+ * @type {string[]}
+ */
 export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_ternary", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
 export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "controls_forEach", "controls_flow_statements"];
 
-
+/**
+ * function for dark theme in blockly workspace
+ * @type {Theme}
+ */
 export const DarkTheme = Blockly.Theme.defineTheme('dark', {
     'base': Blockly.Themes.Classic,
     'blockStyles': {},
@@ -25,6 +31,10 @@ export const DarkTheme = Blockly.Theme.defineTheme('dark', {
     },
 });
 
+/**
+ * function for light theme in blockly workspace
+ * @type {Theme}
+ */
 export const LightTheme = Blockly.Theme.defineTheme('light', {
     'base': Blockly.Themes.Classic,
     'componentStyles': {
@@ -35,6 +45,10 @@ export const LightTheme = Blockly.Theme.defineTheme('light', {
     },
 });
 
+/**
+ * help centre content
+ * @type {{connectAndDriveFirstLine: string, dragAndDropSecondLine: string, saveAndDownloadSecondLine: string, dragAndDropFirstLine: string, connectAndDriveSecondLine: string, saveAndDownloadFirstLine: string}}
+ */
 export const HelpCenterText = {
     dragAndDropFirstLine: "Drag and drop the selected block of code into the input field.",
     dragAndDropSecondLine: "Repeat the steps of selecting and placing all required code blocks, and then connecting them together to create a sequence of actions.",
@@ -46,12 +60,19 @@ export const HelpCenterText = {
     connectAndDriveSecondLine: "Carry out desired actions such as activating indicator lights, detecting objects, and more on your robot car.",
 }
 
+/**
+ * dark and light theme constants
+ * @type {{light: string, dark: string}}
+ */
 export const Themes = {
     "light": "light",
     "dark": "dark",
 }
 
-
+/**
+ * constants for local storage items
+ * @type {{configData: string, currentProject: string, accessToken: string, allProjects: string}}
+ */
 export const localStorageKeys = {
     allProjects: "projects",
     currentProject: "currentProject",
@@ -59,6 +80,10 @@ export const localStorageKeys = {
     configData: "configData"
 }
 
+/**
+ * general constants
+ * @type {{qr: string, tflite: string, endCode: string, js: string, py: string, ProfileSuccessMsg: string, FolderName: string, CookieMsg: string, baseUrl: string, InternetOffMsg: string, xml: string, json: string, LoadingTime: number}}
+ */
 export const Constants = {
     LoadingTime: 800,
     ProfileSuccessMsg: "Profile updated successfully!",
@@ -75,12 +100,20 @@ export const Constants = {
     InternetOffMsg: "Please check your internet connection.",
 }
 
+/**
+ * errors for openBot playground
+ * @type {{error1: string, error3: string, error2: string}}
+ */
 export const Errors = {
     error1: "No start or forever block present in the playground.",
     error2: "Detected adjacent AI blocks. Please review the Start block configuration.",
     error3: "Identical objects for AI block that follow and stop."
 }
 
+/**
+ * AI models
+ * @type {{type: string[]}}
+ */
 export const Models = {
     type: [
         'AUTOPILOT',
@@ -89,11 +122,19 @@ export const Models = {
     ],
 }
 
+/**
+ * Application paths
+ * @type {{playGround: string, home: string}}
+ */
 export const PathName = {
     "home": "/",
     "playGround": "/playground",
 }
 
+/**
+ * Static labels for AI blocks
+ * @type {string[]}
+ */
 export const Labels = [
     "person",
     "bicycle",
@@ -178,6 +219,10 @@ export const Labels = [
     "toothbrush",
 ]
 
+/**
+ * carousal content and text
+ * @type {[{carousalLine1: string, carousalLine2: string, videoDark: *, carousalHeader: string, videoLight: *},{carousalLine1: string, carousalLine2: string, videoDark: *, carousalHeader: string, videoLight: *},{carousalLine1: string, carousalLine2: string, videoDark: *, carousalHeader: string, videoLight: *}]}
+ */
 export const Carousal = [
     {
         carousalHeader: "Drag and Drop",
@@ -201,7 +246,6 @@ export const Carousal = [
         videoDark: darkCarousal3,
     }
 ]
-
 
 /**
  * error Toast

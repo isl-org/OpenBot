@@ -7,7 +7,6 @@ import BlackText from "../../fonts/blackText";
 import {HelpCenterText} from "../../../utils/constants";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-
 /**
  * HelpCenterModal contains static how to upload code details
  * @param props
@@ -37,7 +36,6 @@ export function HelpCenterModal(props) {
         </Modal>
     )
 }
-
 
 /**
  * Help Details modal

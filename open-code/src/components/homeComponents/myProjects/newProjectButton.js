@@ -43,15 +43,6 @@ function NewProjectButton(props) {
         setFileId("")
     }
 
-
-    useEffect(() => {
-        const handleOrientationChange = () => {
-            setIsTabletQuery(window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches);
-        };
-        window.addEventListener("resize", handleOrientationChange);
-    }, []);
-
-
     // Function to close the modal
     const handleClose = () => setOpen(false);
 
@@ -76,9 +67,17 @@ function NewProjectButton(props) {
         }
     }
 
+    //function to handle project name change
     function handleProjectNameChange(name) {
         setProjectName(name); // Function to handle project name input change
     }
+
+    useEffect(() => {
+        const handleOrientationChange = () => {
+            setIsTabletQuery(window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches);
+        };
+        window.addEventListener("resize", handleOrientationChange);
+    }, []);
 
     return (
         <>
