@@ -66,7 +66,7 @@ export const BottomBar = () => {
      */
     function handleAllChildBlocks(array, child) {
         if (array.length > 0) {
-            array.map((item,key)=>{
+            array.forEach((item) => {
                 child.push(item.type)
                 handleAllChildBlocks(item.childBlocks_, child)
             })

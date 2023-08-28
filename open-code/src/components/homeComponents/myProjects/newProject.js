@@ -18,7 +18,7 @@ import {StoreContext} from "../../../context/context";
 export const NewProject = () => {
         const [projects, setProjects] = useState(undefined);
         const {theme} = useContext(ThemeContext);
-        const {setCode, isSignIn} = useContext(StoreContext);
+        const {setCode, isSignIn, setDrawer} = useContext(StoreContext);
         const [deleteLoader, setDeleteLoader] = useState(false);
         const [loader, setLoader] = useState(false);
 
@@ -55,7 +55,7 @@ export const NewProject = () => {
                     <div className={styles.ButtonsMessage}>
 
                         {/* Render the new project button if there are existing projects */}
-                        <NewProjectButton isProject={projects?.length}/>
+                        <NewProjectButton isProject={projects?.length} setDrawer={setDrawer}/>
 
                         {/* Sort the projects based on the last updated date and time */}
                         {projects && projects?.length > 0 ?
