@@ -997,10 +997,3 @@ class jsEvaluator {
     }
 }
 
-/**
- Protocol to create autopilot delegate
- */
-protocol autopilotDelegate: AnyObject {
-    func didPerformAction()
-}
-

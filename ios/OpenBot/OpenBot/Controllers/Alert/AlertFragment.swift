@@ -5,6 +5,9 @@
 import Foundation
 import UIKit
 import GoogleSignIn
+/**
+ class  to create alert
+ */
 class alertFragment : UIViewController {
     @IBOutlet weak var confirmLogoutLabel: UILabel!
     override func viewDidLoad() {

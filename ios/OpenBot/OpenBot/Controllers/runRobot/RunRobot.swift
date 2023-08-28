@@ -525,10 +525,8 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             var timingInfo: CMSampleTimingInfo = .invalid
             var formatDescription: CMVideoFormatDescription? = nil
             CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: converted, formatDescriptionOut: &formatDescription)
-
             var output: CMSampleBuffer? = nil
             _ = CMSampleBufferCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: converted, dataReady: true, makeDataReadyCallback: nil, refcon: refCon.mutableBytes, formatDescription: formatDescription!, sampleTiming: &timingInfo, sampleBufferOut: &output)
-
             // extract the image buffer from the sample buffer
             let pixelBufferBGRA: CVPixelBuffer? = CMSampleBufferGetImageBuffer(output!)
             result = runRobot.navigation?.recognizeImage(pixelBuffer: pixelBufferBGRA!, goalDistance: distance, goalSin: sin(yaw), goalCos: cos(yaw))
@@ -690,7 +688,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
         sendControl(control: controlResult)
         isInferenceQueueBusy = false
-        print("Time for autopilot is -----> \(returnCurrentTimeStampSince1970() - startTime)")
+        print("Time for autopilot is -----> \(1000 / (returnCurrentTimeStampSince1970() - startTime))")
     }
 
     /// function to calculate the delta yaw for device position and goal position
@@ -762,7 +760,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             }
         }
         self.isInferenceQueueBusy = false
-        print("Time for objectTracking is -----> \(returnCurrentTimeStampSince1970() - startTime)")
+        print("Time for objectTracking is -----> \(1000 / (returnCurrentTimeStampSince1970() - startTime))")
     }
 
     /**
