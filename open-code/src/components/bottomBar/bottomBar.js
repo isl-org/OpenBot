@@ -5,7 +5,7 @@ import {javascriptGenerator} from 'blockly/javascript';
 import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import {ThemeContext} from "../../App";
-import {Constants, Errors, errorToast} from "../../utils/constants";
+import {aiBlocks, Constants, Errors, errorToast} from "../../utils/constants";
 import {
     CircularProgress,
     circularProgressClasses,
@@ -66,10 +66,10 @@ export const BottomBar = () => {
      */
     function handleAllChildBlocks(array, child) {
         if (array.length > 0) {
-            for (let i = 0; i < array.length; i++) {
-                child.push(array[i].type)
-                handleAllChildBlocks(array[i].childBlocks_, child)
-            }
+            array.map((item,key)=>{
+                child.push(item.type)
+                handleAllChildBlocks(item.childBlocks_, child)
+            })
         }
         return child;
     }
@@ -81,7 +81,6 @@ export const BottomBar = () => {
      */
     function handlingMultipleAIBlocks(start) {
         let child = []
-        const aiBlocks = ["objectTracking", "autopilot", "multipleObjectTracking", "navigateForwardAndLeft", "multipleAIDetection"];
         let allChildBlocks = []
         let configuredAIBlocks = []
         if (start.length !== 0) {
@@ -191,7 +190,6 @@ export const BottomBar = () => {
     const clickedButton = (e) => {
         const {name} = e.target;
         setButtonSelected(name);
-
         //to verify if undoStack has items, or if both undo and redo are empty (first Project)
         const isUndo = () => {
             const workspace = Blockly.getMainWorkspace();
