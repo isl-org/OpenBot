@@ -44,7 +44,7 @@ export function EditProfileModal(props) {
             photoUrl: auth?.currentUser.photoURL,
         })
         setIsDobChanged(false);
-    }, [])
+    }, [setIsDobChanged])
 
     const handleClose = () => {
         setIsEditProfileModal(false)

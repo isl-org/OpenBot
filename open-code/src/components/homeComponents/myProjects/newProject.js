@@ -34,7 +34,7 @@ export const NewProject = () => {
                 }, 0.00001)
                 setLoader(false)
             }
-        }, [deleteLoader, isSignIn]);
+        }, [deleteLoader, isSignIn, setCode]);
 
         //sorting the projects according to updated time
         const getSortedData = async () => {

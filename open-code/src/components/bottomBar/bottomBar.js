@@ -333,9 +333,8 @@ export const BottomBar = () => {
 function GenerateCodeButton(params) {
     const {generateCode, buttonSelected, buttonActive, setDrawer, setIsAIModelComponent, setFile} = params
     const themes = useTheme();
-    const {category, setCategory} = useContext(StoreContext);
+    const {setCategory} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
-    const [language, setLanguage] = useState(category === Constants.py ? Constants.py : Constants.js);
     const theme = useContext(ThemeContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [openPopupArrow, setOpenPopupArrow] = useState(false);
@@ -355,7 +354,6 @@ function GenerateCodeButton(params) {
     const id = openPopupArrow ? 'simple-popper' : undefined;
 
     const handleLanguageDropDown = (lang) => {
-        setLanguage(lang);
         setCategory(lang);
         setDrawer(true);
         setAnchorEl(null);

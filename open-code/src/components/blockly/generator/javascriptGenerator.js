@@ -45,7 +45,7 @@ javascriptGenerator['soundType'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
     let value_name = javascriptGenerator.valueToCode(block, 'NAME', javascriptGenerator.ORDER_ATOMIC);
     let code = '';
-    code += "playSoundSpeed(" + "'" + dropdown_type + "'" + ");\n" + value_name;
+    code += "playSoundSpeed('" + dropdown_type + "');\n" + value_name;
     return code;
 };
 

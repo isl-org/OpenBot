@@ -33,7 +33,7 @@ export function ProfileOptionModal(props) {
     const location = useLocation();
     const themes = useTheme();
     const {theme, toggleTheme} = useContext(ThemeContext);
-    const {isOnline, setIsDob, isDob, setIsAutoSyncEnabled,setUser} = useContext(StoreContext);
+    const {isOnline, setIsDob, isDob, setIsAutoSyncEnabled, setUser} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const isSignedIn = localStorage.getItem("isSigIn") === "true";
     const isHomePage = location.pathname === PathName.home;

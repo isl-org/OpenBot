@@ -320,6 +320,10 @@ async function setConfigData() {
     }
 }
 
+/**
+ * function to get config data from local storage
+ * @returns {any|*[]}
+ */
 function getConfigData() {
     try {
         let models = localStorage.getItem(localStorageKeys.configData)
@@ -357,6 +361,10 @@ function filterModels(modelType, assetType) {
     }
 }
 
+/**
+ * function to return all class labels
+ * @returns {[string,string][]}
+ */
 function filterLabels() {
     return Labels.map((item) => [item, item]);
 }
@@ -367,7 +375,10 @@ function filterLabels() {
  */
 async function autoSync() {
     await setConfigData().then(async () => {
-            await uploadToGoogleDrive(localStorage.getItem(localStorageKeys.configData), Constants.json)
+            let data = JSON.stringify(configData)
+            if (data === localStorage.getItem(localStorageKeys.configData)) {
+                await uploadToGoogleDrive(localStorage.getItem(localStorageKeys.configData), Constants.json)
+            }
         }
     )
 }
