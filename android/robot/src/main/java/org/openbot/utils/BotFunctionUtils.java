@@ -41,6 +41,7 @@ public class BotFunctionUtils {
     "reachGoal",
     "follow",
           "enableAutopilot",
+          "enableMultipleAI",
     "reachPosition",
   };
 }

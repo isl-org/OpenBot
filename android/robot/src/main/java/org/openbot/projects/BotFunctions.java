@@ -385,7 +385,7 @@ public class BotFunctions implements SensorEventListener {
       binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT);
       binding.jsCommand.setText("Follow " + object + " using " + modelName);
     });
-    BlocklyExecutingFragment.modelName = modelName;
+    BlocklyExecutingFragment.detectorModelName = modelName;
     BlocklyExecutingFragment.classType = object;
     BlocklyExecutingFragment.isFollow = true;
   }
@@ -396,7 +396,7 @@ public class BotFunctions implements SensorEventListener {
       binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT);
       binding.jsCommand.setText("Follow " + startObject + " using " + modelName + "stop when see " + stopObject);
     });
-    BlocklyExecutingFragment.modelName = modelName;
+    BlocklyExecutingFragment.detectorModelName = modelName;
     BlocklyExecutingFragment.startObject = startObject;
     BlocklyExecutingFragment.stopObject = stopObject;
     BlocklyExecutingFragment.isFollowMultipleObject = true;
@@ -408,8 +408,21 @@ public class BotFunctions implements SensorEventListener {
       binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT);
       binding.jsCommand.setText("Start Autopilot using " + modelName);
     });
-    BlocklyExecutingFragment.modelName = modelName;
+    BlocklyExecutingFragment.autoPilotModelName = modelName;
     BlocklyExecutingFragment.isAutopilot = true;
+  }
+
+  @JavascriptInterface
+  public void enableMultipleAI(String autoPilotModel, String task, String classType, String detectorModel){
+    mActivity.runOnUiThread(() -> {
+      binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT);
+      binding.jsCommand.setText("Start Autopilot with Object Tracking.");
+    });
+    BlocklyExecutingFragment.autoPilotModelName = autoPilotModel;
+    BlocklyExecutingFragment.detectorModelName = detectorModel;
+    BlocklyExecutingFragment.classType = classType;
+    BlocklyExecutingFragment.getTask = task;
+    BlocklyExecutingFragment.isStartDetectorAutoPilot = true;
   }
 
   @JavascriptInterface

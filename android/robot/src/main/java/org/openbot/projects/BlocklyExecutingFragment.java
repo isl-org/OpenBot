@@ -66,16 +66,21 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   public static boolean isFollow = false;
   public static boolean isAutopilot = false;
   public static boolean isFollowMultipleObject = false;
+  public static boolean isStartDetectorAutoPilot = false;
   public static String classType = "person";
-  public static String modelName = "";
+  public static String detectorModelName = "";
+  public static String autoPilotModelName = "";
   public static String startObject = "person";
   public static String stopObject = "person";
+  public static String getTask = "stopRobot();";
   private Detector detector;
   private Autopilot autopilot;
   private Model setModel;
   private List<Model> modelList;
-  private Bitmap croppedBitmap;
-  private Matrix frameToCropTransform;
+  private Bitmap detectorCroppedBitmap;
+  private Bitmap autoPilotCroppedBitmap;
+  private Matrix detectorFrameToCropTransform;
+  private Matrix autoPilotFrameToCropTransform;
   private Network.Device getDevice;
   private int sensorOrientation;
   private MultiBoxTracker tracker;
@@ -155,11 +160,21 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     if (isFollow) startFollowObject(bitmap);
     if (isAutopilot) startAutopilot(bitmap);
     if (isFollowMultipleObject) followMultipleObject(bitmap);
+    if (isStartDetectorAutoPilot) getMultipleAiValue(bitmap);
   }
 
-  private Model getModel() {
+  private Model getDetectorModel() {
     for (Model findModel : modelList){
-      if (FileUtils.nameWithoutExtension(findModel.getName()).equals(modelName)){
+      if (FileUtils.nameWithoutExtension(findModel.getName()).equals(detectorModelName)){
+        setModel = findModel;
+      }
+    }
+    return setModel;
+  }
+
+  private Model getAutoPilotModel() {
+    for (Model findModel : modelList){
+      if (FileUtils.nameWithoutExtension(findModel.getName()).equals(autoPilotModelName)){
         setModel = findModel;
       }
     }
@@ -180,12 +195,12 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
 
     if (handler != null) {
       handler.post(()->{
-                final Canvas canvas = new Canvas(croppedBitmap);
-        canvas.drawBitmap(bitmap, frameToCropTransform, null);
+                final Canvas canvas = new Canvas(autoPilotCroppedBitmap);
+        canvas.drawBitmap(bitmap, autoPilotFrameToCropTransform, null);
 
                 if (autopilot != null) {
                   Timber.i("Running autopilot on image %s", frameNum);
-                  vehicle.setControl(autopilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
+                  vehicle.setControl(autopilot.recognizeImage(autoPilotCroppedBitmap, vehicle.getIndicator()));
                 }
                 computingNetwork = false;
               });}
@@ -203,18 +218,18 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     if (handler != null) {
       handler.post(()->{
 
-        final Canvas canvas = new Canvas(croppedBitmap);
+        final Canvas canvas = new Canvas(detectorCroppedBitmap);
         if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
           canvas.drawBitmap(
-                  CameraUtils.flipBitmapHorizontal(bitmap), frameToCropTransform, null);
+                  CameraUtils.flipBitmapHorizontal(bitmap), detectorFrameToCropTransform, null);
         } else {
-          canvas.drawBitmap(bitmap, frameToCropTransform, null);
+          canvas.drawBitmap(bitmap, detectorFrameToCropTransform, null);
         }
 
         if (detector != null) {
           Timber.i("Running detection on image %s", frameNum);
           final List<Detector.Recognition> results =
-                  detector.recognizeImage(croppedBitmap, classType);
+                  detector.recognizeImage(detectorCroppedBitmap, classType);
           if (!results.isEmpty())
             Timber.i(
                     "Object: "
@@ -254,18 +269,18 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
       return;
     }
     computingNetwork = true;
-        final Canvas canvas = new Canvas(croppedBitmap);
+        final Canvas canvas = new Canvas(detectorCroppedBitmap);
         if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
           canvas.drawBitmap(
-                  CameraUtils.flipBitmapHorizontal(bitmap), frameToCropTransform, null);
+                  CameraUtils.flipBitmapHorizontal(bitmap), detectorFrameToCropTransform, null);
         } else {
-          canvas.drawBitmap(bitmap, frameToCropTransform, null);
+          canvas.drawBitmap(bitmap, detectorFrameToCropTransform, null);
         }
 
         if (detector != null) {
           Timber.i("Running detection on image %s", frameNum);
           final ArrayList<ArrayList<Detector.Recognition>> results =
-                  detector.recognizeMultipleImage(croppedBitmap, startObject, stopObject);
+                  detector.recognizeMultipleImage(detectorCroppedBitmap, startObject, stopObject);
           final List<Detector.Recognition> mappedRecognitions = new LinkedList<>();
           double startDistance = 0;
           double stopDistance = 0;
@@ -291,7 +306,8 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   }
 
   private void updateCropImageInfo() {
-    frameToCropTransform = null;
+    detectorFrameToCropTransform = null;
+    autoPilotFrameToCropTransform = null;
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());
 
@@ -300,7 +316,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
 
     Timber.i("Camera orientation relative to screen canvas: %d", sensorOrientation);
 
-    recreateNetwork(getModel(), getDevice, preferencesManager.getNumThreads());
+    recreateNetwork(getDetectorModel(), getAutoPilotModel(), getDevice, preferencesManager.getNumThreads());
     if (detector == null) {
       Timber.e("No network on preview!");
       return;
@@ -312,9 +328,9 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
             sensorOrientation);
   }
 
-  private void recreateNetwork(Model model, Network.Device device, int numThreads) {
+  private void recreateNetwork(Model detectorModel, Model autoPilotModel, Network.Device device, int numThreads) {
 
-    if (model == null) return;
+    if (detectorModel == null && autoPilotModel == null) return;
     tracker.clearTrackedObjects();
     if (detector != null) {
       Timber.d("Closing detector.");
@@ -323,46 +339,103 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     }
 
     try {
-      Timber.d("Creating detector (model=%s, device=%s, numThreads=%d)", model, device, numThreads);
-      if (isFollow || isFollowMultipleObject) {
-        detector = Detector.create(requireActivity(), model, device, numThreads);
+      Timber.d("Creating detector (model=%s, device=%s, numThreads=%d)", detectorModel, device, numThreads);
+      if (detectorModel != null) {
+        detector = Detector.create(requireActivity(), detectorModel, device, numThreads);
         assert detector != null;
-        croppedBitmap =
+        detectorCroppedBitmap =
                 Bitmap.createBitmap(
                         detector.getImageSizeX(), detector.getImageSizeY(), Bitmap.Config.ARGB_8888);
 
-        frameToCropTransform =
+        detectorFrameToCropTransform =
                 ImageUtils.getTransformationMatrix(
                         getMaxAnalyseImageSize().getWidth(),
                         getMaxAnalyseImageSize().getHeight(),
-                        croppedBitmap.getWidth(),
-                        croppedBitmap.getHeight(),
+                        detectorCroppedBitmap.getWidth(),
+                        detectorCroppedBitmap.getHeight(),
                         sensorOrientation,
                         detector.getCropRect(),
                         detector.getMaintainAspect());
 
-      } else if (isAutopilot) {
-        autopilot = new Autopilot(requireActivity(), model, device, numThreads);
-        croppedBitmap = Bitmap.createBitmap(
+      }
+
+      cropToFrameTransform = new Matrix();
+      detectorFrameToCropTransform.invert(cropToFrameTransform);
+
+      if (autoPilotModel != null) {
+        autopilot = new Autopilot(requireActivity(), autoPilotModel, device, numThreads);
+        autoPilotCroppedBitmap = Bitmap.createBitmap(
                 autopilot.getImageSizeX(), autopilot.getImageSizeY(), Bitmap.Config.ARGB_8888);
 
-        frameToCropTransform =
+        autoPilotFrameToCropTransform =
                 ImageUtils.getTransformationMatrix(
                         getMaxAnalyseImageSize().getWidth(),
                         getMaxAnalyseImageSize().getHeight(),
-                        croppedBitmap.getWidth(),
-                        croppedBitmap.getHeight(),
+                        autoPilotCroppedBitmap.getWidth(),
+                        autoPilotCroppedBitmap.getHeight(),
                         sensorOrientation,
                         autopilot.getCropRect(),
                         autopilot.getMaintainAspect());
       }
 
       cropToFrameTransform = new Matrix();
-      frameToCropTransform.invert(cropToFrameTransform);
+      autoPilotFrameToCropTransform.invert(cropToFrameTransform);
 
     } catch (IllegalArgumentException | IOException e) {
       Timber.e("Failed to create network.");
     }
+  }
+
+  private void getMultipleAiValue(Bitmap bitmap){
+      if (tracker == null) updateCropImageInfo();
+
+      ++frameNum;
+
+      if (computingNetwork) {
+        return;
+      }
+
+      computingNetwork = true;
+      if (handler != null) {
+        handler.post(()->{
+
+          final Canvas detectorCanvas = new Canvas(detectorCroppedBitmap);
+          if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
+            detectorCanvas.drawBitmap(
+                    CameraUtils.flipBitmapHorizontal(bitmap), detectorFrameToCropTransform, null);
+          } else {
+            detectorCanvas.drawBitmap(bitmap, detectorFrameToCropTransform, null);
+          }
+
+          if (detector != null) {
+            Timber.i("Running detection on image %s", frameNum);
+            final List<Detector.Recognition> results =
+                    detector.recognizeImage(detectorCroppedBitmap, classType);
+
+              for (final Detector.Recognition result : results) {
+                final RectF location = result.getLocation();
+                if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
+                  isStartDetectorAutoPilot = false;
+                  vehicle.stopBot();
+                  runJSCommand(getTask);
+                }
+              }
+          }
+
+          if (handler != null) {
+            handler.post(()-> {
+              final Canvas autoPilotCanvas = new Canvas(autoPilotCroppedBitmap);
+              autoPilotCanvas.drawBitmap(bitmap, autoPilotFrameToCropTransform, null);
+
+              if (autopilot != null) {
+                Timber.i("Running autopilot on image %s", frameNum);
+                 if (isStartDetectorAutoPilot) vehicle.setControl(autopilot.recognizeImage(autoPilotCroppedBitmap, vehicle.getIndicator()));
+              }
+            });}
+
+          computingNetwork = false;
+        });
+      }
   }
 
   private void showAlertDialog() {
@@ -409,7 +482,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
                     arCore),
                 "Android");
             // execute the JavaScript code in the web-view.
-            myWebView.evaluateJavascript(finalCode, null);
+            myWebView.evaluateJavascript(finalCode.replace("\n", "").replace("\r", ""), null);
           });
     }
   }
