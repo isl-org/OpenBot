@@ -109,12 +109,9 @@ export function EditProfileModal(props) {
 
     // TimeStamp format for setting DOB
     function toTimeStamp(dob) {
-        const dateParts = dob.split('-');
-        const year = parseInt(dateParts[0]);
-        const month = parseInt(dateParts[1]) - 1; // Months are zero-based in JavaScript Date object
-        const day = parseInt(dateParts[2]);
-        const date = new Date(year, month, day);
+        const date = new Date(dob);
         return firebase.firestore.Timestamp.fromDate(date).toDate();
+
     }
 
     //handle Date of birth change

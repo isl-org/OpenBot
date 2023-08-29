@@ -8,7 +8,7 @@ pythonGenerator['soundType'] = function (block) {
     let dropdown_type = block.getFieldValue('type');
     let value_name = pythonGenerator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC);
     let code = '';
-    code += "playSoundSpeed(" + "'" + dropdown_type + "'" + ")\n" + value_name;
+    code += "playSoundSpeed('" + dropdown_type + "')\n" + value_name;
     return code;
 };
 

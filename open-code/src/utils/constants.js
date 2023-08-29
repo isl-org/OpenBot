@@ -264,3 +264,5 @@ export const errorToast = (message) => {
         pauseOnFocusLoss: false,
     })
 }
+
+export const aiBlocks = ["objectTracking", "autopilot", "multipleObjectTracking", "navigateForwardAndLeft", "multipleAIDetection"];

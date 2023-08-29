@@ -17,10 +17,6 @@ import darkPencilIcon from "../../src/assets/images/icon/dark-pencil-icon.png"
 import logo from "../../src/assets/images/icon/OBplaygroundLogo.png"
 import dragDropWhite from "../../src/assets/images/drag_drop_white.gif";
 import dragDropDark from "../../src/assets/images/drag_drop_dark.gif";
-import Carousal2 from "../../src/assets/images/qr_light.mov";
-import Carousal2Dark from "../../src/assets/images/qr_dark.mp4";
-import Carousal3 from "../../src/assets/images/mobile_white.mp4";
-import Carousal3Dark from "../../src/assets/images/mobile_dark.mp4";
 import cloud from "../assets/images/icon/cloud.png"
 import lightThemeIcon from "../assets/images/icon/light-theme-icon.png"
 import darkThemeIcon from "../assets/images/icon/whiteMode/white-mode-icon.png"
@@ -79,10 +75,6 @@ export const Images = {
     logo: logo,
     dragDropDark: dragDropDark,
     dragDropWhite: dragDropWhite,
-    Carousal2: Carousal2,
-    Carousal2Dark: Carousal2Dark,
-    Carousal3: Carousal3,
-    Carousal3Dark: Carousal3Dark,
     cloud: cloud,
     lightThemeIcon: lightThemeIcon,
     darkThemeIcon: darkThemeIcon,

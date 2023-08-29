@@ -18,7 +18,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
  * @constructor
  */
 function NewProjectButton(props) {
-    const {isProject} = props;
+    const {isProject, setDrawer} = props;
     let navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [isInputError, setIsInputError] = useState(true);
@@ -63,6 +63,7 @@ function NewProjectButton(props) {
             setIsInputError(false);  // Clear input error flag
             // Navigate to playground page and close modal
             navigate(PathName.playGround);
+            setDrawer(false);
             handleClose();
         }
     }

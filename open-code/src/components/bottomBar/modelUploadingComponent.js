@@ -68,22 +68,22 @@ export function ModelUploadingComponent(params) {
     }
 
     //function to handle model type and class dependency on type
+    const handleTypeMap = {
+        AUTOPILOT: { handleTypeDependency: ['AUTOPILOT'], modelClass: 'AUTOPILOT' },
+        DETECTOR: { handleTypeDependency: ['MOBILENET', 'EFFICIENTDET', 'YOLOV4', 'YOLOV5'], modelClass: 'MOBILENET' },
+        NAVIGATION: { handleTypeDependency: ['NAVIGATION'], modelClass: 'NAVIGATION' },
+    };
     function handleTypeChange(e) {
-        if (e === "AUTOPILOT") {
-            setHandleTypeDependency([e]);
-            setModelClassDropdown(e);
-        } else if (e === "DETECTOR") {
-            setHandleTypeDependency(["MOBILENET", "EFFICIENTDET", "YOLOV4", "YOLOV5"]);
-            setModelClassDropdown("MOBILENET");
-        } else if (e === "NAVIGATION") {
-            setHandleTypeDependency([e]);
-            setModelClassDropdown(e);
-        }
+        const handleTypeData = handleTypeMap[e] || {};
+
+        setHandleTypeDependency(handleTypeData.handleTypeDependency || []);
+        setModelClassDropdown(handleTypeData.modelClass || '');
+
         setModelDetails({
             ...modelDetails,
             type: e,
-            class: modelClassDropdown
-        })
+            class: modelClassDropdown,
+        });
     }
 
     //function to handle model class

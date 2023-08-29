@@ -25,7 +25,6 @@ export function PopUpModal(props) {
         handleButtonClick,
         deleteLoader,
         inlineStyle,
-        googleSignOut
     } = props;
     const {isOnline} = useContext(StoreContext);
     const [open, setOpen] = useState(true);
@@ -62,7 +61,6 @@ export function PopUpModal(props) {
                         <div className={styles.logoutButtonsDiv}>
                             <BlueButton onClick={() => {
                                 handleClose()
-                                googleSignOut()
                             }} buttonName={"Cancel"}
                                         buttonStyle={styles.buttonStyle}
                                         extraStyle={styles.logoutButtonsExtraStyle + " " + styles.cancelExtraStyle}/>

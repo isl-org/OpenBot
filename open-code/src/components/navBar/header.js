@@ -189,10 +189,6 @@ export function Header() {
                                                          headerText={"Session Expired"}
                                                          containText={"Your session has expired.Please login again to continue."}
                                                          buttonText={"Login"}
-                                                         googleSignOut={() => {
-                                                             googleSignOut().then();
-                                                         }
-                                                         }
                                                          handleButtonClick={handleSignIn}/>}
                 </div>
             </div>
