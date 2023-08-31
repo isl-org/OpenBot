@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
@@ -69,9 +70,7 @@ public class LoggerFragment extends CameraFragment {
   private int sensorOrientation;
   private RectF cropRect;
   private boolean maintainAspectRatio;
-  private boolean isServer;
-  private boolean isLocal;
-  private boolean isGoogleDive;
+  private String saveAs;
   private GoogleServices googleServices;
 
   @Override
@@ -158,13 +157,13 @@ public class LoggerFragment extends CameraFragment {
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
           case 0:
-            isLocal = true; isGoogleDive = false; isServer = false;
+            saveAs = "Local";
             break;
           case 1:
-            isLocal = false; isGoogleDive = true; isServer = false;
+            saveAs = "GoogleDrive";
             break;
           case 2:
-            isLocal = false; isGoogleDive = false; isServer = true;
+            saveAs = "Server";
             break;
         }
       }
@@ -366,12 +365,13 @@ public class LoggerFragment extends CameraFragment {
         () -> {
           try {
             File folder = new File(logFolder);
-            if (!isCancel && isServer) {
-              // Zip the log folder and then upload it
-              serverCommunication.upload(zip(folder));
-            }
-            if (isGoogleDive) {
-              googleServices.uploadLogData(zip(folder));
+            switch (saveAs) {
+              case "Local" :
+              case "Server" :
+                if (!isCancel) serverCommunication.upload(zip(folder));
+                break;
+              case "GoogleDrive" : googleServices.uploadLogData(zip(folder));
+                break;
             }
             TimeUnit.MILLISECONDS.sleep(500);
             FileUtils.deleteQuietly(folder);
