@@ -122,6 +122,14 @@ export const BottomBar = () => {
                 const multipleObjectTracking = workspace.getBlocksByType("multipleObjectTracking");
                 let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false);  //filtering multiple objectTracking connected blocks
                 let isAIBlocksAdjacent = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
+                let array = []
+                let foreverChildBlocks = handleAllChildBlocks(forever, array)
+                let isForeverContainsAI;
+                foreverChildBlocks.forEach((item) => {
+                    if (aiBlocks.includes(item)) {
+                        isForeverContainsAI = true;
+                    }
+                })
                 let object_1 = "object_1";
                 let object_2 = "object_2";
                 if (multipleObjectTrackingEnabledBlocks.length > 0) {
@@ -134,6 +142,8 @@ export const BottomBar = () => {
                     handleError(Errors.error2);
                 } else if (object_1 === object_2) {
                     handleError(Errors.error3)
+                } else if (isForeverContainsAI === true) {
+                    handleError(Errors.error4)
                 } else {
                     if (start.length > 0)
                         code += "\nstart();";

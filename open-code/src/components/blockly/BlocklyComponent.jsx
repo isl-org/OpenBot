@@ -4,7 +4,7 @@ import Blockly from 'blockly/core';
 import locale from 'blockly/msg/en';
 import 'blockly/blocks';
 import {ThemeContext} from "../../App";
-import {Constants, DarkTheme, errorToast, LightTheme, PathName} from "../../utils/constants";
+import {aiBlocks, Constants, DarkTheme, errorToast, LightTheme, PathName} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
 import {getCurrentProject, updateCurrentProject} from "../../services/workspace";
@@ -13,6 +13,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {checkFileExistsInFolder, getFolderId, getShareableLink} from "../../services/googleDrive";
 import {RightDrawer} from "../drawer/drawer";
 import {useLocation} from "react-router-dom";
+
 Blockly.setLocale(locale);
 
 /**
@@ -64,25 +65,16 @@ function BlocklyComponent(props) {
 
     }, []);
 
-    //function to enable all child blocks
-    const enableAllChildBlocks = (block) => {
-        if (block) {
-            block.setEnabled(true);
-            const children = block.getChildren();
-            for (let i = 0; i < children.length; i++) {
-                enableAllChildBlocks(children[i]);
-            }
-        }
-    };
-
-    //function to disable all  child blocks
-    const disableChildBlocks = (blocks) => {
-        if (blocks.length > 1) {
-            for (let i = 1; i < blocks.length; i++) {
-                blocks[i].setEnabled(false);
-            }
-        }
-    };
+    /**
+     * handling duplicate for start and forever
+     * @type {(function(*): void)|*}
+     */
+    const handleDuplicateBlocks = useCallback((event) => {
+        const blockTypes = ["start", "forever", "onBumper"];
+        blockTypes.forEach((blockType) => {
+            handlingBlocks(event, blockType);
+        });
+    }, []);
 
     //handling all child blocks for enabling and disabling
     const handlingBlocks = (event, blockType) => {
@@ -100,13 +92,67 @@ function BlocklyComponent(props) {
         }
     };
 
-    //handling duplicate for start and forever
-    const handleDuplicateBlocks = useCallback((event) => {
-        const blockTypes = ["start", "forever", "onBumper"];
-        blockTypes.forEach((blockType) => {
-            handlingBlocks(event, blockType);
-        });
-    }, []);
+    //function to disable all  child blocks
+    const disableChildBlocks = (blocks) => {
+        if (blocks.length > 1) {
+            for (let i = 1; i < blocks.length; i++) {
+                blocks[i].setEnabled(false);
+            }
+        }
+    };
+
+    //function to enable all child blocks
+    const enableAllChildBlocks = (block) => {
+        if (block) {
+            block.setEnabled(true);
+            const children = block.getChildren();
+            for (let i = 0; i < children.length; i++) {
+                enableAllChildBlocks(children[i]);
+            }
+        }
+    };
+
+    /**
+     * function to disable forever block if start block contains AI block
+     * @type {(function(): void)|*}
+     */
+    const handleForeverBlocks = useCallback(() => {
+        let childArray = []
+        const start = primaryWorkspace.current.getBlocksByType("start")
+        const forever = primaryWorkspace.current.getBlocksByType("forever")
+        let startBlock = start[0]?.childBlocks_
+        let filteredAIBlocks = []
+        if (startBlock?.length > 0 && forever.length > 0) {
+            let handleEvents = handleStartChildBlocks(startBlock, childArray)
+            handleEvents?.forEach((item) => {
+                if (aiBlocks.includes(item)) {
+                    filteredAIBlocks.push(item)
+                }
+            })
+            if (filteredAIBlocks?.length > 0) {
+                for (let i = 0; i < forever.length; i++) {
+                    forever[i].setEnabled(false);
+                }
+            } else {
+                forever[0].setEnabled(true);
+                enableAllChildBlocks(forever[0]);
+            }
+        }
+    }, [])
+
+    /**
+     * function to contain all blocks inside start block
+     * @param startBlock
+     * @param childArray
+     * @returns {*}
+     */
+    const handleStartChildBlocks = (startBlock, childArray) => {
+        startBlock.forEach((item) => {
+            childArray.push(item.type)
+            handleStartChildBlocks(item.childBlocks_, childArray)
+        })
+        return childArray;
+    }
 
     //function to check qr code availability and display drive link
     const checkQRCode = async () => {
@@ -190,6 +236,9 @@ function BlocklyComponent(props) {
 
         //handle start and forever duplicate blocks occurrence
         primaryWorkspace.current.addChangeListener(handleDuplicateBlocks);
+
+        //handle forever block disability if start block contains AI block
+        primaryWorkspace.current.addChangeListener(handleForeverBlocks);
 
         // Load XML code into the workspace if it exists, otherwise load initial XML code
         if (currentProjectXml) {
