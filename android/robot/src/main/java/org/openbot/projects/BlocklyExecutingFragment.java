@@ -160,7 +160,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     if (isFollow) startFollowObject(bitmap);
     if (isAutopilot) startAutopilot(bitmap);
     if (isFollowMultipleObject) followMultipleObject(bitmap);
-    if (isStartDetectorAutoPilot) getMultipleAiValue(bitmap);
+    if (isStartDetectorAutoPilot) startMultipleAi(bitmap);
   }
 
   private Model getDetectorModel() {
@@ -386,7 +386,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     }
   }
 
-  private void getMultipleAiValue(Bitmap bitmap){
+  private void startMultipleAi(Bitmap bitmap){
       if (tracker == null) updateCropImageInfo();
 
       ++frameNum;
@@ -551,21 +551,18 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   private static float computeDistance(Pose goalPose, Pose robotPose) {
     Float dx = abs(goalPose.tx() - robotPose.tx());
     Float dz = abs(goalPose.tz() - robotPose.tz());
-
     return (float) Math.sqrt(dx * dx + dz * dz);
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
-
     arCore.closeSession();
   }
 
   @Override
   public void onStop() {
     super.onStop();
-
     arCore.removeArCoreListener();
   }
 }

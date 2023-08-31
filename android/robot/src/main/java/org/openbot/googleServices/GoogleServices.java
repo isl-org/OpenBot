@@ -457,10 +457,18 @@ public class GoogleServices {
     return null;
   }
 
+  /**
+   * Creates and uploads a JSON file containing a list of models to Google Drive.
+   *
+   * @param modelList List of Model objects to be included in the JSON file.
+   */
   public void createAndUploadJsonFile(List<Model> modelList) {
+    // Get the Drive service instance and convert the modelList to JSON string using Gson.
     Drive getDriveService = getDriveService();
     Gson gson = new GsonBuilder().create();
     String modelListContent = gson.toJson(modelList);
+
+    // Start a new thread to perform the Drive API operations.
     new Thread(
             () -> {
               String pageToken = null;
@@ -491,11 +499,15 @@ public class GoogleServices {
                       }
                     }
 
+                    // Perform necessary actions based on file existence.
                     if (getOpenBotPlayGroundFile && getConfigFIle)
+                      // Update existing config.json with model list.
                       updateModelListFile(modelListContent, configFileId);
                     if (getOpenBotPlayGroundFile && !getConfigFIle)
+                      // Create config.json and add model list.
                       createModelListFile(modelListContent, openBotPlayGroundFileId);
                     if (!getOpenBotPlayGroundFile && !getConfigFIle)
+                      // Create 'openBot' folder and add config.json with model list.
                       createOpenBotFolder(modelListContent, null);
                     pageToken = result.getNextPageToken();
                   }
@@ -507,6 +519,12 @@ public class GoogleServices {
             }).start();
   }
 
+  /**
+   * Creates an 'openBot' folder on Google Drive and adds a model list JSON file or log data.
+   *
+   * @param modelListContent JSON content of the model list (null if not applicable).
+   * @param zipFile          Zip file containing log data (null if not applicable).
+   */
   private void createOpenBotFolder(String modelListContent, java.io.File zipFile) {
     Drive driveService = getDriveService();
     File fileMetadata = new File();
@@ -526,8 +544,16 @@ public class GoogleServices {
     }
   }
 
+  /**
+   * Creates a 'config.json' file containing the model list content within the specified folder on Google Drive.
+   *
+   * @param modelListContent JSON content of the model list.
+   * @param playGroundFolderId ID of the parent folder where the file should be created.
+   */
   private void createModelListFile(String modelListContent, String playGroundFolderId) {
     Drive getDriveService = getDriveService();
+    // Create metadata for the 'config.json' file within the specified folder and
+    // convert the JSON content to a byte array content.
     File fileMetadata = new File();
     fileMetadata.setName("config.json").setParents(Collections.singletonList(playGroundFolderId));
     ByteArrayContent content = ByteArrayContent.fromString("application/json", modelListContent);
@@ -543,27 +569,38 @@ public class GoogleServices {
     }).start();
   }
 
+  /**
+   * Updates the content of an existing file with the new model list content on Google Drive.
+   *
+   * @param modelListContent New JSON content of the model list.
+   * @param fileId           ID of the file to be updated.
+   */
   private void updateModelListFile(String modelListContent, String fileId) {
     Drive driveService = getDriveService();
     new Thread(() -> {
       if (driveService != null) {
         try {
-          // Create the file content from the new JSON content
+          // Convert the JSON content to a byte array content and update the file's content.
           ByteArrayContent content = ByteArrayContent.fromString("application/json", modelListContent);
-          // Update the file's content
           File updatedFile = driveService.files().update(fileId, null, content).execute();
-          // File content updated successfully
         } catch (IOException e) {
+          // Handle error: Update operation failed.
           e.printStackTrace();
-          // Handle the update error
         }
       }
     }).start();
   }
 
+  /**
+   * Uploads a log data zip file to Google Drive, creating a new file or using an existing folder.
+   *
+   * @param zipFile The log data zip file to be uploaded.
+   */
   public void uploadLogData(java.io.File zipFile) {
     Drive getDriveService = getDriveService();
     String playGroundFolderId = checkPlaygroundFolder();
+
+    // Check if the 'openBot' folder exists, upload the zip file to it.
     if (playGroundFolderId != null){
       File fileMetadata = new File();
       String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
@@ -579,10 +616,17 @@ public class GoogleServices {
         }
       }).start();
     } else {
+      // If the folder doesn't exist, create it and upload the zip file
       createOpenBotFolder(null, zipFile);
     }
   }
 
+  /**
+   * Gets the content of the 'config.json' file from Google Drive and update model list.
+   *
+   * @param rotation The ObjectAnimator used for rotation animation (to be paused upon completion).
+   * @param icon     The ImageView icon (to be reset upon completion).
+   */
   public void getConfigFileContent(ObjectAnimator rotation, ImageView icon) {
     Drive driveService = getDriveService();
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -600,7 +644,7 @@ public class GoogleServices {
                             .setQ("trashed = false")
                             .execute();
             List<File> driveProjectFiles = result.getFiles();
-            String projectCommands;
+            String updatedModelList;
             for (File driveProjectFile : driveProjectFiles) {
               if (driveProjectFile.getName().equals("config.json")) {
                 // Read the content of the file
@@ -609,12 +653,13 @@ public class GoogleServices {
                         .files()
                         .get(driveProjectFile.getId())
                         .executeMediaAndDownloadTo(outputStream);
-                projectCommands = outputStream.toString();
-                List<Model> modelList = gson.fromJson(projectCommands, new TypeToken<List<Model>>(){}.getType());
+                updatedModelList = outputStream.toString();
+                List<Model> modelList = gson.fromJson(updatedModelList, new TypeToken<List<Model>>(){}.getType());
                 FileUtils.updateModelConfig(mActivity, mContext, modelList, true);
                 break;
               }
             }
+            // Pause rotation animation and reset icon.
             rotation.pause();
             icon.setRotation(0f);
             pageToken = result.getNextPageToken();
