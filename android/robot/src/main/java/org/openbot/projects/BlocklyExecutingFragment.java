@@ -135,13 +135,14 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
           isFollow = false;
           isAutopilot = false;
         });
-    // if string js code variable is not null execute js code when you navigate on this fragment.
+    // Execute the JavaScript code if the js code variable is not null and isRunJSCommand is true
     if (BarCodeScannerFragment.finalCode != null && isRunJSCommand) {
       runJSCommand(BarCodeScannerFragment.finalCode);
     }
 
     modelList = FileUtils.loadConfigJSONFromAsset(requireActivity());
 
+    // Get the selected device preference from the preferences manager.
     switch (preferencesManager.getDevice()){
       case 0:
         getDevice = Network.Device.CPU;
@@ -157,12 +158,18 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
 
   @Override
   protected void processFrame(Bitmap bitmap, ImageProxy imageProxy) {
+    // Check and execute modes based on blockly block code commands.
     if (isFollow) startFollowObject(bitmap);
     if (isAutopilot) startAutopilot(bitmap);
     if (isFollowMultipleObject) followMultipleObject(bitmap);
     if (isStartDetectorAutoPilot) startMultipleAi(bitmap);
   }
 
+  /**
+   * Retrieves the model for object detection from the list.
+   *
+   * @return The selected model for object detection.
+   */
   private Model getDetectorModel() {
     for (Model findModel : modelList){
       if (FileUtils.nameWithoutExtension(findModel.getName()).equals(detectorModelName)){
@@ -172,6 +179,11 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     return setModel;
   }
 
+  /**
+   * Retrieves the model for autopilot from the list.
+   *
+   * @return The selected model for autopilot.
+   */
   private Model getAutoPilotModel() {
     for (Model findModel : modelList){
       if (FileUtils.nameWithoutExtension(findModel.getName()).equals(autoPilotModelName)){
@@ -181,6 +193,11 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     return setModel;
   }
 
+  /**
+   * Starts the autopilot mode using the blockly (enable autopilot) block code command.
+   *
+   * @param bitmap The input bitmap for autopilot.
+   */
   private void startAutopilot(Bitmap bitmap){
     if (tracker == null) updateCropImageInfo();
 
@@ -205,6 +222,12 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
                 computingNetwork = false;
               });}
   }
+
+  /**
+   * Starts the follow object mode using the (follow a object) blockly block code command.
+   *
+   * @param bitmap The input bitmap for object tracking.
+   */
   private void startFollowObject(Bitmap bitmap){
     if (tracker == null) updateCropImageInfo();
 
@@ -261,6 +284,11 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     }
   }
 
+  /**
+   * Follows multiple objects using the (follow and stop) blockly block code command.
+   *
+   * @param bitmap The input bitmap for object tracking.
+   */
   private void followMultipleObject(Bitmap bitmap){
     if (tracker == null) updateCropImageInfo();
 
@@ -329,7 +357,6 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   }
 
   private void recreateNetwork(Model detectorModel, Model autoPilotModel, Network.Device device, int numThreads) {
-
     if (detectorModel == null && autoPilotModel == null) return;
     tracker.clearTrackedObjects();
     if (detector != null) {
@@ -386,6 +413,10 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     }
   }
 
+  /**
+   * Starts both autopilot and object detection AI simultaneously using blockly block code command
+   * to handle additional functionality upon detection.
+   */
   private void startMultipleAi(Bitmap bitmap){
       if (tracker == null) updateCropImageInfo();
 
@@ -438,6 +469,9 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
       }
   }
 
+  /**
+   * Shows an alert dialog when phone rotation is detected during the execution of a Blockly project.
+   */
   private void showAlertDialog() {
     AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
     builder.setTitle("Rotation Detected").setMessage("Do you want to restart Blockly command?");
@@ -448,6 +482,9 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     dialog.setCancelable(false);
   }
 
+  /**
+   * Restarts the Blockly project by initializing a WebView and executing JavaScript block codes.
+   */
   @SuppressLint("SetJavaScriptEnabled")
   private void restartJSCommand() {
     // initialise web view to execute javascript block codes.
@@ -511,6 +548,9 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     isFollowMultipleObject = false;
   }
 
+  /**
+   * Handles AR Core updates for point goal navigation with Blockly block code commands.
+   */
   @Override
   public void onArCoreUpdate(NavigationPoses navigationPoses, ImageFrame rgb, CameraIntrinsics cameraIntrinsics, long timestamp) {
     if (isRunning) {
@@ -539,14 +579,10 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   }
 
   @Override
-  public void onArCoreTrackingFailure(long timestamp, TrackingFailureReason trackingFailureReason) {
-
-  }
+  public void onArCoreTrackingFailure(long timestamp, TrackingFailureReason trackingFailureReason) {}
 
   @Override
-  public void onArCoreSessionPaused(long timestamp) {
-
-  }
+  public void onArCoreSessionPaused(long timestamp) {}
 
   private static float computeDistance(Pose goalPose, Pose robotPose) {
     Float dx = abs(goalPose.tx() - robotPose.tx());
