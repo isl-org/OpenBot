@@ -121,19 +121,22 @@ function BlocklyComponent(props) {
         const start = primaryWorkspace.current.getBlocksByType("start")
         const forever = primaryWorkspace.current.getBlocksByType("forever")
         let startBlock = start[0]?.childBlocks_
+        let filteredAIBlocks = []
         if (startBlock?.length > 0 && forever.length > 0) {
             let handleEvents = handleStartChildBlocks(startBlock, childArray)
             handleEvents?.forEach((item) => {
                 if (aiBlocks.includes(item)) {
-                    for (let i = 0; i < forever.length; i++) {
-                        forever[i].setEnabled(false);
-                    }
-                } else {
-                    for (let i = 0; i < forever.length; i++) {
-                        forever[0].setEnabled(true);
-                    }
+                    filteredAIBlocks.push(item)
                 }
             })
+            if (filteredAIBlocks?.length > 0) {
+                for (let i = 0; i < forever.length; i++) {
+                    forever[i].setEnabled(false);
+                }
+            } else {
+                forever[0].setEnabled(true);
+                enableAllChildBlocks(forever[0]);
+            }
         }
     }, [])
 
