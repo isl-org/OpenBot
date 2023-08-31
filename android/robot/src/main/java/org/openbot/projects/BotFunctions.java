@@ -430,6 +430,10 @@ public class BotFunctions implements SensorEventListener {
     Timber.tag("Ai Blocks").i(x + ", " + y);
   }
 
+  /**
+   * Get phone sensors value.
+   * @param event the {@link android.hardware.SensorEvent SensorEvent}.
+   */
   @Override
   public void onSensorChanged(SensorEvent event) {
     switch (event.sensor.getType()) {
@@ -462,11 +466,20 @@ public class BotFunctions implements SensorEventListener {
   @Override
   public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
+  /**
+   * Starts the process of driving towards a goal point using ARCore and navigation
+   * for the Blockly block code(start point goal navigation) command.
+   * @param goalX The x-coordinate of the goal point.
+   * @param goalZ The z-coordinate of the goal point.
+   */
   private void startPointGoal(float goalX, float goalZ) {
     setupArCore();
     while (arCore.getStartPose() == null) startDriving(goalX, goalZ);
   }
 
+  /**
+   * Sets up ARCore for usage.
+   */
   private void setupArCore() {
     try {
       arCore.resume();
@@ -488,6 +501,12 @@ public class BotFunctions implements SensorEventListener {
 //            "ARCore failure. Make sure that your device is compatible and the ARCore SDK is installed.");
   }
 
+  /**
+   * Initiates the driving process towards the specified goal point using ARCore.
+   *
+   * @param goalX The x-coordinate of the goal point.
+   * @param goalZ The z-coordinate of the goal point.
+   */
   private void startDriving(float goalX, float goalZ) {
     Timber.i("setting goal at (" + goalX + ", " + goalZ + ")");
     try {
