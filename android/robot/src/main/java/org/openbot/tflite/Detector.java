@@ -214,6 +214,15 @@ public abstract class Detector extends Network {
     return recognitions;
   }
 
+  /**
+   * Recognizes multiple objects in the given Bitmap using the model for (detect multiple object) blockly command.
+   *
+   * @param bitmap The input Bitmap for object recognition.
+   * @param classNameFirst The first class name for start vehicle recognition.
+   * @param classNameSecond The second class name for stop vehicle recognition.
+   * @return An ArrayList of ArrayLists containing Recognition results for both classes.
+   * @throws IllegalArgumentException if an error occurs during recognition.
+   */
   public ArrayList<ArrayList<Recognition>> recognizeMultipleImage(final Bitmap bitmap, String classNameFirst, String classNameSecond)
           throws IllegalArgumentException {
     // Log this method so that it can be analyzed with systrace.

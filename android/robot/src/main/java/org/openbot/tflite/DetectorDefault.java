@@ -149,6 +149,12 @@ public class DetectorDefault extends Detector {
     return nms(recognitions);
   }
 
+  /**
+   * Retrieves both recognized objects from the model's output and organizes them into ArrayLists
+   * based on class names.
+   *
+   * @return An ArrayList of ArrayLists containing Recognition results for both classes.
+   */
   @Override
   protected ArrayList<ArrayList<Recognition>> getAllRecognitions(String classNameFirst, String classNameSecond) {
     final ArrayList<ArrayList<Recognition>> allRecognitions = new ArrayList<>(getNumDetections());
