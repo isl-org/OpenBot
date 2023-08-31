@@ -65,6 +65,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
         v -> {
           if (itemClickListener.onModelDownloadClicked()) {
             holder.imgDownload.setClickable(false);
+            // Check the download model path and call the appropriate API to download the model.
             if(holder.mItem.path.startsWith("https://drive.google.com")){
               downloadFromDrive(holder);
             } else {
@@ -101,6 +102,11 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
     holder.title.setAlpha((holder.mItem.pathType == Model.PATH_TYPE.URL) ? 0.7f : 1f);
   }
 
+  /**
+   * Downloads a model from Google Drive using the provided ViewHolder.
+   *
+   * @param holder The ViewHolder associated with the download task.
+   */
   private void downloadFromDrive(ViewHolder holder) {
     new DownloadFileTask(mContext, progress -> {
       holder.progressBar.setProgress(progress);
@@ -127,6 +133,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
         outputStream.close();
         inputStream.close();
       } catch (IOException e) {
+        // Handle errors and notify listener on download failure
         holder.imgDownload.setClickable(true);
         holder.progressBar.setProgress(0);
         itemClickListener.onModelDownloaded(false, holder.mItem);

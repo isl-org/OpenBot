@@ -361,8 +361,7 @@ public class LoggerFragment extends CameraFragment {
     requireActivity().stopService(intentSensorService);
 
     // Pack and upload the collected data
-    runInBackground(
-        () -> {
+    runInBackground(() -> {
           try {
             File folder = new File(logFolder);
             switch (saveAs) {
