@@ -259,10 +259,9 @@ pythonGenerator['objectTracking'] = function (block) {
     return code;
 };
 
-pythonGenerator['disableAI'] = function (block) {
-    let dropdown_ai = block.getFieldValue('AI');
-    let code = "";
-    code += "disable('" + dropdown_ai + "')\n";
+pythonGenerator['disableAI'] = function () {
+    let code = '';
+    code += "disableAI();\n";
     return code;
 };
 

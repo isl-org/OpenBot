@@ -302,10 +302,9 @@ javascriptGenerator['objectTracking'] = function (block, generator) {
 };
 
 //Javascript generated function for stop AI block
-javascriptGenerator['disableAI'] = function (block) {
-    let dropdown_ai = block.getFieldValue('AI');
-    let code = "";
-    code += "disable('" + dropdown_ai + "');\n";
+javascriptGenerator['disableAI'] = function () {
+    let code = '';
+    code += "disableAI();\n";
     return code;
 };
 

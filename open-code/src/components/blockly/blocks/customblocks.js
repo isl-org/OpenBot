@@ -746,7 +746,7 @@ Blockly.Blocks["navigateForwardAndLeft"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "reach to forward at %1 (cm) and left at %2 (cm) using %3",
+            "message0": "move to forward at %1 (cm) and left at %2 (cm) using %3",
             "args0": [
                 {
                     "type": "field_number",
@@ -783,30 +783,10 @@ Blockly.Blocks["disableAI"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "disable %1",
-            "args0": [
-                {
-                    "type": "field_dropdown",
-                    "name": "AI",
-                    "options": [
-                        [
-                            "Autopilot",
-                            "autopilot"
-                        ],
-                        [
-                            "Object Tracking",
-                            "object_tracking"
-                        ],
-                        [
-                            "Point Goal Navigation",
-                            "point_goal_navigation"
-                        ]
-                    ]
-                }
-            ],
+            "message0": "disable AI",
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 105,
+            "colour": "#a4302a",
             "tooltip": "",
             "helpUrl": ""
         });
