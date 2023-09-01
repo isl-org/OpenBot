@@ -778,49 +778,12 @@ Blockly.Blocks["navigateForwardAndLeft"] = {
     }
 };
 
-//Blockly json structure for AI multiple object tracking block
-Blockly.Blocks["multipleObjectTracking"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "follow a %1 using %2, stop when see %3",
-            "args0": [
-                {
-                    "type": "field_dropdown",
-                    "name": "labels1",
-                    "options": filterLabels()
-                },
-                {
-                    "type": "field_dropdown",
-                    "name": "models",
-                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
-                        [
-                            "MobileNetV1-300",
-                            "MobileNetV1-300"
-                        ]
-                    ]
-                },
-                {
-                    "type": "field_dropdown",
-                    "name": "labels2",
-                    "options": filterLabels()
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
 //Blockly json structure for stop AI detection block
-Blockly.Blocks["stopAI"] = {
+Blockly.Blocks["disableAI"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "stop %1",
+            "message0": "disable %1",
             "args0": [
                 {
                     "type": "field_dropdown",
@@ -901,8 +864,8 @@ Blockly.Blocks["multipleAIDetection"] = {
     }
 };
 
-
-Blockly.Blocks["dynamicObjectTracking"] = {
+//Blockly json structure for AI multiple object tracking block
+Blockly.Blocks["multipleObjectTracking"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",

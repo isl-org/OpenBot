@@ -301,21 +301,11 @@ javascriptGenerator['objectTracking'] = function (block, generator) {
     return code;
 };
 
-//Javascript generated function for AI multiple object tracking block
-javascriptGenerator['multipleObjectTracking'] = function (block, generator) {
-    let labels1 = block.getFieldValue('labels1');
-    let models = block.getFieldValue('models');
-    let labels2 = block.getFieldValue('labels2');
-    let code = "";
-    code += "followAndStop('" + labels1 + "','" + models + "','" + labels2 + "');\n"
-    return code;
-};
-
 //Javascript generated function for stop AI block
-javascriptGenerator['stopAI'] = function (block) {
+javascriptGenerator['disableAI'] = function (block) {
     let dropdown_ai = block.getFieldValue('AI');
     let code = "";
-    code += "stopAI('" + dropdown_ai + "');\n"
+    code += "disable('" + dropdown_ai + "');\n";
     return code;
 };
 
@@ -330,12 +320,13 @@ javascriptGenerator['multipleAIDetection'] = function (block) {
     return code;
 };
 
-javascriptGenerator['dynamicObjectTracking'] = function (block) {
+//Javascript generated function for AI multiple object tracking block
+javascriptGenerator['multipleObjectTracking'] = function (block) {
     let labels1 = block.getFieldValue('labels1');
     let models = block.getFieldValue('models');
     let labels2 = block.getFieldValue('labels2');
     let tasks = javascriptGenerator.statementToCode(block, 'tasks');
     let code = "";
-    code += "detectAndPerform('" + labels1 + "','" + models + "','" + labels2 + "','" + tasks + "');\n";
+    code += "enableMultipleDetection('" + labels1 + "','" + models + "','" + labels2 + "','" + tasks + "');\n";
     return code;
 };
