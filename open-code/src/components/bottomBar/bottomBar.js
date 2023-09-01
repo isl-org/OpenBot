@@ -74,7 +74,7 @@ export const BottomBar = () => {
                     for (let i = 0; i < allChildBlocks.length; i++) {
                         if (aiBlocks.includes(allChildBlocks[i])) {
                             configuredAIBlocks.push(allChildBlocks[i]);
-                        } else if (allChildBlocks[i] === "stopAI") {
+                        } else if (allChildBlocks[i] === "disableAI") {
                             configuredAIBlocks.pop();
                         }
                         if (configuredAIBlocks.length > 1) {
