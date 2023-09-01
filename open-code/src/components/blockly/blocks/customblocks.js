@@ -820,17 +820,30 @@ Blockly.Blocks["stopAI"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "%1",
+            "message0": "stop %1",
             "args0": [
                 {
-                    "type": "field_label_serializable",
-                    "name": "movement_stop",
-                    "text": "stop AI detection"
+                    "type": "field_dropdown",
+                    "name": "AI",
+                    "options": [
+                        [
+                            "Autopilot",
+                            "autopilot"
+                        ],
+                        [
+                            "Object Tracking",
+                            "object_tracking"
+                        ],
+                        [
+                            "Point Goal Navigation",
+                            "point_goal_navigation"
+                        ]
+                    ]
                 }
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 345,
+            "colour": 105,
             "tooltip": "",
             "helpUrl": ""
         });
@@ -870,6 +883,53 @@ Blockly.Blocks["multipleAIDetection"] = {
                             "MobileNetV1-300"
                         ]
                     ]
+                },
+                {
+                    "type": "input_dummy"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "tasks"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 230,
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+
+Blockly.Blocks["dynamicObjectTracking"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "follow a  %1 using %2 , %3 on detecting %4 %5 Do %6",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "labels1",
+                    "options": filterLabels()
+                },
+                {
+                    "type": "field_dropdown",
+                    "name": "models",
+                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
+                        [
+                            "MobileNetV1-300",
+                            "MobileNetV1-300"
+                        ]
+                    ]
+                },
+                {
+                    "type": "input_dummy"
+                },
+                {
+                    "type": "field_dropdown",
+                    "name": "labels2",
+                    "options": filterLabels()
                 },
                 {
                     "type": "input_dummy"

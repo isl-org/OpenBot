@@ -268,9 +268,10 @@ pythonGenerator['multipleObjectTracking'] = function (block, generator) {
     return code;
 };
 
-pythonGenerator['stopAI'] = function () {
-    let code = '';
-    code += "stopAI()\n";
+pythonGenerator['stopAI'] = function (block) {
+    let dropdown_ai = block.getFieldValue('AI');
+    let code = "";
+    code += "stopAI('" + dropdown_ai + "')\n"
     return code;
 };
 
@@ -281,5 +282,15 @@ pythonGenerator['multipleAIDetection'] = function (block) {
     let tasks = pythonGenerator.statementToCode(block, 'tasks');
     let code = "";
     code += "enableMultipleAI('" + autopilot_models + "','" + tasks + "','" + labels + "','" + objectTracking_models + "')\n"
+    return code;
+};
+
+pythonGenerator['dynamicObjectTracking'] = function (block) {
+    let labels1 = block.getFieldValue('labels1');
+    let models = block.getFieldValue('models');
+    let labels2 = block.getFieldValue('labels2');
+    let tasks = pythonGenerator.statementToCode(block, 'tasks');
+    let code = "";
+    code += "detectAndPerform('" + labels1 + "','" + models + "','" + labels2 + "','" + tasks + "');\n";
     return code;
 };

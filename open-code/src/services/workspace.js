@@ -383,6 +383,22 @@ async function autoSync() {
     )
 }
 
+/**
+ * function to contain all child blocks inside statement blocks
+ * @param array
+ * @param child
+ * @returns {*}
+ */
+function handleChildBlockInWorkspace(array, child) {
+    if (array.length > 0) {
+        array.forEach((item) => {
+            child.push(item.type)
+            handleChildBlockInWorkspace(item.childBlocks_, child)
+        })
+    }
+    return child;
+}
+
 export {
     autoSync,
     getDriveProjects,
@@ -398,5 +414,6 @@ export {
     setConfigData,
     filterModels,
     getConfigData,
-    filterLabels
+    filterLabels,
+    handleChildBlockInWorkspace,
 }

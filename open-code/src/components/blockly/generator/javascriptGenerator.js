@@ -312,9 +312,10 @@ javascriptGenerator['multipleObjectTracking'] = function (block, generator) {
 };
 
 //Javascript generated function for stop AI block
-javascriptGenerator['stopAI'] = function () {
-    let code = '';
-    code += "stopAI();\n";
+javascriptGenerator['stopAI'] = function (block) {
+    let dropdown_ai = block.getFieldValue('AI');
+    let code = "";
+    code += "stopAI('" + dropdown_ai + "');\n"
     return code;
 };
 
@@ -326,5 +327,15 @@ javascriptGenerator['multipleAIDetection'] = function (block) {
     let tasks = javascriptGenerator.statementToCode(block, 'tasks');
     let code = "";
     code += "enableMultipleAI('" + autopilot_models + "','" + tasks + "','" + labels + "','" + objectTracking_models + "');\n"
+    return code;
+};
+
+javascriptGenerator['dynamicObjectTracking'] = function (block) {
+    let labels1 = block.getFieldValue('labels1');
+    let models = block.getFieldValue('models');
+    let labels2 = block.getFieldValue('labels2');
+    let tasks = javascriptGenerator.statementToCode(block, 'tasks');
+    let code = "";
+    code += "detectAndPerform('" + labels1 + "','" + models + "','" + labels2 + "','" + tasks + "');\n";
     return code;
 };

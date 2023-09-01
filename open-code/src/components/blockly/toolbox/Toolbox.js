@@ -139,7 +139,8 @@ export const Toolbox = (props) => {
                 <Label text="Artificial Intelligence" web-class="Heading"></Label>
                 <Block type="objectTracking"/>
                 <Block type="autopilot"/>
-                <Block type="multipleObjectTracking"/>
+                {/*<Block type="multipleObjectTracking"/>*/}
+                <Block type="dynamicObjectTracking"/>
                 <Block type="navigateForwardAndLeft"/>
                 <Block type="multipleAIDetection"/>
                 <Block type="stopAI"/>
