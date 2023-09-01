@@ -7,7 +7,7 @@ import {ThemeContext} from "../../App";
 import {aiBlocks, Constants, DarkTheme, errorToast, LightTheme, PathName} from "../../utils/constants";
 import {Modal} from "@blockly/plugin-modal";
 import {StoreContext} from "../../context/context";
-import {getCurrentProject, updateCurrentProject} from "../../services/workspace";
+import {getCurrentProject, handleChildBlockInWorkspace, updateCurrentProject} from "../../services/workspace";
 import {useTheme} from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {checkFileExistsInFolder, getFolderId, getShareableLink} from "../../services/googleDrive";
@@ -122,8 +122,8 @@ function BlocklyComponent(props) {
         const forever = primaryWorkspace.current.getBlocksByType("forever")
         let startBlock = start[0]?.childBlocks_
         let filteredAIBlocks = []
-        if (startBlock?.length > 0 && forever.length > 0) {
-            let handleEvents = handleStartChildBlocks(startBlock, childArray)
+        if (start?.length > 0 && forever.length > 0) {
+            let handleEvents = handleChildBlockInWorkspace(startBlock, childArray)
             handleEvents?.forEach((item) => {
                 if (aiBlocks.includes(item)) {
                     filteredAIBlocks.push(item)
@@ -139,20 +139,6 @@ function BlocklyComponent(props) {
             }
         }
     }, [])
-
-    /**
-     * function to contain all blocks inside start block
-     * @param startBlock
-     * @param childArray
-     * @returns {*}
-     */
-    const handleStartChildBlocks = (startBlock, childArray) => {
-        startBlock.forEach((item) => {
-            childArray.push(item.type)
-            handleStartChildBlocks(item.childBlocks_, childArray)
-        })
-        return childArray;
-    }
 
     //function to check qr code availability and display drive link
     const checkQRCode = async () => {

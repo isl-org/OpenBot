@@ -30,7 +30,7 @@ Blockly.Blocks["start"] = {
                     "name": "start_blocks"
                 }
             ],
-            "colour": 210,
+            "colour": "#4860b7",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -54,7 +54,7 @@ Blockly.Blocks["forever"] = {
                     "name": "forever_loop_blocks"
                 }
             ],
-            "colour": 210,
+            "colour": "#4860b7",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -82,7 +82,7 @@ Blockly.Blocks["wait"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 210,
+            "colour": "#4860b7",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -117,7 +117,7 @@ Blockly.Blocks["soundType"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 345,
+            "colour": "#709662",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -152,7 +152,7 @@ Blockly.Blocks["soundMode"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 345,
+            "colour": "#709662",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -191,7 +191,7 @@ Blockly.Blocks["forward&BackwardAtSpeed"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 195,
+            "colour": "#d56235",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -230,7 +230,7 @@ Blockly.Blocks["left&RightAtSpeed"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 195,
+            "colour": "#d56235",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -273,7 +273,7 @@ Blockly.Blocks["moveLeft&Right"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 195,
+            "colour": "#d56235",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -296,7 +296,7 @@ Blockly.Blocks["movementStop"] = {
 
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 345,
+            "colour": "#ca3143",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -310,7 +310,7 @@ Blockly.Blocks["sonarReading"] = {
             "type": "ellipse_block",
             "message0": "sonar reading",
             "output": "Number",
-            "colour": 240,
+            "colour": "#49a2a5",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -324,7 +324,7 @@ Blockly.Blocks["speedReading"] = {
             "type": "ellipse_block",
             "message0": "speed reading",
             "output": "Number",
-            "colour": 240,
+            "colour": "#49a2a5",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -338,7 +338,7 @@ Blockly.Blocks["voltageDividerReading"] = {
             "type": "ellipse_block",
             "message0": "voltage divider reading",
             "output": "Number",
-            "colour": 240,
+            "colour": "#49a2a5",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -368,7 +368,7 @@ Blockly.Blocks["wheelOdometerSensors"] = {
                 }
             ],
             "output": "Number",
-            "colour": 240,
+            "colour": "#49a2a5",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -402,7 +402,7 @@ Blockly.Blocks["gyroscope_reading"] = {
                 }
             ],
             "output": "Number",
-            "colour": 240,
+            "colour": "#49a2a5",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -436,7 +436,7 @@ Blockly.Blocks["acceleration_reading"] = {
                 }
             ],
             "output": "Number",
-            "colour": 240,
+            "colour": "#49a2a5",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -470,7 +470,7 @@ Blockly.Blocks["magnetic_reading"] = {
                 }
             ],
             "output": "Number",
-            "colour": 240,
+            "colour": "#49a2a5",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -505,7 +505,7 @@ Blockly.Blocks["speedControl"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 195,
+            "colour": "#d56235",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -536,7 +536,7 @@ Blockly.Blocks["controllerMode"] = {
                 ],
                 "previousStatement": null,
                 "nextStatement": null,
-                "colour": 230,
+                "colour": "#bf778b",
                 "tooltip": "",
                 "helpUrl": ""
             }
@@ -572,7 +572,7 @@ Blockly.Blocks["driveModeControls"] = {
                 ],
                 "previousStatement": null,
                 "nextStatement": null,
-                "colour": 230,
+                "colour": "#bf778b",
                 "tooltip": "",
                 "helpUrl": ""
             }
@@ -587,7 +587,7 @@ Blockly.Blocks["bumper"] = {
             "type": "ellipse_block",
             "message0": "check if bumper collided with an obstacle",
             "output": "Number",
-            "colour": 240,
+            "colour": "#49a2a5",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -612,7 +612,7 @@ Blockly.Blocks["brightness"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 230,
+            "colour": "#687c9e",
             "tooltip": "",
             "helpUrl": ""
 
@@ -651,7 +651,7 @@ Blockly.Blocks["indicators"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 230,
+            "colour":"#687c9e",
             "tooltip": "",
             "helpUrl": ""
 
@@ -676,7 +676,7 @@ Blockly.Blocks["brightnessHighOrLow"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 230,
+            "colour": "#687c9e",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -708,7 +708,7 @@ Blockly.Blocks["objectTracking"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 230,
+            "colour": "#458ff7",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -734,7 +734,7 @@ Blockly.Blocks["autopilot"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 230,
+            "colour": "#458ff7",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -746,7 +746,7 @@ Blockly.Blocks["navigateForwardAndLeft"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "reach to forward at %1 (cm) and left at %2 (cm) using %3",
+            "message0": "move to forward at %1 (cm) and left at %2 (cm) using %3",
             "args0": [
                 {
                     "type": "field_number",
@@ -771,44 +771,7 @@ Blockly.Blocks["navigateForwardAndLeft"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 230,
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-//Blockly json structure for AI multiple object tracking block
-Blockly.Blocks["multipleObjectTracking"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "follow a %1 using %2, stop when see %3",
-            "args0": [
-                {
-                    "type": "field_dropdown",
-                    "name": "labels1",
-                    "options": filterLabels()
-                },
-                {
-                    "type": "field_dropdown",
-                    "name": "models",
-                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
-                        [
-                            "MobileNetV1-300",
-                            "MobileNetV1-300"
-                        ]
-                    ]
-                },
-                {
-                    "type": "field_dropdown",
-                    "name": "labels2",
-                    "options": filterLabels()
-                }
-            ],
-            "previousStatement": null,
-            "nextStatement": null,
-            "colour": 230,
+            "colour": "#458ff7",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -816,21 +779,14 @@ Blockly.Blocks["multipleObjectTracking"] = {
 };
 
 //Blockly json structure for stop AI detection block
-Blockly.Blocks["stopAI"] = {
+Blockly.Blocks["disableAI"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "%1",
-            "args0": [
-                {
-                    "type": "field_label_serializable",
-                    "name": "movement_stop",
-                    "text": "stop AI detection"
-                }
-            ],
+            "message0": "disable AI",
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 345,
+            "colour": "#ca3143",
             "tooltip": "",
             "helpUrl": ""
         });
@@ -881,7 +837,54 @@ Blockly.Blocks["multipleAIDetection"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 230,
+            "colour": "#458ff7",
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+//Blockly json structure for AI multiple object tracking block
+Blockly.Blocks["multipleObjectTracking"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "follow a  %1 using %2 , %3 on detecting %4 %5 Do %6",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "labels1",
+                    "options": filterLabels()
+                },
+                {
+                    "type": "field_dropdown",
+                    "name": "models",
+                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
+                        [
+                            "MobileNetV1-300",
+                            "MobileNetV1-300"
+                        ]
+                    ]
+                },
+                {
+                    "type": "input_dummy"
+                },
+                {
+                    "type": "field_dropdown",
+                    "name": "labels2",
+                    "options": filterLabels()
+                },
+                {
+                    "type": "input_dummy"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "tasks"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": "#458ff7",
             "tooltip": "",
             "helpUrl": ""
         });

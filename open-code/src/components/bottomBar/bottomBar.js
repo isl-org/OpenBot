@@ -17,7 +17,7 @@ import BlackText from "../fonts/blackText";
 import {Images} from "../../utils/images";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
-import {getCurrentProject} from "../../services/workspace";
+import {getCurrentProject, handleChildBlockInWorkspace} from "../../services/workspace";
 import navbarStyle from "../navBar/navbar.module.css"
 import BlueText from "../fonts/blueText";
 import {ModelUploadingComponent} from "./modelUploadingComponent";
@@ -59,22 +59,6 @@ export const BottomBar = () => {
     }
 
     /**
-     * handling child blocks inside start block
-     * @param array
-     * @param child
-     * @returns {*}
-     */
-    function handleAllChildBlocks(array, child) {
-        if (array.length > 0) {
-            array.forEach((item) => {
-                child.push(item.type)
-                handleAllChildBlocks(item.childBlocks_, child)
-            })
-        }
-        return child;
-    }
-
-    /**
      * handling adjacent AI blocks error
      * @param start
      * @returns {boolean}
@@ -85,12 +69,12 @@ export const BottomBar = () => {
         let configuredAIBlocks = []
         if (start.length !== 0) {
             if (start[0].childBlocks_.length > 0) {
-                allChildBlocks = handleAllChildBlocks(start[0].childBlocks_, child)
+                allChildBlocks = handleChildBlockInWorkspace(start[0].childBlocks_, child)
                 if (allChildBlocks.length > 0) {
                     for (let i = 0; i < allChildBlocks.length; i++) {
                         if (aiBlocks.includes(allChildBlocks[i])) {
                             configuredAIBlocks.push(allChildBlocks[i]);
-                        } else if (allChildBlocks[i] === "stopAI") {
+                        } else if (allChildBlocks[i] === "disableAI") {
                             configuredAIBlocks.pop();
                         }
                         if (configuredAIBlocks.length > 1) {
@@ -123,7 +107,7 @@ export const BottomBar = () => {
                 let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false);  //filtering multiple objectTracking connected blocks
                 let isAIBlocksAdjacent = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
                 let array = []
-                let foreverChildBlocks = handleAllChildBlocks(forever, array)
+                let foreverChildBlocks = handleChildBlockInWorkspace(forever, array)
                 let isForeverContainsAI;
                 foreverChildBlocks.forEach((item) => {
                     if (aiBlocks.includes(item)) {

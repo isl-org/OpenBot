@@ -22,7 +22,33 @@ export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "contro
  */
 export const DarkTheme = Blockly.Theme.defineTheme('dark', {
     'base': Blockly.Themes.Classic,
-    'blockStyles': {},
+    'blockStyles': {
+        'logic_blocks': {
+            'colourPrimary': "#4860b7",
+            'colourSecondary': "#4860b7",
+            'colourTertiary': "#2b3c7b"
+        },
+        'loop_blocks': {
+            'colourPrimary': "#b75439",
+            'colourSecondary': "#ff0000",
+            'colourTertiary': "#8c4531"
+        },
+        "text_blocks": {
+            'colourPrimary': "#c169c9",
+            'colourSecondary': "#ff0000",
+            'colourTertiary': "#a65aad"
+        },
+        'variable_blocks': {
+            'colourPrimary': "#c169c9",
+            'colourSecondary': "#ff0000",
+            'colourTertiary': "#a65aad"
+        },
+        'math_blocks': {
+            'colourPrimary': "#8b6aee",
+            'colourSecondary': "#ff0000",
+            'colourTertiary': "#5f46ab"
+        },
+    },
     'componentStyles': {
         'workspaceBackgroundColour': colors.blocklyBackground,
         'toolboxBackgroundColour': colors.blocklyBackground,
@@ -37,6 +63,33 @@ export const DarkTheme = Blockly.Theme.defineTheme('dark', {
  */
 export const LightTheme = Blockly.Theme.defineTheme('light', {
     'base': Blockly.Themes.Classic,
+    'blockStyles': {
+        'logic_blocks': {
+            'colourPrimary': "#4860b7",
+            'colourSecondary': "#4860b7",
+            'colourTertiary': "#2b3c7b"
+        },
+        'loop_blocks': {
+            'colourPrimary': "#b75439",
+            'colourSecondary': "#ff0000",
+            'colourTertiary': "#8c4531"
+        },
+        "text_blocks": {
+            'colourPrimary': "#c169c9",
+            'colourSecondary': "#ff0000",
+            'colourTertiary': "#a65aad"
+        },
+        'variable_blocks': {
+            'colourPrimary': "#c169c9",
+            'colourSecondary': "#ff0000",
+            'colourTertiary': "#a65aad"
+        },
+        'math_blocks': {
+            'colourPrimary': "#8b6aee",
+            'colourSecondary': "#ff0000",
+            'colourTertiary': "#5f46ab"
+        },
+    },
     'componentStyles': {
         'workspaceBackgroundColour': colors.whiteBackground,
         'toolboxBackgroundColour': colors.whiteBackground,
@@ -107,8 +160,8 @@ export const Constants = {
 export const Errors = {
     error1: "No start or forever block present in the playground.",
     error2: "Detected adjacent AI blocks. Please review the Start block configuration.",
-    error3: "Identical objects for AI block that follow and stop.",
-    error4: "AI block present in the forever block"
+    error3: "Identical objects for multiple detection AI block.",
+    error4: "AI block present within the forever block. Please review the block code."
 }
 
 /**
@@ -266,4 +319,8 @@ export const errorToast = (message) => {
     })
 }
 
+/**
+ * AI block types
+ * @type {string[]}
+ */
 export const aiBlocks = ["objectTracking", "autopilot", "multipleObjectTracking", "navigateForwardAndLeft", "multipleAIDetection"];

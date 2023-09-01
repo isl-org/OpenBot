@@ -259,18 +259,9 @@ pythonGenerator['objectTracking'] = function (block) {
     return code;
 };
 
-pythonGenerator['multipleObjectTracking'] = function (block, generator) {
-    let labels1 = block.getFieldValue('labels1');
-    let models = block.getFieldValue('models');
-    let labels2 = block.getFieldValue('labels2');
-    let code = "";
-    code += "followAndStop('" + labels1 + "','" + models + "','" + labels2 + "')\n";
-    return code;
-};
-
-pythonGenerator['stopAI'] = function () {
+pythonGenerator['disableAI'] = function () {
     let code = '';
-    code += "stopAI()\n";
+    code += "disableAI();\n";
     return code;
 };
 
@@ -281,5 +272,15 @@ pythonGenerator['multipleAIDetection'] = function (block) {
     let tasks = pythonGenerator.statementToCode(block, 'tasks');
     let code = "";
     code += "enableMultipleAI('" + autopilot_models + "','" + tasks + "','" + labels + "','" + objectTracking_models + "')\n"
+    return code;
+};
+
+pythonGenerator['multipleObjectTracking'] = function (block) {
+    let labels1 = block.getFieldValue('labels1');
+    let models = block.getFieldValue('models');
+    let labels2 = block.getFieldValue('labels2');
+    let tasks = pythonGenerator.statementToCode(block, 'tasks');
+    let code = "";
+    code += "enableMultipleDetection('" + labels1 + "','" + models + "','" + labels2 + "','" + tasks + "');\n";
     return code;
 };
