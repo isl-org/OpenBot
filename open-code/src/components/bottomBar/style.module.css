@@ -81,6 +81,10 @@
     cursor: pointer;
 }
 
+.features:hover {
+    opacity: 85%;
+}
+
 .leftButton {
     display: flex;
     font-family: Gilroy-medium, sans-serif;

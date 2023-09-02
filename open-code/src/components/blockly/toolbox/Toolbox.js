@@ -87,8 +87,6 @@ export const Toolbox = (props) => {
                 <Block type="variables_set"/>
                 <Block type="variables_get"/>
                 <Block type="math_change"/>
-                <Block type="logic_boolean"/>
-                <Block type="logic_null"/>
                 <Block type="math_number"/>
                 <Block type="text"/>
             </Category>
@@ -100,7 +98,7 @@ export const Toolbox = (props) => {
                 <Block type="brightnessHighOrLow"/>
             </Category>
 
-            <Category name="Controller" colour={"#8156C9"}>
+            <Category name="Controller" colour={"#bf778b"}>
                 <Label text="Controller" web-class="Heading"></Label>
                 <Block type="controllerMode"></Block>
                 <Block type="driveModeControls"/>
@@ -113,7 +111,7 @@ export const Toolbox = (props) => {
                 </Block>,
             </Category>
 
-            <Category name="Sensors" colour={"#61A8EC"}>
+            <Category name="Sensors" colour={"#49a2a5"}>
                 <Label text="Phone Sensors" web-class="sensorsHeading"></Label>
                 <Block type="gyroscope_reading"/>
                 <Block type="acceleration_reading"/>
@@ -126,7 +124,7 @@ export const Toolbox = (props) => {
                 <Block type="wheelOdometerSensors"/>
             </Category>
 
-            <Category name="Movement" colour={"#DA4B5D"}>
+            <Category name="Movement" colour={"#d56235"}>
                 <Label text="Movement" web-class="Heading"></Label>
                 <Block type="speedControl"/>
                 <Block type="forward&BackwardAtSpeed"/>
@@ -135,7 +133,7 @@ export const Toolbox = (props) => {
                 <Block type="movementStop"/>
             </Category>
 
-            <Category name="AI" colour={"#D030BA"}>
+            <Category name="AI" colour={"#458ff7"}>
                 <Label text="Artificial Intelligence" web-class="Heading"></Label>
                 <Block type="disableAI"/>
                 <Block type="objectTracking"/>
