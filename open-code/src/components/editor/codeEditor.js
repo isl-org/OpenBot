@@ -1,8 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import ace from 'ace-builds';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/mode-python';
-import {useContext} from "react";
 import {StoreContext} from "../../context/context";
 import {javascriptGenerator} from "blockly/javascript";
 import {pythonGenerator} from "blockly/python";

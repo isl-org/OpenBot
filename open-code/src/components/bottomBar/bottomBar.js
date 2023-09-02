@@ -6,12 +6,7 @@ import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import {ThemeContext} from "../../App";
 import {aiBlocks, Constants, Errors, errorToast} from "../../utils/constants";
-import {
-    CircularProgress,
-    circularProgressClasses,
-    Popper,
-    useTheme
-} from "@mui/material";
+import {CircularProgress, circularProgressClasses, Popper, useTheme} from "@mui/material";
 import WhiteText from "../fonts/whiteText";
 import BlackText from "../fonts/blackText";
 import {Images} from "../../utils/images";
