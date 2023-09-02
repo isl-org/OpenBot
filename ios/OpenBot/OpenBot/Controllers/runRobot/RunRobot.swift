@@ -42,7 +42,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     private var forward: Double = 0
     private var left: Double = 0
     var configuration = ARWorldTrackingConfiguration()
-    var task : String  = ""
+    var task: String = ""
 
 
     /**
@@ -656,12 +656,14 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
                                     if (getStopObjectPos > getStartObjectPos) {
                                         self.sendControl(control: controlResult)
                                     } else {
-                                        self.sendControl(control: Control())
+                                        self.stopCar();
+                                        _ = jsEvaluator(jsCode: self.task);
                                     }
                                 }
                             }
                         } else if (stopObject.count > 0 && runObject.count == 0) {
-                            self.sendControl(control: Control())
+                            self.stopCar();
+                            _ = jsEvaluator(jsCode: self.task);
                         } else {
                             self.sendControl(control: Control())
                         }
@@ -766,7 +768,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     /**
      Function to stop the AI Blocks
      */
-    static func stopAI() {
+    static func disableAI() {
         isObjectTracking = false
         isAutopilot = false;
         isMultipleObjectTracking = false

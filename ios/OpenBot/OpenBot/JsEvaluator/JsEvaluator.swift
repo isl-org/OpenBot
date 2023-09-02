@@ -253,8 +253,8 @@ class jsEvaluator {
                     self.delegate?.didPerformAction();
                 }
 
-                let followAndStop: @convention(block) (String, String, String) -> Void = { (object1, model, object2) in
-                    self.runOpenBotThreadClass?.followAndStop(object1: object1, model: model, object2: object2);
+                let enableMultipleDetection: @convention(block) (String, String, String, String) -> Void = { (object1, model, object2, task) in
+                    self.runOpenBotThreadClass?.enableMultipleDetection(object1: object1, model: model, object2: object2, task: task);
                 }
 
                 let enableMultipleAI: @convention(block) (String, String, String, String) -> Void = { (autoPilotModelName, task, object, detectorModel) in
@@ -263,8 +263,8 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.startMultipleAI(autoPilotModelName: autoPilotModelName, task: task, object: object, detectorModel: detectorModel);
                 }
 
-                let stopAI: @convention(block) () -> Void = { () in
-                    self.runOpenBotThreadClass?.stopAI()
+                let disableAI: @convention(block) () -> Void = { () in
+                    self.runOpenBotThreadClass?.disableAI()
                 }
 
                 context.setObject(moveForward,
@@ -361,12 +361,12 @@ class jsEvaluator {
                         forKeyedSubscript: "setSpeed" as NSString)
                 context.setObject(enableAutopilot,
                         forKeyedSubscript: "enableAutopilot" as NSString);
-                context.setObject(followAndStop,
-                        forKeyedSubscript: "followAndStop" as NSString);
+                context.setObject(enableMultipleDetection,
+                        forKeyedSubscript: "enableMultipleDetection" as NSString);
                 context.setObject(enableMultipleAI,
                         forKeyedSubscript: "enableMultipleAI" as NSString);
-                context.setObject(stopAI,
-                        forKeyedSubscript: "stopAI" as NSString);
+                context.setObject(disableAI,
+                        forKeyedSubscript: "disableAI" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -945,7 +945,7 @@ class jsEvaluator {
             runRobot.enableObjectTracking(object: object, model: model);
         }
 
-    /**
+        /**
      A method that call static method enableAutopilot to initialize autopilot
      - Parameter model:
      */
@@ -957,19 +957,20 @@ class jsEvaluator {
         }
 
         /**
-            Function for follow and stop
+            Function to start multiple detection
          - Parameters:
            - object1:
            - model:
            - object2:
          */
-        func followAndStop(object1: String, model: String, object2: String) {
+        func enableMultipleDetection(object1: String, model: String, object2: String, task: String) {
             if isCancelled {
                 return
             }
             NotificationCenter.default.post(name: .commandObject, object: [object1, object2]);
-            NotificationCenter.default.post(name: .commandName, object: "follow and stop");
+            NotificationCenter.default.post(name: .commandName, object: "multiple detection");
             runRobot.enableMultipleObjectTracking(object1: object1, model: model, object2: object2);
+            NotificationCenter.default.post(name: .createCameraView, object: task);
         }
 
         /**
@@ -991,8 +992,8 @@ class jsEvaluator {
         /**
          Function to call static method of runRobot class to stop AI block
          */
-        func stopAI() {
-            runRobot.stopAI();
+        func disableAI() {
+            runRobot.disableAI();
         }
     }
 }
