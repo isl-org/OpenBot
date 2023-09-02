@@ -225,7 +225,7 @@ function RightSection(params) {
     return (
         <>
             {location.pathname === PathName.playGround && isSignedIn && !isMobile && !tabletQuery && !isMobileLandscape &&
-                <img className={`${styles.listStyle} ${isAutoSync && styles.sync}`} alt={"syncIcon"}
+                <img title={"Auto Sync"} className={`${styles.listStyle} ${isAutoSync && styles.sync}`} alt={"syncIcon"}
                      src={Images.darkSyncIcon}
                      onClick={async () => {
                          if (isOnline) {
@@ -249,13 +249,13 @@ function RightSection(params) {
             {location.pathname === PathName.playGround && !isMobile && !tabletQuery && !isMobileLandscape &&
                 <img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon}
                      onClick={() => setIsHelpCenterModal(true)}
-                     style={{height: 24}}/>
+                     style={{height: 24}} title={"Help"}/>
             }
             {/*if screen is playground, and it's mobile than do not show change theme icon and divider*/}
             {!(location.pathname === PathName.playGround && isMobile) &&
                 <>
                     {/*change theme icon*/}
-                    <img alt="icon" onClick={() => toggleTheme(!theme)}
+                    <img title={"Theme"} alt="icon" onClick={() => toggleTheme(!theme)}
                          src={theme === "dark" ? Images.lightThemeIcon : Images.darkThemeIcon}
                          className={`${theme === "dark" ? styles.lightThemeIcon : styles.darkThemeIcon} ${styles.iconMargin}`}/>
                     {/*divider*/}

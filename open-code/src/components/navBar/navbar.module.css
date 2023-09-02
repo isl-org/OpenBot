@@ -42,6 +42,10 @@
     cursor: pointer;
 }
 
+.listStyle:hover {
+    transform: scale(1.4);
+}
+
 .dropdownMargin {
     width: 20%;
 }
@@ -438,6 +442,14 @@
     height: 23px;
     width: 23px;
     cursor: pointer;
+}
+
+.lightThemeIcon:hover {
+    transform: scale(1.4);
+}
+
+.darkThemeIcon:hover {
+    transform: scale(1.4);
 }
 
 .lineIcon {

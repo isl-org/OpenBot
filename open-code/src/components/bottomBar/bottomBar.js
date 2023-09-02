@@ -180,10 +180,13 @@ export const BottomBar = () => {
         window.addEventListener("resize", handleOrientationChange);
     }, []);
 
-    //handle click  on bottom bar button event which affect workspace
+    /**
+     * handle click on bottom bar button event which affect workspace
+     */
     const clickedButton = (e) => {
         const {name} = e.target;
         setButtonSelected(name);
+
         //to verify if undoStack has items, or if both undo and redo are empty (first Project)
         const isUndo = () => {
             const workspace = Blockly.getMainWorkspace();
@@ -230,6 +233,10 @@ export const BottomBar = () => {
             }
             case "plus": {
                 Blockly.getMainWorkspace().zoom(1, 2, 1.5);
+                break;
+            }
+            case "uploadCode": {
+                generateCode();
                 break;
             }
             default: {
@@ -293,9 +300,9 @@ export const BottomBar = () => {
             </div>
             <div className={styles.buttonsDiv}>
                 {/*generate code*/}
-                <GenerateCodeButton buttonSelected={buttonSelected} generateCode={generateCode} setDrawer={setDrawer}
-                                    buttonActive={buttonActive} clickedButton={clickedButton}
-                                    setIsAIModelComponent={setIsAIModelComponent} setFile={setFile}/>
+                <UploadCodeButton buttonSelected={buttonSelected} setDrawer={setDrawer}
+                                  buttonActive={buttonActive} clickedButton={clickedButton}
+                                  setIsAIModelComponent={setIsAIModelComponent} setFile={setFile}/>
                 {/*model upload pop up */}
                 {
                     isAIModelComponent &&
@@ -324,8 +331,8 @@ export const BottomBar = () => {
  * @returns {JSX.Element}
  * @constructor
  */
-function GenerateCodeButton(params) {
-    const {generateCode, buttonSelected, buttonActive, setDrawer, setIsAIModelComponent, setFile} = params
+function UploadCodeButton(params) {
+    const {clickedButton, buttonSelected, buttonActive, setDrawer, setIsAIModelComponent, setFile} = params
     const themes = useTheme();
     const {setCategory} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
@@ -396,7 +403,7 @@ function GenerateCodeButton(params) {
             {/*generate QR code*/}
             <button
                 className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
-                name={"uploadCode"} onClick={generateCode}>
+                name={"uploadCode"} onClick={clickedButton}>
                 {isMobile || isLandscape || isTabletQuery.matches || isDesktopSmallerScreen ? (
                     ""
                 ) : (
@@ -405,8 +412,8 @@ function GenerateCodeButton(params) {
                 <img alt={""}
                      className={styles.iconDiv} src={Images.uploadIcon}/>
             </button>
-            <div
-                className={`${styles.features}`} ref={popUpRef} onClick={handleClick}>
+            <div title={"Features"}
+                 className={`${styles.features}`} ref={popUpRef} onClick={handleClick}>
                 <img alt={"features"} className={styles.iconDiv} src={Images.darkDots}/>
             </div>
 

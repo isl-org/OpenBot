@@ -302,7 +302,7 @@ export function ProfileSignIn(params) {
 function ImageWithArrow(params) {
     const {setIsProfileModal, user, isMobile, signIn} = params
     return (
-        <div onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
+        <div title={"User Profile"} onClick={() => setIsProfileModal(true)} className={styles.profileDiv}>
 
             {/*image display*/}
             {signIn ? user?.photoURL ?
