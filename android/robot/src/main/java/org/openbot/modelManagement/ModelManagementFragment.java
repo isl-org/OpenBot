@@ -179,29 +179,11 @@ public class ModelManagementFragment extends Fragment
   }
 
   private void openPicker() {
-
-//    Intent i = new Intent(requireActivity(), BackHandlingFilePickerActivity.class);
-//    // This works if you defined the intent filter
-//    // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-//
-//    // Set these depending on your use case. These are the defaults.
-//    i.putExtra(BackHandlingFilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-//    i.putExtra(BackHandlingFilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-//    i.putExtra(BackHandlingFilePickerActivity.EXTRA_MODE, BackHandlingFilePickerActivity.MODE_FILE);
-//
-//    // Configure initial directory by specifying a String.
-//    // You could specify a String like "/storage/emulated/0/", but that can
-//    // dangerous. Always use Android's API calls to get paths to the SD-card or
-//    // internal memory.
-//    i.putExtra(
-//        BackHandlingFilePickerActivity.EXTRA_START_PATH,
-//        Environment.getExternalStorageDirectory().getPath());
       Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
       intent.setType("application/octet-stream"); // Specify the MIME type for TFLite files
       intent.addCategory(Intent.CATEGORY_OPENABLE);
 
       mStartForResult.launch(intent);
-
   }
 
   @Nullable
