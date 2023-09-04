@@ -466,13 +466,13 @@ function UndoRedo(params) {
     const {clickedButton, buttonSelected, buttonActive} = params
     return (
         <div className={styles.buttonMargin + " " + styles.iconMargin}>
-            <button
+            <button title={"Undo"}
                 onClick={clickedButton}
                 className={`${styles.buttonStyle} ${styles.minusStyle} ${styles.borderStyle} ${buttonSelected === "undo" && buttonActive ? styles.buttonColor : ""}`}
                 name={"undo"}>
                 <img alt={""} className={styles.commandSize} src={Images.undoIcon}/>
             </button>
-            <button onClick={clickedButton}
+            <button onClick={clickedButton} title={"Redo"}
                     className={`${styles.buttonStyle} ${styles.plusStyle} ${buttonSelected === "redo" && buttonActive ? styles.buttonColor : ""}`}
                     name={"redo"}>
                 <img alt={""} className={styles.commandSize} src={Images.redoIcon}/>
@@ -493,12 +493,12 @@ function ZoomInOut(params) {
     const {clickedButton, buttonSelected, buttonActive} = params;
     return (
         <div className={styles.iconMargin}>
-            <button onClick={clickedButton}
+            <button onClick={clickedButton} title={"Zoom Out"}
                     className={`${styles.buttonStyle} ${styles.minusStyle} ${styles.borderStyle} ${buttonSelected === "minus" && buttonActive ? styles.buttonColor : ""}`}
                     name={"minus"}>
                 <span className={styles.operationSize}>-</span>
             </button>
-            <button onClick={clickedButton}
+            <button onClick={clickedButton} title={"Zoom In"}
                     className={`${styles.buttonStyle} ${styles.plusStyle} ${buttonSelected === "plus" && buttonActive ? styles.buttonColor : ""}`}
                     name={"plus"}>
                 <span className={styles.operationSize}>+</span>
