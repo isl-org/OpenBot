@@ -39,8 +39,8 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     var marker = SCNNode()
     private var startingPoint = SCNNode()
     private var endingPoint: SCNNode!
-    private var forward: Double = 0
-    private var left: Double = 0
+    static var forward: Double = 0
+    static var left: Double = 0
     var configuration = ARWorldTrackingConfiguration()
     var task: String = ""
 
@@ -97,7 +97,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
                 let camera = self.sceneView.pointOfView!
                 let cameraTransform = camera.transform
                 _ = SCNVector3(-cameraTransform.m31, -cameraTransform.m32, -cameraTransform.m33)
-                let markerInCameraFrame = SCNVector3(Float(-self.left), 0.0, Float(-self.forward))
+                let markerInCameraFrame = SCNVector3(Float(-runRobot.left), 0.0, Float(-runRobot.forward))
                 let markerInWorldFrame = markerInCameraFrame.transformed(by: cameraTransform)
                 self.marker = SCNNode(geometry: SCNPlane(width: 0.1, height: 0.1))
                 self.marker.position = markerInWorldFrame
@@ -192,7 +192,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     @objc func updateCommandObject(_ notification: Notification) {
         DispatchQueue.main.async {
             runRobot.detector?.setMultipleSelectedClass(newClasses: notification.object as! [String])
-            self.setVectorPositions(positions: notification.object as! [String]);
         }
     }
 
@@ -219,18 +218,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         let configuration = ARWorldTrackingConfiguration()
         sceneView.session.run(configuration)
         completion()
-    }
-
-    /**
-     function to set positions for navigation
-     - Parameter positions:
-     */
-    func setVectorPositions(positions: [String]) {
-        isReached = false
-        let forwardDistance = Double(positions[0]) ?? 0
-        let LeftDistance = Double(positions[1]) ?? 0
-        forward = forwardDistance
-        left = LeftDistance
     }
 
     /**
@@ -478,6 +465,8 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     static func enablePointGoalNavigation(forward: Double, left: Double) {
         DispatchQueue.main.async {
             runRobot.isPointGoalNavigation = true;
+            runRobot.forward = forward
+            runRobot.left = left
         }
         navigation = Navigation(model: Model.fromModelItem(item: Common.returnNavigationModel()), device: RuntimeDevice.CPU, numThreads: 1)
     }

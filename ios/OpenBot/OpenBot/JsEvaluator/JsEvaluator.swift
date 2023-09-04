@@ -909,11 +909,8 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
-            let a: String = String(forward)
-            let b: String = String(left)
             runRobot.enablePointGoalNavigation(forward: forward, left: left)
             NotificationCenter.default.post(name: .commandName, object: "reach goal");
-            NotificationCenter.default.post(name: .commandObject, object: [a, b]);
             print(forward, left);
         }
 
