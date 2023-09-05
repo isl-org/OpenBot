@@ -937,7 +937,8 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
-            NotificationCenter.default.post(name: .commandName, object: object);
+            runRobot.detector?.setSelectedClass(newClass: object)
+            NotificationCenter.default.post(name: .commandName, object: "follow");
             print(object, model);
             runRobot.enableObjectTracking(object: object, model: model);
         }
@@ -982,6 +983,7 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
+            runRobot.detector?.setSelectedClass(newClass: object)
             runRobot.enableMultipleAI(autoPilotModel: autoPilotModelName, task: task, object: object, detectorModel: detectorModel);
             NotificationCenter.default.post(name: .createCameraView, object: task);
         }

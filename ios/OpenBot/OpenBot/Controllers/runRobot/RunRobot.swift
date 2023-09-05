@@ -171,9 +171,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      - Parameter notification:
      */
     @objc func updateCommandMsg(_ notification: Notification) {
-        DispatchQueue.main.async {
-            runRobot.detector?.setSelectedClass(newClass: notification.object as! String)
-        }
         let message = notification.object as! String;
         // Update UI periodically to show all the received messages
         if self.count > 1 {
@@ -588,10 +585,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
                     for item in res! {
                         if (item.getConfidence() > self.MINIMUM_CONFIDENCE_TF_OD_API) {
                             print("confidence is :=============", item.getConfidence());
-                            if (item.getConfidence() > 0.70) {
-                                self.bluetooth.sendData(payload: "i1,0\n")
-                                self.stopCar();
-                            }
                             self.sendControl(control: controlResult)
                         } else {
                             self.sendControl(control: Control())
