@@ -139,6 +139,17 @@ public class BotFunctions implements SensorEventListener {
     vehicle.stopBot();
   }
 
+  @JavascriptInterface
+  public void disableAI() {
+    System.out.println("sanjeev disable AI");
+    mActivity.runOnUiThread(() -> binding.jsCommand.setText("Stop AI"));
+    BlocklyExecutingFragment.tracker = null;
+    BlocklyExecutingFragment.isFollow = false;
+    BlocklyExecutingFragment.isAutopilot = false;
+    BlocklyExecutingFragment.isFollowMultipleObject = false;
+    BlocklyExecutingFragment.isStartDetectorAutoPilot = false;
+  }
+
   /**
    * openBot Sensor functions
    *
@@ -391,7 +402,7 @@ public class BotFunctions implements SensorEventListener {
   }
 
   @JavascriptInterface
-  public void followAndStop(String startObject, String modelName, String stopObject) {
+  public void enableMultipleDetection(String startObject, String modelName, String stopObject, String task) {
     mActivity.runOnUiThread(() -> {
       binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT);
       binding.jsCommand.setText("Follow " + startObject + " using " + modelName + "stop when see " + stopObject);
@@ -399,6 +410,7 @@ public class BotFunctions implements SensorEventListener {
     BlocklyExecutingFragment.detectorModelName = modelName;
     BlocklyExecutingFragment.startObject = startObject;
     BlocklyExecutingFragment.stopObject = stopObject;
+    BlocklyExecutingFragment.getTask = task;
     BlocklyExecutingFragment.isFollowMultipleObject = true;
   }
 

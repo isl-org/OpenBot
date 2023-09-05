@@ -72,7 +72,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   public static String autoPilotModelName = "";
   public static String startObject = "person";
   public static String stopObject = "person";
-  public static String getTask = "stopRobot();";
+  public static String getTask = "";
   private Detector detector;
   private Autopilot autopilot;
   private Model setModel;
@@ -83,7 +83,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   private Matrix autoPilotFrameToCropTransform;
   private Network.Device getDevice;
   private int sensorOrientation;
-  private MultiBoxTracker tracker;
+  public static MultiBoxTracker tracker;
   private long frameNum = 0;
   private boolean computingNetwork = false;
   private Handler handler;
@@ -159,6 +159,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   @Override
   protected void processFrame(Bitmap bitmap, ImageProxy imageProxy) {
     // Check and execute modes based on blockly block code commands.
+    System.out.println("sanjeev disable AI == " + isFollow + " , " + isAutopilot + " , " + isFollowMultipleObject + " , " + isStartDetectorAutoPilot);
     if (isFollow) startFollowObject(bitmap);
     if (isAutopilot) startAutopilot(bitmap);
     if (isFollowMultipleObject) followMultipleObject(bitmap);
@@ -326,9 +327,11 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
               }
             }
           }
-          tracker.trackResults(mappedRecognitions, frameNum);
-          if ((startDistance >= stopDistance) && isFollowMultipleObject) vehicle.setControl(tracker.updateTarget());
-          else vehicle.stopBot();
+          if (tracker!=null){
+            tracker.trackResults(mappedRecognitions, frameNum);
+            if ((startDistance >= stopDistance) && isFollowMultipleObject) vehicle.setControl(tracker.updateTarget());
+            else runJSCommand(getTask);
+          }
         }
         computingNetwork = false;
   }
