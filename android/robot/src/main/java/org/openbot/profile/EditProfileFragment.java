@@ -26,15 +26,24 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
+
 import org.openbot.R;
 import org.openbot.databinding.FragmentEditProfileBinding;
 
@@ -43,7 +52,8 @@ public class EditProfileFragment extends Fragment {
   private FirebaseUser user;
   private Uri selectedImageUri;
   private final Calendar calender = Calendar.getInstance();
-
+  private FirebaseFirestore db = FirebaseFirestore.getInstance();
+  private final Map<String, Object> userDOB = new HashMap<>();
 
     @Override
   public View onCreateView(
@@ -91,7 +101,14 @@ public class EditProfileFragment extends Fragment {
                   // on below line we are passing context.
                   requireContext(),
                   (view1, getYear, monthOfYear, dayOfMonth) -> {
-                    binding.dateOfBirth.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                    binding.dateOfBirth.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + getYear);
+
+                      Calendar calendar = Calendar.getInstance();
+                      calendar.set(getYear, monthOfYear, dayOfMonth, 0, 0, 0);
+                      calendar.set(Calendar.MILLISECOND, 0);
+                      // Convert the selected date to a Timestamp
+                      Timestamp dobTimestamp = new Timestamp(calendar.getTime());
+                      userDOB.put("dob", dobTimestamp);
                   }, year, month, day);
           datePickerDialog.show();
         });
@@ -185,6 +202,11 @@ public class EditProfileFragment extends Fragment {
   /** Method to update the user's profile with the selected image URI and user name. */
   private void updateProfile(Uri imageUri, String userName) {
     startLoader(true);
+    if (userDOB.get("dob") != null) {
+      db.collection("users")
+              .document(user.getUid()) // Replace with your user's unique ID
+              .set(userDOB);
+    }
     if (imageUri != null && !userName.isBlank()) {
       try {
         // Get a reference to the Firebase Storage location where the image will be stored
@@ -280,9 +302,36 @@ public class EditProfileFragment extends Fragment {
       }
     }
     binding.profilePic.setImageURI(user.getPhotoUrl());
+    setDOB();
     binding.firstName.setText(firstName);
     binding.lastName.setText(lastName);
     binding.emailAddress.setText(user.getEmail());
+  }
+
+  private void setDOB(){
+    DocumentReference userRef = db.collection("users").document(user.getUid());
+    userRef.get().addOnSuccessListener(documentSnapshot -> {
+      if (documentSnapshot.exists()) {
+        // Retrieve the date of birth as a Timestamp
+        Timestamp dobTimestamp = documentSnapshot.getTimestamp("dob");
+
+        if (dobTimestamp != null) {
+          // Format the Timestamp as a string
+          SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+          dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+5:30"));
+          binding.dateOfBirth.setText(dateFormat.format(dobTimestamp.toDate()));
+          // Update the TextView with the formatted date of birth
+//            dobTextView.setText(formattedDOB);
+        } else {
+          // Handle the case where dobTimestamp is null
+        }
+      } else {
+        // Handle the case where the user document does not exist
+      }
+    }).addOnFailureListener(e -> {
+      // Handle any errors here
+      System.out.println("Error: " + e.getMessage());
+    });
   }
 
   /**
