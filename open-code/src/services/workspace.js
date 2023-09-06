@@ -4,7 +4,8 @@ import {
     deleteFileFromGoogleDrive,
     fileRename,
     getAllFilesFromGoogleDrive,
-    getFolderId, uploadToGoogleDrive,
+    getFolderId,
+    uploadToGoogleDrive,
 } from "./googleDrive";
 import configData from "../config.json"
 

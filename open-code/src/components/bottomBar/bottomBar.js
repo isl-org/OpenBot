@@ -6,12 +6,7 @@ import {StoreContext} from "../../context/context";
 import {colors} from "../../utils/color";
 import {ThemeContext} from "../../App";
 import {aiBlocks, Constants, Errors, errorToast} from "../../utils/constants";
-import {
-    CircularProgress,
-    circularProgressClasses,
-    Popper,
-    useTheme
-} from "@mui/material";
+import {CircularProgress, circularProgressClasses, Popper, useTheme} from "@mui/material";
 import WhiteText from "../fonts/whiteText";
 import BlackText from "../fonts/blackText";
 import {Images} from "../../utils/images";
@@ -103,6 +98,7 @@ export const BottomBar = () => {
                 );
                 const start = workspace.getBlocksByType("start");
                 const forever = workspace.getBlocksByType("forever");
+                const detection = workspace.getBlocksByType("detectionOrUndetection");
                 const multipleObjectTracking = workspace.getBlocksByType("multipleObjectTracking");
                 let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false);  //filtering multiple objectTracking connected blocks
                 let isAIBlocksAdjacent = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
@@ -120,7 +116,7 @@ export const BottomBar = () => {
                     object_1 = multipleObjectTrackingEnabledBlocks[0].getFieldValue("labels1")
                     object_2 = multipleObjectTrackingEnabledBlocks[0].getFieldValue("labels2")
                 }
-                if ((start.length === 0 && forever.length === 0)) {
+                if ((start.length === 0 && forever.length === 0 && detection.length === 0)) {
                     handleError(Errors.error1);
                 } else if (isAIBlocksAdjacent === true && start.length > 0) {
                     handleError(Errors.error2);
@@ -471,13 +467,13 @@ function UndoRedo(params) {
     const {clickedButton, buttonSelected, buttonActive} = params
     return (
         <div className={styles.buttonMargin + " " + styles.iconMargin}>
-            <button
+            <button title={"Undo"}
                 onClick={clickedButton}
                 className={`${styles.buttonStyle} ${styles.minusStyle} ${styles.borderStyle} ${buttonSelected === "undo" && buttonActive ? styles.buttonColor : ""}`}
                 name={"undo"}>
                 <img alt={""} className={styles.commandSize} src={Images.undoIcon}/>
             </button>
-            <button onClick={clickedButton}
+            <button onClick={clickedButton} title={"Redo"}
                     className={`${styles.buttonStyle} ${styles.plusStyle} ${buttonSelected === "redo" && buttonActive ? styles.buttonColor : ""}`}
                     name={"redo"}>
                 <img alt={""} className={styles.commandSize} src={Images.redoIcon}/>
@@ -498,12 +494,12 @@ function ZoomInOut(params) {
     const {clickedButton, buttonSelected, buttonActive} = params;
     return (
         <div className={styles.iconMargin}>
-            <button onClick={clickedButton}
+            <button onClick={clickedButton} title={"Zoom Out"}
                     className={`${styles.buttonStyle} ${styles.minusStyle} ${styles.borderStyle} ${buttonSelected === "minus" && buttonActive ? styles.buttonColor : ""}`}
                     name={"minus"}>
                 <span className={styles.operationSize}>-</span>
             </button>
-            <button onClick={clickedButton}
+            <button onClick={clickedButton} title={"Zoom In"}
                     className={`${styles.buttonStyle} ${styles.plusStyle} ${buttonSelected === "plus" && buttonActive ? styles.buttonColor : ""}`}
                     name={"plus"}>
                 <span className={styles.operationSize}>+</span>
