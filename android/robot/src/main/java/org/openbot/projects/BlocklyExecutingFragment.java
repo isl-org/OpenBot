@@ -159,7 +159,6 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   @Override
   protected void processFrame(Bitmap bitmap, ImageProxy imageProxy) {
     // Check and execute modes based on blockly block code commands.
-    System.out.println("sanjeev disable AI == " + isFollow + " , " + isAutopilot + " , " + isFollowMultipleObject + " , " + isStartDetectorAutoPilot);
     if (isFollow) startFollowObject(bitmap);
     if (isAutopilot) startAutopilot(bitmap);
     if (isFollowMultipleObject) followMultipleObject(bitmap);
@@ -229,7 +228,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
    *
    * @param bitmap The input bitmap for object tracking.
    */
-  private void startFollowObject(Bitmap bitmap){
+  private void startFollowObject(Bitmap bitmap) {
     if (tracker == null) updateCropImageInfo();
 
     ++frameNum;
@@ -327,7 +326,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
               }
             }
           }
-          if (tracker!=null){
+          if (tracker!=null) {
             tracker.trackResults(mappedRecognitions, frameNum);
             if ((startDistance >= stopDistance) && isFollowMultipleObject) vehicle.setControl(tracker.updateTarget());
             else runJSCommand(getTask);

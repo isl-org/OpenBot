@@ -141,7 +141,6 @@ public class BotFunctions implements SensorEventListener {
 
   @JavascriptInterface
   public void disableAI() {
-    System.out.println("sanjeev disable AI");
     mActivity.runOnUiThread(() -> binding.jsCommand.setText("Stop AI"));
     BlocklyExecutingFragment.tracker = null;
     BlocklyExecutingFragment.isFollow = false;
