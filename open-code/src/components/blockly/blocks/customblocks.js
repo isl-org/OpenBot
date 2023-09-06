@@ -890,3 +890,54 @@ Blockly.Blocks["multipleObjectTracking"] = {
         });
     }
 };
+
+
+Blockly.Blocks["detectionOrUndetection"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "on %1 %2 using %3 %4 %5",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "type",
+                    "options": [
+                        [
+                            "Detect",
+                            "Detect"
+                        ],
+                        [
+                            "Undetect",
+                            "Undetect"
+                        ]
+                    ]
+                },
+                {
+                    "type": "field_dropdown",
+                    "name": "labels",
+                    "options": filterLabels()
+                },
+                {
+                    "type": "field_dropdown",
+                    "name": "models",
+                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
+                        [
+                            "MobileNetV1-300",
+                            "MobileNetV1-300"
+                        ]
+                    ]
+                },
+                {
+                    "type": "input_dummy"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "task"
+                }
+            ],
+            "colour": "#458ff7",
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};

@@ -284,3 +284,13 @@ pythonGenerator.forBlock['multipleObjectTracking'] = function (block) {
     code += "enableMultipleDetection('" + labels1 + "','" + models + "','" + labels2 + "','" + tasks + "');\n";
     return code;
 };
+
+pythonGenerator.forBlock['detectionOrUndetection'] = function (block, generator) {
+    let type = block.getFieldValue('type');
+    let labels = block.getFieldValue('labels');
+    let models = block.getFieldValue('models');
+    let task = pythonGenerator.statementToCode(block, 'task');
+    let code = '';
+    code += "on" + type + "('" + labels + "','" + models + "','" + task + "')\n";
+    return code;
+};
