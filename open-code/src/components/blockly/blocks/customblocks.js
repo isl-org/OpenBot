@@ -651,7 +651,7 @@ Blockly.Blocks["indicators"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour":"#687c9e",
+            "colour": "#687c9e",
             "tooltip": "",
             "helpUrl": ""
 
@@ -933,6 +933,50 @@ Blockly.Blocks["detectionOrUndetection"] = {
                 {
                     "type": "input_statement",
                     "name": "task"
+                }
+            ],
+            "colour": "#458ff7",
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+
+Blockly.Blocks["variableDetection"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "on Detect %1 using %2 %3 do %4 on Undetect %5 do %6",
+            "args0": [
+                {
+                    "type": "field_dropdown",
+                    "name": "labels1",
+                    "options": filterLabels()
+                },
+                {
+                    "type": "field_dropdown",
+                    "name": "models",
+                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
+                        [
+                            "MobileNetV1-300",
+                            "MobileNetV1-300"
+                        ]
+                    ]
+                },
+                {
+                    "type": "input_dummy"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "detect_tasks"
+                },
+                {
+                    "type": "input_dummy"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "undetect_tasks"
                 }
             ],
             "colour": "#458ff7",
