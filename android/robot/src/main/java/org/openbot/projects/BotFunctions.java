@@ -142,7 +142,7 @@ public class BotFunctions implements SensorEventListener {
   @JavascriptInterface
   public void disableAI() {
     mActivity.runOnUiThread(() -> binding.jsCommand.setText("Stop AI"));
-    BlocklyExecutingFragment.tracker = null;
+//    BlocklyExecutingFragment.tracker = null;
     BlocklyExecutingFragment.isFollow = false;
     BlocklyExecutingFragment.isAutopilot = false;
     BlocklyExecutingFragment.isFollowMultipleObject = false;
@@ -434,6 +434,13 @@ public class BotFunctions implements SensorEventListener {
     BlocklyExecutingFragment.classType = classType;
     BlocklyExecutingFragment.getTask = task;
     BlocklyExecutingFragment.isStartDetectorAutoPilot = true;
+  }
+
+  @JavascriptInterface
+  public void onDetect(String classType, String model, String task) {
+    BlocklyExecutingFragment.detectorModelName = model;
+    BlocklyExecutingFragment.taskStorage.addTask(classType, task);
+    BlocklyExecutingFragment.isOnDetection = true;
   }
 
   @JavascriptInterface

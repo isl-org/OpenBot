@@ -44,6 +44,7 @@ public class BotFunctionUtils {
           "enableMultipleDetection",
           "enableAutopilot",
           "enableMultipleAI",
+          "onDetect",
     "reachPosition",
   };
 }

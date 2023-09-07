@@ -52,8 +52,10 @@ import org.openbot.vehicle.Control;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -67,6 +69,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   public static boolean isAutopilot = false;
   public static boolean isFollowMultipleObject = false;
   public static boolean isStartDetectorAutoPilot = false;
+  public static boolean isOnDetection = false;
   public static String classType = "person";
   public static String detectorModelName = "";
   public static String autoPilotModelName = "";
@@ -83,7 +86,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   private Matrix autoPilotFrameToCropTransform;
   private Network.Device getDevice;
   private int sensorOrientation;
-  public static MultiBoxTracker tracker;
+  public MultiBoxTracker tracker;
   private long frameNum = 0;
   private boolean computingNetwork = false;
   private Handler handler;
@@ -92,6 +95,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   public static boolean isRunning = false;
   private Matrix cropToFrameTransform;
   public static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
+  public static TaskStorage taskStorage = new TaskStorage();
 
   @SuppressLint("SetJavaScriptEnabled")
   @Override
@@ -163,6 +167,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     if (isAutopilot) startAutopilot(bitmap);
     if (isFollowMultipleObject) followMultipleObject(bitmap);
     if (isStartDetectorAutoPilot) startMultipleAi(bitmap);
+    if (isOnDetection) onDetection(bitmap);
   }
 
   /**
@@ -239,7 +244,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
 
     computingNetwork = true;
     if (handler != null) {
-      handler.post(()->{
+      handler.post(()-> {
 
         final Canvas canvas = new Canvas(detectorCroppedBitmap);
         if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
@@ -332,7 +337,52 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
             else runJSCommand(getTask);
           }
         }
-        computingNetwork = false;
+    computingNetwork = false;
+  }
+
+  private void onDetection(Bitmap bitmap) {
+    if (tracker == null) updateCropImageInfo();
+
+    ++frameNum;
+    if (computingNetwork) {
+      return;
+    }
+    computingNetwork = true;
+    if (handler != null) {
+      handler.post(()-> {
+        final Canvas canvas = new Canvas(detectorCroppedBitmap);
+        if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
+          canvas.drawBitmap(
+                  CameraUtils.flipBitmapHorizontal(bitmap), detectorFrameToCropTransform, null);
+        } else {
+          canvas.drawBitmap(bitmap, detectorFrameToCropTransform, null);
+        }
+
+        if (detector != null) {
+          Timber.i("Running detection on image %s", frameNum);
+          final List<Detector.Recognition> results =
+                  detector.recognizeImage(detectorCroppedBitmap, null);
+
+          for (final Detector.Recognition result : results) {
+            final RectF location = result.getLocation();
+            if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
+              // Retrieving tasks
+              Map<String, String> tasks = taskStorage.getAllTasks();
+              Iterator<Map.Entry<String, String>> iterator = tasks.entrySet().iterator();
+
+              while (iterator.hasNext()) {
+                Map.Entry<String, String> entry = iterator.next();
+                if (result.getTitle().equals(entry.getKey())) {
+                  runJSCommand(entry.getValue());
+                  iterator.remove(); // Safely remove the entry from the map
+                }
+              }
+            }
+          }
+        }
+          computingNetwork = false;
+      });
+    }
   }
 
   private void updateCropImageInfo() {

@@ -156,10 +156,10 @@ public class DetectorDefault extends Detector {
    * @return An ArrayList of ArrayLists containing Recognition results for both classes.
    */
   @Override
-  protected ArrayList<ArrayList<Recognition>> getAllRecognitions(String classNameFirst, String classNameSecond) {
-    final ArrayList<ArrayList<Recognition>> allRecognitions = new ArrayList<>(getNumDetections());
-    allRecognitions.add(new ArrayList<>());
-    allRecognitions.add(new ArrayList<>());
+  protected ArrayList<ArrayList<Recognition>> getMultipleRecognitions(String classNameFirst, String classNameSecond) {
+    final ArrayList<ArrayList<Recognition>> multipleRecognitions = new ArrayList<>(getNumDetections());
+    multipleRecognitions.add(new ArrayList<>());
+    multipleRecognitions.add(new ArrayList<>());
     for (int i = 0; i < getNumDetections(); ++i) {
       final RectF detection =
               new RectF(
@@ -172,16 +172,37 @@ public class DetectorDefault extends Detector {
       // while outputClasses correspond to class index from 0 to number_of_classes
       int classId = (int) outputClasses[0][i];
       int labelId = classId + 1;
-      if (allRecognitions.get(0).isEmpty() && labels.get(labelId).contentEquals(classNameFirst)) {
-        allRecognitions.get(0).add(
+      if (multipleRecognitions.get(0).isEmpty() && labels.get(labelId).contentEquals(classNameFirst)) {
+        multipleRecognitions.get(0).add(
                 new Recognition("" + i, labels.get(labelId), outputScores[0][i], detection, classId));
       }
-      if (allRecognitions.get(1).isEmpty() && labels.get(labelId).contentEquals(classNameSecond)) {
-        allRecognitions.get(1).add(
+      if (multipleRecognitions.get(1).isEmpty() && labels.get(labelId).contentEquals(classNameSecond)) {
+        multipleRecognitions.get(1).add(
                 new Recognition("" + i, labels.get(labelId), outputScores[0][i], detection, classId));
       }
     }
-    return multipleNMS(allRecognitions);
+    return multipleNMS(multipleRecognitions);
+  }
+
+  @Override
+  protected ArrayList<Recognition> getAllRecognition() {
+    final ArrayList<Recognition> allRecognitions = new ArrayList<>(getNumDetections());
+    for (int i = 0; i < getNumDetections(); ++i) {
+      final RectF detection =
+              new RectF(
+                      outputLocations[0][i][1] * getImageSizeY(),
+                      outputLocations[0][i][0] * getImageSizeX(),
+                      outputLocations[0][i][3] * getImageSizeY(),
+                      outputLocations[0][i][2] * getImageSizeX());
+      // SSD Mobilenet V1 Model assumes class 0 is background class
+      // in label file and class labels start from 1 to number_of_classes+1,
+      // while outputClasses correspond to class index from 0 to number_of_classes
+      int classId = (int) outputClasses[0][i];
+      int labelId = classId + 1;
+      allRecognitions.add(
+                new Recognition("" + i, labels.get(labelId), outputScores[0][i], detection, classId));
+    }
+    return nms(allRecognitions);
   }
 
 }

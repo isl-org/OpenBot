@@ -208,7 +208,10 @@ public abstract class Detector extends Network {
     Trace.endSection(); // "recognizeImage"
 
     startTime = SystemClock.elapsedRealtime();
-    List<Recognition> recognitions = getRecognitions(className);
+    List<Recognition> recognitions;
+    if (className == null){
+      recognitions = getAllRecognition();
+    } else recognitions = getRecognitions(className);
     endTime = SystemClock.elapsedRealtime();
     Timber.v("Timecost for postprocessing: %s", (endTime - startTime));
     return recognitions;
@@ -252,7 +255,7 @@ public abstract class Detector extends Network {
     Trace.endSection(); // "recognizeImage"
 
     startTime = SystemClock.elapsedRealtime();
-    ArrayList<ArrayList<Recognition>> recognitions = getAllRecognitions(classNameFirst, classNameSecond);
+    ArrayList<ArrayList<Recognition>> recognitions = getMultipleRecognitions(classNameFirst, classNameSecond);
     endTime = SystemClock.elapsedRealtime();
     Timber.v("Timecost for postprocessing: %s", (endTime - startTime));
 
@@ -443,5 +446,6 @@ public abstract class Detector extends Network {
    * @return
    */
   protected abstract List<Recognition> getRecognitions(String className);
-  protected abstract ArrayList<ArrayList<Recognition>> getAllRecognitions(String classNameFirst, String classNameSecond);
+  protected abstract ArrayList<ArrayList<Recognition>> getMultipleRecognitions(String classNameFirst, String classNameSecond);
+  protected abstract List<Recognition> getAllRecognition();
 }
