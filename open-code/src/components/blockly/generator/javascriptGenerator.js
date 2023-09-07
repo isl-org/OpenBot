@@ -347,6 +347,6 @@ javascriptGenerator.forBlock['variableDetection'] = function (block, generator) 
     let detect_tasks = javascriptGenerator.statementToCode(block, 'detect_tasks');
     let undetect_tasks = javascriptGenerator.statementToCode(block, 'undetect_tasks');
     let code = "";
-    code += "onDetect" + '("' + labels1 + '","' + models + '","' + detect_tasks + '");\n' + 'onUndetect("' + undetect_tasks + '");\n';
+    code += "onDetect" + '("' + labels1 + '","' + models + '","' + detect_tasks + '");\n' + 'onUndetect("' + labels1 + '","' + undetect_tasks + '");\n';
     return code;
 };
