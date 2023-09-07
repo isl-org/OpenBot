@@ -330,12 +330,13 @@ javascriptGenerator.forBlock['multipleObjectTracking'] = function (block) {
     return code;
 };
 
+//Javascript generated function for AI on detection block
 javascriptGenerator.forBlock['detectionOrUndetection'] = function (block, generator) {
     let type = block.getFieldValue('type');
     let labels = block.getFieldValue('labels');
     let models = block.getFieldValue('models');
     let task = javascriptGenerator.statementToCode(block, 'task');
     let code = '';
-    code += "on" + type + "('" + labels + "','" + models + "','" + task + "');\n";
+    code += "on" + type + '("' + labels + '","' + models + '","' + task + '");\n';
     return code;
 };
