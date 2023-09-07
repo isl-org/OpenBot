@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		113A1E4E0F1483D107D53843 /* BlockyTasksStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113A10896533873FE2926AF5 /* BlockyTasksStorage.swift */; };
 		3A3C9E0D29E803AC008758C9 /* projectCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A3C9E0C29E803AC008758C9 /* projectCollectionViewCell.xib */; };
 		3A70CA1229C98E5800E4192B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */; };
 		3AA7193929DD42CF00DE8336 /* openCode.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AA7193829DD42CF00DE8336 /* openCode.storyboard */; };
@@ -138,6 +139,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		113A10896533873FE2926AF5 /* BlockyTasksStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockyTasksStorage.swift; sourceTree = "<group>"; };
 		14FEE4780CE79F3AAB630B6D /* Pods-OpenBotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.release.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.release.xcconfig"; sourceTree = "<group>"; };
 		17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot_OpenBotUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38BD59823D98022F3763FF79 /* Pods-OpenBot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.release.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.release.xcconfig"; sourceTree = "<group>"; };
@@ -658,6 +660,7 @@
 			isa = PBXGroup;
 			children = (
 				727D3EC5C93F255195145384 /* RunRobot.swift */,
+				113A10896533873FE2926AF5 /* BlockyTasksStorage.swift */,
 			);
 			path = runRobot;
 			sourceTree = "<group>";
@@ -1193,6 +1196,7 @@
 				727D36856575D19091290CFF /* WebViewFragment.swift in Sources */,
 				727D3E26C05E5911CC9BF342 /* Readme.md in Sources */,
 				727D397E28A6A94840B702D4 /* AlertFragment.swift in Sources */,
+				113A1E4E0F1483D107D53843 /* BlockyTasksStorage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1247,7 +1251,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 45P94DZS6G;
+				DEVELOPMENT_TEAM = 743KKCATL4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -1290,7 +1294,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 45P94DZS6G;
+				DEVELOPMENT_TEAM = 743KKCATL4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
