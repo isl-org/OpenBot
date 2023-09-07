@@ -291,6 +291,6 @@ pythonGenerator.forBlock['detectionOrUndetection'] = function (block, generator)
     let models = block.getFieldValue('models');
     let task = pythonGenerator.statementToCode(block, 'task');
     let code = '';
-    code += "on" + type + "('" + labels + "','" + models + "','" + task + "')\n";
+    code += "on" + type + '("' + labels + '","' + models + '","' + task + '")\n';
     return code;
 };
