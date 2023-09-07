@@ -100,6 +100,7 @@ export const BottomBar = () => {
                 const forever = workspace.getBlocksByType("forever");
                 const detection = workspace.getBlocksByType("detectionOrUndetection");
                 const multipleObjectTracking = workspace.getBlocksByType("multipleObjectTracking");
+                const variableDetection = workspace.getBlocksByType("variableDetection");
                 let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false);  //filtering multiple objectTracking connected blocks
                 let isAIBlocksAdjacent = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
                 let array = []
@@ -116,7 +117,7 @@ export const BottomBar = () => {
                     object_1 = multipleObjectTrackingEnabledBlocks[0].getFieldValue("labels1")
                     object_2 = multipleObjectTrackingEnabledBlocks[0].getFieldValue("labels2")
                 }
-                if ((start.length === 0 && forever.length === 0 && detection.length === 0)) {
+                if (start.length === 0 && forever.length === 0 && detection.length === 0 && variableDetection.length === 0) {
                     handleError(Errors.error1);
                 } else if (isAIBlocksAdjacent === true && start.length > 0) {
                     handleError(Errors.error2);
@@ -468,9 +469,9 @@ function UndoRedo(params) {
     return (
         <div className={styles.buttonMargin + " " + styles.iconMargin}>
             <button title={"Undo"}
-                onClick={clickedButton}
-                className={`${styles.buttonStyle} ${styles.minusStyle} ${styles.borderStyle} ${buttonSelected === "undo" && buttonActive ? styles.buttonColor : ""}`}
-                name={"undo"}>
+                    onClick={clickedButton}
+                    className={`${styles.buttonStyle} ${styles.minusStyle} ${styles.borderStyle} ${buttonSelected === "undo" && buttonActive ? styles.buttonColor : ""}`}
+                    name={"undo"}>
                 <img alt={""} className={styles.commandSize} src={Images.undoIcon}/>
             </button>
             <button onClick={clickedButton} title={"Redo"}

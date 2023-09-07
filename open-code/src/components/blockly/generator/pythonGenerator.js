@@ -294,3 +294,13 @@ pythonGenerator.forBlock['detectionOrUndetection'] = function (block, generator)
     code += "on" + type + '("' + labels + '","' + models + '","' + task + '")\n';
     return code;
 };
+
+pythonGenerator.forBlock['variableDetection'] = function (block, generator) {
+    let labels1 = block.getFieldValue('labels1');
+    let models = block.getFieldValue('models');
+    let detect_tasks = pythonGenerator.statementToCode(block, 'detect_tasks');
+    let undetect_tasks = pythonGenerator.statementToCode(block, 'undetect_tasks');
+    let code = "";
+    code += "onDetect" + '("' + labels1 + '","' + models + '","' + detect_tasks + '")\n' + 'onUndetect("' + undetect_tasks + '")\n';
+    return code;
+};
