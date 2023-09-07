@@ -200,6 +200,8 @@ class Detector: Network {
 
             if (detectionType == "multiple") {
                 return getMultipleRecognitions(classA: selectedMultipleClass[0], classB: selectedMultipleClass[1], width: imageWidth, height: imageHeight)
+            } else if (detectionType == "many") {
+                return getManyRecognitions(objects: selectedMultipleClass, width: imageWidth, height: imageHeight)
             } else {
                 return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
             }
@@ -209,6 +211,8 @@ class Detector: Network {
             print("error:\(error)")
             if (detectionType == "multiple") {
                 return getMultipleRecognitions(classA: selectedMultipleClass[0], classB: selectedMultipleClass[1], width: imageWidth, height: imageHeight)
+            } else if (detectionType == "many") {
+                return getManyRecognitions(objects: selectedMultipleClass, width: imageWidth, height: imageHeight)
             } else {
                 return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
             }
@@ -350,6 +354,10 @@ class Detector: Network {
 
     /// Get the multiple recognitions
     func getMultipleRecognitions(classA: String, classB: String, width: Int, height: Int) -> [Recognition] {
+        [];
+    }
+
+    func getManyRecognitions(objects: [String], width: Int, height: Int) -> [Recognition] {
         [];
     }
 

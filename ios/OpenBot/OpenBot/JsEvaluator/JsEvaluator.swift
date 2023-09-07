@@ -28,7 +28,7 @@ class jsEvaluator {
      */
     init(jsCode: String) {
         command = jsCode;
-        setupCommand()
+        setupCommand();
         initializeJS();
         evaluateJavaScript();
         NotificationCenter.default.addObserver(self, selector: #selector(cancelThread), name: .cancelThread, object: nil)
@@ -135,7 +135,6 @@ class jsEvaluator {
 
                     self.runOpenBotThreadClass?.setLeftIndicatorOn();
                 }
-
                 let rightIndicatorOn: @convention(block) () -> Void = { () in
                     self.runOpenBotThreadClass?.setRightIndicatorOn();
                 }
@@ -234,6 +233,9 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.follow(object: object, model: model);
                 }
 
+                let onDetect: @convention(block) (String, String, String) -> Void = { (object, model, task) in
+                    self.runOpenBotThreadClass?.onDetect(object: object, model: model, task: task);
+                }
 
                 let toggleLed: @convention(block) (String) -> Void = { (status) in
                     switch status {
@@ -367,6 +369,8 @@ class jsEvaluator {
                         forKeyedSubscript: "enableMultipleAI" as NSString);
                 context.setObject(disableAI,
                         forKeyedSubscript: "disableAI" as NSString);
+                context.setObject(onDetect,
+                        forKeyedSubscript: "onDetect" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -993,6 +997,19 @@ class jsEvaluator {
          */
         func disableAI() {
             runRobot.disableAI();
+        }
+
+        func onDetect(object: String, model: String, task: String) {
+            if isCancelled {
+                return
+            }
+            print("object::::", object);
+            print("model::::::", model);
+            print("task::::", task);
+            runRobot.onDetection(object: object, model: model, task: task);
+            runRobot.detector?.setSelectedClass(newClass: object);
+            taskStorage.addAttribute(classType: object, task: task);
+            NotificationCenter.default.post(name: .createCameraView, object: task);
         }
     }
 }

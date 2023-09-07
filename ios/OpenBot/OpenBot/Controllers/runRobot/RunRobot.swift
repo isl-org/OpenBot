@@ -28,6 +28,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     static var isMultipleObjectTracking: Bool = false
     static var isMultipleAi: Bool = false
     static var isPointGoalNavigation: Bool = false
+    static var isDetection: Bool = false
     var tempPixelBuffer: CVPixelBuffer!
     var sceneView: ARSCNView!
     let blueDress = try! YCbCrImageBufferConverter()
@@ -57,7 +58,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandMsg), name: .commandName, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandObject), name: .commandObject, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(createCamera), name: .createCameraView, object: nil);
-        setupNavigationBarItem()
+        setupNavigationBarItem();
         updateConstraints();
         let modelItems = Common.loadAllModelItemsFromBundle()
         if (modelItems.count > 0) {
@@ -291,11 +292,13 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      function to stop ongoing robot commands
      */
     func stopCar() {
+        runRobot.isDetection = false
         runRobot.isObjectTracking = false
         runRobot.isAutopilot = false
         runRobot.isMultipleObjectTracking = false
         runRobot.isPointGoalNavigation = false
         runRobot.isMultipleAi = false
+        taskStorage.array = [];
         bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
         bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
         let indicatorValues = "i0,0\n";
@@ -307,7 +310,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      - Parameter control:
      */
     func sendControl(control: Control) {
-        if runRobot.isAutopilot || runRobot.isObjectTracking || runRobot.isMultipleObjectTracking {
+        if runRobot.isAutopilot || runRobot.isObjectTracking || runRobot.isMultipleObjectTracking || runRobot.isDetection {
             createCameraView();
         }
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
@@ -384,7 +387,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      */
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
 
-        if (runRobot.isObjectTracking || runRobot.isAutopilot || runRobot.isMultipleObjectTracking || runRobot.isMultipleAi) {
+        if (runRobot.isObjectTracking || runRobot.isAutopilot || runRobot.isMultipleObjectTracking || runRobot.isMultipleAi || runRobot.isDetection) {
             let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
             bufferWidth = CVPixelBufferGetWidth(pixelBuffer!)
             bufferHeight = CVPixelBufferGetHeight(pixelBuffer!)
@@ -403,9 +406,11 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
                     self.runMultipleObjectTracking(imagePixelBuffer: imagePixelBuffer);
                 } else if runRobot.isAutopilot {
                     self.runAutopilot(imagePixelBuffer: imagePixelBuffer);
-                } else {
+                } else if runRobot.isMultipleAi {
                     self.runAutopilot(imagePixelBuffer: imagePixelBuffer);
                     self.runObjectTrackingForMultipleAI(imagePixelBuffer: imagePixelBuffer);
+                } else {
+                    self.runDetection(imagePixelBuffer: imagePixelBuffer);
                 }
             }
 
@@ -466,6 +471,20 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             runRobot.left = left
         }
         navigation = Navigation(model: Model.fromModelItem(item: Common.returnNavigationModel()), device: RuntimeDevice.CPU, numThreads: 1)
+    }
+
+    /**
+     function to enable detection
+     - Parameters:
+       - forward:
+       - left:
+     */
+    static func onDetection(object: String, model: String, task: String) {
+        let currentModel = Common.returnModelItem(modelName: model)
+        detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: .CPU, numThreads: 1) as? Detector
+        DispatchQueue.main.async {
+            runRobot.isDetection = true;
+        }
     }
 
     /**
@@ -748,6 +767,44 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     }
 
     /**
+     function to send control to robot according to object tracking
+     - Parameter imagePixelBuffer:
+     */
+    func runDetection(imagePixelBuffer: CVPixelBuffer) {
+        self.isInferenceQueueBusy = true
+        let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, detectionType: "many");
+        if res != nil {
+            if (res!.count > 0) {
+                self.result = self.updateTarget(res!.first!.getLocation())
+            } else {
+                self.result = Control(left: 0, right: 0)
+            }
+            guard let controlResult = self.result else {
+                return
+            }
+            DispatchQueue.main.async {
+                if (res!.count > 0) {
+                    for item in res! {
+                        if (item.getConfidence() > self.MINIMUM_CONFIDENCE_TF_OD_API) {
+                            print("array:::;", taskStorage.returnAttributeArray())
+                            if (taskStorage.returnAttributeArray().contains { i in
+                                i.keys.contains(item.getTitle())
+                            }) {
+                                print("item::::", item.getTitle());
+                                _ = jsEvaluator(jsCode: taskStorage.getValueOfAttribute(classType: item.getTitle()) ?? "");
+                                taskStorage.removeAttribute(classTye: item.getTitle());
+                            }
+                        } else {
+                            self.sendControl(control: Control())
+                        }
+                    }
+                }
+            }
+        }
+        self.isInferenceQueueBusy = false
+    }
+
+    /**
      Function to stop the AI Blocks
      */
     static func disableAI() {
@@ -755,6 +812,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         isAutopilot = false;
         isMultipleObjectTracking = false
         isMultipleAi = false
+        isDetection = false
     }
 }
 

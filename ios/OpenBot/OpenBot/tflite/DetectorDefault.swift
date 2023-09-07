@@ -175,7 +175,7 @@ class DetectorDefault: Detector {
             }
 
         }
-        // Execute non-maximum suppression 
+        // Execute non-maximum suppression
         return nms(recognitions: recognitions);
     }
 
@@ -207,4 +207,33 @@ class DetectorDefault: Detector {
         return nms(recognitions: recognitions);
     }
 
+    override func getManyRecognitions(objects: [String], width: Int, height: Int) -> [Recognition] {
+        var recognitions: [Recognition] = [];
+        for i in 0..<getNumDetections() {
+            let xPos = CGFloat(outputLocations![(4 * i) + 1]) * CGFloat(getImageSizeX());
+            let yPos = CGFloat(outputLocations![(4 * i)]) * CGFloat(getImageSizeY());
+            let w = CGFloat(outputLocations![(4 * i) + 3]) * CGFloat(getImageSizeX()) - xPos;
+            let h = CGFloat(outputLocations![(4 * i) + 2]) * CGFloat(getImageSizeY()) - yPos;
+            let scaleX = CGFloat(width) / CGFloat(getImageSizeX())
+            let scaleY = CGFloat(height) / CGFloat(getImageSizeY())
+            //let scale = min(scaleX, scaleY)
+            let dx = (CGFloat(width) - scaleX * CGFloat(getImageSizeX())) / 2
+            let dy = (CGFloat(height) - scaleY * CGFloat(getImageSizeY())) / 2
+            let transform = CGAffineTransform.identity.translatedBy(x: dx, y: dy).scaledBy(x: scaleX, y: scaleY)
+            let detection = CGRect(x: xPos, y: yPos, width: w, height: h).applying(transform);
+            // SSD Mobilenet V1 Model assumes class 0 is background class
+            // in label file and class labels start from 1 to number_of_classes+1,
+            // while outputClasses correspond to class index from 0 to number_of_classes
+            let classId: Int = Int(outputClasses![i]);
+            let labelId: Int = classId + 1;
+
+            for item in objects {
+                if (item == labels[labelId]) {
+                    recognitions.append(Recognition(id: String(i), title: labels[labelId], confidence: outputScores![i], location: detection, classId: classId));
+                }
+            }
+        }
+        // Execute non-maximum suppression
+        return nms(recognitions: recognitions);
+    }
 }
