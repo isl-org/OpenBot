@@ -136,7 +136,7 @@ class Detector: Network {
         selectedClass = labels.first {
             $0.capitalized == "person".capitalized
         };
-        selectedMultipleClass = ["person", "laptop"]
+        selectedMultipleClass = ["person"]
         parseTFlite();
     }
 
@@ -201,7 +201,7 @@ class Detector: Network {
             if (detectionType == "multiple") {
                 return getMultipleRecognitions(classA: selectedMultipleClass[0], classB: selectedMultipleClass[1], width: imageWidth, height: imageHeight)
             } else if (detectionType == "many") {
-                return getManyRecognitions(objects: selectedMultipleClass, width: imageWidth, height: imageHeight)
+                return getManyRecognitions(width: imageWidth, height: imageHeight)
             } else {
                 return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
             }
@@ -212,11 +212,10 @@ class Detector: Network {
             if (detectionType == "multiple") {
                 return getMultipleRecognitions(classA: selectedMultipleClass[0], classB: selectedMultipleClass[1], width: imageWidth, height: imageHeight)
             } else if (detectionType == "many") {
-                return getManyRecognitions(objects: selectedMultipleClass, width: imageWidth, height: imageHeight)
+                return getManyRecognitions(width: imageWidth, height: imageHeight)
             } else {
                 return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
             }
-
         };
     }
 
@@ -357,7 +356,7 @@ class Detector: Network {
         [];
     }
 
-    func getManyRecognitions(objects: [String], width: Int, height: Int) -> [Recognition] {
+    func getManyRecognitions(width: Int, height: Int) -> [Recognition] {
         [];
     }
 

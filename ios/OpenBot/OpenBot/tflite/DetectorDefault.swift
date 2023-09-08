@@ -207,7 +207,7 @@ class DetectorDefault: Detector {
         return nms(recognitions: recognitions);
     }
 
-    override func getManyRecognitions(objects: [String], width: Int, height: Int) -> [Recognition] {
+    override func getManyRecognitions(width: Int, height: Int) -> [Recognition] {
         var recognitions: [Recognition] = [];
         for i in 0..<getNumDetections() {
             let xPos = CGFloat(outputLocations![(4 * i) + 1]) * CGFloat(getImageSizeX());
@@ -226,12 +226,7 @@ class DetectorDefault: Detector {
             // while outputClasses correspond to class index from 0 to number_of_classes
             let classId: Int = Int(outputClasses![i]);
             let labelId: Int = classId + 1;
-
-            for item in objects {
-                if (item == labels[labelId]) {
-                    recognitions.append(Recognition(id: String(i), title: labels[labelId], confidence: outputScores![i], location: detection, classId: classId));
-                }
-            }
+            recognitions.append(Recognition(id: String(i), title: labels[labelId], confidence: outputScores![i], location: detection, classId: classId));
         }
         // Execute non-maximum suppression
         return nms(recognitions: recognitions);

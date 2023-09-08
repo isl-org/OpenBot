@@ -44,7 +44,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     static var left: Double = 0
     var configuration = ARWorldTrackingConfiguration()
     var task: String = ""
-
+    private var framesArray: [Bool] = [];
+    private var totalFrames: Int = 0;
+    var counter: Int = 0;
+    var object: String = "";
 
     /**
       override function calls when view of controller loaded
@@ -298,7 +301,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         runRobot.isMultipleObjectTracking = false
         runRobot.isPointGoalNavigation = false
         runRobot.isMultipleAi = false
-        taskStorage.array = [];
+        taskStorage.taskArray = [];
         bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
         bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
         let indicatorValues = "i0,0\n";
@@ -386,7 +389,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
        - connection:
      */
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-
         if (runRobot.isObjectTracking || runRobot.isAutopilot || runRobot.isMultipleObjectTracking || runRobot.isMultipleAi || runRobot.isDetection) {
             let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
             bufferWidth = CVPixelBufferGetWidth(pixelBuffer!)
@@ -771,31 +773,31 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      - Parameter imagePixelBuffer:
      */
     func runDetection(imagePixelBuffer: CVPixelBuffer) {
-        self.isInferenceQueueBusy = true
+        isInferenceQueueBusy = true
         let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, detectionType: "many");
         if res != nil {
             if (res!.count > 0) {
-                self.result = self.updateTarget(res!.first!.getLocation())
+                result = updateTarget(res!.first!.getLocation())
             } else {
-                self.result = Control(left: 0, right: 0)
-            }
-            guard let controlResult = self.result else {
-                return
+                result = Control(left: 0, right: 0)
             }
             DispatchQueue.main.async {
                 if (res!.count > 0) {
                     for item in res! {
                         if (item.getConfidence() > self.MINIMUM_CONFIDENCE_TF_OD_API) {
-                            print("array:::;", taskStorage.returnAttributeArray())
+                            self.counter = 0
                             if (taskStorage.returnAttributeArray().contains { i in
                                 i.keys.contains(item.getTitle())
                             }) {
-                                print("item::::", item.getTitle());
-                                _ = jsEvaluator(jsCode: taskStorage.getValueOfAttribute(classType: item.getTitle()) ?? "");
-                                taskStorage.removeAttribute(classTye: item.getTitle());
+                                self.object = item.getTitle();
+                                _ = jsEvaluator(jsCode: taskStorage.getValueOfAttribute(classType: item.getTitle(), type: "detect") as! String);
+                                self.totalFrames = taskStorage.getValueOfAttribute(classType: item.getTitle(), type: "frames") as! Int
                             }
                         } else {
-                            self.sendControl(control: Control())
+                            self.counter = self.counter + 1;
+                            if (self.counter >= self.totalFrames && self.object != "") {
+                                _ = jsEvaluator(jsCode: taskStorage.getValueOfAttribute(classType: self.object, type: "unDetect") as! String);
+                            }
                         }
                     }
                 }

@@ -233,8 +233,8 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.follow(object: object, model: model);
                 }
 
-                let onDetect: @convention(block) (String, String, String) -> Void = { (object, model, task) in
-                    self.runOpenBotThreadClass?.onDetect(object: object, model: model, task: task);
+                let onDetect: @convention(block) (String, String, Int, String) -> Void = { (object, model, frames, task) in
+                    self.runOpenBotThreadClass?.onDetect(object: object, model: model, frames: frames, task: task);
                 }
 
                 let toggleLed: @convention(block) (String) -> Void = { (status) in
@@ -267,6 +267,10 @@ class jsEvaluator {
 
                 let disableAI: @convention(block) () -> Void = { () in
                     self.runOpenBotThreadClass?.disableAI()
+                }
+
+                let onLostFrames: @convention(block) (String, Int, String) -> Void = { (object, frames, task) in
+                    self.runOpenBotThreadClass?.onLostFrames(object: object, frames: frames, task: task);
                 }
 
                 context.setObject(moveForward,
@@ -371,6 +375,8 @@ class jsEvaluator {
                         forKeyedSubscript: "disableAI" as NSString);
                 context.setObject(onDetect,
                         forKeyedSubscript: "onDetect" as NSString);
+                context.setObject(onLostFrames,
+                        forKeyedSubscript: "onLostFrames" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -999,17 +1005,22 @@ class jsEvaluator {
             runRobot.disableAI();
         }
 
-        func onDetect(object: String, model: String, task: String) {
+        func onDetect(object: String, model: String, frames: Int, task: String) {
             if isCancelled {
                 return
             }
             print("object::::", object);
-            print("model::::::", model);
-            print("task::::", task);
             runRobot.onDetection(object: object, model: model, task: task);
             runRobot.detector?.setSelectedClass(newClass: object);
-            taskStorage.addAttribute(classType: object, task: task);
-            NotificationCenter.default.post(name: .createCameraView, object: task);
+            taskStorage.addAttribute(classType: object, task: task, frames: frames, type: "detect")
+            NotificationCenter.default.post(name: .createCameraView, object: "");
+        }
+
+        func onLostFrames(object: String, frames: Int, task: String) {
+            if isCancelled {
+                return
+            }
+            taskStorage.addAttribute(classType: object, task: task, frames: frames, type: "unDetect")
         }
     }
 }

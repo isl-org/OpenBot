@@ -222,7 +222,7 @@ class DetectorFloatYoloV5: Detector {
         return nms(recognitions: recognitions);
     }
 
-    override func getManyRecognitions(objects: [String], width: Int, height: Int) -> [Recognition] {
+    override func getManyRecognitions(width: Int, height: Int) -> [Recognition] {
         var out = Array(repeating: Array<Float32>(repeating: 0, count: numClass + 5), count: output_box);
         var recognitions: [Recognition] = [];
         var classes = Array<Float32>(repeating: 0, count: numClass);
@@ -258,24 +258,21 @@ class DetectorFloatYoloV5: Detector {
                     maxClass = classes[c];
                 }
             }
-
             let score: Float = maxClass * confidence
             if (score > getObjThresh()) {
-                for item in objects {
-                    if (classId > -1 && item == labels[classId]) {
-                        let xPos = out[i][0]
-                        let yPos = out[i][1]
-                        let w = out[i][2]
-                        let h = out[i][3]
-                        let scaleX = CGFloat(width) / CGFloat(getImageSizeX())
-                        let scaleY = CGFloat(height) / CGFloat(getImageSizeY())
-                        //let scale = min(scaleX, scaleY)
-                        let dx = (CGFloat(width) - scaleX * CGFloat(getImageSizeX())) / 2
-                        let dy = (CGFloat(height) - scaleY * CGFloat(getImageSizeY())) / 2
-                        let transform = CGAffineTransform.identity.translatedBy(x: dx, y: dy).scaledBy(x: scaleX, y: scaleY)
-                        let detection = CGRect(x: CGFloat(max(0, xPos - w / 2)), y: CGFloat(max(0, yPos - h / 2)), width: CGFloat(w), height: CGFloat(h)).applying(transform);
-                        recognitions.append(Recognition(id: String(i), title: labels[classId], confidence: score, location: detection, classId: classId));
-                    }
+                if (classId > -1) {
+                    let xPos = out[i][0]
+                    let yPos = out[i][1]
+                    let w = out[i][2]
+                    let h = out[i][3]
+                    let scaleX = CGFloat(width) / CGFloat(getImageSizeX())
+                    let scaleY = CGFloat(height) / CGFloat(getImageSizeY())
+                    //let scale = min(scaleX, scaleY)
+                    let dx = (CGFloat(width) - scaleX * CGFloat(getImageSizeX())) / 2
+                    let dy = (CGFloat(height) - scaleY * CGFloat(getImageSizeY())) / 2
+                    let transform = CGAffineTransform.identity.translatedBy(x: dx, y: dy).scaledBy(x: scaleX, y: scaleY)
+                    let detection = CGRect(x: CGFloat(max(0, xPos - w / 2)), y: CGFloat(max(0, yPos - h / 2)), width: CGFloat(w), height: CGFloat(h)).applying(transform);
+                    recognitions.append(Recognition(id: String(i), title: labels[classId], confidence: score, location: detection, classId: classId));
                 }
             }
         }
