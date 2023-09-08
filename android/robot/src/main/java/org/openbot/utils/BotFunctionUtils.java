@@ -45,6 +45,7 @@ public class BotFunctionUtils {
           "enableAutopilot",
           "enableMultipleAI",
           "onDetect",
+          "onLostFrames",
     "reachPosition",
   };
 }

@@ -65,11 +65,14 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   private WebView myWebView;
   private SharedPreferencesManager sharedPreferencesManager;
   private boolean isRunJSCommand = false;
+  private boolean isTaskKeyDetected = false;
+  private int frameCounter = 0;
   public static boolean isFollow = false;
   public static boolean isAutopilot = false;
   public static boolean isFollowMultipleObject = false;
   public static boolean isStartDetectorAutoPilot = false;
   public static boolean isOnDetection = false;
+  public static int numberOfFrames = 1;
   public static String classType = "person";
   public static String detectorModelName = "";
   public static String autoPilotModelName = "";
@@ -367,14 +370,20 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
             final RectF location = result.getLocation();
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
               // Retrieving tasks
-              Map<String, String> tasks = taskStorage.getAllTasks();
-              Iterator<Map.Entry<String, String>> iterator = tasks.entrySet().iterator();
-
-              while (iterator.hasNext()) {
-                Map.Entry<String, String> entry = iterator.next();
+              Map<String, Map<String, String>> taskData = taskStorage.getData();
+              for (Map.Entry<String, Map<String, String>> entry : taskData.entrySet()) {
                 if (result.getTitle().equals(entry.getKey())) {
-                  runJSCommand(entry.getValue());
-                  iterator.remove(); // Safely remove the entry from the map
+                  isTaskKeyDetected = true;
+                  Map<String, String> tasks = entry.getValue();
+                  runJSCommand(tasks.get("onDetect"));
+                  System.out.println("sanjeev onUnDetect: " + tasks.get("onUnDetect"));
+                } else {
+                  frameCounter ++;
+                  if (isTaskKeyDetected && frameCounter >= 60) {
+                    Map<String, String> tasks = entry.getValue();
+                    runJSCommand(tasks.get("onUnDetect"));
+                    System.out.println("sanjeev onUnDetect: " + tasks.get("onUnDetect"));
+                  }
                 }
               }
             }
