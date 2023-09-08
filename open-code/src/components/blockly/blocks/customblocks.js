@@ -891,27 +891,12 @@ Blockly.Blocks["multipleObjectTracking"] = {
     }
 };
 
-
-Blockly.Blocks["detectionOrUndetection"] = {
+Blockly.Blocks["variableDetection"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "on %1 %2 using %3 %4 %5",
+            "message0": "on %1 detected using %2 %3 do %4 on lost %5 frames %6 do %7",
             "args0": [
-                {
-                    "type": "field_dropdown",
-                    "name": "type",
-                    "options": [
-                        [
-                            "Detect",
-                            "Detect"
-                        ],
-                        [
-                            "Undetect",
-                            "Undetect"
-                        ]
-                    ]
-                },
                 {
                     "type": "field_dropdown",
                     "name": "labels",
@@ -932,51 +917,21 @@ Blockly.Blocks["detectionOrUndetection"] = {
                 },
                 {
                     "type": "input_statement",
-                    "name": "task"
-                }
-            ],
-            "colour": "#458ff7",
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
-
-Blockly.Blocks["variableDetection"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "block_type",
-            "message0": "on Detect %1 using %2 %3 do %4 on Undetect %5 do %6",
-            "args0": [
-                {
-                    "type": "field_dropdown",
-                    "name": "labels1",
-                    "options": filterLabels()
-                },
-                {
-                    "type": "field_dropdown",
-                    "name": "models",
-                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
-                        [
-                            "MobileNetV1-300",
-                            "MobileNetV1-300"
-                        ]
-                    ]
-                },
-                {
-                    "type": "input_dummy"
-                },
-                {
-                    "type": "input_statement",
                     "name": "detect_tasks"
                 },
                 {
+                    "type": "field_slider",
+                    "name": "frames",
+                    "value": 192,
+                    "min": 1, // Minimum value for the slider
+                    "max": 90 // Maximum value for the slider
+                },
+                {
                     "type": "input_dummy"
                 },
                 {
                     "type": "input_statement",
-                    "name": "undetect_tasks"
+                    "name": "framesLost_tasks"
                 }
             ],
             "colour": "#458ff7",
