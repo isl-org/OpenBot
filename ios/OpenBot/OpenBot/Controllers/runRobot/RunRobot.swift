@@ -785,7 +785,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
                 if (res!.count > 0) {
                     for item in res! {
                         if (item.getConfidence() > self.MINIMUM_CONFIDENCE_TF_OD_API) {
-                            self.counter = 0
+                            self.counter = 0;
                             if (taskStorage.returnAttributeArray().contains { i in
                                 i.keys.contains(item.getTitle())
                             }) {
@@ -796,7 +796,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
                         } else {
                             self.counter = self.counter + 1;
                             if (self.counter >= self.totalFrames && self.object != "") {
-                                _ = jsEvaluator(jsCode: taskStorage.getValueOfAttribute(classType: self.object, type: "unDetect") as! String);
+                                let task = taskStorage.getValueOfAttribute(classType: self.object, type: "unDetect");
+                                if task != nil {
+                                    _ = jsEvaluator(jsCode: task as! String);
+                                }
                             }
                         }
                     }
