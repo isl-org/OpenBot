@@ -200,8 +200,8 @@ class Detector: Network {
 
             if (detectionType == "multiple") {
                 return getMultipleRecognitions(classA: selectedMultipleClass[0], classB: selectedMultipleClass[1], width: imageWidth, height: imageHeight)
-            } else if (detectionType == "many") {
-                return getManyRecognitions(width: imageWidth, height: imageHeight)
+            } else if (detectionType == "all") {
+                return getAllRecognitions(width: imageWidth, height: imageHeight)
             } else {
                 return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
             }
@@ -211,8 +211,8 @@ class Detector: Network {
             print("error:\(error)")
             if (detectionType == "multiple") {
                 return getMultipleRecognitions(classA: selectedMultipleClass[0], classB: selectedMultipleClass[1], width: imageWidth, height: imageHeight)
-            } else if (detectionType == "many") {
-                return getManyRecognitions(width: imageWidth, height: imageHeight)
+            } else if (detectionType == "all") {
+                return getAllRecognitions(width: imageWidth, height: imageHeight)
             } else {
                 return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
             }
@@ -356,7 +356,7 @@ class Detector: Network {
         [];
     }
 
-    func getManyRecognitions(width: Int, height: Int) -> [Recognition] {
+    func getAllRecognitions(width: Int, height: Int) -> [Recognition] {
         [];
     }
 

@@ -207,7 +207,7 @@ class DetectorDefault: Detector {
         return nms(recognitions: recognitions);
     }
 
-    override func getManyRecognitions(width: Int, height: Int) -> [Recognition] {
+    override func getAllRecognitions(width: Int, height: Int) -> [Recognition] {
         var recognitions: [Recognition] = [];
         for i in 0..<getNumDetections() {
             let xPos = CGFloat(outputLocations![(4 * i) + 1]) * CGFloat(getImageSizeX());

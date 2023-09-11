@@ -202,7 +202,7 @@ class DetectorFloatYoloV4: Detector {
         return nms(recognitions: recognitions);
     }
 
-    override func getManyRecognitions(width: Int, height: Int) -> [Recognition] {
+    override func getAllRecognitions(width: Int, height: Int) -> [Recognition] {
         var recognitions: [Recognition] = [];
         var outputScores2D = Array(repeating: Array<Float32>(repeating: 0, count: labels.count), count: NUM_DETECTIONS);
         for a in 0..<NUM_DETECTIONS {

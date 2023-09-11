@@ -774,7 +774,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      */
     func runDetection(imagePixelBuffer: CVPixelBuffer) {
         isInferenceQueueBusy = true
-        let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, detectionType: "many");
+        let res = runRobot.detector?.recognizeImage(pixelBuffer: imagePixelBuffer, detectionType: "all");
         if res != nil {
             if (res!.count > 0) {
                 result = updateTarget(res!.first!.getLocation())

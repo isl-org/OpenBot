@@ -1011,8 +1011,7 @@ class jsEvaluator {
             }
             print("object::::", object);
             runRobot.onDetection(object: object, model: model, task: task);
-            runRobot.detector?.setSelectedClass(newClass: object);
-            taskStorage.addAttribute(classType: object, task: task, frames: frames, type: "detect")
+            taskStorage.addAttribute(classType: object, task: task, frames: frames, type: "detect");
             NotificationCenter.default.post(name: .createCameraView, object: "");
         }
 
@@ -1020,7 +1019,7 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
-            taskStorage.addAttribute(classType: object, task: task, frames: frames, type: "unDetect")
+            taskStorage.addAttribute(classType: object, task: task, frames: frames, type: "unDetect");
         }
     }
 }

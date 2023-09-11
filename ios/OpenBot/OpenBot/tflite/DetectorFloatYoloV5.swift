@@ -222,7 +222,7 @@ class DetectorFloatYoloV5: Detector {
         return nms(recognitions: recognitions);
     }
 
-    override func getManyRecognitions(width: Int, height: Int) -> [Recognition] {
+    override func getAllRecognitions(width: Int, height: Int) -> [Recognition] {
         var out = Array(repeating: Array<Float32>(repeating: 0, count: numClass + 5), count: output_box);
         var recognitions: [Recognition] = [];
         var classes = Array<Float32>(repeating: 0, count: numClass);
