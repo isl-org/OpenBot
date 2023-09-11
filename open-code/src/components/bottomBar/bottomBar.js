@@ -169,6 +169,11 @@ export const BottomBar = () => {
     };
 
     useEffect(() => {
+        const button = document.querySelector("#uploadCode");
+        button.disabled = isLoader;
+    }, [isLoader])
+
+    useEffect(() => {
         const handleOrientationChange = () => {
             setIsLandscape(
                 window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches
@@ -398,9 +403,9 @@ function UploadCodeButton(params) {
         <div className={styles.iconMargin + " " + styles.noSpace}
              style={{width: "25%"}}>
             {/*generate QR code*/}
-            <button
-                className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
-                name={"uploadCode"} onClick={clickedButton}>
+            <button id={"uploadCode"}
+                    className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
+                    name={"uploadCode"} onClick={clickedButton}>
                 {isMobile || isLandscape || isTabletQuery.matches || isDesktopSmallerScreen ? (
                     ""
                 ) : (
