@@ -292,6 +292,6 @@ pythonGenerator.forBlock['variableDetection'] = function (block, generator) {
     let frames = block.getFieldValue("frames");
     let framesLost_tasks = pythonGenerator.statementToCode(block, 'framesLost_tasks');
     let code = "";
-    code += "onDetect" + '("' + labels + '","' + models + ',"' + detect_tasks + '")\n' + 'onLostFrames("' + labels + '",' + frames + ',"' + framesLost_tasks + '")\n';
+    code += "onDetect" + '("' + labels + '","' + models + '","' + detect_tasks + '")\n' + 'onLostFrames("' + labels + '",' + frames + ',"' + framesLost_tasks + '")\n';
     return code;
 };
