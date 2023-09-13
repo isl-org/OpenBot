@@ -234,7 +234,7 @@ class jsEvaluator {
                 }
 
                 let onDetect: @convention(block) (String, String, Int, String) -> Void = { (object, model, frames, task) in
-                    self.runOpenBotThreadClass?.onDetect(object: object, model: model, frames: frames, task: task);
+                    self.runOpenBotThreadClass?.onDetect(object: object, model: model, task: task);
                 }
 
                 let toggleLed: @convention(block) (String) -> Void = { (status) in
@@ -1005,16 +1005,30 @@ class jsEvaluator {
             runRobot.disableAI();
         }
 
-        func onDetect(object: String, model: String, frames: Int, task: String) {
+        /**
+         Function to call static method of runRobot class to enable detection
+         - Parameters:
+           - object:
+           - model:
+           - task:
+         */
+        func onDetect(object: String, model: String, task: String) {
             if isCancelled {
                 return
             }
             print("object::::", object);
             runRobot.onDetection(object: object, model: model, task: task);
-            taskStorage.addAttribute(classType: object, task: task, frames: frames, type: "detect");
+            taskStorage.addAttribute(classType: object, task: task, frames: 0, type: "detect");
             NotificationCenter.default.post(name: .createCameraView, object: "");
         }
 
+        /**
+
+         - Parameters:
+           - object:
+           - frames:
+           - task:
+         */
         func onLostFrames(object: String, frames: Int, task: String) {
             if isCancelled {
                 return
