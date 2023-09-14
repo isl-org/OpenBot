@@ -52,10 +52,10 @@ import org.openbot.vehicle.Control;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -72,7 +72,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   public static boolean isFollowMultipleObject = false;
   public static boolean isStartDetectorAutoPilot = false;
   public static boolean isOnDetection = false;
-  public static int numberOfFrames = 1;
+  private int numberOfFrames = 1;
   public static String classType = "person";
   public static String detectorModelName = "";
   public static String autoPilotModelName = "";
@@ -368,21 +368,21 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
 
           for (final Detector.Recognition result : results) {
             final RectF location = result.getLocation();
-            if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
+            if (location != null) {
               // Retrieving tasks
               Map<String, Map<String, String>> taskData = taskStorage.getData();
               for (Map.Entry<String, Map<String, String>> entry : taskData.entrySet()) {
-                if (result.getTitle().equals(entry.getKey())) {
+                if (result.getTitle().equals(entry.getKey()) && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
+                  frameCounter = 0;
                   isTaskKeyDetected = true;
                   Map<String, String> tasks = entry.getValue();
+                  numberOfFrames = Integer.parseInt(Objects.requireNonNull(tasks.get("noOfFrames")));
                   runJSCommand(tasks.get("onDetect"));
-                  System.out.println("sanjeev onUnDetect: " + tasks.get("onUnDetect"));
                 } else {
                   frameCounter ++;
-                  if (isTaskKeyDetected && frameCounter >= 60) {
+                  if (isTaskKeyDetected && frameCounter >= numberOfFrames) {
                     Map<String, String> tasks = entry.getValue();
                     runJSCommand(tasks.get("onUnDetect"));
-                    System.out.println("sanjeev onUnDetect: " + tasks.get("onUnDetect"));
                   }
                 }
               }

@@ -439,25 +439,21 @@ public class BotFunctions implements SensorEventListener {
   }
 
   @JavascriptInterface
-  public void onDetect(String classType, String model, int numberOfFrames, String task) {
+  public void onDetect(String classType, String model, String task) {
     Map<String, String> detectTask = new HashMap<>();
     detectTask.put("onDetect", task);
-//    detectTask.put("noOfFrames", numberOfFrames);
     BlocklyExecutingFragment.detectorModelName = model;
     BlocklyExecutingFragment.taskStorage.addTask(classType, detectTask);
-    BlocklyExecutingFragment.isOnDetection = true;
   }
 
   @JavascriptInterface
   public void onLostFrames(String classType, int numberOfFrames, String task) {
-
     Map<String, Map<String, String>> taskData = BlocklyExecutingFragment.taskStorage.getData();
     for (Map.Entry<String, Map<String, String>> entry : taskData.entrySet()) {
       if (classType.equals(entry.getKey())) {
         Map<String, String> existingMap = entry.getValue();
-        System.out.println("sanjeev existingMap1 == " + existingMap);
         existingMap.put("onUnDetect", task);
-        System.out.println("sanjeev existingMap2 == " + existingMap);
+        existingMap.put("noOfFrames", String.valueOf(numberOfFrames));
         BlocklyExecutingFragment.taskStorage.addTask(classType, existingMap);
         taskData.put(classType, existingMap);
         break;
