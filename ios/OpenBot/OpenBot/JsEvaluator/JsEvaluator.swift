@@ -233,7 +233,7 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.follow(object: object, model: model);
                 }
 
-                let onDetect: @convention(block) (String, String, Int, String) -> Void = { (object, model, frames, task) in
+                let onDetect: @convention(block) (String, String, String) -> Void = { (object, model, task) in
                     self.runOpenBotThreadClass?.onDetect(object: object, model: model, task: task);
                 }
 
