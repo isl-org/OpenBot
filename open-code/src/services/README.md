@@ -75,30 +75,60 @@
 
   </p>
 
+### Setting up Google Drive Services
+
+- #### To Enable API
+  Go to the Google Cloud Console (https://console.cloud.google.com/) and sign in using the same Google account that you
+  use for Firebase. This ensures seamless integration between the services. Under Quick access, you should see an option
+  labeled ``APIs & Services``. Click on it.
+  If you don't see it immediately, you might need to click on the menu icon (usually three horizontal lines) at the
+  top left corner to expand the menu and reveal the options.
+
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/googleCloud_console.png" alt="Google Cloud Console" width="30%"/>
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_API_services.png" alt="Google Cloud Console" width="30%"/>
+
+    - After opening "APIs & Services", navigate to the ``Library`` section. This is where you can search for Google
+      Drive API.
+      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/googleDrive_library.png" alt="Google Cloud Console" width="50%"/>
+
+    - The Google Drive API should appear in the search results. Click on it.
+      On the next page, you'll find information about the API. Click the "Enable" button to enable it for your project.
+      Once enabled, you'll be able to access and manage the API settings.
+      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_drive_result.png" alt="Google Cloud Console" width="30%"/>
+      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_drive_enable_API.png" alt="Google Cloud Console" width="30%"/>
+
 ### Troubleshooting
 
 Here are some common issues that may occur during the Firebase configuration process and their corresponding solutions.
+
 ```bash
   1. Invalid Credentials error: Inspect the browser console for any error messages or warnings related to Invalid Credentials.
 ```
+
 - Verify that you have entered the correct client ID and API key in the Firebase Console.
 - Double-check that there are no typos or errors in the values entered in environment variables.
-- Make sure you have enabled the configuration settings properly when calling the firebase.auth().signInWithPopup() function.
+- Make sure you have enabled the configuration settings properly when calling the firebase.auth().signInWithPopup()
+  function.
 - Ensure that you have specified correct firebase SDK version, and you are signing in with the valid Google account.
 
 ```bash
   2.  User account disabled error.
 ```
-- The only way to fix this issue is to reactivate the existing account or create a new one.
-- Additionally, you can check if account has been disabled or deleted before attempting to authenticate them with Firebase Google Sign-in, and display an error message if account is not active.
 
+- The only way to fix this issue is to reactivate the existing account or create a new one.
+- Additionally, you can check if account has been disabled or deleted before attempting to authenticate them with
+  Firebase Google Sign-in, and display an error message if account is not active.
 
 ```bash
   3.  Cross-Origin Resource Sharing (CORS) error: If you notice that expected behavior of the web application is not occurring, such as data not being loaded or displayed correctly.
 ```
-- Go to the Firebase Console, in the Authentication section select the "Sign-in method" tab. Under the "Authorized domains" section, make sure that your web application domain is added and that CORS is enabled for it.
-- If you are using a server-side authentication flow, make sure that you have added the necessary CORS headers to your server response to allow requests from your web application domain.
-- If you are hosting your web application on Firebase Hosting, it automatically enables CORS for your domain. You can also use Firebase Cloud Run to serve API requests with CORS headers included. 
+
+- Go to the Firebase Console, in the Authentication section select the "Sign-in method" tab. Under the "Authorized
+  domains" section, make sure that your web application domain is added and that CORS is enabled for it.
+- If you are using a server-side authentication flow, make sure that you have added the necessary CORS headers to your
+  server response to allow requests from your web application domain.
+- If you are hosting your web application on Firebase Hosting, it automatically enables CORS for your domain. You can
+  also use Firebase Cloud Run to serve API requests with CORS headers included. 
 
 
 
