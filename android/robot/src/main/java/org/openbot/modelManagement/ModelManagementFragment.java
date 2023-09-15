@@ -337,6 +337,7 @@ public class ModelManagementFragment extends Fragment
             adapter.notifyItemChanged(index);
           }
           FileUtils.updateModelConfig(requireActivity(), masterList);
+          requireActivity().runOnUiThread(() -> adapter.setItems(loadModelList(binding.modelSpinner.getSelectedItem().toString())));
         });
     builder.setNegativeButton("Cancel", (dialog, id) -> {});
     AlertDialog dialog = builder.create();
