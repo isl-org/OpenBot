@@ -25,6 +25,8 @@ class ObjectTrackingSettings: UIView {
     var modelDropDown = DropDown()
     var objectDropDown = DropDown();
     var objectDropDownView = UIView()
+    var dynamicSpeedLabel = UILabel()
+    var dynamicSpeedCheckbox = Checkbox()
 
     /// Initialization routine.
     ///
@@ -49,6 +51,8 @@ class ObjectTrackingSettings: UIView {
         createBluetoothIcon()
         createCameraIcon()
         createSwitchButton()
+        addSubview(createLabel(text: Strings.dynamicSpeed, leadingAnchor: Int(adapted(dimensionSize: 150, to: .height)), topAnchor: Int(adapted(dimensionSize: 40, to: .height))))
+        setDynamicSpeed()
         addSubview(createLabel(text: Strings.model, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 60, to: .height))))
         createModelDropDown()
         addSubview(createLabel(text: Strings.speed, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 90, to: .height))))
@@ -220,7 +224,28 @@ class ObjectTrackingSettings: UIView {
         speedLabel = createLabel(text: "*** fps", leadingAnchor: 90, topAnchor: Int(adapted(dimensionSize: 90, to: .height)))
         addSubview(speedLabel)
     }
-
+    
+    func setDynamicSpeed(){
+        dynamicSpeedCheckbox = createCheckbox(leadingAnchor: 181.5, topAnchor: 68,action: #selector(updateDynamicSpeed(_:)))
+        addSubview(dynamicSpeedCheckbox);
+    }
+    
+    func createCheckbox(leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> Checkbox {
+        let checkbox = Checkbox(frame: CGRect(x: leadingAnchor, y: topAnchor, width: 20, height: 20))
+        checkbox.checkedBorderColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
+        checkbox.uncheckedBorderColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
+        checkbox.checkmarkColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
+        checkbox.checkedBorderColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
+        checkbox.checkmarkStyle = .tick;
+        checkbox.isEnabled = true;
+        checkbox.addTarget(self, action: action!, for: .touchUpInside);
+        return checkbox
+    }
+    
+    @objc func updateDynamicSpeed(_ sender: UIButton) {
+        dynamicSpeedCheckbox.isChecked = !dynamicSpeedCheckbox.isChecked;
+    }
+    
     /// function to crete the dropdown for objects
     func setupObjectDropDown() {
         objectDropDown.backgroundColor = Colors.freeRoamButtonsColor;
