@@ -75,17 +75,52 @@
 
   </p>
 
+
+- Enabling Firestore database, navigate to the Build menu on the left sidebar.
+  Click on ``Firestore Database`` from the options. Then, Click on ``Create database`` button.
+
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firestore_database_setup.png" alt="Google Cloud Console" width="50%"/>
+
+    - For secure rules, select ``Start in production mode`` and choose firestore location for the
+      app and click on the ``Enable`` button.
+
+      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_database_production_build.png" alt="Google Cloud Console" width="30%"/>
+      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_database_location.png" alt="Google Cloud Console" width="30%"/>
+
+        - Once your database is created, click on the ``Rules`` to configure permissions for read and write.
+
+          <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_database_rules.png" alt="Google Cloud Console" width="30%"/>
+
+        - Replace the default rules with below code and click on ``Publish`` button.
+
+          ```bash
+          rules_version = '2';
+          service cloud.firestore {
+              match /databases/{database}/documents {
+                  match /{document=**} {
+                      allow read, write: if request.auth != null;
+                  }
+              }
+          }
+          ```
+        
 ### Setting up Google Drive Services
 
 - #### To Enable API
-  Go to the Google Cloud Console (https://console.cloud.google.com/) and sign in using the same Google account that you
-  use for Firebase. This ensures seamless integration between the services. Under Quick access, you should see an option
+  Go to the Google Cloud
+  Console (https://console.cloud.google.com/) and sign
+  in using the same Google account that you
+  use for Firebase. This ensures seamless integration between the services. At the top of the page, you'll see the current project name. Click on it to open the project selector. Under the `ALL` section, select the project you want to switch to.
+
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/googleCloud_console.png" alt="Google Cloud Console" width="30%"/>
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_cloud_project.png" alt="Google Cloud Console" width="30%"/>
+
+- After switching, under Quick access, you should see an option
   labeled ``APIs & Services``. Click on it.
   If you don't see it immediately, you might need to click on the menu icon (usually three horizontal lines) at the
   top left corner to expand the menu and reveal the options.
 
-  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/googleCloud_console.png" alt="Google Cloud Console" width="30%"/>
-  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_API_services.png" alt="Google Cloud Console" width="30%"/>
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_API_services.png" alt="Google Cloud Console" width="50%"/>
 
     - After opening "APIs & Services", navigate to the ``Library`` section. This is where you can search for Google
       Drive API.
@@ -93,7 +128,8 @@
 
     - The Google Drive API should appear in the search results. Click on it.
       On the next page, you'll find information about the API. Click the "Enable" button to enable it for your project.
-      Once enabled, you'll be able to access and manage the API settings.
+      Once enabled, you'll be able to access and manage the Google Drive and Drive API settings.
+  
       <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_drive_result.png" alt="Google Cloud Console" width="30%"/>
       <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_drive_enable_API.png" alt="Google Cloud Console" width="30%"/>
 
