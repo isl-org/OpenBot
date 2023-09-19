@@ -27,7 +27,7 @@ class ObjectTrackingSettings: UIView {
     var objectDropDownView = UIView()
     var dynamicSpeedLabel = UILabel()
     var dynamicSpeedCheckbox = Checkbox()
-
+    
     /// Initialization routine.
     ///
     /// - Parameters:
@@ -238,14 +238,13 @@ class ObjectTrackingSettings: UIView {
         checkbox.checkedBorderColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
         checkbox.checkmarkStyle = .tick;
         checkbox.isEnabled = true;
-        checkbox.addTarget(self, action: action!, for: .touchUpInside);
+        checkbox.addTarget(self, action: action!, for: .valueChanged);
         return checkbox
     }
     
     @objc func updateDynamicSpeed(_ sender: UIButton) {
-        dynamicSpeedCheckbox.isChecked = !dynamicSpeedCheckbox.isChecked;
     }
-    
+        
     /// function to crete the dropdown for objects
     func setupObjectDropDown() {
         objectDropDown.backgroundColor = Colors.freeRoamButtonsColor;

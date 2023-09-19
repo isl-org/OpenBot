@@ -28,7 +28,6 @@ class ObjectTrackingFragment: CameraController {
     private var bufferHeight = 0
     private var bufferWidth = 0
     private let edgeOffset: CGFloat = 2.0
-    private var useDynamicSpeed: Bool = false
     
     /// Called after the view fragment has loaded.
     override func viewDidLoad() {
@@ -208,7 +207,7 @@ class ObjectTrackingFragment: CameraController {
         }
         
         // Adjust speed depending on size of detected object bounding box
-        if (useDynamicSpeed) {
+        if (objectTrackingSettings!.dynamicSpeedCheckbox.isChecked) {  //  Set use of dynamic speed on or off (used in updateTarget())
             var scaleFactor: Float = 1.0 - boxArea / Float(frameWidth * frameHeight)
             scaleFactor = scaleFactor > 0.75 ? 1.0 : scaleFactor // tracked object far, full speed
             // apply scale factor if tracked object is not too near, otherwise stop
@@ -222,13 +221,6 @@ class ObjectTrackingFragment: CameraController {
         }
         
         return Control(left: left, right: right)
-    }
-    
-    /// Set use of dynamic speed on or off (used in updateTarget())
-    ///
-    /// - Parameter isEnabled
-    func setDynamicSpeed(isEnabled: Bool) {
-        self.useDynamicSpeed = isEnabled
     }
     
     /// function to create the frame on the screen for detection on based of image device(front/back) or orientation (portrait/landscape).
