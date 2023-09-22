@@ -15,15 +15,15 @@ apply plugin: 'de.undercouch.download'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion '33.0.1'
+    compileSdk 34
+    buildToolsVersion '33.0.2'
     defaultConfig {
         applicationId "org.openbot"
         minSdkVersion 21
         targetSdkVersion 32
-        ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a'
-        }
+        //ndk {
+            //abiFilters 'armeabi-v7a', 'arm64-v8a'
+        //}
     }
     buildTypes {
         release {
@@ -91,6 +91,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.3.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation project(path: ':opencv')
 
     def nav_version = "2.3.5"
     // Java language implementation
