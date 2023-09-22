@@ -23,6 +23,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var bluetoothIcon = UIImageView()
     var isClientConnected: Bool = false
     private let mainView = UIView()
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
@@ -50,6 +51,27 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         if currentOrientation == UIInterfaceOrientation.landscapeRight || currentOrientation == UIInterfaceOrientation.landscapeLeft {
             applyLandScapeConstraint()
         }
+        if let value = preferencesManager.getControlMode() {
+            if let mode = ControlMode(rawValue: value){
+                selectedControlMode = mode;
+                updateControlMode();
+            }
+        }
+        if let value = preferencesManager.getDriveMode() {
+            if let mode = DriveMode(rawValue: value){
+                selectedDriveMode = mode;
+                gameController.selectedDriveMode = mode
+                updateGameControllerModeType()
+            }
+        }
+        if let value = preferencesManager.getSpeedMode() {
+            if let mode = SpeedMode(rawValue: value) {
+                selectedSpeedMode = mode;
+                gameController.selectedSpeedMode = mode
+                updateSpeedModes()
+            }
+        }
+        
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(decreaseSpeedMode), name: .decreaseSpeedMode, object: nil);
@@ -391,18 +413,21 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         selectedDriveMode = DriveMode.JOYSTICK
         gameController.selectedDriveMode = DriveMode.JOYSTICK
         updateGameControllerModeType()
+        preferencesManager.setDriveMode(value: selectedDriveMode.rawValue);
     }
 
     @objc func gameMode(_ sender: UIView) {
         selectedDriveMode = DriveMode.GAME
         gameController.selectedDriveMode = DriveMode.GAME
         updateGameControllerModeType()
+        preferencesManager.setDriveMode(value: selectedDriveMode.rawValue);
     }
 
     @objc func dualMode(_ sender: UIView) {
         selectedDriveMode = DriveMode.DUAL
         gameController.selectedDriveMode = DriveMode.DUAL
         updateGameControllerModeType()
+        preferencesManager.setDriveMode(value: selectedDriveMode.rawValue);
     }
 
     /// function to update the speed modes value and create UI
@@ -426,29 +451,34 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     @objc func phoneMode(_ sender: UIView) {
         selectedControlMode = ControlMode.PHONE
         updateControlMode()
+        preferencesManager.setControlMode(value: selectedControlMode.rawValue);
     }
 
     @objc func gamepadMode(_ sender: UIView) {
         selectedControlMode = ControlMode.GAMEPAD;
         updateControlMode()
+        preferencesManager.setControlMode(value: selectedControlMode.rawValue);
     }
 
     @objc func slow(_ sender: UIView) {
         selectedSpeedMode = SpeedMode.SLOW
         gameController.selectedSpeedMode = SpeedMode.SLOW
         updateSpeedModes()
+        preferencesManager.setSpeedMode(value: selectedSpeedMode.rawValue);
     }
 
     @objc func medium(_ sender: UIView) {
         selectedSpeedMode = SpeedMode.NORMAL
         gameController.selectedSpeedMode = SpeedMode.NORMAL
         updateSpeedModes()
+        preferencesManager.setSpeedMode(value: selectedSpeedMode.rawValue);
     }
 
     @objc func fast(_ sender: UIView) {
         selectedSpeedMode = SpeedMode.FAST
         gameController.selectedSpeedMode = SpeedMode.FAST
         updateSpeedModes()
+        preferencesManager.setSpeedMode(value: selectedSpeedMode.rawValue);
     }
 
     /// UI function to create the mode
