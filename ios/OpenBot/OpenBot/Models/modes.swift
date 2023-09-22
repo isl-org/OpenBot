@@ -10,4 +10,5 @@ public struct ModeItem {
     var label: String;
     var icon: UIImage;
     var identifier: String;
+    var color: UIColor;
 }

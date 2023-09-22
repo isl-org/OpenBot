@@ -165,4 +165,41 @@ struct Strings {
     static let canceled: String = "CANCEL"
     static let info: String = "Info"
     static let restart: String = "Restart"
+
+
+    //open-code functions
+    static let moveForward: String = "moveForward";
+    static let loop: String = "loop";
+    static let moveOpenBot: String = "moveOpenBot";
+    static let moveCircular: String = "moveCircular";
+    static let pause: String = "pause";
+    static let moveBackward: String = "moveBackward";
+    static let moveLeft: String = "moveLeft";
+    static let moveRight: String = "moveRight";
+    static let playSound: String = "playSound";
+    static let playSoundSpeed: String = "playSoundSpeed";
+    static let motorBackward: String = "motorBackward";
+    static let motorForward: String = "motorForward";
+    static let motorStop: String = "motorStop";
+    static let playSoundMode: String = "playSoundMode";
+    static let ledBrightness: String = "ledBrightness";
+    static let leftIndicatorOn: String = "leftIndicatorOn";
+    static let rightIndicatorOn: String = "rightIndicatorOn";
+    static let indicatorOff: String = "indicatorOff";
+    static let stopRobot: String = "stopRobot";
+    static let rightIndicatorOff: String = "rightIndicatorOff";
+    static let leftIndicatorOff: String = "leftIndicatorOff";
+    static let sonarReading: String = "sonarReading";
+    static let switchController: String = "switchController";
+    static let switchDriveMode: String = "switchDriveMode";
+    static let bumperCollision: String = "bumperCollision";
+    static let speedReading: String = "speedReading";
+    static let voltageDividerReading: String = "voltageDividerReading";
+    static let backWheelReading: String = "backWheelReading";
+    static let frontWheelReading: String = "frontWheelReading";
+    static let gyroscopeReading:  String = "gyroscopeReading";
+    static let accelerationReading: String = "accelerationReading";
+    static let magneticReading: String = "magneticReading"
+
+
 }

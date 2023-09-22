@@ -14,6 +14,7 @@ class VehicleControl: UIView {
     var isButtonEnable: Bool = true
     let gameController = GameController.shared
     var downSwipe: Bool = false
+    let audioPlayer = AudioPlayer.shared;
 
     /// initializing function
     override init(frame: CGRect) {
@@ -210,6 +211,7 @@ class VehicleControl: UIView {
             break;
         }
         updateSpeedMode(self);
+        audioPlayer.playSpeedMode(speedMode: speedMode);
     }
 
     ///function to increase the speed modes.
@@ -223,10 +225,12 @@ class VehicleControl: UIView {
         case .FAST:
             return;
         }
+        audioPlayer.playSpeedMode(speedMode: speedMode);
     }
 
     /// function to update the drive modes.
     @objc func updateDrive(_ notification: Notification) {
         updateDriveMode(self)
+        audioPlayer.playDriveMode(driveMode: driveMode);
     }
 }

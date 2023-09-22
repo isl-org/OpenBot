@@ -80,7 +80,7 @@ class Autopilot: Network {
             var indicatorData: Data = Data()
             indicatorData.append(contentsOf: indicator.bytes)
 
-            // Pre-proccess input image.
+            // Pre-process input image.
             let inputTensor = try tflite!.input(at: imgIndex)
             guard let rgbData = rgbDataFromBuffer(scaledPixelBuffer, isModelQuantized: inputTensor.dataType == .uInt8) else {
                 return Control(left: 0, right: 0)

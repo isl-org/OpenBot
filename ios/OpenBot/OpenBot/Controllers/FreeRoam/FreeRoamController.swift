@@ -22,11 +22,13 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var gameController = GameController.shared
     var bluetoothIcon = UIImageView()
     var isClientConnected: Bool = false
+    var audioPlayer = AudioPlayer.shared
     private let mainView = UIView()
 
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("navigationController is :",navigationController);
         setupNavigationBarItem()
         setupSpeedMode()
         applySafeAreaConstraints()
@@ -59,6 +61,13 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
         gameController.resetControl = false
+    }
+
+    /**
+     Removing all notifications
+     */
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     /// Called after the view was dismissed, covered or otherwise hidden.
@@ -501,8 +510,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     /// update the speedometer value
     func updateSpeedometer() {
-        let oldTag = view.viewWithTag(100)
-        oldTag?.removeFromSuperview()
+        let oldTag = view.viewWithTag(100);
+        oldTag?.removeFromSuperview();
         let a = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
         a.tag = 100
         let speedometer = bluetooth.speedometer
@@ -552,6 +561,15 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         _ = navigationController?.popViewController(animated: true)
     }
 
+    override func beginAppearanceTransition(_ isAppearing: Bool, animated: Bool) {
+        super.beginAppearanceTransition(isAppearing, animated: animated)
+
+    }
+
+    override func endAppearanceTransition() {
+        super.endAppearanceTransition()
+    }
+
     /// open the bluetooth settings screen
     @objc func openBluetoothSettings(tapGestureRecognizer: UITapGestureRecognizer) {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
@@ -579,6 +597,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             selectedSpeedMode = .NORMAL;
             break;
         }
+        audioPlayer.playSpeedMode(speedMode: selectedSpeedMode);
         updateSpeedModes()
     }
 
@@ -594,6 +613,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         case .FAST:
             return
         }
+        audioPlayer.playSpeedMode(speedMode: selectedSpeedMode);
         updateSpeedModes()
     }
 
@@ -615,6 +635,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             }
         }
         updateGameControllerModeType()
+        audioPlayer.playDriveMode(driveMode: selectedDriveMode);
     }
 
     /// update screen data coming from application
