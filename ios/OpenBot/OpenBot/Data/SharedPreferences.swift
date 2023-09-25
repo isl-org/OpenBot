@@ -14,7 +14,7 @@ public class SharedPreferencesManager {
     public var drive_mode : String = "drive_mode";
     
     public var speed_mode : String = "speed_mode";
-        
+            
     public func setControlMode(value:String){
         UserDefaults.standard.set(value, forKey: control_mode)
     }
@@ -37,6 +37,14 @@ public class SharedPreferencesManager {
     
     public func getSpeedMode() -> Float? {
         return UserDefaults.standard.float(forKey: speed_mode);
+    }
+    
+    public func updateSensorData(value:Bool,sensor:String){
+        UserDefaults.standard.set(value, forKey: sensor);
+    }
+    
+    public func getSensorData(sensor:String) -> Any? {
+        return UserDefaults.standard.value(forKey: sensor)
     }
     
 }

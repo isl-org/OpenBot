@@ -28,6 +28,7 @@ class DataCollectionController: CameraController {
     private var isImageCaptureQueueBusy = false
     var saveZipFilesName = [URL]()
     var paths: [String] = [""]
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
@@ -49,6 +50,22 @@ class DataCollectionController: CameraController {
             let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.dataCollection, target: self, action: #selector(DataCollectionController.back(sender:)), titleColor: Colors.navigationColor ?? .white)
             navigationItem.leftBarButtonItem = newBackButton
         }
+                
+        if let value = preferencesManager.getSensorData(sensor: "isVehicleLogSelected"){
+            dataLogger.isVehicleLogSelected = value as! Bool;
+        }
+        if let value = preferencesManager.getSensorData(sensor: "isGpsLogSelected"){
+            dataLogger.isGpsLogSelected = value as! Bool;        }
+        if let value = preferencesManager.getSensorData(sensor: "isMagneticLogSelected"){
+            dataLogger.isMagneticLogSelected = value as! Bool;
+        }
+        if let value = preferencesManager.getSensorData(sensor: "isGyroscopeLogSelected"){
+            dataLogger.isGyroscopeLogSelected = value as! Bool;
+        }
+        if let value = preferencesManager.getSensorData(sensor: "isAccelerationLogSelected"){
+            dataLogger.isAccelerationLogSelected = value as! Bool;
+        }
+        
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
@@ -226,7 +243,6 @@ class DataCollectionController: CameraController {
 
     /// Activate/deactivate logging
     @objc func toggleLogging() {
-
         loggingEnabled = !loggingEnabled;
         isLoggedButtonPressed = true;
 
