@@ -27,6 +27,8 @@ public class FeatureList {
   public static final String DATA_COLLECTION = "Data Collection";
 
   public static final String LANE_DETECTION = "Lane Detection";
+
+  public static final String REWARD = "Reward Lilou";
   public static final String LOCAL_SAVE_ON_PHONE = "Local (save On Phone)";
   public static final String EDGE_LOCAL_NETWORK = "Edge (local Network)";
   public static final String CLOUD_FIREBASE = "Cloud (firebase)";
@@ -78,6 +80,7 @@ public class FeatureList {
 
     subCategories = new ArrayList<>();
     subCategories.add(new SubCategory(LANE_DETECTION, R.drawable.ic_cameraswitch, "#7268A6"));
+    subCategories.add(new SubCategory(REWARD, R.drawable.ic_map, "#7268A6"));
     subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
     subCategories.add(new SubCategory(DATA_COLLECTION, R.drawable.ic_storage, "#93C47D"));
     subCategories.add(new SubCategory(CONTROLLER_MAPPING, R.drawable.ic_joystick, "#7268A6"));

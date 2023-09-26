@@ -1,16 +1,21 @@
 package org.openbot.rl;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
@@ -30,6 +35,7 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +44,18 @@ public class LaneDetectionFragment extends CameraFragment {
     private FragmentLaneDetectionBinding binding;
     private MultiBoxTracker tracker;
 
+
+
+    private SharedDataViewModel viewModel;
+
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedDataViewModel.class);
+
 
         if (!OpenCVLoader.initDebug()) {
             // OpenCV initialization failed, handle the error
@@ -66,10 +81,13 @@ public class LaneDetectionFragment extends CameraFragment {
 
         // Find the ImageView by its ID
         ImageView imageView = view.findViewById(R.id.yourImageViewId);
+
+
+
     }
 
     // Create a custom image processing method
-    private Bitmap performImageProcessing(Bitmap inputImage) {
+    private ImageProcessingResult  performImageProcessing(Bitmap inputImage) {
         // Convert Bitmap to Mat
         Mat inputMat = new Mat(inputImage.getHeight(), inputImage.getWidth(), CvType.CV_8UC4);
         Utils.bitmapToMat(inputImage, inputMat);
@@ -109,6 +127,29 @@ public class LaneDetectionFragment extends CameraFragment {
         Mat thresholdMat = new Mat();
         Imgproc.adaptiveThreshold(bottom, thresholdMat, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 11, 2);
 
+        Mat hierarchy = new Mat(); // Not used in this case
+        List<MatOfPoint> contours = new ArrayList<>();
+        Imgproc.findContours(bottom, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        List<Point> centroids = new ArrayList<>();
+        for (MatOfPoint contour : contours) {
+            Point centroid = calculateCentroid(contour.toList());
+            centroids.add(centroid);
+        }
+
+        Point closestCentroid = findClosestCentroid(centroids, new Point(270, 310));
+
+// Update the text of your TextView with the integer values
+
+                    // Your lane detection logic here
+                    // Update LiveData in the ViewModel
+
+
+                    // Schedule the next lane detection iteration
+
+
+
+            // Do something with the centroid of each contour
+
 
         // Convert Mat back to Bitmap
         Bitmap processedBitmap = Bitmap.createBitmap(bottom.cols(), bottom.rows(), Bitmap.Config.ARGB_8888);
@@ -117,8 +158,31 @@ public class LaneDetectionFragment extends CameraFragment {
 
 
         // Now, 'processedBitmap' contains the preprocessed image
-        return processedBitmap;
+        return new ImageProcessingResult(processedBitmap, closestCentroid);
     }
+
+    private Point findClosestCentroid(List<Point> centroids, Point targetPoint) {
+        double minDistance = Double.MAX_VALUE;
+        Point closestCentroid = null;
+
+        for (Point centroid : centroids) {
+            double distance = calculateDistance(centroid, targetPoint);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestCentroid = centroid;
+            }
+        }
+
+        return closestCentroid;
+    }
+
+    private double calculateDistance(Point point1, Point point2) {
+        double dx = point1.x - point2.x;
+        double dy = point1.y - point2.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+
 
     public static Mat regionOfInterest(Mat inputMat){
 
@@ -147,18 +211,47 @@ public class LaneDetectionFragment extends CameraFragment {
     @Override
     protected void processFrame(Bitmap image, ImageProxy imageProxy) {
         // Call your custom image processing method
-        Bitmap processedBitmap = performImageProcessing(image);
-        ImageView imageView = binding.yourImageViewId;
-        // Continue with your custom processing or display the processed image
-        // For example, if you want to display the processed image in an ImageView:
+        // Call your custom image processing method
+        ImageProcessingResult result = performImageProcessing(image);
+
+        // Update the UI with the processed bitmap
+        binding.yourImageViewId.post(new Runnable() {
+            @Override
+            public void run() {
+                // Update the ImageView with the processed bitmap
+                binding.yourImageViewId.setImageBitmap(result.getProcessedBitmap());
+            }
+        });
+
         requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                imageView.setImageBitmap(processedBitmap);
+                viewModel.setCentroidValue(result.getCentroid());
             }
         });
+
     }
 
+    public Point calculateCentroid(List<Point> contour) {
+        double sumX = 0.0;
+        double sumY = 0.0;
+
+        // Calculate the sum of x and y coordinates of all points
+        for (Point point : contour) {
+            sumX += point.x;
+            sumY += point.y;
+        }
+
+        // Calculate the mean (centroid) by dividing the sums by the number of points
+        double centerX = sumX / contour.size();
+        double centerY = sumY / contour.size();
+
+        return new Point(centerX, centerY);
+    }
+
+    public interface LaneDetectionCallback {
+        void onCentroidAndDistanceUpdate(Point centroid, double distance);
+    }
     @Override
     protected void processControllerKeyData(String command) {
 
@@ -167,5 +260,23 @@ public class LaneDetectionFragment extends CameraFragment {
     @Override
     protected void processUSBData(String data) {
 
+    }
+
+    public class ImageProcessingResult {
+        private Bitmap processedBitmap;
+        private Point centroid;
+
+        public ImageProcessingResult(Bitmap processedBitmap, Point centroid) {
+            this.processedBitmap = processedBitmap;
+            this.centroid = centroid;
+        }
+
+        public Bitmap getProcessedBitmap() {
+            return processedBitmap;
+        }
+
+        public Point getCentroid() {
+            return centroid;
+        }
     }
 }

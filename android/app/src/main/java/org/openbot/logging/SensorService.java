@@ -65,6 +65,10 @@ public class SensorService extends Service implements SensorEventListener {
   private BufferedWriter wheelsLog;
   private BufferedWriter bumperLog;
 
+  //Lilou
+  private BufferedWriter processedImageLog;
+  private BufferedWriter centroidLog;
+
   private boolean trackingLocation = false;
   private boolean hasStarted = false;
   private FusedLocationProviderClient fusedLocationClient;
@@ -103,6 +107,8 @@ public class SensorService extends Service implements SensorEventListener {
     // Initialize the FusedLocationClient.
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     preferencesManager = new SharedPreferencesManager(this);
+
+
   }
 
   @Override
@@ -473,6 +479,7 @@ public class SensorService extends Service implements SensorEventListener {
       if (!myDir.mkdirs()) {
         LOGGER.i("Make dir failed");
       }
+
     }
 
     final File file = new File(myDir, filename);

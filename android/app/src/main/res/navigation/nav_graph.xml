@@ -17,6 +17,9 @@
             android:id="@+id/action_mainFragment_to_laneDetectionFragment"
             app:destination="@id/laneDetectionFragment" />
         <action
+            android:id="@+id/action_mainFragment_to_rewardFragment"
+            app:destination="@id/rewardFragment" />
+        <action
             android:id="@+id/action_mainFragment_to_loggerFragment"
             app:destination="@id/loggerFragment" />
         <action
@@ -63,6 +66,11 @@
         android:name="org.openbot.rl.LaneDetectionFragment"
         android:label="fragment_lane_detection"
         tools:layout="@layout/fragment_lane_detection" />
+    <fragment
+        android:id="@+id/rewardFragment"
+        android:name="org.openbot.rl.RewardFragment"
+        android:label="fragment_reward"
+        tools:layout="@layout/fragment_reward" />
     <fragment
         android:id="@+id/AIFragment"
         android:name="org.openbot.autopilot.AutopilotFragment"
