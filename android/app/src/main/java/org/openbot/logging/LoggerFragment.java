@@ -29,6 +29,8 @@ import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -593,6 +595,63 @@ public class LoggerFragment extends CameraFragment {
     }
   }
 
+  private void saveCentroidToFile(double distance, String folderPath, long frameNumber) {
+    File folder = new File(folderPath + File.separator + "distance");
+    if (!folder.exists()) {
+      folder.mkdirs();
+    }
+
+    String fileName = "distance_" + frameNumber + ".txt";
+    File file = new File(folder, fileName);
+
+    try {
+      FileWriter writer = new FileWriter(file);
+      writer.write("Frame Number: " + frameNumber + "\n");
+      writer.write("Distance X: " + distance + "\n");
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public Point calculateCentroid(List<Point> contour) {
+    double sumX = 0.0;
+    double sumY = 0.0;
+
+    // Calculate the sum of x and y coordinates of all points
+    for (Point point : contour) {
+      sumX += point.x;
+      sumY += point.y;
+    }
+
+    // Calculate the mean (centroid) by dividing the sums by the number of points
+    double centerX = sumX / contour.size();
+    double centerY = sumY / contour.size();
+
+    return new Point(centerX, centerY);
+  }
+
+  private double findClosestCentroid(List<Point> centroids, Point targetPoint) {
+    double minDistance = Double.MAX_VALUE;
+    Point closestCentroid = null;
+
+    for (Point centroid : centroids) {
+      double distance = calculateDistance(centroid, targetPoint);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestCentroid = centroid;
+      }
+    }
+
+    return minDistance;
+  }
+
+  private double calculateDistance(Point point1, Point point2) {
+    double dx = point1.x - point2.x;
+
+    return dx;
+  }
+
   private Bitmap applyOpenCVProcessing(Bitmap inputImage) {
     Mat inputMat = new Mat(inputImage.getHeight(), inputImage.getWidth(), CvType.CV_8UC4);
     Utils.bitmapToMat(inputImage, inputMat);
@@ -631,6 +690,21 @@ public class LoggerFragment extends CameraFragment {
     Mat bottom = regionOfInterest(edges);
     Mat thresholdMat = new Mat();
     Imgproc.adaptiveThreshold(bottom, thresholdMat, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 11, 2);
+
+    Mat hierarchy = new Mat(); // Not used in this case
+    List<MatOfPoint> contours = new ArrayList<>();
+    Imgproc.findContours(bottom, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+    List<Point> centroids = new ArrayList<>();
+    for (MatOfPoint contour : contours) {
+      Point centroid = calculateCentroid(contour.toList());
+      centroids.add(centroid);
+    }
+
+    double distance = findClosestCentroid(centroids, new Point(270, 310));
+    if (distance != Double.MAX_VALUE) {
+      // Save the centroid to a TXT file
+      saveCentroidToFile(distance, logFolder, frameNum);
+    }
 
     Bitmap processedBitmap = Bitmap.createBitmap(bottom.cols(), bottom.rows(), Bitmap.Config.ARGB_8888);
     Utils.matToBitmap(bottom, processedBitmap);
