@@ -27,7 +27,8 @@ class ObjectTrackingSettings: UIView {
     var objectDropDownView = UIView()
     var dynamicSpeedLabel = UILabel()
     var dynamicSpeedCheckbox = Checkbox()
-    
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
+
     /// Initialization routine.
     ///
     /// - Parameters:
@@ -69,6 +70,29 @@ class ObjectTrackingSettings: UIView {
         setupThreads();
         setupVehicleControls();
         createLeftSpeed()
+        
+        if let model = preferencesManager.getObjectTrackModel(){
+            modelDropdownLabel.text = model
+            let returnModel = Common.returnModelItem(modelName: model)
+            self.selectedModel = returnModel
+            imageInputLabel.text = returnModel.inputSize
+        }
+        
+        if let object = preferencesManager.getObjectTrackingObject(){
+            objectDropDownLabel.text = object
+        }
+
+        if let confidence = preferencesManager.getObjectTrackConfidence(){
+            confidenceLabel.text = String(confidence as! Int) + "%"
+        }
+        
+        if let device = preferencesManager.getDevice(){
+            deviceDropDownLabel.text = device;
+        }
+        
+        if let threads = preferencesManager.getThreads(){
+            threadLabel.text = threads;
+        }
 
         // Setup callbacks
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
@@ -544,12 +568,14 @@ class ObjectTrackingSettings: UIView {
         let model = Common.returnModelItem(modelName: selectedModel)
         self.selectedModel = model
         imageInputLabel.text = model.inputSize
+        preferencesManager.setObjectTrackModel(value: selectedModel);
     }
 
     /// Callback function to update the UI
     @objc func updateObject(_ notification: Notification) {
         let selectedObject = notification.object as! String
         objectDropDownLabel.text = selectedObject
+        preferencesManager.setObjectTrackingObject(value: selectedObject);
     }
 
     /// Callback function to update the BLE connection status

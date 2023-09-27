@@ -14,7 +14,17 @@ public class SharedPreferencesManager {
     public var drive_mode : String = "drive_mode";
     
     public var speed_mode : String = "speed_mode";
-            
+    
+    public var object_tracking_model : String = "object_tracking_model";
+    
+    public var object_tracking_object : String = "object_tracking_object";
+    
+    public var confidence : String = "confidence";
+    
+    public var device : String = "device";
+    
+    public var threads : String = "threads";
+    
     public func setControlMode(value:String){
         UserDefaults.standard.set(value, forKey: control_mode)
     }
@@ -47,4 +57,43 @@ public class SharedPreferencesManager {
         return UserDefaults.standard.value(forKey: sensor)
     }
     
+    public func setObjectTrackModel(value:String){
+        UserDefaults.standard.set(value, forKey: object_tracking_model);
+    }
+    
+    public func getObjectTrackModel() -> String? {
+        return UserDefaults.standard.string(forKey: object_tracking_model)
+    }
+    
+    public func setObjectTrackingObject(value:String){
+        UserDefaults.standard.set(value, forKey: object_tracking_object)
+    }
+    
+    public func getObjectTrackingObject() -> String? {
+        return UserDefaults.standard.string(forKey: object_tracking_object);
+    }
+    
+    public func setObjectTrackConfidence(value:Int){
+        UserDefaults.standard.set(value, forKey: confidence);
+    }
+    
+    public func getObjectTrackConfidence() -> Any? {
+        return UserDefaults.standard.value(forKey: confidence);
+    }
+    
+    public func setDevice(value:String){
+        UserDefaults.standard.set(value, forKey: device);
+    }
+    
+    public func getDevice() -> String? {
+        return UserDefaults.standard.string(forKey: device);
+    }
+    
+    public func setThreads(value:String){
+        UserDefaults.standard.set(value, forKey: threads);
+    }
+    
+    public func getThreads() -> String? {
+        return UserDefaults.standard.string(forKey: threads);
+    }
 }
