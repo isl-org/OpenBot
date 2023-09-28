@@ -71,10 +71,15 @@ class ObjectTrackingSettings: UIView {
         setupVehicleControls();
         createLeftSpeed()
         if let model = preferencesManager.getObjectTrackModel(){
-            modelDropdownLabel.text = model
-            let returnModel = Common.returnModelItem(modelName: model)
-            self.selectedModel = returnModel
-            imageInputLabel.text = returnModel.inputSize
+            if Common.isModelItemAvailableInDocument(modelName: model) == true {
+                modelDropdownLabel.text = model
+                let returnModel = Common.returnModelItem(modelName: model)
+                self.selectedModel = returnModel
+                imageInputLabel.text = returnModel.inputSize
+            }
+            else{
+                preferencesManager.setObjectTrackModel(value: "");
+            }
         }
         
         if let object = preferencesManager.getObjectTrackingObject(){

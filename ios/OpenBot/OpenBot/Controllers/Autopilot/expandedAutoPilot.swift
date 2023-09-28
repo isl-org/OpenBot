@@ -65,17 +65,22 @@ class expandedAutoPilot: UIView {
             threadLabel.text = threads;
         }
         if let autopilotModel = preferencesManager.getAutopilotModel(){
-            let selectedModel = autopilotModel;
-            modelDropdownLabel.text = selectedModel
-            let models = loadAllAutoPilotModels()
-            for model in models {
-                guard let index = model.name.firstIndex(of: ".") else {
-                    return
+            if Common.isModelItemAvailableInDocument(modelName: autopilotModel) == true {
+                let selectedModel = autopilotModel;
+                modelDropdownLabel.text = selectedModel
+                let models = loadAllAutoPilotModels()
+                for model in models {
+                    guard let index = model.name.firstIndex(of: ".") else {
+                        return
+                    }
+                    if model.name.prefix(upTo: index) == selectedModel {
+                        imageInputLabel.text = model.inputSize
+                        break
+                    }
                 }
-                if model.name.prefix(upTo: index) == selectedModel {
-                    imageInputLabel.text = model.inputSize
-                    break
-                }
+            }
+            else{
+                preferencesManager.setAutopilotModel(value: "");
             }
         }
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)

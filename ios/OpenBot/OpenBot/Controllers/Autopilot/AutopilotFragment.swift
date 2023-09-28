@@ -49,9 +49,11 @@ class AutopilotFragment: CameraController {
             autopilot?.tfliteOptions.threadCount = numberOfThreads
         }
         if let models = preferencesManager.getAutopilotModel(){
-            let selectedModelName = models;
-            currentModel = Common.returnModelItem(modelName: selectedModelName)
-            autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
+            if Common.isModelItemAvailableInDocument(modelName: models) == true {
+                let selectedModelName = models;
+                currentModel = Common.returnModelItem(modelName: selectedModelName)
+                autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
+            }
         }
         view.addSubview(expandedAutoPilotView!)
         expandedAutoPilotView!.translatesAutoresizingMaskIntoConstraints = false
