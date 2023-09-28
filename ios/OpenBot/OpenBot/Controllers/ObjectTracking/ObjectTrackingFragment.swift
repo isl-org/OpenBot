@@ -28,7 +28,6 @@ class ObjectTrackingFragment: CameraController {
     private var bufferHeight = 0
     private var bufferWidth = 0
     private let edgeOffset: CGFloat = 2.0
-    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// Called after the view fragment has loaded.
     override func viewDidLoad() {

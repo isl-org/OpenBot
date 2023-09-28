@@ -26,6 +26,8 @@ public class SharedPreferencesManager {
     public var threads : String = "threads";
     
     public var autopilot_model : String = "autopilot_model";
+    
+    public var camera_switch : String = "camera_switch";
         
     public func setControlMode(value:String){
         UserDefaults.standard.set(value, forKey: control_mode)
@@ -105,5 +107,13 @@ public class SharedPreferencesManager {
     
     public func getAutopilotModel() -> String? {
         return UserDefaults.standard.string(forKey: autopilot_model);
+    }
+    
+    public func setCameraSwitch(value:String){
+        UserDefaults.standard.set(value, forKey: camera_switch);
+    }
+    
+    public func getCameraSwitch() -> String?{
+        UserDefaults.standard.string(forKey: camera_switch);
     }
 }

@@ -28,7 +28,6 @@ class DataCollectionController: CameraController {
     private var isImageCaptureQueueBusy = false
     var saveZipFilesName = [URL]()
     var paths: [String] = [""]
-    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {

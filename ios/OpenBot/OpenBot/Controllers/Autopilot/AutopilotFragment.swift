@@ -23,7 +23,6 @@ class AutopilotFragment: CameraController {
     private var isInferenceQueueBusy = false
     private var result: Control?
     var autopilotEnabled = false
-    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// Called after the view fragment has loaded.
     override func viewDidLoad() {

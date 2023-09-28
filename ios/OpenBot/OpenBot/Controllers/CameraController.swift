@@ -24,7 +24,8 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
     private var isInferenceQueueBusy = false
     private let inferenceQueue = DispatchQueue(label: "openbot.cameraController.inferencequeue")
     var previewResolution: Resolutions = .MEDIUM
-    
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
+
     // Image processing memory pool
     var preAllocatedMemoryPool: CVPixelBufferPool?
     
@@ -129,10 +130,21 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             if captureSession.canSetSessionPreset(.hd1280x720) {
                 captureSession.sessionPreset = .hd1280x720
             }
-            guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
-            else {
+            
+            guard var backCamera = AVCaptureDevice.default(for: AVMediaType.video)
+            else{
                 print("Unable to access back camera!")
                 return
+
+            }
+            if let cameraView = preferencesManager.getCameraSwitch(){
+                if cameraView == "front"{
+                    if let frontCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
+                        backCamera = frontCamera
+                    } else {
+                        print("Unable to access front camera!");
+                    }
+                }
             }
             
             do {
@@ -299,10 +311,12 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
             UIView.transition(with: cameraView, duration: 0.5, options: .transitionFlipFromLeft, animations: {
                 newCamera = self.cameraWithPosition(.front)!
             }, completion: nil)
+            preferencesManager.setCameraSwitch(value: "front");
         } else {
             UIView.transition(with: cameraView, duration: 0.5, options: .transitionFlipFromRight, animations: {
                 newCamera = self.cameraWithPosition(.back)!
             }, completion: nil)
+            preferencesManager.setCameraSwitch(value: "back");
         }
         do {
             try captureSession?.addInput(AVCaptureDeviceInput(device: newCamera))

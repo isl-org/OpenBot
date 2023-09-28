@@ -23,7 +23,6 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var bluetoothIcon = UIImageView()
     var isClientConnected: Bool = false
     private let mainView = UIView()
-    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
