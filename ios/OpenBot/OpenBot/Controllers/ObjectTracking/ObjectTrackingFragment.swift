@@ -38,16 +38,16 @@ class ObjectTrackingFragment: CameraController {
             currentModel = model
             detector = try! Detector.create(model: Model.fromModelItem(item: model ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector
         }
+        if let threads = preferencesManager.getThreads(){
+            numberOfThreads = Int(threads) ?? 4
+            detector?.tfliteOptions.threadCount = numberOfThreads
+        }
         if let object = preferencesManager.getObjectTrackingObject(){
+            currentObject = object;
             detector?.setSelectedClass(newClass: object);
         }
         if let confidence = preferencesManager.getObjectTrackConfidence(){
             MINIMUM_CONFIDENCE_TF_OD_API = Float(confidence as! Int) / 100.0
-        }
-        
-        if let threads = preferencesManager.getThreads(){
-            numberOfThreads = Int(threads) ?? 4
-            detector?.tfliteOptions.threadCount = numberOfThreads
         }
         if let device = preferencesManager.getDevice(){
             currentDevice = RuntimeDevice(rawValue: device) ?? RuntimeDevice.CPU
@@ -58,7 +58,10 @@ class ObjectTrackingFragment: CameraController {
         if let lastModel = preferencesManager.getObjectTrackModel(){
             currentModel = Common.returnModelItem(modelName: lastModel)
             detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector
+            NotificationCenter.default.post(name: .updateObjectList, object: detector?.getLabels())
+            NotificationCenter.default.post(name: .updateObject, object: currentObject)
         }
+        
         objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector, model: currentModel)
         objectTrackingSettings!.backgroundColor = Colors.freeRoamButtonsColor
         objectTrackingSettings!.layer.cornerRadius = 5

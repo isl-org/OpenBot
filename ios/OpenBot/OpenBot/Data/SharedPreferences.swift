@@ -17,7 +17,7 @@ public class SharedPreferencesManager {
     
     public var object_tracking_model : String = "object_tracking_model";
     
-    public var object_tracking_object : String = "object_tracking_object";
+    public var object_type : String = "object_type";
     
     public var confidence : String = "confidence";
     
@@ -25,6 +25,8 @@ public class SharedPreferencesManager {
     
     public var threads : String = "threads";
     
+    public var autopilot_model : String = "autopilot_model";
+        
     public func setControlMode(value:String){
         UserDefaults.standard.set(value, forKey: control_mode)
     }
@@ -66,11 +68,11 @@ public class SharedPreferencesManager {
     }
     
     public func setObjectTrackingObject(value:String){
-        UserDefaults.standard.set(value, forKey: object_tracking_object)
+        UserDefaults.standard.set(value, forKey: object_type)
     }
     
     public func getObjectTrackingObject() -> String? {
-        return UserDefaults.standard.string(forKey: object_tracking_object);
+        return UserDefaults.standard.string(forKey: object_type);
     }
     
     public func setObjectTrackConfidence(value:Int){
@@ -95,5 +97,13 @@ public class SharedPreferencesManager {
     
     public func getThreads() -> String? {
         return UserDefaults.standard.string(forKey: threads);
+    }
+    
+    public func setAutopilotModel(value:String){
+        UserDefaults.standard.set(value, forKey: autopilot_model);
+    }
+    
+    public func getAutopilotModel() -> String? {
+        return UserDefaults.standard.string(forKey: autopilot_model);
     }
 }

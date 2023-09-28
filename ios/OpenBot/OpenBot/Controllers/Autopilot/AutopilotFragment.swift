@@ -49,6 +49,11 @@ class AutopilotFragment: CameraController {
             currentDevice.rawValue == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
             autopilot?.tfliteOptions.threadCount = numberOfThreads
         }
+        if let models = preferencesManager.getAutopilotModel(){
+            let selectedModelName = models;
+            currentModel = Common.returnModelItem(modelName: selectedModelName)
+            autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
+        }
         view.addSubview(expandedAutoPilotView!)
         expandedAutoPilotView!.translatesAutoresizingMaskIntoConstraints = false
         expandedAutoPilotView!.widthAnchor.constraint(equalToConstant: width).isActive = true
@@ -123,6 +128,7 @@ class AutopilotFragment: CameraController {
         let selectedModelName = notification.object as! String
         currentModel = Common.returnModelItem(modelName: selectedModelName)
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
+        preferencesManager.setAutopilotModel(value: notification.object as! String);
     }
 
     /// function to turn on and off autopilot
