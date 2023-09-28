@@ -70,7 +70,6 @@ class ObjectTrackingSettings: UIView {
         setupThreads();
         setupVehicleControls();
         createLeftSpeed()
-        
         if let model = preferencesManager.getObjectTrackModel(){
             modelDropdownLabel.text = model
             let returnModel = Common.returnModelItem(modelName: model)
@@ -93,7 +92,12 @@ class ObjectTrackingSettings: UIView {
         if let threads = preferencesManager.getThreads(){
             threadLabel.text = threads;
         }
-
+        
+        if let dynamicSpeed = preferencesManager.getDynamicSpeed(){
+            if dynamicSpeed as! Bool == true {
+                dynamicSpeedCheckbox.isChecked = true;
+            }
+        }
         // Setup callbacks
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateObject), name: .updateObject, object: nil)
@@ -249,11 +253,13 @@ class ObjectTrackingSettings: UIView {
         addSubview(speedLabel)
     }
     
+    /// function to create checkbox to enable or disable dynamic speed
     func setDynamicSpeed(){
         dynamicSpeedCheckbox = createCheckbox(leadingAnchor: 181.5, topAnchor: 68,action: #selector(updateDynamicSpeed(_:)))
         addSubview(dynamicSpeedCheckbox);
     }
     
+    /// function to create checkbox for objects
     func createCheckbox(leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> Checkbox {
         let checkbox = Checkbox(frame: CGRect(x: leadingAnchor, y: topAnchor, width: 20, height: 20))
         checkbox.checkedBorderColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
@@ -267,6 +273,7 @@ class ObjectTrackingSettings: UIView {
     }
     
     @objc func updateDynamicSpeed(_ sender: UIButton) {
+        preferencesManager.setDynamicSpeed(value: dynamicSpeedCheckbox.isChecked);
     }
         
     /// function to crete the dropdown for objects

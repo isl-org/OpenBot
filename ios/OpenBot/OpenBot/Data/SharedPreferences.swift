@@ -9,6 +9,8 @@ import Foundation
 
 public class SharedPreferencesManager {
     
+    private let userDefaults = UserDefaults.standard
+
     public var control_mode : String = "control_mode";
     
     public var drive_mode : String = "drive_mode";
@@ -28,92 +30,102 @@ public class SharedPreferencesManager {
     public var autopilot_model : String = "autopilot_model";
     
     public var camera_switch : String = "camera_switch";
+    
+    public var dynamic_speed : String = "dynamic_speed";
         
     public func setControlMode(value:String){
-        UserDefaults.standard.set(value, forKey: control_mode)
+        userDefaults.set(value, forKey: control_mode)
     }
     
     public func getControlMode() -> String? {
-        return UserDefaults.standard.string(forKey: control_mode);
+        return userDefaults.string(forKey: control_mode);
     }
     
     public func setDriveMode(value:String){
-        UserDefaults.standard.set(value, forKey: drive_mode)
+        userDefaults.set(value, forKey: drive_mode)
     }
     
     public func getDriveMode() -> String? {
-        return UserDefaults.standard.string(forKey: drive_mode);
+        return userDefaults.string(forKey: drive_mode);
     }
     
     public func setSpeedMode(value:Float){
-        UserDefaults.standard.set(value, forKey: speed_mode);
+        userDefaults.set(value, forKey: speed_mode);
     }
     
     public func getSpeedMode() -> Float? {
-        return UserDefaults.standard.float(forKey: speed_mode);
+        return userDefaults.float(forKey: speed_mode);
     }
     
     public func updateSensorData(value:Bool,sensor:String){
-        UserDefaults.standard.set(value, forKey: sensor);
+        userDefaults.set(value, forKey: sensor);
     }
     
     public func getSensorData(sensor:String) -> Any? {
-        return UserDefaults.standard.value(forKey: sensor)
+        return userDefaults.value(forKey: sensor)
     }
     
     public func setObjectTrackModel(value:String){
-        UserDefaults.standard.set(value, forKey: object_tracking_model);
+        userDefaults.set(value, forKey: object_tracking_model);
     }
     
     public func getObjectTrackModel() -> String? {
-        return UserDefaults.standard.string(forKey: object_tracking_model)
+        return userDefaults.string(forKey: object_tracking_model)
     }
     
     public func setObjectTrackingObject(value:String){
-        UserDefaults.standard.set(value, forKey: object_type)
+        userDefaults.set(value, forKey: object_type)
     }
     
     public func getObjectTrackingObject() -> String? {
-        return UserDefaults.standard.string(forKey: object_type);
+        return userDefaults.string(forKey: object_type);
     }
     
     public func setObjectTrackConfidence(value:Int){
-        UserDefaults.standard.set(value, forKey: confidence);
+        userDefaults.set(value, forKey: confidence);
     }
     
     public func getObjectTrackConfidence() -> Any? {
-        return UserDefaults.standard.value(forKey: confidence);
+        return userDefaults.value(forKey: confidence);
     }
     
     public func setDevice(value:String){
-        UserDefaults.standard.set(value, forKey: device);
+        userDefaults.set(value, forKey: device);
     }
     
     public func getDevice() -> String? {
-        return UserDefaults.standard.string(forKey: device);
+        return userDefaults.string(forKey: device);
     }
     
     public func setThreads(value:String){
-        UserDefaults.standard.set(value, forKey: threads);
+        userDefaults.set(value, forKey: threads);
     }
     
     public func getThreads() -> String? {
-        return UserDefaults.standard.string(forKey: threads);
+        return userDefaults.string(forKey: threads);
     }
     
     public func setAutopilotModel(value:String){
-        UserDefaults.standard.set(value, forKey: autopilot_model);
+        userDefaults.set(value, forKey: autopilot_model);
     }
     
     public func getAutopilotModel() -> String? {
-        return UserDefaults.standard.string(forKey: autopilot_model);
+        return userDefaults.string(forKey: autopilot_model);
     }
     
     public func setCameraSwitch(value:String){
-        UserDefaults.standard.set(value, forKey: camera_switch);
+        userDefaults.set(value, forKey: camera_switch);
     }
     
     public func getCameraSwitch() -> String?{
-        UserDefaults.standard.string(forKey: camera_switch);
+        userDefaults.string(forKey: camera_switch);
+    }
+    
+    public func setDynamicSpeed(value:Bool){
+        userDefaults.set(value, forKey: dynamic_speed);
+    }
+    
+    public func getDynamicSpeed() -> Any?{
+        userDefaults.value(forKey: dynamic_speed);
     }
 }
