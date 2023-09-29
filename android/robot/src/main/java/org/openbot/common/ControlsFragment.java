@@ -445,7 +445,7 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
     if (modelAdapter != null && modelAdapter.getPosition(model) == -1) {
       modelAdapter.add(model);
       masterList.add(item);
-      FileUtils.updateModelConfig(requireActivity(), masterList);
+      FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
     } else {
       if (model.equals(modelSpinner.getSelectedItem())) {
         setModel(item);

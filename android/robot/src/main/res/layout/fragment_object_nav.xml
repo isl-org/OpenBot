@@ -338,7 +338,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
         <include
             android:id="@+id/controllerContainer"
             layout="@layout/control_buttons" />

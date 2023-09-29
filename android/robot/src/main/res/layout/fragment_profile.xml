@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:id="@+id/sign_out_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:text="Set up your profile by signing in with your Google account."
+            android:textAlignment="center"
+            android:textColor="@color/black_text"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:background="@drawable/border_radius_layout"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign-in with Google"
+                android:textColor="@color/white_text"
+                android:gravity="center"
+                app:drawableLeftCompat="@drawable/ic_google_custom"
+                android:drawablePadding="20dp"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_settings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/edit_profile_btn"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="50dp"
+                android:drawablePadding="20dp"
+                android:gravity="center_vertical"
+                android:text="@string/edit_profile"
+                android:textColor="@color/black_text"
+                android:textSize="18sp"
+                app:drawableLeftCompat="@drawable/ic_profile"
+                app:drawableTint="@color/black_text" />
+
+            <TextView
+                android:id="@+id/logout_btn"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="50dp"
+                android:drawablePadding="20dp"
+                android:gravity="center_vertical"
+                android:text="@string/logout"
+                android:textColor="@color/black_text"
+                android:textSize="18sp"
+                app:drawableLeftCompat="@drawable/ic_logout"
+                app:drawableTint="@color/black_text" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

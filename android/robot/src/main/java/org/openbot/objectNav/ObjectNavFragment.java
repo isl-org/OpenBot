@@ -198,6 +198,11 @@ public class ObjectNavFragment extends CameraFragment {
           binding.bleToggle.setChecked(vehicle.bleConnected());
           Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
         });
+    binding.bleToggle.setOnClickListener(
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
+        });
 
     setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
     setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));

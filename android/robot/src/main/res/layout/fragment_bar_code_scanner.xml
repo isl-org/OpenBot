@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000" />
+
+    <ImageView
+        android:id="@+id/btnCross"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginVertical="20dp"
+        android:layout_marginEnd="30dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_cross"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/scanner_view_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnCross">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/scan_qr_code"
+            android:textColor="@color/white_text"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="15dp"
+            android:text="@string/text_on_qr_screen"
+            android:textAlignment="center"
+            android:textColor="@color/white_text"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/scanner_view_border"
+        android:layout_width="310dp"
+        android:layout_height="310dp"
+        android:src="@drawable/qr_scanner_border"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCross" />
+
+    <SurfaceView
+        android:id="@+id/qrCodeView"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:alpha="1"
+        app:layout_constraintBottom_toBottomOf="@+id/scanner_view_border"
+        app:layout_constraintEnd_toEndOf="@+id/scanner_view_border"
+        app:layout_constraintStart_toStartOf="@+id/scanner_view_border"
+        app:layout_constraintTop_toTopOf="@+id/scanner_view_border" />
+
+    <ProgressBar
+        android:id="@+id/barCodeLoader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/scanner_view_border"
+        app:layout_constraintEnd_toEndOf="@+id/scanner_view_border"
+        app:layout_constraintStart_toStartOf="@+id/scanner_view_border"
+        app:layout_constraintTop_toTopOf="@+id/scanner_view_border" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/qr_bottom_sheet_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/overlay_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/qr_bottom_sheet_success"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@drawable/bottom_sheet_bg"
+            android:orientation="vertical"
+            android:padding="20dp"
+            app:behavior_hideable="true"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:layout_constraintBottom_toBottomOf="@+id/surface_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/qr_bottom_sheet_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QR scanned successfully"
+                android:textColor="@color/black_text"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/qr_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:textColor="@color/black_text"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/qr_bottom_sheet_title" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/qr_start_btn"
+                    android:layout_width="120dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/border_radius_qr_buttons"
+                    android:backgroundTint="@color/blue_buttons"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Start"
+                        android:textColor="@color/white_text"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/qr_cancel_btn"
+                    android:layout_width="120dp"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/border_radius_qr_buttons"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cancel"
+                        android:textColor="@color/black_text"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/qr_bottom_sheet_error"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@drawable/bottom_sheet_bg"
+            android:orientation="vertical"
+            android:padding="20dp"
+            app:behavior_hideable="true"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:layout_constraintBottom_toBottomOf="@+id/surface_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/qr_bottom_sheet_title_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Error"
+                android:textColor="@color/black_text"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/qr_error_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:text="Oops! Something went wrong.Please try again."
+                android:textColor="@color/black_text"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/qr_bottom_sheet_title_error" />
+
+            <LinearLayout
+                android:id="@+id/re_scan_btn"
+                android:layout_width="120dp"
+                android:layout_height="45dp"
+                android:background="@drawable/border_radius_qr_buttons"
+                android:backgroundTint="@color/blue_buttons"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Scan QR"
+                    android:textColor="@color/white_text"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

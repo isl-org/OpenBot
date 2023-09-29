@@ -16,7 +16,8 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <!-- RTSP Video streaming -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
 
     <uses-feature android:name="android.hardware.camera" android:required="true"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="true"/>
@@ -28,13 +29,11 @@
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
     <uses-feature android:name="android.hardware.location.gps" android:required="true"/>
 
-
-
     <application
+        android:name=".OpenBotApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_openbot"
         android:label="@string/app_name"
-        android:name=".OpenBotApplication"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/ic_openbot"
         android:supportsRtl="true"
@@ -71,9 +70,9 @@
 
         <activity
             android:name=".modelManagement.BackHandlingFilePickerActivity"
+            android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/FilePickerTheme"
-            android:exported="true">
+            android:theme="@style/FilePickerTheme">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -85,19 +84,25 @@
             android:enabled="true"
             android:launchMode="singleTask" />
 
-        <service android:name="net.majorkernelpanic.streaming.rtsp.RtspServer"/>
+        <service android:name="net.majorkernelpanic.streaming.rtsp.RtspServer" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <meta-data android:name="com.google.ar.core" android:value="optional" />
+        <meta-data
+            android:name="com.google.ar.core"
+            android:value="optional" />
+
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="barcode" />
 
     </application>
 
