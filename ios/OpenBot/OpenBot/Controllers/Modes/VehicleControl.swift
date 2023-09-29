@@ -7,8 +7,8 @@ import UIKit
 
 class VehicleControl: UIView {
     var controlMode: ControlMode = ControlMode.PHONE;
-    var speedMode: SpeedMode = SpeedMode.SLOW;
-    var driveMode: DriveMode = DriveMode.DUAL;
+    var speedMode: SpeedMode = SpeedMode.FAST;
+    var driveMode: DriveMode = DriveMode.GAME;
     var speedLabel = UILabel()
     var speedInRpm = UILabel()
     var isButtonEnable: Bool = true

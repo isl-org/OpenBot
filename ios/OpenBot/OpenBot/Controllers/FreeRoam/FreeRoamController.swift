@@ -11,7 +11,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var voltageLabel = UILabel()
     var outerSonar: UIView!
     var selectedSpeedMode: SpeedMode = SpeedMode.SLOW;
-    var selectedControlMode: ControlMode = ControlMode.PHONE;
+    var selectedControlMode: ControlMode = ControlMode.GAMEPAD;
     var selectedDriveMode: DriveMode = DriveMode.DUAL;
     let bluetooth = bluetoothDataController.shared;
     var gameControllerObj: GameController?;
