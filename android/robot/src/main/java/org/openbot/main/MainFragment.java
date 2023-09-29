@@ -74,11 +74,6 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
             .navigate(R.id.action_mainFragment_to_robotInfoFragment);
         break;
 
-      case FeatureList.FREE_ROAM_SERVER:
-        Navigation.findNavController(requireView())
-                .navigate(R.id.action_mainFragment_to_freeRoamServerFragment);
-        break;
-
       case FeatureList.AUTOPILOT:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_autopilotFragment);
