@@ -59,10 +59,8 @@ class ObjectTrackingFragment: CameraController {
                 currentModel = Common.returnModelItem(modelName: lastModel)
                 detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector
                 NotificationCenter.default.post(name: .updateObjectList, object: detector?.getLabels())
-                NotificationCenter.default.post(name: .updateObject, object: currentObject)
             }
         }
-        
         objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector, model: currentModel)
         objectTrackingSettings!.backgroundColor = Colors.freeRoamButtonsColor
         objectTrackingSettings!.layer.cornerRadius = 5
