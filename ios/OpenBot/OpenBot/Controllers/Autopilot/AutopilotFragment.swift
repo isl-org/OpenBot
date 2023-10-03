@@ -45,7 +45,6 @@ class AutopilotFragment: CameraController {
         if let device = preferencesManager.getDevice(){
             currentDevice = RuntimeDevice(rawValue: device) ?? RuntimeDevice.CPU
             autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
-            currentDevice.rawValue == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
             autopilot?.tfliteOptions.threadCount = numberOfThreads
         }
         if let models = preferencesManager.getAutopilotModel(){

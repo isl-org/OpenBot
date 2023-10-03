@@ -41,25 +41,23 @@ class ObjectTrackingFragment: CameraController {
             numberOfThreads = Int(threads) ?? 4
             detector?.tfliteOptions.threadCount = numberOfThreads
         }
-        if let object = preferencesManager.getObjectTrackingObject(){
-            currentObject = object;
-            detector?.setSelectedClass(newClass: object);
-        }
         if let confidence = preferencesManager.getObjectTrackConfidence(){
             MINIMUM_CONFIDENCE_TF_OD_API = Float(confidence as! Int) / 100.0
         }
         if let device = preferencesManager.getDevice(){
             currentDevice = RuntimeDevice(rawValue: device) ?? RuntimeDevice.CPU
             detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector
-            currentDevice.rawValue == RuntimeDevice.GPU.rawValue ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
             detector?.tfliteOptions.threadCount = numberOfThreads
         }
         if let lastModel = preferencesManager.getObjectTrackModel(){
             if Common.isModelItemAvailableInDocument(modelName: lastModel) == true {
                 currentModel = Common.returnModelItem(modelName: lastModel)
                 detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector
-                NotificationCenter.default.post(name: .updateObjectList, object: detector?.getLabels())
             }
+        }
+        if let object = preferencesManager.getObjectTrackingObject(){
+            currentObject = object;
+            detector?.setSelectedClass(newClass: object);
         }
         objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector, model: currentModel)
         objectTrackingSettings!.backgroundColor = Colors.freeRoamButtonsColor
