@@ -44,11 +44,13 @@ import org.openbot.databinding.FragmentLoggerBinding;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.ImageUtils;
 import org.openbot.tflite.Model;
+import org.openbot.tflite.Network;
 import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.FormatUtils;
 import org.openbot.utils.PermissionUtils;
+import org.openbot.vehicle.Control;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -62,6 +64,7 @@ import org.opencv.imgproc.Imgproc;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
 import timber.log.Timber;
+import org.openbot.tflite.Autopilot;
 
 public class LoggerFragment extends CameraFragment {
 
@@ -79,6 +82,13 @@ public class LoggerFragment extends CameraFragment {
   private int sensorOrientation;
   private RectF cropRect;
   private boolean maintainAspectRatio;
+
+  private Model tfModel;
+  private Autopilot autopilot;
+  private boolean autonomousControlEnabled = false;
+
+  private boolean autonomousStarted = true;
+
 
   @Override
   public View onCreateView(
@@ -130,6 +140,13 @@ public class LoggerFragment extends CameraFragment {
     binding.loggerSwitch.setOnCheckedChangeListener(
         (buttonView, isChecked) -> setLoggingActive(isChecked));
 
+    binding.autonomousSwitch.setOnCheckedChangeListener(
+            (buttonView, isChecked) -> {
+              autonomousControlEnabled = isChecked;
+            });
+
+
+
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
     List<String> models = getModelNames(f -> f.pathType != Model.PATH_TYPE.URL);
@@ -171,6 +188,20 @@ public class LoggerFragment extends CameraFragment {
           Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
         });
   }
+  private void stopAutonomousDriving() {
+
+    // Close the autopilot if it was initialized
+    vehicle.setControl((float)0, (float) 0);
+    if (autopilot != null) {
+      Log.e("AUTONOMOUS STOPPING", "AUTONOMOUS STOP SUCCESS !");
+      autopilot.close();
+      autopilot = null;
+      autonomousControlEnabled = false;
+      autonomousStarted = false;
+    }
+  }
+
+
 
   @Override
   protected void setModel(Model selected) {
@@ -302,11 +333,57 @@ public class LoggerFragment extends CameraFragment {
             TimeUnit.MILLISECONDS.sleep(500);
             sendControlToSensorService();
             sendIndicatorToSensorService();
+
           } catch (InterruptedException e) {
             Timber.e(e, "Got interrupted.");
           }
         });
+    if(autonomousControlEnabled){
+      startAutonomousDriving();
+    }
   }
+
+  private void startAutonomousDriving() {
+    try {
+      // Initialize the autopilot if not already initialized
+      if (autopilot == null) {
+        tfModel = new Model(1, Model.CLASS.AUTOPILOT, Model.TYPE.CMDNAV,
+                "CIL-Mobile-Cmd.tflite", Model.PATH_TYPE.ASSET, "networks/autopilot_float.tflite", "256x96");
+        Network.Device device = Network.Device.CPU; // Set your desired device here
+        int numThreads = 4; // Set the number of threads you want to use
+
+        autopilot = new Autopilot(getActivity(), tfModel, device, numThreads);
+        Log.e("AUTONOMOUS INIT", "Autopilot initialization succes: " );
+
+      }
+    } catch (Exception e) {
+      Log.e("AUTONOMOUS INIT", "Autopilot initialization failed: " + e.getMessage());
+      e.printStackTrace();
+    }
+
+    // Start continuous autopilot updates
+
+
+    if (autopilot != null) {
+      Timber.i("Running autopilot on image %s", frameNum);
+      final long startTime = SystemClock.elapsedRealtime();
+      handleDriveCommandAutonomous(autopilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
+
+    }
+
+  }
+
+  private void handleDriveCommandAutonomous(Control control) {
+    vehicle.setControl(control);
+    float left = vehicle.getLeftSpeed();
+    float right = vehicle.getRightSpeed();
+    requireActivity()
+            .runOnUiThread(
+                    () ->
+                            binding.controllerContainer.controlInfo.setText(
+                                    String.format(Locale.US, "%.0f,%.0f", left, right)));
+  }
+
 
   private void stopLogging(boolean isCancel) {
     if (sensorConnection != null) requireActivity().unbindService(sensorConnection);
@@ -328,6 +405,10 @@ public class LoggerFragment extends CameraFragment {
           }
         });
     loggingEnabled = false;
+    if (autonomousControlEnabled){
+      stopAutonomousDriving();
+    }
+
   }
 
   private File zip(File folder) {
@@ -557,6 +638,17 @@ public class LoggerFragment extends CameraFragment {
                         String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight())));
 
       if (!binding.loggerSwitch.isChecked()) return;
+      if (autonomousControlEnabled)
+      {
+
+        if (croppedBitmap != null) {
+          processFrameForAutonomous(croppedBitmap);
+          Log.e("AutonomousProcessing", "Received a frameBitmap.");
+
+        } else {
+          Log.e("AutonomousProcessing", "Received a null frameBitmap.");
+        }
+      }
 
       if (binding.previewCheckBox.isChecked() || binding.trainingDataCheckBox.isChecked()) {
         sendFrameNumberToSensorService(frameNum);
@@ -581,6 +673,8 @@ public class LoggerFragment extends CameraFragment {
 
         final Canvas canvas = new Canvas(croppedBitmap);
         canvas.drawBitmap(bitmap, frameToCropTransform, null);
+
+
         ImageUtils.saveBitmap(
             croppedBitmap, logFolder + File.separator + "images", frameNum + "_crop.jpeg");
       }
@@ -594,7 +688,31 @@ public class LoggerFragment extends CameraFragment {
       }
     }
   }
+  private void processFrameForAutonomous(Bitmap frameBitmap) {
+    // Ensure that the autopilot is initialized
+    if (autopilot != null) {
+      // Perform image recognition and get control commands
+      Bitmap resizedBitmap;
+      resizedBitmap = cropBitmap(frameBitmap,(int) 256, (int)96);
+      Control control = autopilot.recognizeImage(frameBitmap, vehicle.getIndicator());
 
+      // Handle the control commands (e.g., update vehicle control)
+      handleDriveCommandAutonomous(control);
+    }
+  }
+  public Bitmap cropBitmap(Bitmap originalBitmap, int cropWidth, int cropHeight) {
+    int originalWidth = originalBitmap.getWidth();
+    int originalHeight = originalBitmap.getHeight();
+
+    // Calculate the coordinates for the top-left corner of the cropped region
+    int left = (originalWidth - cropWidth) / 2;
+    int top = (originalHeight - cropHeight) / 2;
+
+    // Create the cropped Bitmap
+    Bitmap croppedBitmap = Bitmap.createBitmap(originalBitmap, left, top, cropWidth, cropHeight);
+
+    return croppedBitmap;
+  }
   private void saveCentroidToFile(double distance, String folderPath, long frameNumber) {
     File folder = new File(folderPath + File.separator + "distance");
     if (!folder.exists()) {
@@ -664,10 +782,10 @@ public class LoggerFragment extends CameraFragment {
     Mat rotatedMat = new Mat();
 
 // Transpose the image (swap rows and columns)
-    Core.transpose(inputMat, rotatedMat);
+    //Core.transpose(inputMat, rotatedMat);
 
 // Flip the transposed image horizontally (180 degrees rotation)
-    Core.flip(rotatedMat, rotatedMat, 1);
+   // Core.flip(rotatedMat, rotatedMat, 1);
 
     Scalar lowerWhite = new Scalar(200, 170, 170);
     Scalar higherWhite = new Scalar(254, 254, 254);
@@ -675,7 +793,7 @@ public class LoggerFragment extends CameraFragment {
     double contrastFactor = 1.2; // Increase contrast by 50%
 // Scale and convert the image data type
     Mat contrastedMat = new Mat();
-    rotatedMat.convertTo(contrastedMat, -1, contrastFactor, -40);
+    inputMat.convertTo(contrastedMat, -1, contrastFactor, -40);
 // Ensure pixel values are within the valid range
     Core.normalize(contrastedMat, contrastedMat, 0, 255, Core.NORM_MINMAX, CvType.CV_8U);
 
