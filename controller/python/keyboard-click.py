@@ -69,7 +69,7 @@ class CommandHandler:
                 break
 
 
-(zc, info) = register("OPEN_BOT_CONTROLLER", 19400)
+(zc, info) = register("OPEN_BOT_CONTROLLER", 8081)
 
 
 def run_receiver():
