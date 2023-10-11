@@ -8,7 +8,7 @@ import FirebaseAuth
 
 @available(iOS 13.0, *)
 class NativeWebSocket: NSObject, WebSocketProvider {
-//    let url = URL(string: "ws://192.168.1.9:8080/ws")!
+//    let url = URL(string: "ws://192.168.1.21:8080/ws")!
 //    let url = URL(string: "ws://inconclusive-warm-shamrock.glitch.me")!;
     let url = URL(string: "ws://verdant-imported-peanut.glitch.me")!;
 
@@ -27,6 +27,7 @@ class NativeWebSocket: NSObject, WebSocketProvider {
     func connect() {
         let socket = urlSession.webSocketTask(with: url)
         socket.resume()
+        NotificationCenter.default.post(name: .clientConnected, object: nil);
         self.socket = socket
         self.readMessage()
     }

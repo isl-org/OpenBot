@@ -5,6 +5,7 @@
 import UIKit
 import AVFoundation
 import Network
+import FirebaseAuth
 
 /// Implementation of the FreeRoamController
 class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
@@ -25,6 +26,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var isClientConnected: Bool = false
     var audioPlayer = AudioPlayer.shared
     private let mainView = UIView()
+    let mSocket = NativeWebSocket.shared;
+    let roomId: String = Auth.auth().currentUser?.email ?? ""
 
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
@@ -351,8 +354,9 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     /// function to create the control type mode and update values
     func updateControlMode() {
-        let gamePadController = createMode(x: 35, y: 55, width: Int(width / 3), label: Strings.gamepad, icon: "gamepad", action: #selector(gamepadMode(_:)))
-        let phoneController = createMode(x: Int(width / 3) + 48, y: 55, width: Int(width / 3), label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
+        let gamePadController = createMode(x: 35, y: 55, width: Int(width / 4), label: Strings.gamepad, icon: "gamepad", action: #selector(gamepadMode(_:)))
+        let phoneController = createMode(x: 140, y: 55, width: Int(width / 4), label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
+        let webController = createMode(x: 245, y: 55, width: Int(width / 4), label: Strings.web, icon: "globe", action: #selector(webMode(_:)))
         if selectedControlMode == ControlMode.GAMEPAD {
             NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             gameControllerObj = gameController
@@ -369,9 +373,22 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
             client.send(message: msg);
         }
+        else {
+            gameControllerObj = nil;
+            gameController.selectedControlMode = ControlMode.WEB
+            webController.backgroundColor = Colors.title
+            let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
+            client.send(message: msg);
+            if(webRTCClient != nil){
+                webRTCClient.disconnect();
+            }
+            sendMessage();
+            _ = ServerWebrtcDelegate();
+        }
         updateGameControllerModeType()
         secondView.addSubview(gamePadController)
         secondView.addSubview(phoneController)
+        secondView.addSubview(webController)
     }
 
     /// function to create the game controller mode and update values
@@ -382,7 +399,12 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         if selectedControlMode == ControlMode.PHONE {
             selectedDriveMode = DriveMode.DUAL
             dual.backgroundColor = Colors.titleDeactivated
-        } else {
+        }
+        else if selectedControlMode == ControlMode.WEB{
+            selectedDriveMode = DriveMode.GAME
+            game.backgroundColor = Colors.titleDeactivated;
+        }
+        else {
             if selectedDriveMode == DriveMode.JOYSTICK {
                 joystick.backgroundColor = Colors.title
             } else if selectedDriveMode == DriveMode.GAME {
@@ -442,6 +464,13 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         selectedControlMode = ControlMode.GAMEPAD;
         updateControlMode()
     }
+    
+    @objc func webMode(_ sender: UIView){
+        selectedControlMode = ControlMode.WEB;
+        updateControlMode()
+        selectedDriveMode = DriveMode.GAME;
+        print("in web mode");
+    }
 
     @objc func slow(_ sender: UIView) {
         selectedSpeedMode = SpeedMode.SLOW
@@ -468,10 +497,13 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         let modeRectangleLabel = UILabel(frame: CGRect(x: 10, y: 4, width: 100, height: 50))
         modeRectangleLabel.text = label
         modeRectangleLabel.textColor = .white
-        modeRectangleLabel.font = modeRectangleLabel.font.withSize(15)
+        modeRectangleLabel.font = modeRectangleLabel.font.withSize(13)
         modeRectangle.addSubview(modeRectangleLabel)
         let modeIcon = UIImageView(frame: CGRect(x: modeRectangle.frame.width - 12.8 - modeRectangle.frame.width / 10, y: modeRectangle.frame.height / 3, width: 19, height: 19))
-        modeIcon.image = UIImage(named: icon)
+        if let image = UIImage(named: icon)?.withRenderingMode(.alwaysTemplate) {
+            modeIcon.image = image
+            modeIcon.tintColor = .white
+        }        
         let tapGesture = UITapGestureRecognizer(target: self, action: action)
         tapGesture.delegate = self
         modeRectangle.addGestureRecognizer(tapGesture)
@@ -650,6 +682,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             let leftSpeed = command.slice(from: "l:", to: "}}")
             gameController.sendControlFromPhoneController(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
         }
+        
     }
 
     /// update when client connects
@@ -668,6 +701,26 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     func setupSpeedMode() {
         gameController.selectedSpeedMode = SpeedMode.NORMAL;
         gameController.selectedDriveMode = DriveMode.JOYSTICK;
+    }
+    
+    /// function to parse the message for the connection and send it.
+    func sendMessage() {
+        var msg = JSON.toString(ServerConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true"), roomId: roomId));
+        print(msg);
+        var data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoProtocolEvent(status: .init(VIDEO_PROTOCOL: "WEBRTC"), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoServerUrlEvent(status: .init(VIDEO_SERVER_URL: ""), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoCommandEvent(status: .init(VIDEO_COMMAND: "START"), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
     }
 
 }
