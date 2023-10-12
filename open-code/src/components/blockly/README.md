@@ -152,3 +152,34 @@
   - if the left speed value is set lower than the right, the robot will move counterclockwise, or vice versa.
   - If you equalize the left and right speeds, it will move straight.
   - Setting a positive value on the left and a negative value on the right will cause the robot to spin.
+
+
+### Artificial Intelligence(AI):
+  OpenBot Playground provides another important block named Artificial Intelligence which further configures many features such as Object Tracking, Autopilot, Point Goal Navigation.
+
+  <img src="../../../../docs/images/playground_ai_blocks.png" height="50%" width="50%"/>
+<br>
+  
+Lets understand this concept by some examples of blocks:
+   - Object Tracking: Its primary function revolves around detecting objects. This AI fragment allows you to pick any object for tracking. Depending on your phone's performance, you have the flexibility to choose an object detector model. By default, this block comes equipped with the "MobileNetV1-300" model. Additionally, you have the option to manually add any model of your choice.
+<br>
+<br>
+    <p style="color: yellow"> TIP: If you've incorporated an external modal, ensure to enable AutoSync in the playground. This feature will assist you in verifying the availability and successful download of the modal.</p>
+
+
+   - AutoPilot: This snippet is also available through OpenBot Playground, utilizing data collection, wherein a pre-trained dataset (ML model CIL-Mobile-Cmd) is already integrated. Subsequently, the camera fragment is displayed on the screen, initiating the tracking of the captured path.
+
+
+   - Point Goal Navigation: The primary objective of this fragment is to reach a designated point through navigation. You can configure the forward and left values using the embedded models within it. When the project is executed on a phone, the point navigation fragment will be displayed on the screen with an Augmented Reality (AR) view. Subsequently, the robot will initiate movement until it successfully reaches the goal.
+
+###  Advanced Artificial Intelligence(AI):
+  OpenBotPlayground comes with some advancements in it and this Advanced Artificial Intelligence(AI)  is another important block inside it.
+
+  <img src="../../../../docs/images/advanced_ai_blocks.png" height="50%" width="50%"/>
+<br>
+<br>
+    Overview:
+<br>
+      This advanced module is designed for object tracking, accommodating various classes such as a person, car, book, traffic light, etc. The identification of the object is carried out by the integrated AI model. The functionality of this module is contingent upon the specified conditions.
+
+Consider two objects: a person and a hairdryer. If the robot initially detects the person as the object, it will execute actions based on the predefined conditions. For instance, it will activate the right indicator and, after loosing 80 frames, initiate backward movement in response to the detected person. However, if 80 frames are not captured or if another object, such as a hairdryer, is identified, the module will not execute actions for the person object. Instead, it will adhere to the conditions set for the hairdryer object.

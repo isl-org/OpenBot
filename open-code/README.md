@@ -172,7 +172,7 @@ JavaScript and Python.
   code.
 - Users can restore a deleted block from the trash by clicking on it, which will display a list of deleted blocks.
   They can then drag and drop the desired block from the trash back into the workspace.
-
+- Know More About Blocks: [Blocks](src/components/blockly/README.md)
   <p align="left">
   <img style="padding-right: 2%;" src="../docs/images/playground_workspace.gif" alt="Create New Project" width="50%"/>
   </p>
