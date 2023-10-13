@@ -28,6 +28,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     private let mainView = UIView()
     let mSocket = NativeWebSocket.shared;
     let roomId: String = Auth.auth().currentUser?.email ?? ""
+    let webSocketMsgHandler = WebSocketMessageHandler();
 
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
@@ -62,6 +63,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(increaseSpeedMode), name: .increaseSpeedMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDriveMode), name: .updateDriveMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateLightsCommandFromControllerApp), name: .updateLightsCommandFromControllerApp, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
         gameController.resetControl = false
@@ -681,12 +683,45 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         }
         if notification.object != nil {
             let command = notification.object as! String
-            let rightSpeed = command.slice(from: "r:", to: ", ");
-            let leftSpeed = command.slice(from: "l:", to: "}}")
+            let rightSpeed = command.slice(from: "l:", to: ", ");
+            let leftSpeed = command.slice(from: "r:", to: " } }")
             gameController.sendControlFromPhoneController(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
         }
         
     }
+    
+    /// update screen command data coming from application
+    @objc func updateLightsCommandFromControllerApp(_ notification: Notification) {
+        if gameController.selectedControlMode == ControlMode.GAMEPAD {
+            return
+        }
+        if notification.object != nil {
+            let command = notification.object as! String
+            let controllerCommand = command.slice(from: "command: ", to: " }")
+            switch controllerCommand {
+            case "INDICATOR_LEFT":
+                self.webSocketMsgHandler.indicatorLeft()
+                break;
+            case "INDICATOR_RIGHT":
+                self.webSocketMsgHandler.indicatorRight();
+                break
+            case "INDICATOR_STOP":
+                self.webSocketMsgHandler.cancelIndicator();
+            case "SPEED_DOWN":
+                self.webSocketMsgHandler.speedDown();
+                break;
+            case "SPEED_UP":
+                self.webSocketMsgHandler.speedUp();
+                break;
+            case "DRIVE_MODE":
+                self.webSocketMsgHandler.driveMode()
+                break;
+            default:
+                break;
+            }
+        }
+    }
+    
 
     /// update when client connects
     @objc func clientConnected(_ notification: Notification) {
