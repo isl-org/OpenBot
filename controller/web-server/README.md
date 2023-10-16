@@ -45,7 +45,7 @@ or just:
 
 - The OpenBot controller operates on a cloud server accessible remotely via the internet. Clients can seamlessly access
   the controller directly, allowing for a convenient ``sign-in`` process using their Google accounts. Moreover, on the
-  robot app, clients utilize the ``same email ID`` as their web controller login for authentication.
+  robot app, clients utilize the ``same email ID`` as their web controller login for authentication. This implementation ensures that there are no cross-connections between servers and clients.
 
 - The server is hosted at ``ws://verdant-imported-peanut.glitch.me`` using a secure WebSocket connection, ensuring swift
   and reliable communication. This setup empowers clients with the ability to connect and control the robot from any

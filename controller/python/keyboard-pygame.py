@@ -130,7 +130,7 @@ class CommandHandler:
                         return
 
 
-(zc, info) = register("OPEN_BOT_CONTROLLER", 19400)
+(zc, info) = register("OPEN_BOT_CONTROLLER", 8081)
 
 
 class VideoPlayer:
