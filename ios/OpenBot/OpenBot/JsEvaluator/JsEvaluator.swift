@@ -919,7 +919,8 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
-            runRobot.enablePointGoalNavigation(forward: forward, left: left)
+            runRobot.enablePointGoalNavigation(forward: forward, left: left);
+            NotificationCenter.default.post(name: .pointGoalnav, object: true);
             NotificationCenter.default.post(name: .commandName, object: "reach goal");
             print(forward, left);
         }

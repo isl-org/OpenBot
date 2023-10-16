@@ -54,4 +54,5 @@ extension Notification.Name {
     static let autoSynced = Notification.Name("autoSynced");
     static let commandObject = Notification.Name("commandObject");
     static let createCameraView = Notification.Name("createCameraView");
+    static let pointGoalnav = Notification.Name("pointGoalnav");
 }

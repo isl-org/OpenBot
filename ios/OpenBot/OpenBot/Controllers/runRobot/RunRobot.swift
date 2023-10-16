@@ -61,6 +61,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandMsg), name: .commandName, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandObject), name: .commandObject, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(createCamera), name: .createCameraView, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(checkPointGoalnavigation), name: .pointGoalnav, object: nil);
         setupNavigationBarItem();
         updateConstraints();
         let modelItems = Common.loadAllModelItemsFromBundle()
@@ -96,6 +97,12 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      */
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+    }
+    
+    /**
+    function handles point goal navigation in an AR scene, placing a marker at a specified location.
+     */
+    @objc func checkPointGoalnavigation(_ notification: Notification){
         if (runRobot.isPointGoalNavigation) {
             pointGoalCameraView {
                 let camera = self.sceneView.pointOfView!
@@ -208,17 +215,19 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      - Parameter completion:
      */
     func pointGoalCameraView(completion: @escaping () -> Void) {
-        sceneView = ARSCNView(frame: view.bounds)
-        sceneView.debugOptions = []
-        view.insertSubview(sceneView, belowSubview: stopRobot)
-        let scene = SCNScene()
-        sceneView.scene = scene
-        sceneView.delegate = self
-        sceneView.showsStatistics = true
-        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
-        let configuration = ARWorldTrackingConfiguration()
-        sceneView.session.run(configuration)
-        completion()
+        DispatchQueue.main.async {
+            self.sceneView = ARSCNView(frame: self.view.bounds)
+            self.sceneView.debugOptions = []
+            self.view.insertSubview(self.sceneView, belowSubview: self.stopRobot)
+            let scene = SCNScene()
+            self.sceneView.scene = scene
+            self.sceneView.delegate = self
+            self.sceneView.showsStatistics = true
+            self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+            let configuration = ARWorldTrackingConfiguration()
+            self.sceneView.session.run(configuration)
+            completion()
+        }
     }
 
     /**
