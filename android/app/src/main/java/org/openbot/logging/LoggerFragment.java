@@ -750,11 +750,11 @@ public class LoggerFragment extends CameraFragment {
   }
 
   private void changeRewardDistance(double distance){
-    if (abs(distance) < 300) {
+    if (abs(distance) < 100) {
       reward =  100;
-    } else if (abs(distance) > 400) {
+    } else if (abs(distance) > 200) {
       reward =  - 10;
-    } else if (abs(distance) < 400 ){
+    } else if (abs(distance) < 200 ){
       reward =  10;
 
     } else {
@@ -872,6 +872,9 @@ public class LoggerFragment extends CameraFragment {
     if (distance != Double.MAX_VALUE) {
       // Save the centroid to a TXT file
       changeRewardDistance(distance);
+    } else {
+      reward = -7;
+      sendRewardToSensorService();
     }
     Bitmap processedBitmap = Bitmap.createBitmap(bottom.cols(), bottom.rows(), Bitmap.Config.ARGB_8888);
     Utils.matToBitmap(bottom, processedBitmap);
