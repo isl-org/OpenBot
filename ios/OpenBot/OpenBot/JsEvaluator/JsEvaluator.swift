@@ -920,7 +920,7 @@ class jsEvaluator {
                 return
             }
             runRobot.enablePointGoalNavigation(forward: forward, left: left);
-            NotificationCenter.default.post(name: .pointGoalnav, object: true);
+            NotificationCenter.default.post(name: .pointGoalNav, object: true);
             NotificationCenter.default.post(name: .commandName, object: "reach goal");
             print(forward, left);
         }

@@ -61,7 +61,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandMsg), name: .commandName, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandObject), name: .commandObject, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(createCamera), name: .createCameraView, object: nil);
-        NotificationCenter.default.addObserver(self, selector: #selector(checkPointGoalnavigation), name: .pointGoalnav, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(setPosForPointGoalnavigation), name: .pointGoalNav, object: nil);
         setupNavigationBarItem();
         updateConstraints();
         let modelItems = Common.loadAllModelItemsFromBundle()
@@ -97,30 +97,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      */
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-    }
-    
-    /**
-    function handles point goal navigation in an AR scene, placing a marker at a specified location.
-     */
-    @objc func checkPointGoalnavigation(_ notification: Notification){
-        if (runRobot.isPointGoalNavigation) {
-            pointGoalCameraView {
-                let camera = self.sceneView.pointOfView!
-                let cameraTransform = camera.transform
-                _ = SCNVector3(-cameraTransform.m31, -cameraTransform.m32, -cameraTransform.m33)
-                let markerInCameraFrame = SCNVector3(Float(-runRobot.left), 0.0, Float(-runRobot.forward))
-                let markerInWorldFrame = markerInCameraFrame.transformed(by: cameraTransform)
-                self.marker = SCNNode(geometry: SCNPlane(width: 0.1, height: 0.1))
-                self.marker.position = markerInWorldFrame
-                let imageMaterial = SCNMaterial()
-                imageMaterial.diffuse.contents = Images.gmapMarker
-                self.marker.geometry?.firstMaterial = imageMaterial
-                self.sceneView.scene.rootNode.addChildNode(self.marker)
-                self.startingPoint.position = self.sceneView.pointOfView?.position ?? camera.position
-                self.endingPoint = self.marker
-                self.calculateRoute()
-            }
-        }
     }
 
     /**
@@ -211,7 +187,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     }
 
     /**
-     function to create camera view for point goal navigation
+     function to create AR view for point goal navigation
      - Parameter completion:
      */
     func pointGoalCameraView(completion: @escaping () -> Void) {
@@ -228,6 +204,28 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             self.sceneView.session.run(configuration)
             completion()
         }
+    }
+    
+    /**
+    function handles point goal navigation in an AR scene, placing a marker at a specified location.
+     */
+    @objc func setPosForPointGoalnavigation(_ notification: Notification){
+            pointGoalCameraView {
+                let camera = self.sceneView.pointOfView!
+                let cameraTransform = camera.transform
+                _ = SCNVector3(-cameraTransform.m31, -cameraTransform.m32, -cameraTransform.m33)
+                let markerInCameraFrame = SCNVector3(Float(-runRobot.left), 0.0, Float(-runRobot.forward))
+                let markerInWorldFrame = markerInCameraFrame.transformed(by: cameraTransform)
+                self.marker = SCNNode(geometry: SCNPlane(width: 0.1, height: 0.1))
+                self.marker.position = markerInWorldFrame
+                let imageMaterial = SCNMaterial()
+                imageMaterial.diffuse.contents = Images.gmapMarker
+                self.marker.geometry?.firstMaterial = imageMaterial
+                self.sceneView.scene.rootNode.addChildNode(self.marker)
+                self.startingPoint.position = self.sceneView.pointOfView?.position ?? camera.position
+                self.endingPoint = self.marker
+                self.calculateRoute()
+            }
     }
 
     /**
@@ -731,7 +729,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
         return resultYaw
     }
-
+    
     /**
      A static method used to initialize the object tracking and autopilot
      - Parameters:
