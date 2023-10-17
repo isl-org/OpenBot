@@ -580,20 +580,6 @@ Blockly.Blocks["driveModeControls"] = {
     }
 };
 
-//Blockly json structure for sensing bumper block
-Blockly.Blocks["bumper"] = {
-    init: function () {
-        this.jsonInit({
-            "type": "ellipse_block",
-            "message0": "check if bumper collided with an obstacle",
-            "output": "Number",
-            "colour": "#49a2a5",
-            "tooltip": "",
-            "helpUrl": ""
-        });
-    }
-};
-
 //Blockly json structure for setting led brightness block
 Blockly.Blocks["brightness"] = {
     init: function () {

@@ -175,13 +175,6 @@ pythonGenerator.forBlock['driveModeControls'] = function (block) {
     return code;
 };
 
-pythonGenerator.forBlock['bumper'] = function () {
-    let code = "";
-    code += "bumperCollision()";
-    return [code, pythonGenerator.ORDER_NONE];
-};
-
-
 pythonGenerator.forBlock['brightness'] = function (block) {
     let value = block.getFieldValue('slider');
     let code = "";

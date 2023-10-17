@@ -117,7 +117,6 @@ export const Toolbox = (props) => {
                 <Block type="acceleration_reading"/>
                 <Block type="magnetic_reading"/>
                 <Label text="Car Sensors" web-class="sensorsHeading"></Label>
-                <Block type="bumper"/>
                 <Block type="sonarReading"/>
                 <Block type="speedReading"/>
                 <Block type="voltageDividerReading"/>

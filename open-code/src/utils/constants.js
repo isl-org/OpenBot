@@ -13,8 +13,8 @@ import darkCarousal3 from "../assets/images/openBot_car_dark.gif";
  * Blockly control and loop blocks
  * @type {string[]}
  */
-export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_ternary", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
-export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "controls_forEach", "controls_flow_statements"];
+export const controlBlocksType = ["controls_if", "controls_ifelse", "logic_compare", "logic_operation", "logic_negate", "logic_boolean", "logic_null"];
+export const loopBlocksType = ["controls_whileUntil", "controls_repeat", "controls_flow_statements"];
 
 /**
  * function for dark theme in blockly workspace

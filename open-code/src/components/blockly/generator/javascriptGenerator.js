@@ -209,13 +209,6 @@ javascriptGenerator.forBlock['driveModeControls'] = function (block) {
     return code;
 };
 
-//Javascript generated function for sensing bumper block
-javascriptGenerator.forBlock['bumper'] = function () {
-    let code = "";
-    code += "bumperCollision()";
-    return [code, javascriptGenerator.ORDER_NONE];
-};
-
 //Javascript generated function for setting led brightness block
 javascriptGenerator.forBlock['brightness'] = function (block) {
     let value = block.getFieldValue('slider');
