@@ -50,4 +50,15 @@ public class LogDataUtils {
     msg.what = SensorService.MSG_FRAME;
     return msg;
   }
+
+  public static Message generateRewardMessage(long reward){
+    Message msg = Message.obtain();
+    Bundle bundle = new Bundle();
+    bundle.putLong("rewardNumber",  reward);
+    bundle.putLong("timestamp", SystemClock.elapsedRealtimeNanos());
+    msg.setData(bundle);
+    msg.what = SensorService.MSG_REWARD;
+
+    return msg;
+  }
 }

@@ -66,8 +66,7 @@ public class SensorService extends Service implements SensorEventListener {
   private BufferedWriter bumperLog;
 
   //Lilou
-  private BufferedWriter processedImageLog;
-  private BufferedWriter centroidLog;
+  private BufferedWriter rewardLog;
 
   private boolean trackingLocation = false;
   private boolean hasStarted = false;
@@ -84,6 +83,7 @@ public class SensorService extends Service implements SensorEventListener {
   public static final int MSG_WHEELS = 6;
   public static final int MSG_BUMPER = 7;
 
+  public static final int MSG_REWARD = 8;
   private static final Logger LOGGER = new Logger();
   Messenger messenger = new Messenger(new SensorMessageHandler());
 
@@ -199,6 +199,9 @@ public class SensorService extends Service implements SensorEventListener {
       gpsLog = openLog(logFolder, "gpsLog.txt");
       appendLog(gpsLog, "timestamp[ns],latitude,longitude,altitude[m],bearing,speed[m/s]");
     }
+
+    rewardLog = openLog(logFolder, "rewardLog.txt");
+    appendLog(rewardLog, "timestamp[ns],reward");
 
     frameLog = openLog(logFolder, "rgbFrames.txt");
     appendLog(frameLog, "timestamp[ns],frame");
@@ -414,6 +417,11 @@ public class SensorService extends Service implements SensorEventListener {
           long frameNumber = msg.getData().getLong("frameNumber");
           long inferenceTime = msg.getData().getLong("inferenceTime");
           if (inferenceLog != null) appendLog(inferenceLog, frameNumber + "," + inferenceTime);
+
+        } else if (msg.what == MSG_REWARD) {
+          long reward = msg.getData().getLong("rewardNumber");
+          long timestamp = msg.getData().getLong("timestamp");
+          if (rewardLog != null) appendLog(rewardLog, timestamp + "," + reward);
         } else if (msg.what == MSG_CONTROL) {
           // msg.arg1 and msg.arg2 contain left and right control signals respectively
           if (ctrlLog != null)
@@ -469,6 +477,7 @@ public class SensorService extends Service implements SensorEventListener {
     if (sonarLog != null) closeLog(sonarLog);
     if (wheelsLog != null) closeLog(wheelsLog);
     if (bumperLog != null) closeLog(bumperLog);
+    if (rewardLog != null) closeLog(rewardLog);
   }
 
   public BufferedWriter openLog(String path, String filename) {

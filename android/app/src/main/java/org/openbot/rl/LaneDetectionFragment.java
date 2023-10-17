@@ -108,10 +108,11 @@ public class LaneDetectionFragment extends CameraFragment {
         Scalar lowerWhite = new Scalar(200, 170, 170);
         Scalar higherWhite = new Scalar(254, 254, 254);
 
+
         double contrastFactor = 1.2; // Increase contrast by 50%
 // Scale and convert the image data type
         Mat contrastedMat = new Mat();
-        rotatedMat.convertTo(contrastedMat, -1, contrastFactor, -40);
+        inputMat.convertTo(contrastedMat, -1, contrastFactor, -40);
 // Ensure pixel values are within the valid range
         Core.normalize(contrastedMat, contrastedMat, 0, 255, Core.NORM_MINMAX, CvType.CV_8U);
 
@@ -136,7 +137,8 @@ public class LaneDetectionFragment extends CameraFragment {
             centroids.add(centroid);
         }
 
-        Point closestCentroid = findClosestCentroid(centroids, new Point(270, 310));
+        Point closestCentroid = findClosestCentroid(centroids, new Point(600, 310));
+
 
 // Update the text of your TextView with the integer values
 
@@ -178,8 +180,8 @@ public class LaneDetectionFragment extends CameraFragment {
 
     private double calculateDistance(Point point1, Point point2) {
         double dx = point1.x - point2.x;
-        double dy = point1.y - point2.y;
-        return Math.sqrt(dx * dx + dy * dy);
+        // double dy = point1.y - point2.y;
+        return dx;
     }
 
 
@@ -191,10 +193,10 @@ public class LaneDetectionFragment extends CameraFragment {
 
         // Define the ROI as the bottom half of the image
         Point[] roiPoints = new Point[4];
-        roiPoints[0] = new Point(width*0.5, 0);
-        roiPoints[1] = new Point(width, 0);
-        roiPoints[2] = new Point(width, height);
-        roiPoints[3] = new Point(width*0.5, height);
+        roiPoints[0] = new Point(width * 0.0, height * 0.8); // Top-left corner of ROI
+        roiPoints[1] = new Point(width, height * 0.8);        // Top-right corner of ROI
+        roiPoints[2] = new Point(width, height*0.1);              // Bottom-right corner of ROI
+        roiPoints[3] = new Point(0, height*0.1);
         MatOfPoint roiContour = new MatOfPoint(roiPoints);
         Mat mask = Mat.zeros(inputMat.size(), CvType.CV_8U);
         List<MatOfPoint> roiContours = new ArrayList<>();
@@ -227,6 +229,14 @@ public class LaneDetectionFragment extends CameraFragment {
             @Override
             public void run() {
                 viewModel.setCentroidValue(result.getCentroid());
+                TextView centroidTextView = getView().findViewById(R.id.centroidTextView);
+
+                // Update the text of the TextView with the centroid values
+                if (result.getCentroid() != null) {
+                    centroidTextView.setText(" X=" + (int) result.getCentroid().x);
+                } else {
+                    centroidTextView.setText("Centroid not found");
+                }
             }
         });
 

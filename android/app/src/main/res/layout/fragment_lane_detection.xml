@@ -16,8 +16,13 @@
         android:background="@android:color/white"/>
 
 
-
-
+    <TextView
+        android:id="@+id/centroidTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Centroid Value: "
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
 
     <!-- Other UI elements or views can be added here -->

@@ -659,7 +659,7 @@ if __name__ == "__main__":
         "--model",
         type=str,
         default="pilot_net",
-        choices=["cil_mobile", "cil_mobile_fast", "cil", "pilot_net"],
+        choices=["cil_mobile" , "reinforcement", "cil_mobile_fast", "cil", "pilot_net"],
         help="network architecture (default: pilot_net)",
     )
     parser.add_argument(

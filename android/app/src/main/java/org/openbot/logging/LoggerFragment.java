@@ -1,5 +1,7 @@
 package org.openbot.logging;
 
+import static java.lang.Math.abs;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -88,6 +90,8 @@ public class LoggerFragment extends CameraFragment {
   private boolean autonomousControlEnabled = false;
 
   private boolean autonomousStarted = true;
+
+  private long reward = 4;
 
 
   @Override
@@ -196,8 +200,8 @@ public class LoggerFragment extends CameraFragment {
       Log.e("AUTONOMOUS STOPPING", "AUTONOMOUS STOP SUCCESS !");
       autopilot.close();
       autopilot = null;
-      autonomousControlEnabled = false;
-      autonomousStarted = false;
+      // autonomousControlEnabled = false;
+      //                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         autonomousStarted = false;
     }
   }
 
@@ -295,6 +299,16 @@ public class LoggerFragment extends CameraFragment {
     }
   }
 
+  protected void sendRewardToSensorService(){
+    if (sensorMessenger != null){
+      try {
+        sensorMessenger.send(LogDataUtils.generateRewardMessage(reward));
+      } catch (RemoteException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
   protected void sendVehicleDataToSensorService(long timestamp, String data, int type) {
     if (sensorMessenger != null) {
       try {
@@ -333,6 +347,7 @@ public class LoggerFragment extends CameraFragment {
             TimeUnit.MILLISECONDS.sleep(500);
             sendControlToSensorService();
             sendIndicatorToSensorService();
+            //sendRewardToSensorService(reward);
 
           } catch (InterruptedException e) {
             Timber.e(e, "Got interrupted.");
@@ -382,6 +397,9 @@ public class LoggerFragment extends CameraFragment {
                     () ->
                             binding.controllerContainer.controlInfo.setText(
                                     String.format(Locale.US, "%.0f,%.0f", left, right)));
+
+    runInBackground(this::sendControlToSensorService);
+
   }
 
 
@@ -509,7 +527,13 @@ public class LoggerFragment extends CameraFragment {
         break;
 
       case Constants.CMD_INDICATOR_LEFT:
+        changeRewardNegative();
+        break;
+
       case Constants.CMD_INDICATOR_RIGHT:
+        changeRewardPositive();
+        break;
+
       case Constants.CMD_INDICATOR_STOP:
         sendIndicatorToSensorService();
         break;
@@ -523,16 +547,18 @@ public class LoggerFragment extends CameraFragment {
         break;
 
       case Constants.CMD_SPEED_DOWN:
-        setSpeedMode(
+        /*setSpeedMode(
             Enums.toggleSpeed(
                 Enums.Direction.DOWN.getValue(),
-                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));*/
+        //changeRewardPositive();
         break;
       case Constants.CMD_SPEED_UP:
-        setSpeedMode(
+        /*setSpeedMode(
             Enums.toggleSpeed(
                 Enums.Direction.UP.getValue(),
-                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));*/
+        //changeRewardNegative();
         break;
       case Constants.CMD_NETWORK:
         cancelLogging();
@@ -713,24 +739,48 @@ public class LoggerFragment extends CameraFragment {
 
     return croppedBitmap;
   }
-  private void saveCentroidToFile(double distance, String folderPath, long frameNumber) {
-    File folder = new File(folderPath + File.separator + "distance");
+  private void changeRewardNegative(){
+    reward = - 30;
+    sendRewardToSensorService();
+  }
+
+  private void changeRewardPositive(){
+    reward =  30;
+    sendRewardToSensorService();
+  }
+
+  private void changeRewardDistance(double distance){
+    if (abs(distance) < 300) {
+      reward =  100;
+    } else if (abs(distance) > 400) {
+      reward =  - 10;
+    } else if (abs(distance) < 400 ){
+      reward =  10;
+
+    } else {
+      reward = 2;
+    }
+    sendRewardToSensorService();
+  }
+ /* private void saveRewardToFile( String folderPath, long frameNumber) {
+    File folder = new File(folderPath + File.separator + "reward");
+
     if (!folder.exists()) {
       folder.mkdirs();
     }
 
-    String fileName = "distance_" + frameNumber + ".txt";
+    String fileName = "reward_" + frameNumber + ".txt";
     File file = new File(folder, fileName);
 
     try {
       FileWriter writer = new FileWriter(file);
       writer.write("Frame Number: " + frameNumber + "\n");
-      writer.write("Distance X: " + distance + "\n");
+      writer.write("Reward: " + reward + "\n");
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
+  }*/
 
   public Point calculateCentroid(List<Point> contour) {
     double sumX = 0.0;
@@ -818,12 +868,11 @@ public class LoggerFragment extends CameraFragment {
       centroids.add(centroid);
     }
 
-    double distance = findClosestCentroid(centroids, new Point(270, 310));
+    double distance = findClosestCentroid(centroids, new Point(250, 310));
     if (distance != Double.MAX_VALUE) {
       // Save the centroid to a TXT file
-      saveCentroidToFile(distance, logFolder, frameNum);
+      changeRewardDistance(distance);
     }
-
     Bitmap processedBitmap = Bitmap.createBitmap(bottom.cols(), bottom.rows(), Bitmap.Config.ARGB_8888);
     Utils.matToBitmap(bottom, processedBitmap);
 
@@ -836,10 +885,10 @@ public class LoggerFragment extends CameraFragment {
 
     // Define the ROI as the bottom half of the image
     Point[] roiPoints = new Point[4];
-    roiPoints[0] = new Point(width*0.5, 0);
-    roiPoints[1] = new Point(width, 0);
-    roiPoints[2] = new Point(width, height);
-    roiPoints[3] = new Point(width*0.5, height);
+    roiPoints[0] = new Point(width * 0.0, height * 0.8); // Top-left corner of ROI
+    roiPoints[1] = new Point(width, height * 0.8);        // Top-right corner of ROI
+    roiPoints[2] = new Point(width, height);              // Bottom-right corner of ROI
+    roiPoints[3] = new Point(0, height);
     MatOfPoint roiContour = new MatOfPoint(roiPoints);
     Mat mask = Mat.zeros(inputMat.size(), CvType.CV_8U);
     List<MatOfPoint> roiContours = new ArrayList<>();
