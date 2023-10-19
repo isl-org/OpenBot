@@ -185,7 +185,7 @@ class Detector: Network {
 
         do {
 
-            // Pre-proccess input image (orientation, scaling, cropping...).
+            // Pre-process input image (orientation, scaling, cropping...).
             let inputTensor = try tflite!.input(at: 0);
             guard let rgbData = rgbDataFromBuffer(scaledPixelBuffer, isModelQuantized: inputTensor.dataType == .uInt8) else {
                 return []

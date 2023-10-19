@@ -17,8 +17,11 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     var medium = UIButton()
     var high = UIButton()
     var modelResolution = UILabel()
-    var server = UIButton()
-    var secondView = UIView()
+    var server = UIView();
+    var serverDropDownLabel = UILabel()
+    var serverDropDown = DropDown()
+    var serverDropDownView = UIView()
+    var secondView = UIScrollView()
     var leadingConstraint: NSLayoutConstraint!
     var topConstraint: NSLayoutConstraint!
     var widthConstraint: NSLayoutConstraint!
@@ -34,6 +37,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     var sensorButtons = [UIButton]()
     var dropDownView = UIView()
     var ddView = UIView()
+    var serverDdView = UIView();
     let dropDown = DropDown()
     var dropdownLabel = UILabel()
     var dropdownTopAnchor: NSLayoutConstraint!
@@ -42,6 +46,11 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     var models: [Model] = [];
     var leftSpeedLabel = UILabel()
     var samplingPeriod: Double = 0.2
+    let serverUpwardImage = UIImageView()
+    let saveAsUpwardImage = UIImageView();
+    let saveAsDropdown = DropDown();
+    let saveAsDropdownLabel = UILabel()
+    var saveAsDropdownView = UIView();
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -57,12 +66,17 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         createDropdown()
         createLabels(value: Strings.server, leadingAnchor: 10, topAnchor: 200, labelWidth: 240, labelHeight: 40).font = UIFont.boldSystemFont(ofSize: 16.0)
         createServer()
+        createServerDropDown();
+        serverDropDown.hide();
+        saveAsDropdown.hide();
         createSecondView()
-        createSecondViewLabel(value: "Images", leadingAnchor: 10, topAnchor: 10, labelWidth: 100, labelHeight: 40).font = UIFont.boldSystemFont(ofSize: 16.0)
+        createSecondViewLabel(value: "Save As", leadingAnchor: 10, topAnchor: 0, labelWidth: 100, labelHeight: 40).font = UIFont.boldSystemFont(ofSize: 16.0)
+        createSaveAsDropDown();
+        createSecondViewLabel(value: "Images", leadingAnchor: 10, topAnchor: 80, labelWidth: 100, labelHeight: 40).font = UIFont.boldSystemFont(ofSize: 16.0)
         createImagesButton()
-        createSecondViewLabel(value: Strings.sensorData, leadingAnchor: 10, topAnchor: 90, labelWidth: 200, labelHeight: 40).font = UIFont.boldSystemFont(ofSize: 16.0)
+        createSecondViewLabel(value: Strings.sensorData, leadingAnchor: 10, topAnchor: 130, labelWidth: 200, labelHeight: 40).font = UIFont.boldSystemFont(ofSize: 16.0)
         createSensorButtons()
-        _ = createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 190, labelWidth: 60, labelHeight: 40)
+        _ = createSecondViewLabel(value: Strings.delay, leadingAnchor: 230, topAnchor: 230, labelWidth: 60, labelHeight: 40)
         createDelayField()
         let vehicleControls = VehicleControl();
         createLeftSpeed()
@@ -75,10 +89,11 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLabel), name: .updateSpeedLabel, object: nil);
-
+        NotificationCenter.default.addObserver(self, selector: #selector(updateServer), name: .server, object: nil);
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
         addGestureRecognizer(tap)
     }
+
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -182,24 +197,81 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         dropDownView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
     }
 
+    func createServerDropDown() {
+        serverDropDown.backgroundColor = Colors.freeRoamButtonsColor
+        serverDropDown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
+        serverDropDown.anchorView = serverDropDownView
+        serverDropDown.width = 210
+        serverDropDownView.frame.size = CGSize(width: 210, height: 100);
+        addSubview(serverDropDownView);
+        serverDropDownView.translatesAutoresizingMaskIntoConstraints = false
+        print("nsdService.servers =======", servers);
+        serverDropDown.dataSource = servers;
+        serverDropDown.show()
+        print("serverItems ========== \(serverItems)");
+        serverDropDownView.leadingAnchor.constraint(equalTo: server.leadingAnchor, constant: 0).isActive = true;
+        serverDropDownView.topAnchor.constraint(equalTo: server.bottomAnchor, constant: 10).isActive = true;
+        serverDropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+            serverDropDownLabel.text = item;
+            let server = serverItems.filter { server in
+                server.name == item
+            }
+            if item == "No Server" {
+                ServerCommunication.serverEndPoint = nil;
+            }
+            if let endpoint = server.first?.endpoint {
+                serverConnection = ServerCommunication(endpoint: endpoint)
+            };
+        }
+        serverDropDown.cancelAction = { [unowned self] in
+            UIView.animate(withDuration: 0) {
+                // Rotate back to the original position
+                self.serverUpwardImage.transform = CGAffineTransform.identity
+                // Toggle the rotation state
+            }
+        }
+
+    }
+
     /// UI Function to create server label
     func createServer() {
-        server = createButton(borderColor: "red", buttonName: Strings.server, leadingAnchor: 10, topAnchor: 230, action: #selector(serverHandler(_:)))
+        addSubview(server);
+        server.backgroundColor = Colors.title;
+        server.layer.cornerRadius = 10;
+        server.translatesAutoresizingMaskIntoConstraints = false;
+        server.widthAnchor.constraint(equalToConstant: 210).isActive = true;
+        server.heightAnchor.constraint(equalToConstant: 40).isActive = true;
+        server.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
+        server.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 230).isActive = true;
+        serverDropDownLabel.text = "No Server"
+        serverDropDownLabel.textColor = Colors.border
+        serverDropDownLabel.frame = CGRect(x: 10, y: 0, width: 210, height: 40)
+        server.addSubview(serverDropDownLabel);
+        server.isUserInteractionEnabled = true;
+        let tap = UITapGestureRecognizer(target: self, action: #selector(serverHandler))
+        server.addGestureRecognizer(tap)
+        serverUpwardImage.frame.size = CGSize(width: 5, height: 5)
+        serverUpwardImage.image = Images.upwardArrow
+        server.addSubview(serverUpwardImage)
+        serverUpwardImage.translatesAutoresizingMaskIntoConstraints = false
+        serverUpwardImage.trailingAnchor.constraint(equalTo: server.trailingAnchor, constant: -10).isActive = true
+        serverUpwardImage.topAnchor.constraint(equalTo: server.topAnchor, constant: 15.5).isActive = true
     }
 
     /// UI Function to create subview on based of orientation
     func createSecondView() {
+        secondView.isScrollEnabled = true;
         secondView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(secondView)
         if currentOrientation == .portrait {
             leadingConstraint = secondView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 0)
             topConstraint = secondView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 290);
             widthConstraint = secondView.widthAnchor.constraint(equalToConstant: width)
-            heightConstraint = secondView.heightAnchor.constraint(equalToConstant: height / 2)
+            heightConstraint = secondView.heightAnchor.constraint(equalToConstant: height / 2 + 100)
         } else {
             leadingConstraint = secondView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: height / 2 - 50)
             leadingConstraint.identifier = Strings.expendSetting;
-            topConstraint = secondView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 30);
+            topConstraint = secondView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0);
             topConstraint.identifier = Strings.expendSetting
             widthConstraint = secondView.widthAnchor.constraint(equalToConstant: height / 2)
             widthConstraint.identifier = Strings.expendSetting
@@ -234,35 +306,35 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
 
     /// UI Function to create button for images
     func createImagesButton() {
-        preview = createSecondViewButton(buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 40, buttonWidth: 120, action: #selector(applyPreview(_:)), borderColor: Colors.freeRoamButtonsColor!.cgColor)
+        preview = createSecondViewButton(buttonName: Strings.preview, leadingAnchor: 10, topAnchor: 80, buttonWidth: 120, action: #selector(applyPreview(_:)), borderColor: Colors.freeRoamButtonsColor!.cgColor)
         preview.tag = 0
-        training = createSecondViewButton(buttonName: Strings.training, leadingAnchor: 140, topAnchor: 40, buttonWidth: 120, action: #selector(applyTraining(_:)), borderColor: Colors.title!.cgColor)
+        training = createSecondViewButton(buttonName: Strings.training, leadingAnchor: 140, topAnchor: 80, buttonWidth: 120, action: #selector(applyTraining(_:)), borderColor: Colors.title!.cgColor)
         training.tag = 1
         setupImageMode()
     }
 
     /// UI Function to create button for sensors
     func createSensorButtons() {
-        vehicle = createSecondViewButton(buttonName: Strings.vehicle, leadingAnchor: 10, topAnchor: 120, buttonWidth: 80, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
+        vehicle = createSecondViewButton(buttonName: Strings.vehicle, leadingAnchor: 10, topAnchor: 160, buttonWidth: 80, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
         vehicle.tag = 1;
         sensorButtons.append(vehicle)
-        gps = createSecondViewButton(buttonName: Strings.gps, leadingAnchor: 100, topAnchor: 120, buttonWidth: 80, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
+        gps = createSecondViewButton(buttonName: Strings.gps, leadingAnchor: 100, topAnchor: 160, buttonWidth: 80, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
         gps.tag = 2;
         sensorButtons.append(gps)
-        acceleration = createSecondViewButton(buttonName: Strings.accelerometer, leadingAnchor: 190, topAnchor: 120, buttonWidth: 140, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
+        acceleration = createSecondViewButton(buttonName: Strings.accelerometer, leadingAnchor: 190, topAnchor: 160, buttonWidth: 140, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
         acceleration.tag = 3
         sensorButtons.append(acceleration)
-        magnetic = createSecondViewButton(buttonName: Strings.magnetic, leadingAnchor: 10, topAnchor: 170, buttonWidth: 100, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
+        magnetic = createSecondViewButton(buttonName: Strings.magnetic, leadingAnchor: 10, topAnchor: 210, buttonWidth: 100, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
         magnetic.tag = 4
         sensorButtons.append(magnetic)
-        gyroscope = createSecondViewButton(buttonName: Strings.gyroscope, leadingAnchor: 120, topAnchor: 170, buttonWidth: 100, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
+        gyroscope = createSecondViewButton(buttonName: Strings.gyroscope, leadingAnchor: 120, topAnchor: 210, buttonWidth: 100, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
         gyroscope.tag = 5
         sensorButtons.append(gyroscope)
     }
 
     /// UI Function to create text field for delay
     func createDelayField() {
-        let delayTextField = UITextField(frame: CGRect(x: 310, y: 177, width: 50, height: 40))
+        let delayTextField = UITextField(frame: CGRect(x: 310, y: 217, width: 50, height: 40))
         delayTextField.placeholder = "200"
         delayTextField.font = UIFont.systemFont(ofSize: 15)
         delayTextField.borderStyle = UITextField.BorderStyle.roundedRect
@@ -310,7 +382,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         dd.backgroundColor = Colors.freeRoamButtonsColor
         dropdownLabel.text = buttonName
         dropdownLabel.textColor = Colors.border
-        let tap = UITapGestureRecognizer(target: self, action: #selector(showDropdown(_:)))
+        let tap = UITapGestureRecognizer(target: self, action: action)
         dd.addGestureRecognizer(tap)
         addSubview(dd)
         dd.translatesAutoresizingMaskIntoConstraints = false
@@ -380,7 +452,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     /// UI Function to create speed rpm labels
     func createLeftSpeed() {
         leftSpeedLabel.frame.size = CGSize(width: 100, height: 40);
-        leftSpeedLabel.frame.origin = CGPoint(x: 10, y: 240)
+        leftSpeedLabel.frame.origin = CGPoint(x: 10, y: 280)
         leftSpeedLabel.text = "xxx,xxx"
         secondView.addSubview(leftSpeedLabel)
         leftSpeedLabel.font = leftSpeedLabel.font.withSize(13.5)
@@ -438,6 +510,10 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     }
 
     @objc func serverHandler(_ sender: UIView) {
+        serverDropDown.show();
+        UIView.animate(withDuration: 0) {
+            self.serverUpwardImage.transform = CGAffineTransform(rotationAngle: .pi)
+        }
     }
 
     /// Function to update resolutions
@@ -549,4 +625,61 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     @objc func updateSpeedLabel(_ notification: Notification) {
         leftSpeedLabel.text = notification.object as? String
     }
+
+    /// function to show server dropdown
+    ///
+    /// - Parameter sender:
+    @objc func showServerDropdown(_ sender: UIButton) {
+        serverDropDown.show()
+    }
+
+    @objc func updateServer(_ notification: Notification) {
+        serverDropDown.dataSource = servers;
+    }
+
+    /// UI Function to create Dropdown View
+    func createSaveAsView(borderColor: String, buttonName: String, leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> UIView {
+        saveAsDropdown.backgroundColor = Colors.freeRoamButtonsColor
+        saveAsDropdown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
+        saveAsDropdown.width = 210
+        let dd = UIView()
+        dd.layer.cornerRadius = 10;
+        dd.backgroundColor = Colors.title;
+        saveAsDropdownLabel.text = buttonName;
+        saveAsDropdownLabel.textColor = Colors.border
+        let tap = UITapGestureRecognizer(target: self, action: action)
+        dd.addGestureRecognizer(tap)
+        secondView.addSubview(dd);
+        dd.translatesAutoresizingMaskIntoConstraints = false
+        dd.topAnchor.constraint(equalTo: secondView.topAnchor, constant: topAnchor).isActive = true;
+        dd.leadingAnchor.constraint(equalTo: secondView.leadingAnchor, constant: leadingAnchor).isActive = true
+        dd.widthAnchor.constraint(equalToConstant: 210).isActive = true
+        dd.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        saveAsDropdownLabel.frame = CGRect(x: 10, y: 0, width: 180, height: 40)
+        dd.addSubview(saveAsDropdownLabel);
+        saveAsDropdown.dataSource = ["Server", "Drive", "Local"]
+        saveAsDropdown.selectionAction = { [unowned self] (index: Int, item: String) in
+            saveAsDropdownLabel.text = item;
+            NotificationCenter.default.post(name: .saveAs, object: item);
+        }
+        saveAsUpwardImage.frame.size = CGSize(width: 5, height: 5)
+        saveAsUpwardImage.image = Images.upwardArrow;
+        dd.addSubview(saveAsUpwardImage);
+        saveAsUpwardImage.translatesAutoresizingMaskIntoConstraints = false;
+        saveAsUpwardImage.trailingAnchor.constraint(equalTo: dd.trailingAnchor, constant: -10).isActive = true;
+        saveAsUpwardImage.topAnchor.constraint(equalTo: dd.topAnchor, constant: 15.5).isActive = true;
+        saveAsDropdown.anchorView = dd
+        return dd
+    }
+
+
+    func createSaveAsDropDown() {
+        saveAsDropdownView = createSaveAsView(borderColor: "black", buttonName: "Local", leadingAnchor: 10, topAnchor: 30, action: #selector(showSaveAsDropDown))
+        secondView.addSubview(saveAsDropdownView);
+    }
+
+    @objc func showSaveAsDropDown(_ sender: UIButton) {
+        saveAsDropdown.show();
+    }
+
 }

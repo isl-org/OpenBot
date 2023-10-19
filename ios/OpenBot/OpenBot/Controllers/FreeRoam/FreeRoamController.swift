@@ -4,6 +4,7 @@
 
 import UIKit
 import AVFoundation
+import Network
 
 /// Implementation of the FreeRoamController
 class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
@@ -28,7 +29,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("navigationController is :",navigationController);
+        print("navigationController is :", navigationController);
         setupNavigationBarItem()
         setupSpeedMode()
         applySafeAreaConstraints()

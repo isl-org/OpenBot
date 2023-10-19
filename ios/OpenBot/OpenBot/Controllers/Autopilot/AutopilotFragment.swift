@@ -56,6 +56,9 @@ class AutopilotFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
         gameController.resetControl = false
         calculateFrame()
+        //start the server
+        var serverListener = ServerListener();
+        serverListener.start();
     }
 
     /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).

@@ -412,6 +412,23 @@ class Authentication {
         }
     }
 
+    func uploadZipFileToDrive(saveZipFilesName: URL, folderId : String) {
+        let file = GTLRDrive_File()
+        file.name = saveZipFilesName.lastPathComponent
+        file.mimeType = "application/zip"
+        file.parents = [folderId]
+        let uploadParameters = GTLRUploadParameters(fileURL: saveZipFilesName, mimeType: "application/zip")
+        let query = GTLRDriveQuery_FilesCreate.query(withObject: file, uploadParameters: uploadParameters)
+        service.executeQuery(query) { (ticket, file, error) in
+            if let error = error {
+                print("File upload failed: \(error.localizedDescription)")
+                return
+            }
+
+            print("File uploaded successfully")
+        }
+    }
+
     /**
      Function to upload JSON file to drive
      - Parameters:

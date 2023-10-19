@@ -152,6 +152,7 @@ class ModelManagementTable: UITableViewController {
     func createModelSelectorDropDown() {
         modelDropdown.backgroundColor = Colors.freeRoamButtonsColor;
         modelDropdown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
+        let dropDownView = UIView(frame: CGRect(x: width / 2 + 20, y: 100, width: width / 2 - 80, height: 200));
         view.addSubview(dropDownView);
         modelDropdown.dataSource = ["All", "AutoPilot", "Detector", "Navigation"];
         modelDropdown.anchorView = dropDownView
@@ -377,6 +378,10 @@ class ModelManagementTable: UITableViewController {
         let filesPath = DataLogger.shared.getDocumentDirectoryInformation()
         for url in filesPath {
             if Common.returnModelItem(modelName: modelName).name == url.lastPathComponent {
+                let item = Common.returnModelItem(modelName: modelName)
+                if (item.path == "" && item.pathType == "FILE") {
+                    print(Common.modifyModels(modelItem: item))
+                }
                 DataLogger.shared.deleteFiles(fileNameToDelete: url.lastPathComponent);
             }
         }
@@ -469,6 +474,7 @@ class ModelManagementTable: UITableViewController {
         autoSyncIcon.layer.removeAnimation(forKey: "rotationAnimation");
         viewWillAppear(true)
     }
+    
 }
 
 class modelManagementCell: UITableViewCell {
