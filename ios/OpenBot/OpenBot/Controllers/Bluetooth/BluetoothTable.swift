@@ -14,6 +14,7 @@ class BluetoothTable: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = false
+        setupNavigationBarItem();
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
     }
@@ -29,6 +30,12 @@ class BluetoothTable: UITableViewController {
         bluetooth.sendData(payload: "f\n");
     }
 
+    /**
+     Function to connect with selected bluetooth
+     - Parameters:
+       - Btn:
+       - index:
+     */
     func connectToBle(Btn: UIButton, index: Int) {
         bluetooth.peri = bluetooth.peripherals[index]
         bluetooth.connect()
@@ -36,6 +43,9 @@ class BluetoothTable: UITableViewController {
         isBluetoothConnected = true
     }
 
+    /**
+     Function to disconnect from bluetooth
+     */
     func disconnectToBle() {
         bluetooth.disconnect()
         tableView.reloadData()
@@ -55,6 +65,13 @@ class BluetoothTable: UITableViewController {
         return 44
     }
 
+    /**
+     Delegate to setup each cell of table
+     - Parameters:
+       - tableView:
+       - indexPath:
+     - Returns:
+     */
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath) as! BluetoothTableViewCell
         let peripheral = bluetooth.peripherals[indexPath.row]
@@ -85,6 +102,10 @@ class BluetoothTable: UITableViewController {
         tableView.reloadData()
     }
 
+    /**
+     Handler function of connect button
+     - Parameter sender:
+     */
     @objc func connect(sender: UIButton) {
 
         if isBluetoothConnected {
@@ -96,6 +117,25 @@ class BluetoothTable: UITableViewController {
             connectToBle(Btn: sender, index: sender.tag)
         }
         tableView.reloadData()
+    }
+
+    /**
+     Function to customise the navigation bar
+     */
+    func setupNavigationBarItem() {
+        if UIImage(named: "back") != nil {
+            let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
+            let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.bluetooth, target: self, action: #selector(back(sender:)), titleColor: Colors.navigationColor ?? .white)
+            navigationItem.leftBarButtonItem = newBackButton
+        }
+    }
+
+    /**
+        function remove current view controller from the navigation controller
+     - Parameter sender:
+     */
+    @objc func back(sender: UIBarButtonItem) {
+        _ = navigationController?.popViewController(animated: true)
     }
 }
 

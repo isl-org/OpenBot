@@ -215,3 +215,11 @@ class AutopilotFragment: CameraController {
         }
     }
 }
+
+/**
+ Protocol to create autopilot delegate
+ */
+protocol autopilotDelegate: AnyObject {
+    func didPerformAction()
+}
+

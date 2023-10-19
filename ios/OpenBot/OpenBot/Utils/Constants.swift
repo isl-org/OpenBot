@@ -57,14 +57,16 @@ struct Colors {
     static let textColor = UIColor(named: "textColor")
     static let navigationColor = UIColor(named: "navigationColor")
     static let modelDetail = UIColor(named: "modelDetailPopup")
-    static let freeRoamColor = UIColor(red: 247.0/255.0, green: 105.0/255.0, blue: 36.0/255.0, alpha: 1.00)
-    static let dataCollectionColor = UIColor(red: 147.0/255.0, green: 196.0/255.0, blue: 125.0/255.0, alpha: 1.00)
-    static let controllerMappingColor = UIColor(red: 103.0/255.0, green: 93.0/255.0, blue: 154.0/255.0, alpha: 1.00)
+    static let blue = UIColor(red: 0, green: 113, blue: 197, alpha: 1);
+    static let lightBlack = UIColor(red: 0.16, green: 0.16, blue: 0.16, alpha: 1.00)
+    static let freeRoamColor = UIColor(red: 247.0 / 255.0, green: 105.0 / 255.0, blue: 36.0 / 255.0, alpha: 1.00)
+    static let dataCollectionColor = UIColor(red: 147.0 / 255.0, green: 196.0 / 255.0, blue: 125.0 / 255.0, alpha: 1.00)
+    static let controllerMappingColor = UIColor(red: 103.0 / 255.0, green: 93.0 / 255.0, blue: 154.0 / 255.0, alpha: 1.00)
     static let robotInfoColor = UIColor(named: "HomePageTitleColor")! //UIColor(red: 75.0/255.0, green: 123.0/255.0, blue: 1.0, alpha: 1.00)
-    static let autopilotColor = UIColor(red: 40.0/255.0, green: 47.0/255.0, blue: 55.0/255.0, alpha: 1.00)
-    static let objectTrackingColor = UIColor(red: 1.0, green: 217.0/255.0, blue: 102.0/255.0, alpha: 1.00)
-    static let pointGoalColor = UIColor(red: 52.0/255.0, green: 181.0/255.0, blue: 183.0/255.0, alpha: 1.00)
-    static let modelColor = UIColor(red: 183.0/255.0, green: 138.0/255.0, blue: 164.0/255.0, alpha: 1.00)
+    static let autopilotColor = UIColor(red: 40.0 / 255.0, green: 47.0 / 255.0, blue: 55.0 / 255.0, alpha: 1.00)
+    static let objectTrackingColor = UIColor(red: 1.0, green: 217.0 / 255.0, blue: 102.0 / 255.0, alpha: 1.00)
+    static let pointGoalColor = UIColor(red: 52.0 / 255.0, green: 181.0 / 255.0, blue: 183.0 / 255.0, alpha: 1.00)
+    static let modelColor = UIColor(red: 183.0 / 255.0, green: 138.0 / 255.0, blue: 164.0 / 255.0, alpha: 1.00)
 }
 
 /// Set of constants used in the code
@@ -87,9 +89,9 @@ struct Constants {
         // AI
         [
             ModeItem(label: Strings.Autopilot, icon: Images.autopilotIcon!, identifier: Strings.AutopilotFragment, color: Colors.autopilotColor),
-            ModeItem(label: Strings.ObjectTracking, icon: Images.objectTrackingIcon!, identifier: Strings.ObjectTrackingFragment,color:  Colors.objectTrackingColor),
-            ModeItem(label: Strings.navigation, icon: Images.pointGoalIcon!, identifier: Strings.ScreenNavigation, color:  Colors.pointGoalColor),
-            ModeItem(label: Strings.modelManagement, icon: Images.modelManagementIcon!, identifier: Strings.ScreenModelManagement, color:  Colors.modelColor)
+            ModeItem(label: Strings.ObjectTracking, icon: Images.objectTrackingIcon!, identifier: Strings.ObjectTrackingFragment, color: Colors.objectTrackingColor),
+            ModeItem(label: Strings.navigation, icon: Images.pointGoalIcon!, identifier: Strings.ScreenNavigation, color: Colors.pointGoalColor),
+            ModeItem(label: Strings.modelManagement, icon: Images.modelManagementIcon!, identifier: Strings.ScreenModelManagement, color: Colors.modelColor)
         ],
         // Legacy
         []
@@ -100,6 +102,7 @@ struct Constants {
     static let types: [String] = ["AUTOPILOT", "DETECTOR", "NAVIGATION"]
     static let classes: [String] = ["AUTOPILOT_F", "MOBILENET", "YOLOV4", "YOLOV5", "EFFICIENTDET", "NAVIGATION"]
     static let devices: [String] = ["CPU", "XNNPACK"]
+
 }
 
 /// The different speed modes of the OpenBot
@@ -183,4 +186,12 @@ enum PATH_TYPE: String {
     case URL = "URL",
          ASSET = "ASSET",
          FILE = "FILE"
+}
+
+/// Class for value of all safe area value
+struct safeAreaLayoutValue {
+    static let top: CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0.0
+    static let bottom: CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0.0
+    static let left: CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0.0;
+    static let right: CGFloat = UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0.0;
 }
