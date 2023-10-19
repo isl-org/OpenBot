@@ -76,6 +76,8 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   public static String classType = "person";
   public static String detectorModelName = "";
   public static String autoPilotModelName = "";
+
+  public static String navigationModelName="";
   public static String startObject = "person";
   public static String stopObject = "person";
   public static String getTask = "";
@@ -217,6 +219,8 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
 
       computingNetwork = true;
       Timber.i("Putting image " + frameNum + " for detection in bg thread.");
+      //System.out.println("frame number-------------"+ frameNum);
+
 
     if (handler != null) {
       handler.post(()->{
@@ -280,6 +284,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
               cropToFrameTransform.mapRect(location);
               result.setLocation(location);
               mappedRecognitions.add(result);
+            //  System.out.println("confidence----->"+result.getConfidence());
             }
           }
           tracker.trackResults(mappedRecognitions, frameNum);
@@ -614,6 +619,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
    */
   @Override
   public void onArCoreUpdate(NavigationPoses navigationPoses, ImageFrame rgb, CameraIntrinsics cameraIntrinsics, long timestamp) {
+    System.out.println("isRunning::::::;"+isRunning);
     if (isRunning) {
       float goalDistance =
               computeDistance(navigationPoses.getTargetPose(), navigationPoses.getCurrentPose());

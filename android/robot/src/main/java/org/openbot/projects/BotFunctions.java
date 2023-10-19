@@ -323,7 +323,7 @@ public class BotFunctions implements SensorEventListener {
   }
 
   @JavascriptInterface
-  public void ledBrightness(int value) {
+  public void  ledBrightness(int value) {
     mActivity.runOnUiThread(() -> binding.jsCommand.setText("Led Brightness " + value));
     vehicle.sendLightIntensity(value, value);
   }
@@ -385,10 +385,11 @@ public class BotFunctions implements SensorEventListener {
   }
 
   @JavascriptInterface
-  public void reachGoal(float forward, float left) {
+  public void reachGoal(float forward, float left, String model) {
     Timber.tag("Ai Blocks").i(forward + ", " + left);
     mActivity.runOnUiThread(() -> binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT));
     startPointGoal(-forward, -left);
+    BlocklyExecutingFragment.navigationModelName = model;
   }
 
   @JavascriptInterface
@@ -420,6 +421,7 @@ public class BotFunctions implements SensorEventListener {
     mActivity.runOnUiThread(() -> {
       binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT);
       binding.jsCommand.setText("Start Autopilot using " + modelName);
+
     });
     BlocklyExecutingFragment.autoPilotModelName = modelName;
     BlocklyExecutingFragment.isAutopilot = true;
@@ -511,6 +513,7 @@ public class BotFunctions implements SensorEventListener {
    */
   private void startPointGoal(float goalX, float goalZ) {
     setupArCore();
+
     while (arCore.getStartPose() == null) startDriving(goalX, goalZ);
   }
 
