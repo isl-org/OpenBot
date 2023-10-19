@@ -22,6 +22,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var gameController = GameController.shared
     var bluetoothIcon = UIImageView()
     var isClientConnected: Bool = false
+    var audioPlayer = AudioPlayer.shared
     private let mainView = UIView()
 
     /// Called after the view controller has loaded.
@@ -59,6 +60,13 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
         gameController.resetControl = false
+    }
+
+    /**
+     Removing all notifications
+     */
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     /// Called after the view was dismissed, covered or otherwise hidden.
@@ -579,6 +587,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             selectedSpeedMode = .NORMAL;
             break;
         }
+        audioPlayer.playSpeedMode(speedMode: selectedSpeedMode);
         updateSpeedModes()
     }
 
@@ -594,6 +603,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         case .FAST:
             return
         }
+        audioPlayer.playSpeedMode(speedMode: selectedSpeedMode);
         updateSpeedModes()
     }
 
@@ -615,6 +625,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             }
         }
         updateGameControllerModeType()
+        audioPlayer.playDriveMode(driveMode: selectedDriveMode);
     }
 
     /// update screen data coming from application
