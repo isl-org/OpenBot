@@ -125,7 +125,7 @@ two buttons.
       functionalities. In the center, the project name is displayed with a downward arrow, providing options for
       renaming and deleting the project.
        <p align="left">
-       <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_rename_and_delete_options.png" alt="Playground Sign In" width="50%" height="50%" />
+       <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_rename__del.png" alt="Playground Sign In" width="50%" height="50%" />
        </p>
 
     - On the right side, a help button has been added, featuring three sections that explain how to effectively
@@ -174,7 +174,7 @@ JavaScript and Python.
   They can then drag and drop the desired block from the trash back into the workspace.
 - Know More About Blocks: [Blocks](src/components/blockly/README.md)
   <p align="left">
-  <img style="padding-right: 2%;" src="../docs/images/playground_workspace.gif" alt="Create New Project" width="50%"/>
+  <img style="padding-right: 2%;" src="../docs/images/playground_workspace__gif.gif" alt="Create New Project" width="50%"/>
   </p>
 
 ### Playground Bottom Bar
@@ -216,7 +216,7 @@ JavaScript and Python.
   <br></br>
   Here is an upload in Drive and generate Code Demo :
   <p align="left">
-  <img style="padding-right: 2%;" src="../docs/images/playground_google_drive.gif" alt="Generate Code" width="95%"/>
+  <img style="padding-right: 2%;" src="../docs/images/playground_gogle_drive_gif.gif" alt="Generate Code" width="50%"/>
   </p>
 
 - #### Code Editor
@@ -226,7 +226,7 @@ JavaScript and Python.
   corresponding code in the side window simultaneously. The options to choose a language enables you to examine and
   evaluate the correctness of the blocks.
   <p align="left">
-  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_code_editor.png" alt="Playground code editor" width="50%" height="50%" />
+  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_codeEditor.png" alt="Playground code editor" width="50%" height="50%" />
   </p>
 
 
