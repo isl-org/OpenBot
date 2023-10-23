@@ -38,7 +38,28 @@ class ObjectTrackingFragment: CameraController {
             currentModel = model
             detector = try! Detector.create(model: Model.fromModelItem(item: model ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector
         }
-
+        if let threads = preferencesManager.getThreads(){
+            numberOfThreads = Int(threads) ?? 4
+            detector?.tfliteOptions.threadCount = numberOfThreads
+        }
+        if let confidence = preferencesManager.getObjectTrackConfidence(){
+            MINIMUM_CONFIDENCE_TF_OD_API = Float(confidence as! Int) / 100.0
+        }
+        if let device = preferencesManager.getDevice(){
+            currentDevice = RuntimeDevice(rawValue: device) ?? RuntimeDevice.CPU
+            detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector
+            detector?.tfliteOptions.threadCount = numberOfThreads
+        }
+        if let lastModel = preferencesManager.getObjectTrackModel(){
+            if Common.isModelItemAvailableInDocument(modelName: lastModel) == true {
+                currentModel = Common.returnModelItem(modelName: lastModel)
+                detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector
+            }
+        }
+        if let object = preferencesManager.getObjectTrackingObject(){
+            currentObject = object;
+            detector?.setSelectedClass(newClass: object);
+        }
         objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector, model: currentModel)
         objectTrackingSettings!.backgroundColor = Colors.freeRoamButtonsColor
         objectTrackingSettings!.layer.cornerRadius = 5
@@ -108,6 +129,7 @@ class ObjectTrackingFragment: CameraController {
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector
         currentDevice.rawValue == RuntimeDevice.GPU.rawValue ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
         detector?.tfliteOptions.threadCount = numberOfThreads
+        preferencesManager.setDevice(value: notification.object as! String);
     }
 
     /// function to update the number of threads.
@@ -115,12 +137,14 @@ class ObjectTrackingFragment: CameraController {
         let threadCount = notification.object as! String
         numberOfThreads = Int(threadCount) ?? 4
         detector?.tfliteOptions.threadCount = numberOfThreads
+        preferencesManager.setThreads(value: notification.object as! String);
     }
 
     /// function to update the confidence of the model
     @objc func updateConfidence(_ notification: Notification) {
         let confidence = notification.object as! Int
         MINIMUM_CONFIDENCE_TF_OD_API = Float(confidence) / 100.0
+        preferencesManager.setObjectTrackConfidence(value: confidence);
     }
 
     /// function to toggle the auto mode
@@ -208,7 +232,7 @@ class ObjectTrackingFragment: CameraController {
         }
 
         // Adjust speed depending on size of detected object bounding box
-        if (useDynamicSpeed) {
+        if (objectTrackingSettings!.dynamicSpeedCheckbox.isChecked) {  //  Set use of dynamic speed on or off (used in updateTarget())
             var scaleFactor: Float = 1.0 - boxArea / Float(frameWidth * frameHeight)
             scaleFactor = scaleFactor > 0.75 ? 1.0 : scaleFactor // tracked object far, full speed
             // apply scale factor if tracked object is not too near, otherwise stop

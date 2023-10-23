@@ -51,6 +51,7 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
     let saveAsDropdown = DropDown();
     let saveAsDropdownLabel = UILabel()
     var saveAsDropdownView = UIView();
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -313,21 +314,29 @@ class expandSetting: UIView, UITextFieldDelegate, UIScrollViewDelegate {
         setupImageMode()
     }
 
+    /// Function to check whether sensors are enabled or not
+    func checkButtonBorderColor(sensor:String) -> Bool? {
+        if let value = preferencesManager.getSensorData(sensor: sensor){
+            return value as! Bool;
+        }
+        return true;
+    }
+    
     /// UI Function to create button for sensors
     func createSensorButtons() {
-        vehicle = createSecondViewButton(buttonName: Strings.vehicle, leadingAnchor: 10, topAnchor: 160, buttonWidth: 80, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
+        vehicle = createSecondViewButton(buttonName: Strings.vehicle, leadingAnchor: 10, topAnchor: 160, buttonWidth: 80, action: #selector(updateSensor(_:)), borderColor: checkButtonBorderColor(sensor: "isVehicleLogSelected") == true ? Colors.title!.cgColor : Colors.freeRoamButtonsColor!.cgColor)
         vehicle.tag = 1;
         sensorButtons.append(vehicle)
-        gps = createSecondViewButton(buttonName: Strings.gps, leadingAnchor: 100, topAnchor: 160, buttonWidth: 80, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
+        gps = createSecondViewButton(buttonName: Strings.gps, leadingAnchor: 100, topAnchor: 160, buttonWidth: 80, action: #selector(updateSensor(_:)), borderColor: checkButtonBorderColor(sensor: "isGpsLogSelected") == true ? Colors.title!.cgColor : Colors.freeRoamButtonsColor!.cgColor)
         gps.tag = 2;
         sensorButtons.append(gps)
-        acceleration = createSecondViewButton(buttonName: Strings.accelerometer, leadingAnchor: 190, topAnchor: 160, buttonWidth: 140, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
+        acceleration = createSecondViewButton(buttonName: Strings.accelerometer, leadingAnchor: 190, topAnchor: 160, buttonWidth: 140, action: #selector(updateSensor(_:)), borderColor: checkButtonBorderColor(sensor: "isAccelerationLogSelected") == true ? Colors.title!.cgColor : Colors.freeRoamButtonsColor!.cgColor)
         acceleration.tag = 3
         sensorButtons.append(acceleration)
-        magnetic = createSecondViewButton(buttonName: Strings.magnetic, leadingAnchor: 10, topAnchor: 210, buttonWidth: 100, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
+        magnetic = createSecondViewButton(buttonName: Strings.magnetic, leadingAnchor: 10, topAnchor: 210, buttonWidth: 100, action: #selector(updateSensor(_:)), borderColor: checkButtonBorderColor(sensor: "isMagneticLogSelected") == true ? Colors.title!.cgColor : Colors.freeRoamButtonsColor!.cgColor)
         magnetic.tag = 4
         sensorButtons.append(magnetic)
-        gyroscope = createSecondViewButton(buttonName: Strings.gyroscope, leadingAnchor: 120, topAnchor: 210, buttonWidth: 100, action: #selector(updateSensor(_:)), borderColor: Colors.title!.cgColor)
+        gyroscope = createSecondViewButton(buttonName: Strings.gyroscope, leadingAnchor: 120, topAnchor: 210, buttonWidth: 100, action: #selector(updateSensor(_:)), borderColor: checkButtonBorderColor(sensor: "isGyroscopeLogSelected") == true ? Colors.title!.cgColor : Colors.freeRoamButtonsColor!.cgColor)
         gyroscope.tag = 5
         sensorButtons.append(gyroscope)
     }

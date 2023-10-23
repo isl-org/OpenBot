@@ -380,7 +380,7 @@ class ModelManagementTable: UITableViewController {
             if Common.returnModelItem(modelName: modelName).name == url.lastPathComponent {
                 let item = Common.returnModelItem(modelName: modelName)
                 if (item.path == "" && item.pathType == "FILE") {
-                    print(Common.modifyModels(modelItem: item))
+                    print(Common.modifyModel(model: item, isDelete: true))
                 }
                 DataLogger.shared.deleteFiles(fileNameToDelete: url.lastPathComponent);
             }

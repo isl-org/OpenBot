@@ -40,6 +40,7 @@ class DataLogger {
     var openbotPath: String = ""
     var imagePath: String = ""
     var sensorDataPath: String = ""
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// initializing function
     init() {
@@ -344,14 +345,19 @@ class DataLogger {
         switch tag {
         case 1:
             isVehicleLogSelected = !isVehicleLogSelected
+            preferencesManager.updateSensorData(value: isVehicleLogSelected, sensor: "isVehicleLogSelected")
         case 2:
             isGpsLogSelected = !isGpsLogSelected
+            preferencesManager.updateSensorData(value: isGpsLogSelected, sensor: "isGpsLogSelected")
         case 3:
             isAccelerationLogSelected = !isAccelerationLogSelected
+            preferencesManager.updateSensorData(value: isAccelerationLogSelected, sensor: "isAccelerationLogSelected")
         case 4:
             isMagneticLogSelected = !isMagneticLogSelected
+            preferencesManager.updateSensorData(value: isMagneticLogSelected, sensor: "isMagneticLogSelected")
         default:
             isGyroscopeLogSelected = !isGyroscopeLogSelected
+            preferencesManager.updateSensorData(value: isGyroscopeLogSelected, sensor: "isGyroscopeLogSelected")
         }
     }
 
