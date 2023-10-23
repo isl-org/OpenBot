@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
-import Blockly from "blockly/core";
+import Blockly, {Block} from "blockly/core";
 import styles from "./style.module.css"
 import {javascriptGenerator} from 'blockly/javascript';
 import {StoreContext} from "../../context/context";
@@ -101,6 +101,22 @@ export const BottomBar = () => {
                 const detection = workspace.getBlocksByType("detectionOrUndetection");
                 const multipleObjectTracking = workspace.getBlocksByType("multipleObjectTracking");
                 const variableDetection = workspace.getBlocksByType("variableDetection");
+                let objNameArray = [];
+                if(variableDetection?.length > 0){
+                    for(let i=0;i<variableDetection.length;i++){
+                        objNameArray.push(variableDetection[i].getFieldValue("labels"));
+                        console.log(objNameArray);
+                    }
+                }
+                let isClassesSimiliar= false;
+                for(let i =0 ;i<objNameArray.length;i++){
+                    for(let j= i +1;j<objNameArray.length;j++){
+                        if(objNameArray[i] === objNameArray[j]) {
+                            isClassesSimiliar = true;
+                        }
+                    }
+                }
+
                 let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false);  //filtering multiple objectTracking connected blocks
                 let isAIBlocksAdjacent = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
                 let array = []
@@ -117,6 +133,7 @@ export const BottomBar = () => {
                     object_1 = multipleObjectTrackingEnabledBlocks[0].getFieldValue("labels1")
                     object_2 = multipleObjectTrackingEnabledBlocks[0].getFieldValue("labels2")
                 }
+
                 if (start.length === 0 && forever.length === 0 && detection.length === 0 && variableDetection.length === 0) {
                     handleError(Errors.error1);
                 } else if (isAIBlocksAdjacent === true && start.length > 0) {
@@ -125,7 +142,11 @@ export const BottomBar = () => {
                     handleError(Errors.error3)
                 } else if (isForeverContainsAI === true) {
                     handleError(Errors.error4)
-                } else {
+                }
+                else if(isClassesSimiliar == true){
+                    handleError(Errors.error5)
+                }
+                else {
                     if (start.length > 0)
                         code += "\nstart();";
                     if (forever.length > 0)

@@ -161,7 +161,8 @@ export const Errors = {
     error1: "No start or forever block present in the playground.",
     error2: "Detected adjacent AI blocks. Please review the Start block configuration.",
     error3: "Identical objects for multiple detection AI block.",
-    error4: "AI block present within the forever block. Please review the block code."
+    error4: "AI block present within the forever block. Please review the block code.",
+    error5: "Similar classes present in the Advanvced AI blocks"
 }
 
 /**
