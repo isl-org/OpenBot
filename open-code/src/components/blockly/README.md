@@ -140,7 +140,7 @@
 
   OpenBotPlayground comes with some advancements in it and this Advanced Artificial Intelligence(AI)  is another important block inside it.
 
-  <img src="../../../../docs/images/Advanced_AI_blocks.png" height="50%" width="50%"/>
+  <img src="../../../../docs/images/playground_advance_ai_blocks.png" height="50%" width="50%"/>
 
      Multiple Detection Block:
 
