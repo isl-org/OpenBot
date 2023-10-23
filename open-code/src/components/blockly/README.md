@@ -12,18 +12,14 @@
 - ### Control:
 
   OpenBot PlayGround includes customizable blocks that can be used to control the flow of program such as loops, events and conditionals. It provides a visual way for users to structure the logic of their programs.
-<br>
-<br>
-     <img src="../../../../docs/images/playground_blockly_newControl.png" height="50%" width="50%"/>
-  <br>
-  <br>
   
-  A brief overview of some control blocks:
-  
-  - Start: Initiates the execution of program and used to start a script when a program is run once.
-  - Conditionals: 'If' and 'If-else' blocks are used to create conditional branches in your code.
-  - Wait: Brings pauses or delays in the code execution.
-  - Forever: Once the Forever block is embedded in place then it will create an infinite loop which indicates that loop will continue indefinitely with each iteration.
+    <img src="../../../../docs/images/playground_blockly_newControl.png" height="50%" width="50%"/>
+
+    A brief overview of some control blocks:
+    - Start: Initiates the execution of program and used to start a script when a program is run once.
+    - Conditionals: 'If' and 'If-else' blocks are used to create conditional branches in your code.
+    - Wait: Brings pauses or delays in the code execution.
+    - Forever: Once the Forever block is embedded in place then it will create an infinite loop which indicates that loop will continue indefinitely with each iteration.
 
 - ### Loops:
 
