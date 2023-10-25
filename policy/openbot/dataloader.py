@@ -65,6 +65,8 @@ class dataloader:
                             .replace("\t", " ")
                             .split("\n")
                         )
+                
+
                         data = [
                             [v.strip() for v in line.split(" ") if v.strip() != ""]
                             for line in lines

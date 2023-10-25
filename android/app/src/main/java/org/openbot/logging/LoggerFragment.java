@@ -872,9 +872,6 @@ public class LoggerFragment extends CameraFragment {
     if (distance != Double.MAX_VALUE) {
       // Save the centroid to a TXT file
       changeRewardDistance(distance);
-    } else {
-      reward = -7;
-      sendRewardToSensorService();
     }
     Bitmap processedBitmap = Bitmap.createBitmap(bottom.cols(), bottom.rows(), Bitmap.Config.ARGB_8888);
     Utils.matToBitmap(bottom, processedBitmap);
