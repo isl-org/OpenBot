@@ -1,0 +1,312 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=UTF-8">
+<title>Intel&reg; Integrated Performance Primitives (Intel&reg; IPP) Library for OpenCV*</title>
+<style>
+body { 
+	color:#333333;
+	background-color:#ffffff; 
+	font-family: Verdana, Arial, sans-serif; 
+	font-size: 10pt; 
+	margin-left: 30px;
+}
+p { 
+	font-size: inherit; 
+	line-height: 120%; 
+	margin-top: 0; 
+	margin-bottom: 5pt;
+	margin-left: 0;
+}
+p.Note { 
+	margin-top:0; 
+	margin-left:25px;
+	margin-bottom:10pt;
+}
+p.twoColumnListHead { 
+	color:#000000; 
+/*	padding:4px; */
+/*	text-align:left; */
+/*	width:auto; */
+	margin-top:0; 
+	margin-bottom:0; 
+/*	margin-left:0; */
+	font-weight:bold;
+}	
+p.pRelatedLink { 
+	margin-top: 0px; 
+	margin-bottom: 0px;
+}
+table { 
+	margin-bottom:5pt; 
+	border-collapse:collapse; 
+	margin-top:0.3em; 
+	font-size: 10pt;
+}	
+td { 
+	border: 1px #bababa solid; 
+	vertical-align: top; 
+	font-size: inherit;
+	margin-bottom: 0px;
+}
+td, P.TableCell, td p, td h3 { 
+	margin-top: 0; 
+	margin-left: 0;
+	padding: 4px; 
+	text-align: left; 
+	font-size: inherit; 
+	line-height: 120%;
+}
+td p.TableCell, td p, td h3{
+	padding:0;
+}
+tr { 
+	vertical-align:top;
+}
+td.noBorder { 
+	border:0px none;
+}
+th { 
+	padding: 4px; 
+	text-align: left; 
+	background-color: #555555; 
+	font-weight: bold; 
+	margin-top: 0; 
+	margin-bottom: 0; 
+	color: #FFFFFF; 
+	font-size: 11pt;	
+}
+th { 
+	border:1px #bababa solid;
+}
+th h3.TableHead, th h3 { 
+	padding:0;
+}		
+h3.TableHead{ 
+	padding: 4px; 
+	text-align: left; 
+	background-color: #555555; 
+	font-weight: bold; 
+	margin-top: 0; 
+	margin-bottom: 0; 
+	color: #FFFFFF; 
+	font-size: 11pt;	
+}
+h1 {
+	color: #0860a8;
+	font-size: 15pt;
+	padding-bottom: 1px;
+	margin-left: 0pt;
+	margin-bottom: 0px;
+	border-bottom: 1px solid #0860A8;
+	font-weight: normal;
+}
+h1.title { 
+	border-bottom:0 none; 
+	margin-left:0;
+	font-weight: normal;
+}
+h2 {
+	color: #0860a8;
+	font-weight: lighter;
+	margin-top: 5pt;
+	margin-bottom: 0;
+	font-size: 13pt;
+}
+h3 {
+	color: #333333;
+	font-weight: bold;
+	margin-top: 5pt;
+	margin-bottom: 0;
+	font-size: 10.5pt;
+}
+h3.NoteTipHead {
+	color:#006699;
+	margin-top:11pt;
+	padding-bottom:0;
+	line-height: 18px;
+	text-transform: uppercase;
+}
+h3.NoteTipHead img {
+	vertical-align: middle;
+}
+ul { 
+	margin-bottom: 1em; 
+	font-size: inherit; 
+	margin-top: 0px; 
+	line-height: 100%; 
+}
+ul ol { 
+	margin-bottom: 0em; 
+	font-size: inherit;
+	list-style-type: decimal;
+}
+ul ul { 
+	margin-bottom:0px; 
+	font-size:inherit;
+}
+ul.Note {
+	margin-left:25px;
+}
+td ul { 
+	font-size:inherit;
+}
+ol { 
+	margin-bottom: 1em; 
+	font-size: inherit; 
+	margin-top: 0px; 
+	line-height: 100%;
+	list-style-type: decimal;
+}
+ol ol { 
+	list-style: lower-alpha; 
+	margin-bottom: 0em; 
+	font-size: inherit;
+}
+ol.Note {
+	margin-left:25px;
+}
+td ol { 
+	font-size:inherit;
+}
+ol ul { 
+	margin-bottom:0px; 
+	font-size:inherit;
+}
+li { 
+	font-size: inherit; 
+	margin-top: 0px; 
+	line-height: 130%;
+}
+li p, ol p, ul p { 
+	margin-bottom:0.2em; 
+	margin-top:0.2em; 
+	margin-left:0; 
+	padding-left:0; 
+	font-size:inherit;
+}
+li table, td table, dd table { 
+	margin-left:0;
+}
+
+P.Preformatted, pre { 
+	x-text-tab-stops: repeat 1in; 
+	margin-top:0; 
+	margin-bottom:0; 
+	font-size: 10pt; 
+	font-family: "Courier New", Courier, monospace; 
+	background-color: #eeeeee;
+}
+td P.Preformatted, td pre { 
+	/* line-height: 90%; */
+	x-text-tab-stops: repeat 1in; 
+	margin-top:0; 
+	margin-bottom:0; 
+	margin-left: 0px;
+	font-size: 10pt; 
+	font-family: "Courier New", Courier, monospace; 
+	background-color: #eeeeee;
+}
+SPAN.Code, span.aCode, .Code { 
+	font-family: "Courier New", Courier, monospace;
+}
+var, span.Variable {
+	font-family: Courier, monospace;
+	font-style: italic;
+}
+blockquote { 
+	margin-top: 0; 
+	margin-bottom: 0;
+}
+HR { 
+	color: #555555; 
+	border: 0; 
+	background: #555555; 
+	height: 1px; 
+	margin-left: 0;
+}
+SPAN.Big { 
+	font-weight:bold; 
+	font-size:105%;
+}
+.welcomeImg { 
+	padding-left: 0px; 
+	padding-bottom: 0px; 
+	margin-left: 0px;
+}
+.IntelExt {
+	color:#008080;
+} 
+dl { 
+	margin-bottom: 1em; 
+	font-size: inherit; 
+	margin-top: 0px; 
+	
+}	
+dt { 
+	font-weight: bold; 
+	margin-top: 1em;
+}
+dd {
+	font-size: inherit; 
+/*	margin-top: -1.2em; */
+	margin-top: 0;
+
+}
+dd p {
+	margin-bottom: 0.2em; 
+	margin-top: 0.2em; 
+	font-size: inherit;
+}
+.link_buttons {
+	background-color: #EEEEEE;
+	border-color: #EEEEEE;
+	border-width: 1px;
+	padding: 4px;
+}
+a:link {
+	color: #0860a8;
+	text-decoration: none;
+}
+a:visited { 
+	color:#0860a8;
+	text-decoration: none;	
+}
+a:active {
+	color: #0860a8;
+	text-decoration: underline;
+}
+a:hover {
+	color: #0860a8;
+	text-decoration: underline;
+}
+sup {
+	font-size: 80%;
+	vertical-align: top;
+}
+
+</style>
+</head>
+<body>
+<h1>Intel&reg; Integrated Performance Primitives (Intel&reg; IPP) Library for OpenCV*</h1>
+<p>Intel&reg; Integrated Performance Primitives (Intel&reg; IPP) library for OpenCV* is a subset of Intel IPP functions for image processing and computer vision. 
+<p>For detailed descriptions of Intel IPP functions and interfaces, refer to the Intel IPP Developer Reference available from the Intel IPP documentation web page at <a href="http://software.intel.com/en-us/articles/intel-integrated-performance-primitives-documentation/">http://software.intel.com/en-us/articles/intel-integrated-performance-primitives-documentation/</a>. Note that not all functions described in the Developer Reference are included in the Intel IPP library for OpenCV.
+
+<h2><a name="legal"></a>Legal Information</h2>
+
+<p>
+No license (express or implied, by estoppel or otherwise) to any intellectual property rights is granted by this document.
+<p>
+Intel disclaims all express and implied warranties, including without limitation, the implied warranties of merchantability, fitness for a particular purpose, and non-infringement, as well as any warranty arising from course of performance, course of dealing, or usage in trade.
+<p>
+This document contains information on products, services and/or processes in development.  All information provided here is subject to change without notice. Contact your Intel representative to obtain the latest forecast, schedule, specifications and roadmaps.
+<p>
+The products and services described may contain defects or errors known as errata which may cause deviations from published specifications. Current characterized errata are available on request.
+<p>
+Intel and the Intel logo are trademarks of Intel Corporation or its subsidiaries in the U.S. and/or other countries.
+<p>
+*Other names and brands may be claimed as the property of others
+<p>
+&copy; Intel Corporation.
+
+</body>
+</html>

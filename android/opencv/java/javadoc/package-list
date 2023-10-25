@@ -1,0 +1,14 @@
+org.opencv.android
+org.opencv.calib3d
+org.opencv.core
+org.opencv.dnn
+org.opencv.features2d
+org.opencv.imgcodecs
+org.opencv.imgproc
+org.opencv.ml
+org.opencv.objdetect
+org.opencv.osgi
+org.opencv.photo
+org.opencv.utils
+org.opencv.video
+org.opencv.videoio
