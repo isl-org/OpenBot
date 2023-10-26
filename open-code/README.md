@@ -120,6 +120,13 @@ two buttons.
   <img style="padding-right: 2%;" src="../docs/images/playground_edit_profile_modal.png" alt="Playground Sign In" width="45%" />
   </p>
 
+- #### AutoSync:
+  - AutoSync is the additional feature of OpenBot robot app which lets you sync machine learning models(Tflite models) from AI detection blocks which comprises object tracking, autopilot, and point goal navigation and that models are pre-trained or can be added manually from the OpenBot Playground.
+  - If a user opts to manually add a model through the robot app, the initial step involves downloading the model within the app. Subsequently, the downloaded model will be displayed in Google Drive through the "config.json" file. AutoSync is the mechanism responsible for presenting this model on Google Drive, with the "config.json" file containing details such as the path and path type of the model.
+  - Following this process, the model will then appear within the OpenBot playground blocks. With the assistance of AutoSync, you can seamlessly select this model directly from the respective AI blocks.
+
+
+
 - #### Playground page additional
     - The Playground page header retains the same design as the homepage header, while incorporating additional
       functionalities. In the center, the project name is displayed with a downward arrow, providing options for
