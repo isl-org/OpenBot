@@ -81,10 +81,8 @@ class VehicleControl: UIView {
 
     /// function to update the control mode of the game
     @objc func updateControlMode(_ sender: UIView) {
-        print("inside updateControlMode");
         if (isButtonEnable) {
             if (controlMode == ControlMode.GAMEPAD) {
-                print("inside gamepad")
                 controlMode = ControlMode.PHONE;
                 driveMode = DriveMode.DUAL;
                 createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
@@ -98,7 +96,6 @@ class VehicleControl: UIView {
             else if(controlMode == ControlMode.PHONE) {
                 controlMode = ControlMode.WEB;
                 driveMode = DriveMode.GAME;
-                print("inside phone")
                 createAndUpdateButton(iconName: Images.webIcon!.withTintColor(.white), leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
                 createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
@@ -112,7 +109,6 @@ class VehicleControl: UIView {
             else{
                 controlMode = ControlMode.GAMEPAD;
                 driveMode = DriveMode.GAME;
-                print("inside else")
                 createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
                 createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
