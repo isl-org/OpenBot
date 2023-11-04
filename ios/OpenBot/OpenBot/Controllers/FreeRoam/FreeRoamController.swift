@@ -382,6 +382,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             gameControllerObj = nil;
             gameController.selectedControlMode = ControlMode.WEB
             webController.backgroundColor = Colors.title
+            client.start();
             let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
             client.send(message: msg);
             if(webRTCClient != nil){
