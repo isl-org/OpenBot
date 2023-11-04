@@ -15,7 +15,7 @@ export function WebRTC(connection) {
     }
 
     const { RTCSessionDescription, RTCIceCandidate } = window;
-    const webRtcEvent = data;
+    const webRtcEvent = JSON.parse(data);
 
     switch (webRtcEvent.type) {
       case 'offer':
