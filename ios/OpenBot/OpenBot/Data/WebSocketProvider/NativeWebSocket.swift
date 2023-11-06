@@ -28,6 +28,7 @@ class NativeWebSocket: NSObject, WebSocketProvider {
         let socket = urlSession.webSocketTask(with: url)
         socket.resume()
         self.socket = socket
+        NotificationCenter.default.post(name: .clientConnected, object: nil);
         self.readMessage()
     }
 
@@ -70,6 +71,7 @@ class NativeWebSocket: NSObject, WebSocketProvider {
     private func disconnect() {
         self.socket?.cancel()
         self.socket = nil
+        NotificationCenter.default.post(name: .clientDisConnected, object: nil);
         self.delegate?.webSocketDidDisconnect(self)
     }
 }
