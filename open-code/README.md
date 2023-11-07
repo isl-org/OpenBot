@@ -121,11 +121,18 @@ two buttons.
   </p>
 
 - #### AutoSync:
-  - AutoSync is the additional feature of OpenBot robot app which lets you sync machine learning models(Tflite models) from AI detection blocks which comprises object tracking, autopilot, and point goal navigation and that models are pre-trained or can be added manually from the OpenBot Playground.
-  - If a user opts to manually add a model through the robot app, the initial step involves downloading the model within the app. Subsequently, the downloaded model will be displayed in Google Drive through the "config.json" file. AutoSync is the mechanism responsible for presenting this model on Google Drive, with the "config.json" file containing details such as the path and path type of the model.
-  - Following this process, the model will then appear within the OpenBot playground blocks. With the assistance of AutoSync, you can seamlessly select this model directly from the respective AI blocks.
-
-
+    - AutoSync enables users to seamlessly synchronize all machine learning models (Tflite models), from the OpenBot
+      robot app and conveniently display them in their respective ``Artificial Intelligence`` blocks. Additionally,
+      users have the flexibility to select the desired AI model directly within the block interface while structuring
+      the code.
+    - #### How it works
+        - The robot app uploads an updated config.json file to the user's Google Drive, including any newly added
+          models. This file lists all the models along with their configurations in JSON format.
+        - When the user clicks on ``Auto Sync`` all downloaded models, including those for detection, autopilot, and
+          point goal navigation, are filtered and displayed in their respective AI blocks.
+        - Following this process, the model will then appear within the OpenBot playground blocks. With the assistance
+          of
+          Google Drive, you can seamlessly select this model directly from the respective AI blocks.
 - #### Playground page additional
     - The Playground page header retains the same design as the homepage header, while incorporating additional
       functionalities. In the center, the project name is displayed with a downward arrow, providing options for
@@ -233,6 +240,16 @@ JavaScript and Python.
   evaluate the correctness of the blocks.
   <p align="left">
   <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_codeEditor.png" alt="Playground code editor" width="50%" height="50%" />
+  </p>
+
+- #### Add Model
+  The OpenBot playground provides a feature to externally add AI model (.tflite) to robot application. The model popup
+  allows user to edit the configuration of our model, including its name, type, class, and input size. Note that the
+  model will
+  automatically saved in the user's Google Drive, along with the updated config.json file.
+  <p align="left">
+  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_model_option.png" alt="Playground code editor" width="40%" height="50%" />
+  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_model_popup.png" alt="Playground code editor" width="40%" height="50%" />
   </p>
 
 
