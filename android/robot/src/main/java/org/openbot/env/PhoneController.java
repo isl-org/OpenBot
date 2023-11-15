@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openbot.R;
@@ -169,9 +171,9 @@ public class PhoneController {
   }
 
   public void send(JSONObject info) {
-    if (webSocket != null)
+    if (webSocket != null && FirebaseAuth.getInstance().getCurrentUser() != null)
       try {
-        info.put("roomId", "torretorich4@gmail.com"); // Add the roomId to the JSON object
+        info.put("roomId", FirebaseAuth.getInstance().getCurrentUser().getEmail()); // Add the roomId to the JSON object
         String messageString = info.toString();
         webSocket.send(messageString);
       } catch (JSONException e) {
