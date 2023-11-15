@@ -1,10 +1,7 @@
 package org.openbot.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
-
-import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -79,7 +76,6 @@ public class FileUtils {
     Gson gson = new GsonBuilder().registerTypeAdapterFactory(new PostProcessingEnabler()).create();
     JsonElement jsonElement;
     Type listType = new TypeToken<List<Model>>() {}.getType();
-
     boolean fileExists = checkFileExistence(activity, configFile);
     if (fileExists) {
       try {
@@ -88,7 +84,6 @@ public class FileUtils {
                     new FileReader(activity.getFilesDir() + File.separator + configFile),
                     JsonElement.class)
                 .getAsJsonArray();
-
         return gson.fromJson(jsonElement, listType);
 
       } catch (FileNotFoundException e) {
@@ -96,7 +91,6 @@ public class FileUtils {
         return null;
       }
     }
-
     try {
       copyFile(
           activity.getAssets().open(configFile),
@@ -110,38 +104,15 @@ public class FileUtils {
       ex.printStackTrace();
       return null;
     }
-
     return gson.fromJson(jsonElement, listType);
   }
 
-  public static boolean updateModelConfig(Activity activity, Context context, List<Model> modelList, boolean isDrive) {
+  public static boolean updateModelConfig(Activity activity, List<Model> modelList) {
     String configFile = "config.json";
-    GoogleServices googleServices = new GoogleServices(activity, context, new GoogleSignInCallback() {
-      @Override
-      public void onSignInSuccess(FirebaseUser account) {
-
-      }
-
-      @Override
-      public void onSignInFailed(Exception exception) {
-
-      }
-
-      @Override
-      public void onSignOutSuccess() {
-
-      }
-
-      @Override
-      public void onSignOutFailed(Exception exception) {
-
-      }
-    });
     try {
-      Writer writer = new FileWriter(activity.getFilesDir() + File.separator + configFile);
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      Writer writer = new FileWriter(activity.getFilesDir() + File.separator + configFile);
       gson.toJson(modelList, writer);
-      if (!isDrive) googleServices.createAndUploadJsonFile(modelList);
       writer.flush();
       writer.close();
       return true;

@@ -1,10 +1,9 @@
 package org.openbot.googleServices;
-
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.widget.ImageView;
-
+import androidx.fragment.app.Fragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -28,7 +27,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -50,11 +48,10 @@ import org.openbot.projects.ProjectsDataInObject;
 import org.openbot.projects.ProjectsFragment;
 import org.openbot.tflite.Model;
 import org.openbot.utils.FileUtils;
-
 import timber.log.Timber;
 
 /** google signIn and google drive files management service class */
-public class GoogleServices {
+public class GoogleServices extends Fragment {
 
   // Set up logging tag for debugging purposes
   private static final String TAG = "GoogleServices";
@@ -226,10 +223,8 @@ public class GoogleServices {
                                     .setQ("trashed = false")
                                     .execute();
                     List<File> driveProjectFiles = result.getFiles();
-
                     // Create a HashSet to store the drive project IDs.
                     Set<String> driveProjectId = new HashSet<>();
-
                     // Create a HashSet to store the local project IDs.
                     Set<String> localProjectId = new HashSet<>();
                     for (ProjectsDataInObject obj : projectsList) {
@@ -655,14 +650,13 @@ public class GoogleServices {
                         .executeMediaAndDownloadTo(outputStream);
                 updatedModelList = outputStream.toString();
                 List<Model> modelList = gson.fromJson(updatedModelList, new TypeToken<List<Model>>(){}.getType());
-                FileUtils.updateModelConfig(mActivity, mContext, modelList, true);
+                FileUtils.updateModelConfig(mActivity, modelList);
                 break;
               }
             }
             // Pause rotation animation and reset icon.
             rotation.pause();
             icon.setRotation(0f);
-            pageToken = result.getNextPageToken();
           } else {
             rotation.pause();
             icon.setRotation(0f);
@@ -674,5 +668,4 @@ public class GoogleServices {
       } while (pageToken != null);
     }).start();
   }
-
 }

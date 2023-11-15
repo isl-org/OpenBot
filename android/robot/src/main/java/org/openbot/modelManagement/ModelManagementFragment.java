@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.http.SslCertificate;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -30,7 +31,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.google.firebase.auth.FirebaseUser;
 import com.nononsenseapps.filepicker.Utils;
 import java.io.File;
@@ -39,8 +39,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.stream.Collectors;
 import org.openbot.R;
 import org.openbot.databinding.FragmentModelManagementBinding;
@@ -180,7 +178,7 @@ public class ModelManagementFragment extends Fragment
               }
               masterList.add(item1);
               showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
-              FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
+              FileUtils.updateModelConfig(requireActivity(), masterList);
               Toast.makeText(
                       requireContext().getApplicationContext(),
                       "Model added: " + fileName,
@@ -306,7 +304,6 @@ public class ModelManagementFragment extends Fragment
               .filter(f -> f.type.equals(Model.TYPE.DETECTOR))
               .collect(Collectors.toList()));
     }
-
     return modelInfoList;
   }
 
@@ -318,7 +315,8 @@ public class ModelManagementFragment extends Fragment
             item,
             item1 -> {
               adapter.notifyDataSetChanged();
-              FileUtils.updateModelConfig(requireActivity(), requireActivity(), masterList, false);
+              FileUtils.updateModelConfig(requireActivity(), masterList);
+              System.out.println(requireActivity());
             });
     edMbS.show(getChildFragmentManager(), edMbS.getTag());
   }
@@ -347,7 +345,7 @@ public class ModelManagementFragment extends Fragment
           model.setPath(requireActivity().getFilesDir() + File.separator + model.name);
           model.setPathType(Model.PATH_TYPE.FILE);
           //          adapter.notifyDataSetChanged();
-          FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
+          FileUtils.updateModelConfig(requireActivity(), masterList);
           break;
         }
       }
@@ -376,8 +374,8 @@ public class ModelManagementFragment extends Fragment
             mItem.setPathType(originalModelConfig.pathType);
             adapter.notifyItemChanged(index);
           }
-          FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
-          requireActivity().runOnUiThread(() -> adapter.setItems(loadModelList(binding.modelSpinner.getSelectedItem().toString())));
+            FileUtils.updateModelConfig(requireActivity(), masterList);
+            requireActivity().runOnUiThread(() -> adapter.setItems(loadModelList(binding.modelSpinner.getSelectedItem().toString())));
         });
     builder.setNegativeButton("Cancel", (dialog, id) -> {});
     AlertDialog dialog = builder.create();
