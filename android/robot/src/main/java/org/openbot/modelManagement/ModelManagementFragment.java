@@ -32,6 +32,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
 import com.nononsenseapps.filepicker.Utils;
 import java.io.File;
 import java.io.IOException;
@@ -178,7 +179,9 @@ public class ModelManagementFragment extends Fragment
               }
               masterList.add(item1);
               showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
-              FileUtils.updateModelConfig(requireActivity(), masterList);
+              FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
+                Gson gson = new Gson();
+                String json = gson.toJson(masterList);
               Toast.makeText(
                       requireContext().getApplicationContext(),
                       "Model added: " + fileName,
@@ -315,7 +318,7 @@ public class ModelManagementFragment extends Fragment
             item,
             item1 -> {
               adapter.notifyDataSetChanged();
-              FileUtils.updateModelConfig(requireActivity(), masterList);
+              FileUtils.updateModelConfig(requireActivity(),requireContext(), masterList, false);
               System.out.println(requireActivity());
             });
     edMbS.show(getChildFragmentManager(), edMbS.getTag());
@@ -345,7 +348,7 @@ public class ModelManagementFragment extends Fragment
           model.setPath(requireActivity().getFilesDir() + File.separator + model.name);
           model.setPathType(Model.PATH_TYPE.FILE);
           //          adapter.notifyDataSetChanged();
-          FileUtils.updateModelConfig(requireActivity(), masterList);
+          FileUtils.updateModelConfig(requireActivity(),requireContext(), masterList, false);
           break;
         }
       }
@@ -374,7 +377,7 @@ public class ModelManagementFragment extends Fragment
             mItem.setPathType(originalModelConfig.pathType);
             adapter.notifyItemChanged(index);
           }
-            FileUtils.updateModelConfig(requireActivity(), masterList);
+            FileUtils.updateModelConfig(requireActivity(),requireContext(), masterList, false);
             requireActivity().runOnUiThread(() -> adapter.setItems(loadModelList(binding.modelSpinner.getSelectedItem().toString())));
         });
     builder.setNegativeButton("Cancel", (dialog, id) -> {});

@@ -1,7 +1,9 @@
 package org.openbot.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -25,6 +27,7 @@ import org.openbot.projects.GoogleSignInCallback;
 import org.openbot.tflite.Model;
 
 public class FileUtils {
+
 
   public static void copyFile(InputStream inputFile, String name, String outputPath) {
 
@@ -107,8 +110,33 @@ public class FileUtils {
     return gson.fromJson(jsonElement, listType);
   }
 
-  public static boolean updateModelConfig(Activity activity, List<Model> modelList) {
+  public static boolean updateModelConfig(Activity activity, Context context , List<Model> modelList, boolean isDrive) {
     String configFile = "config.json";
+
+     GoogleServices googleServices= new GoogleServices(activity, context, new GoogleSignInCallback() {
+
+
+      @Override
+      public void onSignInSuccess(FirebaseUser account) {
+
+      }
+
+      @Override
+      public void onSignInFailed(Exception exception) {
+
+      }
+
+      @Override
+      public void onSignOutSuccess() {
+
+      }
+
+      @Override
+      public void onSignOutFailed(Exception exception) {
+
+      }
+    });
+     if (!isDrive) googleServices.createAndUploadJsonFile(modelList);
     try {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
       Writer writer = new FileWriter(activity.getFilesDir() + File.separator + configFile);

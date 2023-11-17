@@ -650,7 +650,12 @@ public class GoogleServices extends Fragment {
                         .executeMediaAndDownloadTo(outputStream);
                 updatedModelList = outputStream.toString();
                 List<Model> modelList = gson.fromJson(updatedModelList, new TypeToken<List<Model>>(){}.getType());
-                FileUtils.updateModelConfig(mActivity, modelList);
+                  for (int i = 0; i < modelList.size(); i++) {
+                    if (modelList.get(i).pathType == Model.PATH_TYPE.FILE && ! FileUtils.checkFileExistence(mActivity, modelList.get(i).name) ) {
+                      modelList.get(i).setPathType(Model.PATH_TYPE.URL);
+                    }
+                  }
+                FileUtils.updateModelConfig(mActivity, mContext, modelList,false) ;
                 break;
               }
             }
