@@ -10,14 +10,15 @@ export function WebRTC(connection) {
 
   this.handle = (data) => {
     if (!peerConnection) {
-      console.log('WebRTC: start() not called, cannot handle...');
       return;
     }
 
     const { RTCSessionDescription, RTCIceCandidate } = window;
-    let webRtcEvent = data;
+    let webRtcEvent;
     if (typeof data === "string" ) {
       webRtcEvent = JSON.parse(data);
+    } else {
+      webRtcEvent = data
     }
 
     switch (webRtcEvent.type) {
@@ -34,7 +35,6 @@ export function WebRTC(connection) {
           sdpMid: webRtcEvent.id,
           sdpMLineIndex: webRtcEvent.label,
         });
-            console.log("inside candidate");
         peerConnection.addIceCandidate(candidate);
         break;
       }
@@ -48,7 +48,6 @@ export function WebRTC(connection) {
   const doAnswer = async () => {
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
-    console.log("Sending to server ->" + { webrtc_event: answer })
     connection.send(JSON.stringify({ webrtc_event: answer }));
   };
 
@@ -58,7 +57,6 @@ export function WebRTC(connection) {
     peerConnection = new RTCPeerConnection();
 
     this.dataChannel = peerConnection.createDataChannel('dataChannel'); // Use this.dataChannel to set it as a property
-    console.log('dataChannel is =======>', this.dataChannel, peerConnection);
     this.dataChannel.onmessage = (event) => {
       // Handle incoming messages here
       const message = event.data;
@@ -87,7 +85,6 @@ export function WebRTC(connection) {
 
 
   this.send = (message) => {
-    console.log("this.datachannel",this.dataChannel)
     if (this.dataChannel) {
       this.dataChannel.send(message)
     } else {

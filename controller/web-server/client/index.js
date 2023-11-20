@@ -23,9 +23,7 @@ const connection = new Connection();
 
 
     const onData = data => {
-        console.log("data is --->", data)
         let msg = JSON.parse(data)
-        console.log("status is ===>", msg.status)
         botMessageHandler.handle(JSON.parse(data).status, connection)
     }
 
@@ -36,7 +34,6 @@ const connection = new Connection();
     await connection.start(onData)
     const webRtc = new WebRTC(connection)
     const sendToBot = (key) => {
-        console.log(key)
         let msg = JSON.parse(key);
         let commands = {}
         if (msg.driveCmd !== undefined) {
@@ -83,7 +80,6 @@ function handleSignInButtonClick() {
                 // Use the user data or store it in a variable for later use
                 signedInUser = user;
                 console.log("Signed-in user:", user);
-                console.log(signedInUser.email)
                 let signInBtn = document.getElementsByClassName("google-sign-in-button")[0]
                 signInBtn.innerText = user.displayName
                 localStorage.setItem("user", JSON.stringify(user));
@@ -103,9 +99,7 @@ function sendId() {
     const response = {
         roomId: signedInUser.email
     };
-    console.log(connection);
     connection.send(JSON.stringify(response));
-    console.log("id has been sent");
 }
 
 function signOut() {

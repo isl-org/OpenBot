@@ -26,7 +26,6 @@ wss.on('connection', (ws) => {
         }
 
         if (msg.roomId === undefined) {
-            console.log("sending to undefined");
             sendToBot(ws, message);
             return;
         }
@@ -37,12 +36,10 @@ wss.on('connection', (ws) => {
 
 
     const sendToRoom = (roomId, message) => {
-        console.log("roomId is ====>", roomId);
+        console.log("roomId: ", roomId);
         let room = rooms.get(roomId);
 
         if (room) {
-            console.log("room is ===>", rooms);
-
             // Broadcast the message to all non-null clients in the room.
             broadcastToRoom(room, message);
         } else {
@@ -67,7 +64,6 @@ wss.on('connection', (ws) => {
 
 // Function to ask for client's roomId
 const askIdOfClient = (ws) => {
-    console.log("Asking for client's roomId");
     let request = {
         roomId: "request-roomId"
     };
@@ -78,7 +74,6 @@ const createOrJoinRoom = (roomId, ws) => {
     // Check if the room with the given roomId exists
     if (!rooms.has(roomId) || rooms.get(roomId).clients[1] !== null) {
         // Room does not exist or is full (has two clients already)
-        console.log("creating room first time");
         let room = {
             clients: [ws, null]
         };
