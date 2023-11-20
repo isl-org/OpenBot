@@ -684,8 +684,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         }
         if notification.object != nil {
             let command = notification.object as! String
-            let rightSpeed = command.slice(from: "l:", to: ", ");
-            let leftSpeed = command.slice(from: "r:", to: " } }")
+            let rightSpeed = command.slice(from: "r:", to: ", ");
+            let leftSpeed = command.slice(from: "l:", to: "}}");
             gameController.sendControlFromPhoneController(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
         }
         
