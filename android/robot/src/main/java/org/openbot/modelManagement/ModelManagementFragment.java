@@ -3,14 +3,15 @@ package org.openbot.modelManagement;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
+import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.stream.Collectors;
 import org.openbot.R;
 import org.openbot.databinding.FragmentModelManagementBinding;
@@ -121,6 +120,37 @@ public class ModelManagementFragment extends Fragment
     requireActivity().getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
   }
 
+    /**
+     * Extracts the file name from a given Uri.
+     *
+     * @param uri The Uri from which to extract the file name.
+     * @return The extracted file name, or null if not found.
+     */
+    private String getFileNameFromUri(Uri uri) {
+        String fileName = null;
+        if (uri.getScheme().equals("content")) {
+            // If the Uri uses the content:// scheme, use a ContentResolver to get the file name
+            ContentResolver contentResolver = requireActivity().getContentResolver();
+            Cursor cursor = contentResolver.query(uri, null, null, null, null);
+            if (cursor != null) {
+                try {
+                    if (cursor.moveToFirst()) {
+                        int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                        if (displayNameIndex != -1) {
+                            fileName = cursor.getString(displayNameIndex);
+                        }
+                    }
+                } finally {
+                    cursor.close();
+                }
+            }
+        } else if (uri.getScheme().equals("file")) {
+            // If the Uri uses the file:// scheme, directly extract the file name
+            fileName = new File(uri.getPath()).getName();
+        }
+        return fileName;
+    }
+
   private void processModelFromStorage(List<Uri> files, String fileName) {
 
     Model item =
@@ -157,25 +187,11 @@ public class ModelManagementFragment extends Fragment
   }
 
   private void openPicker() {
+      Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+      intent.setType("application/octet-stream"); // Specify the MIME type for TFLite files
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-    Intent i = new Intent(requireActivity(), BackHandlingFilePickerActivity.class);
-    // This works if you defined the intent filter
-    // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-
-    // Set these depending on your use case. These are the defaults.
-    i.putExtra(BackHandlingFilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-    i.putExtra(BackHandlingFilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-    i.putExtra(BackHandlingFilePickerActivity.EXTRA_MODE, BackHandlingFilePickerActivity.MODE_FILE);
-
-    // Configure initial directory by specifying a String.
-    // You could specify a String like "/storage/emulated/0/", but that can
-    // dangerous. Always use Android's API calls to get paths to the SD-card or
-    // internal memory.
-    i.putExtra(
-        BackHandlingFilePickerActivity.EXTRA_START_PATH,
-        Environment.getExternalStorageDirectory().getPath());
-
-    mStartForResult.launch(i);
+      mStartForResult.launch(intent);
   }
 
   @Nullable
@@ -357,6 +373,7 @@ public class ModelManagementFragment extends Fragment
             adapter.notifyItemChanged(index);
           }
           FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
+          requireActivity().runOnUiThread(() -> adapter.setItems(loadModelList(binding.modelSpinner.getSelectedItem().toString())));
         });
     builder.setNegativeButton("Cancel", (dialog, id) -> {});
     AlertDialog dialog = builder.create();
