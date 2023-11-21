@@ -54,6 +54,7 @@ import org.openbot.utils.PermissionUtils;
 public class ModelManagementFragment extends Fragment
     implements OnItemClickListener<Model>, ModelAdapter.OnItemClickListener<Model> {
 
+
   private FragmentModelManagementBinding binding;
   public static final String ALL = "ALL";
   private ModelAdapter adapter;
@@ -248,9 +249,8 @@ public class ModelManagementFragment extends Fragment
     binding.modelSpinner.setAdapter(modelAdapter);
     binding.autoSync.setOnClickListener(v -> {
         rotation.start();
-        googleServices.getConfigFileContent(rotation, binding.autoSync);
+        googleServices.getConfigFileContent(rotation, binding.autoSync, adapter);
     });
-      googleServices.getConfigFileContent(rotation, binding.autoSync);
     adapter = new ModelAdapter(loadModelList(ALL), requireContext(), this);
     binding.modelListContainer.setLayoutManager(new LinearLayoutManager(requireContext()));
     binding.modelListContainer.setAdapter(adapter);
@@ -347,7 +347,7 @@ public class ModelManagementFragment extends Fragment
         if (model.id.equals(mItem.id)) {
           model.setPath(requireActivity().getFilesDir() + File.separator + model.name);
           model.setPathType(Model.PATH_TYPE.FILE);
-          //          adapter.notifyDataSetChanged();
+          //         adapter.notifyDataSetChanged();
           FileUtils.updateModelConfig(requireActivity(),requireContext(), masterList, false);
           break;
         }
