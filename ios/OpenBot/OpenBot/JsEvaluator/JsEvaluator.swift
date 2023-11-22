@@ -114,7 +114,7 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.playSoundSpeed(speedMode: speed);
                 }
                 let setSpeed: @convention(block) (String) -> Void = { (speed) in
-                    self.runOpenBotThreadClass?.playSoundSpeed(speedMode: speed);
+                    self.runOpenBotThreadClass?.setSpeed(speedMode: speed);
                 }
                 let motorBackward: @convention(block) () -> Void = { () in
                     self.runOpenBotThreadClass?.motorBackward();
@@ -258,7 +258,7 @@ class jsEvaluator {
                 let enableMultipleDetection: @convention(block) (String, String, String, String) -> Void = { (object1, model, object2, task) in
                     self.runOpenBotThreadClass?.enableMultipleDetection(object1: object1, model: model, object2: object2, task: task);
                 }
-
+            
                 let enableMultipleAI: @convention(block) (String, String, String, String) -> Void = { (autoPilotModelName, task, object, detectorModel) in
                     print(autoPilotModelName, task, object, detectorModel);
 //                    enableAutopilot(autoPilotModelName);
@@ -424,7 +424,7 @@ class jsEvaluator {
         private var vehicleControl: Control = Control();
         private let sensor = sensorDataRetrieve.shared
         private let audioPlayer = AudioPlayer.shared
-
+        var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
         /**
          function to send controls to openBot
          - Parameter control:
@@ -603,6 +603,29 @@ class jsEvaluator {
                 break
             }
         }
+        
+        func setSpeed(speedMode: String){
+            if isCancelled {
+                return
+            }
+            NotificationCenter.default.post(name: .commandName, object: "Set speed to \(speedMode)");
+            switch speedMode {
+            case "slow":
+                gameController.selectedSpeedMode = .SLOW;
+                preferencesManager.setSpeedMode(value: SpeedMode.FAST.rawValue);
+                break
+            case "medium":
+                gameController.selectedSpeedMode = .NORMAL;
+                preferencesManager.setSpeedMode(value: SpeedMode.SLOW.rawValue);
+                break
+            case "fast":
+                gameController.selectedSpeedMode = .FAST;
+                preferencesManager.setSpeedMode(value: SpeedMode.NORMAL.rawValue);
+                break
+            default:
+                break
+            }
+        }
 
         func playSoundMode(driveMode: String) {
             if isCancelled {
@@ -677,7 +700,7 @@ class jsEvaluator {
             NotificationCenter.default.post(name: .commandName, object: "Set Led BrightNess \(factor) ");
             let front = (factor * 255) / 100
             let back = ((factor * 255)) / 100
-            bluetooth.sendDataFromJs(payloadData: "l" + String(front) + "," + String(back) + "\n")
+            bluetooth.sendDataFromJs(payloadData: "l" + String(front) + "," + String(back) + "\n");
         }
 
         /**
@@ -685,7 +708,7 @@ class jsEvaluator {
          */
         func setLeftIndicatorOn() {
             if isCancelled {
-                bluetooth.sendDataFromJs(payloadData: "i0,0\n")
+                bluetooth.sendDataFromJs(payloadData: "i0,0\n");
                 return
             }
             NotificationCenter.default.post(name: .commandName, object: "Left Indicator On");
@@ -744,12 +767,15 @@ class jsEvaluator {
             switch driveMode {
             case "dual":
                 gameController.selectedDriveMode = .DUAL;
+                preferencesManager.setDriveMode(value: DriveMode.GAME.rawValue);
                 break;
             case "joystick":
                 gameController.selectedDriveMode = .JOYSTICK;
+                preferencesManager.setDriveMode(value: DriveMode.DUAL.rawValue);
                 break;
             case "game":
                 gameController.selectedDriveMode = .GAME;
+                preferencesManager.setDriveMode(value: DriveMode.JOYSTICK.rawValue);
                 break;
             default:
                 break;
@@ -768,9 +794,11 @@ class jsEvaluator {
             switch controller {
             case "phone":
                 gameController.selectedControlMode = .PHONE;
+                preferencesManager.setControlMode(value: ControlMode.GAMEPAD.rawValue);
                 break;
             case "gamepad":
                 gameController.selectedControlMode = .GAMEPAD;
+                preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
                 break;
             default:
                 break;
