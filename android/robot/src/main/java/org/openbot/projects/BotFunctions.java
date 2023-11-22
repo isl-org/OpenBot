@@ -322,11 +322,11 @@ public class BotFunctions implements SensorEventListener {
     vehicle.setIndicator(-1);
   }
 
-  @JavascriptInterface
-  public void  ledBrightness(int value) {
-    mActivity.runOnUiThread(() -> binding.jsCommand.setText("Led Brightness " + value));
-    vehicle.sendLightIntensity(value, value);
-  }
+@JavascriptInterface
+public void ledBrightness(float value) {
+  mActivity.runOnUiThread(() -> binding.jsCommand.setText("Led Brightness " + value));
+  vehicle.sendLightIntensity(value / 100, value / 100);
+}
 
   @JavascriptInterface
   public void toggleLed(String value) {
@@ -364,7 +364,6 @@ public class BotFunctions implements SensorEventListener {
       sharedPreferencesManager.setDriveMode(2);
     }
   }
-
   @JavascriptInterface
   public void setSpeed(String speed) {
     if (Objects.equals(speed, "slow")) {
