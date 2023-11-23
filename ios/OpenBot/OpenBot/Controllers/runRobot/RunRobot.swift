@@ -125,6 +125,12 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         sceneView.session.pause()
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
     }
+    
+    // Restart session when interrupted in between threads - prevents bug from crashing app
+    func sessionWasInterrupted(_ session: ARSession) {
+        self.sceneView.session.pause();
+        self.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+    }
 
     /**
      override function calls after current controller view disappear
@@ -584,7 +590,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             distance = simd_distance(position, endingPoint.simdPosition)
             if distance <= distanceThreshold {
                 DispatchQueue.main.async {
-                    self.sceneView.session.pause()
                     self.isReached = true
                     self.marker.removeFromParentNode()
                 }
