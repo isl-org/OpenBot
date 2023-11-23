@@ -603,12 +603,6 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     vehicle.setIndicator(0);
     vehicle.stopBot();
     arCore.pause();
-    // if previous speed multiplier value is not 0, set the speed multiplier back to its previous
-    // value when you go back from this screen.
-    Enums.SpeedMode speedMode = Enums.SpeedMode.getByID(preferencesManager.getSpeedMode());
-    assert speedMode != null;
-    preferencesManager.setSpeedMode(speedMode.getValue());
-    vehicle.setSpeedMultiplier(speedMode.getValue());
     isFollow = false;
     isAutopilot = false;
     isFollowMultipleObject = false;

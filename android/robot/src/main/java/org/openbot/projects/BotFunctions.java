@@ -369,12 +369,15 @@ public void ledBrightness(float value) {
     if (Objects.equals(speed, "slow")) {
       mActivity.runOnUiThread(() -> binding.jsCommand.setText("Set speed to " + speed));
       sharedPreferencesManager.setSpeedMode(128);
+      vehicle.setSpeedMultiplier(Enums.SpeedMode.SLOW.getValue());
     } else if (Objects.equals(speed, "medium")) {
       mActivity.runOnUiThread(() -> binding.jsCommand.setText("Set speed to " + speed));
       sharedPreferencesManager.setDriveMode(192);
+      vehicle.setSpeedMultiplier(Enums.SpeedMode.NORMAL.getValue());
     } else if (Objects.equals(speed, "fast")) {
       mActivity.runOnUiThread(() -> binding.jsCommand.setText("Set speed to " + speed));
       sharedPreferencesManager.setDriveMode(255);
+      vehicle.setSpeedMultiplier(Enums.SpeedMode.FAST.getValue());
     }
   }
 
