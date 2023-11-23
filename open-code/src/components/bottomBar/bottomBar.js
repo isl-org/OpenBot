@@ -143,17 +143,19 @@ export const BottomBar = () => {
                 } else if (isForeverContainsAI === true) {
                     handleError(Errors.error4)
                 }
-                else if(isClassesSimiliar == true){
+                else if(isClassesSimiliar === true){
                     handleError(Errors.error5)
                 }
                 else {
+                    // Replace comments with an empty string
+                    let codeWithoutComments = code.replace(/\/\/.*$/gm, '');
                     if (start.length > 0)
-                        code += "\nstart();";
+                        codeWithoutComments += "\nstart();";
                     if (forever.length > 0)
-                        code += "\nforever();";
+                        codeWithoutComments += "\nforever();";
                     setGenerateCode(!generate);
-                    console.log(code);
-                    uploadToGoogleDrive(code, "js").then((res) => {
+                    console.log(codeWithoutComments);
+                    uploadToGoogleDrive(codeWithoutComments, "js").then((res) => {
                             let linkCode = {
                                 driveLink: res,
                                 projectName: getCurrentProject().projectName
