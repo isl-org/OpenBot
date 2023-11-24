@@ -102,6 +102,7 @@ export const Toolbox = (props) => {
                 <Label text="Controller" web-class="Heading"></Label>
                 <Block type="controllerMode"></Block>
                 <Block type="driveModeControls"/>
+                <Block type="speedControl"/>
             </Category>
 
             <Category name="Sound" colour={"#5BBC73"}>
@@ -125,7 +126,6 @@ export const Toolbox = (props) => {
 
             <Category name="Movement" colour={"#d56235"}>
                 <Label text="Movement" web-class="Heading"></Label>
-                <Block type="speedControl"/>
                 <Block type="forward&BackwardAtSpeed"/>
                 <Block type="left&RightAtSpeed"/>
                 <Block type="moveLeft&Right"/>
