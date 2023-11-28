@@ -482,9 +482,9 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     static func enablePointGoalNavigation(forward: Double, left: Double) {
         DispatchQueue.main.async {
             runRobot.isPointGoalNavigation = true;
-            runRobot.forward = forward
-            runRobot.left = left
         }
+        runRobot.forward = forward
+        runRobot.left = left
         navigation = Navigation(model: Model.fromModelItem(item: Common.returnNavigationModel()), device: RuntimeDevice.CPU, numThreads: 1)
     }
 
