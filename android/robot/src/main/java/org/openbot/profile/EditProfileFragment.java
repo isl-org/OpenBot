@@ -318,7 +318,7 @@ public class EditProfileFragment extends Fragment {
         if (dobTimestamp != null) {
           // Format the Timestamp as a string
           SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-          dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+5:30"));
+          dateFormat.setTimeZone(TimeZone.getDefault());
           binding.dateOfBirth.setText(dateFormat.format(dobTimestamp.toDate()));
           // Update the TextView with the formatted date of birth
 //            dobTextView.setText(formattedDOB);
