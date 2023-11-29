@@ -482,7 +482,7 @@ Blockly.Blocks["speedControl"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",
-            "message0": "set speed to %1",
+            "message0": "set speed limit to %1",
             "args0": [
                 {
                     "type": "field_dropdown",
@@ -505,7 +505,7 @@ Blockly.Blocks["speedControl"] = {
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": "#d56235",
+            "colour": "#bf778b",
             "tooltip": "",
             "helpUrl": ""
         });
