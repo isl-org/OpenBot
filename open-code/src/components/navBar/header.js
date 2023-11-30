@@ -235,6 +235,10 @@ function RightSection(params) {
                                      setIsAutoSyncEnabled(true);
                                      setIsAutoSync(false);
                                  })
+                                     .catch((e) => {
+                                         errorToast("Something went wrong!")
+                                         setIsAutoSync(false);
+                                     })
                              } else {
                                  errorToast("Please sign-In to auto sync.")
                              }

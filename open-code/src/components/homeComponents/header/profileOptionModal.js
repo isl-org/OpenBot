@@ -113,6 +113,11 @@ export function ProfileOptionModal(props) {
                                     setIsAutoSync(false);
                                     setIsAutoSyncEnabled(true);
                                 })
+                                    .catch((error) => {
+                                            errorToast("something went wrong!");
+                                            setIsAutoSync(false)
+                                        }
+                                    )
                             } else {
                                 errorToast("Please sign-In to auto sync.")
                             }
