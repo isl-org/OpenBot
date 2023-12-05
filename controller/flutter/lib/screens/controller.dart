@@ -280,7 +280,8 @@ class ControllerState extends State<Controller> {
     if (items["VIDEO_PROTOCOL"] != null) {
       if (items["VIDEO_PROTOCOL"] == "RTSP") {
         Fluttertoast.showToast(
-            msg: "RTSP not supported by this controller. For video, set your main app to use WebRTC.",
+            msg:
+                "RTSP not supported by this controller. For video, set your main app to use WebRTC.",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: Colors.grey,
@@ -315,7 +316,12 @@ class ControllerState extends State<Controller> {
     }
 
     if (items["WEB_RTC_EVENT"] != null) {
-      var webRTCResponse = json.decode(items["WEB_RTC_EVENT"]);
+      var webRTCResponse;
+      if (items["WEB_RTC_EVENT"] is String) {
+        webRTCResponse = json.decode(items["WEB_RTC_EVENT"]);
+      } else {
+        webRTCResponse = items["WEB_RTC_EVENT"];
+      }
       if (webRTCResponse["type"].toString() == "offer") {
         setState(() {
           type = webRTCResponse["type"];
