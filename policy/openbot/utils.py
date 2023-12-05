@@ -10,6 +10,9 @@ from nbconvert import HTMLExporter
 import codecs
 import nbformat
 
+# Select non-interactive backend for compatability
+plt.switch_backend("agg")
+
 
 def save_notebook():
     Javascript("IPython.notebook.save_notebook()")

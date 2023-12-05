@@ -14,7 +14,12 @@ The main task of the MCU is to handle the low-level control of the vehicle and p
 ## Setup
 
 First you have to set up your hardware configuration at the beginning of the code. If you did the DIY build (using the L298N motor driver), set `OPENBOT DIY`.
-If you used the custom PCB, check the version and set either `OPENBOT PCB_V1` or `OPENBOT PCB_V2`. If you have a OpenBot kit set `OPENBOT RTR_TT`. If you have retrofitted a RC truck, set `OPENBOT RC_CAR`. If you use the smaller DIY version for education, set `OPENBOT LITE`. If you use the OpenBot Ready-to-Run kit with 520-motors, set `OPENBOT RTR_520`. Finally if you built the Multi Terrain Vehicle, you should set `OPENBOT MTV`.
+If you used the custom PCB, check the version and set either `OPENBOT PCB_V1` or `OPENBOT PCB_V2`. If you have a OpenBot kit set `OPENBOT RTR_TT`. If you have retrofitted an RC truck, set `OPENBOT RC_CAR`. If you use the smaller DIY version for education, set `OPENBOT LITE`. If you use the OpenBot Ready-to-Run kit with 520-motors, set `OPENBOT RTR_520`. if you built the Multi Terrain Vehicle, you should set `OPENBOT MTV`. To run the `OpenBot DIY` with the ESP32 set OpenBot `DIY_ESP32`.
+
+## Bluetooth
+
+You can run the OpenBot via bluetooth as well, for that you can enable the bluetooth by setting `BLUETOOTH 1` (disable: 0). For bluetooth to work you need OpenBot with ESP32 boards like `(RTR_520, MTV, DIY_ESP32)`.
+
 
 ## Config
 

@@ -9,7 +9,7 @@
 
 Click on the links below to read about the features of the apps.
 
-- [Robot App](app/README.md)
+- [Robot App](robot/README.md)
 - [Controller App](controller/README.md)
 
 ## Install the apps
