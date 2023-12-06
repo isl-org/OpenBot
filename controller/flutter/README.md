@@ -26,14 +26,14 @@ When the controller app is started, it immediately tries to connect to the robot
 To connect the controller to the robot, place the robot's app control setting into the **Phone** mode.
 
 <p float="left">
-  <img src="../../docs/images/app_controller_settings_1.png" width="25%" />
-  <img src="../../docs/images/app_controller_settings_2.png" width="25%" />
+  <img src="../../docs/images/app_controller_settings_1.jpg" width="25%" />
+  <img src="../../docs/images/app_controller_settings_2.jpg" width="25%" />
 </p>
 
 You can also connect to the controller from the `FreeRoamFragment` by selecting the phone as the controller:
 
 <p float="left">
-  <img src="../../docs/images/free-roam-fragment-selection.png" width="50%" />
+  <img src="../../docs/images/free-roam-fragment-selection.jpg" width="50%" />
 </p>
 
 In a few seconds, the controller will change its screen to:
@@ -60,10 +60,13 @@ above/below the center of the slider.
   <img src="../../docs/images/flutter_controller_dual_drive_mode.jpg" width="50%" />
 </p>
 
-You can also set the left/right turn indicators
+- Indicators: You can also set the left/right turn indicators
 <img src="../../docs/images/keyboard_arrow_left-24px.svg" height="24"/>
 <img src="../../docs/images/keyboard_arrow_right-24px.svg" height="24"/>
-by clicking on the arrows on the top-left of the screen, and the red button between them to cancel.
+by clicking on the arrows on the top-left of the screen.
+- Switch Camera: You can choose the camera option to switch between the front and back camera modes.
+- Sound: Select the sound option to activate sound mode, and simply tap on it to mute if needed.
+- Mirror view: This allows you to display the view in a mirrored or flipped form. 
 
 ### Tilt to drive
 
