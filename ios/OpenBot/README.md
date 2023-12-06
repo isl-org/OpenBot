@@ -262,7 +262,7 @@ If you don't see your latest projects in the project list, you can reload them b
 
 <p align="left">
 <img src="../../docs/images/projects_tab_screen_ios.gif" alt="Project Screen" width="25%"/>
-<img src="../../docs/images/no_projects_found_ios.jpeg" alt="No project screen" width="26.5%"/>
+<img src="../../docs/images/no_projects_found_ios.jpg" alt="No project screen" style="padding-left: 0.3%" width="26.5%"/>
 <img src="../../docs/images/reload_projects_ios.gif" alt="Reload project screen" width="25%"/>
 </p>
 
@@ -280,7 +280,7 @@ If you don't see your latest projects in the project list, you can reload them b
 <p align="left">
 <img src="../../docs/images/google_drive_projects_execute_ios.gif" alt="Google Drive project execute" width="25%" />
 <img src="../../docs/images/ios_qr_scan.gif" alt="Qr code scanner project execute" width="25%" />
-<img src="../../docs/images/delete_project_ios.jpeg" alt="Delete project popup" width="26%" />
+<img src="../../docs/images/delete_project_ios.jpg" alt="Delete project popup" style="padding-right: 1.2%" width="26%" />
 </p>
 
 
@@ -290,8 +290,8 @@ If the user is not signed in, a `Google Sign-in` button will appear, prompting t
 If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edit Profile` and `Logout`.
 
 <p align="left">
-<img src="../../docs/images/logged_out_profile_screen_ios.jpeg" alt="Logged out profile screen" width="25%"/>
-<img src="../../docs/images/logged_in_profile_screen_ios.jpeg" alt="Logged in profile screen" width="25%"/>
+<img src="../../docs/images/logged_out_profile_screen_ios.jpg" alt="Logged out profile screen" width="25%"/>
+<img src="../../docs/images/logged_in_profile_screen_ios.jpg" alt="Logged in profile screen" width="25%"/>
 </p>
 
 - **Edit Profile**: Tapping on this button will open a new screen where the user can update their profile information, such as their name and profile picture.
@@ -300,14 +300,14 @@ If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edi
 - **Logout**: This button allows the user to log out of their account. Tapping on this button will log the user out and return them to the login screen.
 
 <p align="left">
-<img src="../../docs/images/ios_edit_profile_screen.jpeg" alt="Edit profile screen" width="25%"/>
-<img src="../../docs/images/logout_dialog_box_ios.jpeg" alt="Logout dialog box" width="25%"/>
+<img src="../../docs/images/ios_edit_profile_screen.jpg" alt="Edit profile screen" width="25%"/>
+<img src="../../docs/images/logout_dialog_box_ios.jpg" alt="Logout dialog box" width="25%"/>
 </p>
 
 
 ### OpenBot PlayGround Screen
 
-To access OpenBot Playground services, click on the OpenBot Playground icon located at the top of the screen in project's screen toolbar options. If you want to learn more about OpenBot Playground, [click here](https://github.com/3dwesupport/OpenBot/blob/react-blockly/open-code/README.md).
+To access OpenBot Playground services, click on the OpenBot Playground icon located at the top of the screen in project's screen toolbar options. If you want to learn more about OpenBot Playground, [Click here](https://github.com/3dwesupport/OpenBot/blob/react-blockly/open-code/README.md).
 
 <p align="left">
 <img src="../../docs/images/playground_services_ios.gif" alt="Playground Services" width="25%" />
