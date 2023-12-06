@@ -477,7 +477,12 @@ public class ObjectNavFragment extends CameraFragment {
               }
 
               tracker.trackResults(mappedRecognitions, frameNum);
-              handleDriveCommand(tracker.updateTarget());
+              Control target = tracker.updateTarget();
+              if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
+                handleDriveCommand(target.mirror());
+              } else {
+                handleDriveCommand(target);
+              }
               binding.trackingOverlay.postInvalidate();
             }
 
