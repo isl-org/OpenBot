@@ -3,6 +3,9 @@ package org.openbot.env;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
+
+import java.lang.reflect.Method;
 
 public class ConnectionSelector {
   private static final String TAG = "ConnectionManager";
@@ -37,7 +40,7 @@ public class ConnectionSelector {
       return connection;
     }
 
-    if (isConnectedViaWifi()) {
+    if (isConnectedViaWifi() || isWifiApEnabled()) {
       connection = networkConnection;
     } else {
       connection = nearbyConnection;
@@ -51,5 +54,18 @@ public class ConnectionSelector {
         (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo mWifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
     return mWifi.isConnected();
+  }
+
+  private boolean isWifiApEnabled() {
+    WifiManager wifiManager =
+            (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
+    try {
+      final Method method =
+              wifiManager.getClass().getDeclaredMethod("isWifiApEnabled");
+      Boolean result = (Boolean) method.invoke(wifiManager);
+      return Boolean.TRUE.equals(result);
+    } catch (final Throwable ignored) {}
+
+    return false;
   }
 }
