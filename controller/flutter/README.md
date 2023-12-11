@@ -3,17 +3,25 @@
 This Controller app serves as a `remote controller` for the [OpenBot](https://www.openbot.org) vehicle. Basically it
 performs similar function as PS3/4 or Xbox remote controller, but running on another Android/iOS device.
 
-## Setup
-You need to install [Flutter](https://docs.flutter.dev/get-started/install) into your system to run this application directly from the code.
 
-Once Flutter setup is done, can open this project file into editor to run the application.
-then run
+## Setup:
+- First you need to install [Flutter](https://docs.flutter.dev/get-started/install) into your system to run this application directly from the code.
 
- ```flutter pub get```
+- [Install](https://docs.flutter.dev/get-started/install) flutter and Get Started.<br>
 
-to download all the dependencies. after that you can run the application by calling 
+- Choose the operating system for the Flutter installation. Downloads available for Windows, macOS, Linux, and ChromeOS operating systems.
 
- ```flutter run lib/main.dart```
+- Once you've finished setting up Flutter, you have the choice to open the project in either Android Studio or IntelliJ IDEA.
+
+- [Setup an Editor](https://docs.flutter.dev/tools/android-studio) for Android and IntelliJ:<br>
+
+Once you open your project in Android Studio after the setup, it will appear as shown in the following image.
+
+[//]: # (<p float="left">)
+
+[//]: # (  <img src="../../docs/images/android_editor.jpg" width="50%" />)
+
+[//]: # (</p>)
 
 ## Connection
 
