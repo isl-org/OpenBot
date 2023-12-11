@@ -6,24 +6,40 @@ performs similar function as PS3/4 or Xbox remote controller, but running on ano
 
 ## Setup:
 - First you need to install [Flutter](https://docs.flutter.dev/get-started/install) into your system to run this application directly from the code.
-
-- [Install](https://docs.flutter.dev/get-started/install) flutter and Get Started.<br>
+### Get Started:
+- [Install](https://docs.flutter.dev/get-started/install) flutter.
 
 - Choose the operating system for the Flutter installation. Downloads available for Windows, macOS, Linux, and ChromeOS operating systems.
+- Once you've finished setting up Flutter, you can open the project in terminal by navigating into the `openBot/controller/flutter` folder.
+- You can run the application through the terminal using following commands.
 
-- Once you've finished setting up Flutter, you have the choice to open the project in either Android Studio or IntelliJ IDEA.
+  ####  Install Dependencies:
+    ```bash
+     flutter pub get 
+    ```
+    Run the project:
+    ```bash
+     flutter run
+    ```
+    If you encounter any issues, run the following command:
+    ```bash
+     flutter doctor
+    ```
 
-- [Setup an Editor](https://docs.flutter.dev/tools/android-studio) for Android and IntelliJ:<br>
+- You can run the application through the editor as well and here is the link for [Setup an Editor](https://docs.flutter.dev/tools/android-studio) 
+- Once you open your project in editor after the setup, it will appear as shown in the following image.
 
-Once you open your project in Android Studio after the setup, it will appear as shown in the following image.
+  <p float="left">
+    <img src="../../docs/images/android_editor.jpg" width="50%" />
+  </p>
 
-[//]: # (<p float="left">)
+- This is how you can run the application directly from editor.
 
-[//]: # (  <img src="../../docs/images/android_editor.jpg" width="50%" />)
+  <p float="left">
+    <img src="../../docs/images/run_editor.jpg" width="50%" />
+  </p>
 
-[//]: # (</p>)
-
-## Connection
+## Connection 
 
 When the controller app is started, it immediately tries to connect to the robot. We see the following screen:
 
