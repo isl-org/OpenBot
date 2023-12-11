@@ -88,6 +88,7 @@ above/below the center of the slider.
 <img src="../../docs/images/keyboard_arrow_left-24px.svg" height="24"/>
 <img src="../../docs/images/keyboard_arrow_right-24px.svg" height="24"/>
 by clicking on the arrows on the top-left of the screen.
+
 - Switch Camera: You can choose the camera option to switch between the front and back camera modes.
 - Sound: Select the sound option to activate sound mode, and simply tap on it to mute if needed.
 - Mirror view: This allows you to display the view in a mirrored or flipped form. 
