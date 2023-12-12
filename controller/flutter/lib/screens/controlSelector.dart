@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nsd/nsd.dart';
 import 'package:openbot_controller/globals.dart';
@@ -11,9 +12,10 @@ class ControlSelector extends StatefulWidget {
   final bool indicatorLeft;
   final bool indicatorRight;
   final List<Service> networkServices;
+  final RTCPeerConnection? peerConnection;
 
   const ControlSelector(this.updateMirrorView, this.indicatorLeft,
-      this.indicatorRight, this.networkServices,
+      this.indicatorRight, this.networkServices, this.peerConnection,
       {super.key});
 
   @override
@@ -38,7 +40,7 @@ class ControlSelectorState extends State<ControlSelector> {
 
   // Function to generate DropdownMenuItem widgets
   List<DropdownMenuItem<String>> buildDropdownMenuItems() {
-     items = [
+    items = [
       DropdownMenuItem(
         value: 'No server',
         child: Container(
@@ -103,7 +105,7 @@ class ControlSelectorState extends State<ControlSelector> {
           });
         },
         child: OnScreenMode(widget.updateMirrorView, widget.indicatorLeft,
-            widget.indicatorRight),
+            widget.indicatorRight, widget.peerConnection),
       );
     } else {
       return Scaffold(
@@ -286,7 +288,7 @@ class ControlSelectorState extends State<ControlSelector> {
                       setState(() {
                         dropDownValue = serverName!;
                       });
-                      if(serverName != "No server"){
+                      if (serverName != "No server") {
                         clientSocket?.writeln("{server: $serverName}");
                       } else {
                         clientSocket?.writeln("{server: noServerFound}");

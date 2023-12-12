@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:openbot_controller/screens/driveCommandReducer.dart';
 import 'package:openbot_controller/utils/forwardSpeed.dart';
 
@@ -8,9 +9,10 @@ class OnScreenMode extends StatefulWidget {
   final dynamic updateMirrorView;
   final bool indicatorLeft;
   final bool indicatorRight;
+  final RTCPeerConnection? peerConnection;
 
-  const OnScreenMode(
-      this.updateMirrorView, this.indicatorLeft, this.indicatorRight,
+  const OnScreenMode(this.updateMirrorView, this.indicatorLeft,
+      this.indicatorRight, this.peerConnection,
       {super.key});
 
   @override
@@ -64,7 +66,7 @@ class OnScreenModeState extends State<OnScreenMode> {
             alignment: AlignmentDirectional.bottomEnd,
             margin: const EdgeInsets.only(bottom: 20),
             child: OnScreenIcon(widget.updateMirrorView, widget.indicatorLeft,
-                widget.indicatorRight),
+                widget.indicatorRight, widget.peerConnection),
           ),
           Container(
               margin: const EdgeInsets.only(right: 50),
@@ -136,19 +138,18 @@ class MyRoundedRectSliderTrackShape extends SliderTrackShape
 
   @override
   void paint(
-      PaintingContext context,
-      Offset offset, {
-        required RenderBox parentBox,
-        required SliderThemeData sliderTheme,
-        required Animation<double> enableAnimation,
-        required TextDirection textDirection,
-        required Offset thumbCenter,
-        Offset? secondaryOffset,
-        bool isDiscrete = false,
-        bool isEnabled = false,
-        double additionalTrackHeight = 30,
-      })
-  {
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required TextDirection textDirection,
+    required Offset thumbCenter,
+    Offset? secondaryOffset,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    double additionalTrackHeight = 30,
+  }) {
     if (sliderTheme.trackHeight == null) {
       return;
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:openbot_controller/buttonCommands/buttonCommands.dart';
 import 'package:openbot_controller/screens/component/blinkingButton.dart';
 
@@ -6,9 +7,10 @@ class OnScreenIcon extends StatefulWidget {
   final dynamic updateMirrorView;
   final bool indicatorLeft;
   final bool indicatorRight;
+  final RTCPeerConnection? peerConnection;
 
-  const OnScreenIcon(
-      this.updateMirrorView, this.indicatorLeft, this.indicatorRight,
+  const OnScreenIcon(this.updateMirrorView, this.indicatorLeft,
+      this.indicatorRight, this.peerConnection,
       {super.key});
 
   @override
@@ -65,10 +67,22 @@ class OnScreenIconState extends State<OnScreenIcon> {
             width: 15,
           ),
           GestureDetector(
-              onTap: () {
+              onTap: () async {
                 setState(() {
                   speaker = !speaker;
                 });
+                if (widget.peerConnection != null) {
+                  List<RTCRtpReceiver> receivers =
+                      await widget.peerConnection!.receivers;
+                  RTCRtpReceiver firstReceiver = receivers[0];
+                  if (receivers.isNotEmpty) {
+                    if (speaker) {
+                      firstReceiver.track!.enabled = false;
+                    } else {
+                      firstReceiver.track!.enabled = true;
+                    }
+                  }
+                }
               }, // Image tapped
               child: Container(
                 // height: 50,

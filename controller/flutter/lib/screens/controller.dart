@@ -253,8 +253,8 @@ class ControllerState extends State<Controller> {
               objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
               mirror: mirroredVideo,
             ),
-            ControlSelector(
-                setMirrorVideo, indicatorLeft, indicatorRight, services)
+            ControlSelector(setMirrorVideo, indicatorLeft, indicatorRight,
+                services, _peerConnection)
           ],
         ),
         debugShowCheckedModeBanner: false,
