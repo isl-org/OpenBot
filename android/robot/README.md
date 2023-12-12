@@ -12,10 +12,10 @@
 The app starts with a menu screen that shows all available screens. The settings screen can be opened with a click on the icon at the top of right corner. By clicking on the other icons the user can access various screens whose functionalities are explained in the following.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../../docs/images/screen_main.jpg" alt="Main Menu" width="24.5%"/>
-<img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="24.5%"/>
-<img src="../../docs/images/dialog_stream_mode.jpg" alt="Settings Menu" width="24.5%"/>
-<img src="../../docs/images/dialog_connectivity_mode.jpg" alt="Settings Menu" width="24.5%"/>
+<img style="padding-right: 2%;" src="../../docs/images/screen_main.jpg" alt="Main Menu" width="25%"/>
+<img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="22.6%"/>
+<img src="../../docs/images/dialog_stream_mode.jpg" alt="Settings Menu" width="22.6%"/>
+<img src="../../docs/images/dialog_connectivity_mode.jpg" alt="Settings Menu" width="22.6%"/>
 </p>
 
 ### Settings Menu
@@ -377,9 +377,9 @@ The Projects Screen displays a list of your OpenBot Playground projects if you a
 
 If you don't see your latest projects in the project list, you can reload them by pulling down on the project screen.
 <p align="left">
-<img src="../../docs/images/projects_tab_screen.gif" alt="Project Screen" width="25%"/>
-<img src="../../docs/images/no_projects_found.jpg" alt="No project screen" width="26.5%"/>
-<img src="../../docs/images/reload_projects.gif" alt="Reload project screen" width="25%"/>
+<img src="../../docs/images/projects_tab_screen.gif" alt="Project Screen" width="24.7%"/>
+<img src="../../docs/images/no_projects_found.jpg" alt="No project screen" width="25%"/>
+<img src="../../docs/images/reload_projects.gif" altq="Reload project screen" width="24.5%"/>
 </p>
 
 - **Google Drive projects**: To run a Google Drive project, tap on the project you want to execute and wait for the contents of the project file to be read. If the file is successfully retrieved without any errors, a pop-up will appear with two buttons: `Start` and `Cancel`. The pop-up will also display the name of the project you are about to run. To execute the project, click on the Start button. If you want to stop the activity, click on the Cancel button. If you receive a pop-up message stating `Something went wrong`, there may be an error with the Google Drive file. To resolve this issue, refresh the project screen by pulling down and then repeating the same process.
@@ -396,7 +396,7 @@ If you don't see your latest projects in the project list, you can reload them b
 <p align="left">
 <img src="../../docs/images/google_drive_projects_execute.gif" alt="Google Drive project execute" width="25%"/>
 <img src="../../docs/images/qr_code_scanner_projects_execute.gif" alt="Qr code scanner project execute" width="25%"/>
-<img src="../../docs/images/delete_project.jpg" alt="Delete Project" width="26.5%"/>
+<img src="../../docs/images/delete_project.jpg" alt="Delete Project" width="24.7%"/>
 </p>
 
 ### Profile Screen
@@ -406,7 +406,7 @@ If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edi
 
 <p align="left">
 <img src="../../docs/images/logged_out_profile_screen.jpg" alt="Logged out profile screen" width="25%"/>
-<img src="../../docs/images/logged_in_profile_screen.jpg" alt="Logged in profile screen" width="25%"/>
+<img src="../../docs/images/logged_in_profile_screen.jpg" alt="Logged in profile screen" width="24.9%"/>
 </p>
 
 - **Edit Profile**: Tapping on this button will open a new screen where the user can update their profile information, such as their name and profile picture.
@@ -415,8 +415,8 @@ If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edi
 - **Logout**: This button allows the user to log out of their account. Tapping on this button will log the user out and return them to the login screen.
 
 <p align="left">
-<img src="../../docs/images/edit_profile_screen.jpg" alt="Edit profile screen" width="25%"/>
-<img src="../../docs/images/logout_dialog_box.jpg" alt="Logout dialog box" width="25%"/>
+<img src="../../docs/images/editProfile.jpg" alt="Edit profile screen" width="25%"/>
+<img src="../../docs/images/logout_dialog_box.jpg" alt="Logout dialog box" width="24.4%"/>
 </p>
 
 ### OpenBot PlayGround Screen
@@ -424,7 +424,7 @@ If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edi
 To access OpenBot Playground services, click on the OpenBot Playground icon located at the top of the screen in the toolbar options. If you want to learn more about OpenBot Playground, [click here](https://github.com/3dwesupport/OpenBot/blob/react-blockly/open-code/README.md).
 
 <p align="left">
-<img src="../../docs/images/playground_sign-in.gif" alt="openBot playground Sign-in" width="25%"/>
+<img src="../../docs/images/playground_signin.gif" alt="openBot playground Sign-in" width="25%"/>
 <img src="../../docs/images/playground_services.gif" alt="openBot playground Services" width="25%"/>
 </p>
 
