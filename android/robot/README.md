@@ -12,7 +12,7 @@
 The app starts with a menu screen that shows all available screens. The settings screen can be opened with a click on the icon at the top of right corner. By clicking on the other icons the user can access various screens whose functionalities are explained in the following.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../../docs/images/screen_main.jpg" alt="Main Menu" width="25%"/>
+<img style="padding-right: 2%;" src="../../docs/images/screen_main.jpg" alt="Main Menu" width="24.5%"/>
 <img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="22.6%"/>
 <img src="../../docs/images/dialog_stream_mode.jpg" alt="Settings Menu" width="22.6%"/>
 <img src="../../docs/images/dialog_connectivity_mode.jpg" alt="Settings Menu" width="22.6%"/>
@@ -424,7 +424,7 @@ If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edi
 To access OpenBot Playground services, click on the OpenBot Playground icon located at the top of the screen in the toolbar options. If you want to learn more about OpenBot Playground, [click here](https://github.com/3dwesupport/OpenBot/blob/react-blockly/open-code/README.md).
 
 <p align="left">
-<img src="../../docs/images/playground_signin.gif" alt="openBot playground Sign-in" width="25%"/>
+<img src="../../docs/images/playground_sign-in.gif" alt="openBot playground Sign-in" width="25%"/>
 <img src="../../docs/images/playground_services.gif" alt="openBot playground Services" width="25%"/>
 </p>
 
