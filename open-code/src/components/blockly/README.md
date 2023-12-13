@@ -15,7 +15,7 @@
   OpenBot PlayGround includes customizable blocks that can be used to control the flow of program such as loops, events
   and conditionals. It provides a visual way for users to structure the logic of their programs.
 
-    <img src="../../../../docs/images/playground_blockly_newControl.png" height="50%" width="50%"/>
+    <img src="../../../../docs/images/playground_blockly_newControl.jpg" height="50%" width="50%"/>
 
   A brief overview of some control blocks:
     - Start: Initiates the execution of program and execute the block code single time.
@@ -28,7 +28,7 @@
 
   Loops category provides various blocks that helps to control the flow of your program through repetition.
 
-     <img src="../../../../docs/images/Playground_blockly_newLoops.png" height="50%" width="50%"/>
+     <img src="../../../../docs/images/Playground_blockly_newLoops.jpg" height="50%" width="50%"/>
 
   Some loop blocks examples are listed here below:
 
@@ -40,7 +40,7 @@
   Operators allow you to perform several operations or calculations within your program. The blocks allow you to build
   complex expressions and conditions according to the requirement.
 
-  <img src="../../../../docs/images/playground_operator_blocks.png" height="50%" width="50%"/>
+  <img src="../../../../docs/images/playground_operator_blocks.jpg" height="50%" width="50%"/>
 
   Here are some common types of operators that you might find in OpenBot PlayGround:
 
@@ -56,7 +56,7 @@
   change and manipulate variables.The concept of variables in OpenBot PlayGround help you to manage and manipulate data
   in your programs.
 
-  <img src="../../../../docs/images/playground_variable_blocks.png" height="50%" width="50%"/>
+  <img src="../../../../docs/images/playground_variable_blocks.jpg" height="50%" width="50%"/>
 
   Have a look on some Variable block examples:
 
@@ -68,22 +68,27 @@
   Lights are another type of category that is provided by OpenBot PlayGround which helps to make the use of indicators
   and can set the values of brightness dynamically.
 
-  <img src="../../../../docs/images/playground_light_blocks.png" height="50%" width="50%"/>
+<<<<<<< Updated upstream
+<img src="../../../../docs/images/playground_light_blocks.png" height="50%" width="50%"/>
 
-  Below are some examples:
+=======
+<img src="../../../../docs/images/playground_light_blocks.jpg" height="50%" width="50%"/>
+
+> > > > > > > Stashed changes
+> > > > > > > Below are some examples:
 
     - Indicators: Block used to enable indicators by turning them ON/OFF.
     - Brightness: used to set the brightness of tail and head LED by taking dynamic values.
 
-  NOTE: Keeping the brightness at zero will make the brightness mode OFF and if the brightness is at the highest point
-  ie.100 will turn ON the brightness mode.
+NOTE: Keeping the brightness at zero will make the brightness mode OFF and if the brightness is at the highest point
+ie.100 will turn ON the brightness mode.
 
 - ### Controller:
 
   Certainly! When selecting a mode within the controller block, it will be applied uniformly across all other fragments
   within the OpenBot robot app.
 
-  <img src="../../../../docs/images/playground_controller_blocks.png" height="50%" width="50%"/>
+  <img src="../../../../docs/images/playground_controller_blocks.jpg" height="50%" width="50%"/>
 
   Below are the examples of Controller Block:
 
@@ -96,7 +101,7 @@
 
   Sound Blocks can be utilized to play sound for drive modes and robot static speed.
 
-  <img src="../../../../docs/images/playground_sound_blocks.png" height="50%" width="50%"/>
+  <img src="../../../../docs/images/playground_sound_blocks.jpg" height="50%" width="50%"/>
 
   Let's have some examples:
 
@@ -107,7 +112,7 @@
 
   Sensors are the blocks which are going to return different readings for OpenBot condition and environment status .
 
-  <img src="../../../../docs/images/playground_sensors-block.png" height="50%" width="50%"/>
+  <img src="../../../../docs/images/playground_sensors-block.jpg" height="50%" width="50%"/>
 
   Overview:
     - Phone Sensors: Help to measure Gyroscope,Acceleration, and Magnetic readings at different axis(3-Dimensional).
@@ -119,7 +124,7 @@
   As the name suggests it is responsible for the movement of Robot at any speed and in any direction and the speed limit
   is 0-255.
 
-  <img src="../../../../docs/images/playground_movement_blocks.png" height="50%" width="50%"/>
+  <img src="../../../../docs/images/playground_movement_blocks.jpg" height="50%" width="50%"/>
 
   Let's have some examples:
 
