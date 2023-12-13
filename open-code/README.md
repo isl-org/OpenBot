@@ -93,15 +93,15 @@ users to create different types of functionality, such as Control, Loops, Moveme
 
 ### Header
 
-The header of the `Openbot-Playground` website has it's logo in the top left section. The right side of the header have
+The header of the `Openbot-Playground` website has its logo in the top left section. The right side of the header have
 two buttons.
 
 - #### Change theme
   Theme icon allows you to switch between light mode and dark mode, and vice versa.
 
   <p align="left">
-  <img style="padding-right: 2%;" src="../docs/images/playground_home_light_theme_screen.png" alt="light theme screen" width="45%"/>
-  <img style="padding-right: 2%;" src="../docs/images/playground_home_dark_theme_screen.png" alt="dark theme screen" width="45%"/>
+  <img style="padding-right: 2%;" src="../docs/images/playground_home_light_theme_screen.jpg" alt="light theme screen" width="45%"/>
+  <img style="padding-right: 2%;" src="../docs/images/playground_home_dark_theme_screen.jpg" alt="dark theme screen" width="45%"/>
   </p>
 
 - #### Sign-in
@@ -116,8 +116,8 @@ two buttons.
   Upon successful sign-in, you will have options to edit your profile and log out. The "Edit Profile" button opens a
   popup where you can update your profile image, display name and date of birth.
   <p align="left">
-  <img style="padding-right: 2%;" src="../docs/images/playground_edit_profile_logout_popup.png" alt="Playground Sign In" width="45%"/>
-  <img style="padding-right: 2%;" src="../docs/images/playground_edit_profile_modal.png" alt="Playground Sign In" width="45%" />
+  <img style="padding-right: 2%;" src="../docs/images/playground_edit_profile_logout_popup 2.jpg" alt="Playground Sign In" width="45%"/>
+  <img style="padding-right: 2%;" src="../docs/images/playground_edit_profile_modal 2.jpg" alt="Playground Sign In" width="45%" />
   </p>
 
 - #### AutoSync:
@@ -143,23 +143,23 @@ two buttons.
       functionalities. In the center, the project name is displayed with a downward arrow, providing options for
       renaming and deleting the project.
        <p align="left">
-       <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_rename__del.png" alt="Playground Sign In" width="50%" height="50%" />
+       <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_rename__del 2.jpg" alt="Playground Sign In" width="50%" height="50%" />
        </p>
 
     - On the right side, a help button has been added, featuring three sections that explain how to effectively
       drag and drop blocks, save and download project progress, and upload to drive for seamless collaboration.
 
         <p align="left">
-        <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_help.png" alt="Playground Help" width="50%"/>
+        <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_help.jpg" alt="Playground Help" width="50%"/>
         </p>
 
 ### Carousal
 
 Carousal's container explains how Application works.
 <p>
-<img style="padding-right: 2%;" src="../docs/images/home_carousal1.png" alt="home_carousal1" width="30%"/>
-<img style="padding-right: 2%;" src="../docs/images/home_carousal2.png" alt="home_carousal2" width="30%"/>
-<img style="padding-right: 2%;" src="../docs/images/home_carousal3.png" alt="home_carousal3" width="30%"/>
+<img style="padding-right: 2%;" src="../docs/images/home_carousal1.jpg" alt="home_carousal1" width="30%"/>
+<img style="padding-right: 2%;" src="../docs/images/home_carousal2.jpg" alt="home_carousal2" width="30%"/>
+<img style="padding-right: 2%;" src="../docs/images/home_carousal3.jpg" alt="home_carousal3" width="30%"/>
 </p>
 
 ### Project Section
@@ -174,9 +174,9 @@ If the user enters a name already assigned to another project, the system will a
 appending an integer to the end of the name.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../docs/images/create_new_project.png" alt="Create New Project" width="30%"/>
-<img style="padding-right: 2%;" src="../docs/images/my_projects.png" alt="my Project" width="30%"/>
-<img style="padding-right: 2%;" src="../docs/images/my_project_option.png" alt="option" width="30%"/>
+<img style="padding-right: 2%;" src="../docs/images/create_new_Project.jpg" alt="Create New Project" width="30%"/>
+<img style="padding-right: 2%;" src="../docs/images/my_Project.jpg" alt="my Project" width="30%"/>
+<img style="padding-right: 2%;" src="../docs/images/myProjectOption.jpg" alt="option" width="30%"/>
 </p>
 
 ### WorkSpace
@@ -192,7 +192,7 @@ JavaScript and Python.
   They can then drag and drop the desired block from the trash back into the workspace.
 - Know More About Blocks: [Blocks](src/components/blockly/README.md)
   <p align="left">
-  <img style="padding-right: 2%;" src="../docs/images/playground_workspace__gif.gif" alt="Create New Project" width="50%"/>
+  <img style="padding-right: 2%;" src="../docs/images/playground_workspace.gif" alt="Create New Project" width="50%"/>
   </p>
 
 ### Playground Bottom Bar
@@ -203,8 +203,8 @@ JavaScript and Python.
       openBot-PlayGround folder.
     - User should not create same name file in openBot-PlayGround folder.
   <p align="left">
-  <img style="padding-right: 2%; margin-top: 2%;" src="../docs/images/google_drive_folder.png" alt="Generate Code" width="35%" />
-  <img style="padding-right: 2%; margin-top: 2%" src="../docs/images/playground_drive_file.png" alt="Generate Code" width="70%"/>
+  <img style="padding-right: 2%; margin-top: 2%;" src="../docs/images/google_drive_folder.jpg" alt="Generate Code" width="35%" />
+  <img style="padding-right: 2%; margin-top: 2%" src="../docs/images/playground_Drive .jpg" alt="Generate Code" width="70%"/>
   </p>
 
 - #### Generate Code
@@ -234,7 +234,7 @@ JavaScript and Python.
   <br></br>
   Here is an upload in Drive and generate Code Demo :
   <p align="left">
-  <img style="padding-right: 2%;" src="../docs/images/playground_gogle_drive_gif.gif" alt="Generate Code" width="50%"/>
+  <img style="padding-right: 2%;" src="../docs/images/playground_google_drive.gif" alt="Generate Code" width="50%"/>
   </p>
 
 - #### Code Editor
@@ -244,7 +244,7 @@ JavaScript and Python.
   corresponding code in the side window simultaneously. The options to choose a language enables you to examine and
   evaluate the correctness of the blocks.
   <p align="left">
-  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_codeEditor.png" alt="Playground code editor" width="50%" height="50%" />
+  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_codeEditor.jpg" alt="Playground code editor" width="50%" height="50%" />
   </p>
 
 - #### Add Model
@@ -253,8 +253,8 @@ JavaScript and Python.
   model will
   automatically saved in the user's Google Drive, along with the updated config.json file.
   <p align="left">
-  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_model_option.png" alt="Playground code editor" width="40%" height="50%" />
-  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_model_popup.png" alt="Playground code editor" width="40%" height="50%" />
+  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_model_option.jpg" alt="Playground code editor" width="40%" height="50%" />
+  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_model_popup.jpg" alt="Playground code editor" width="40%" height="50%" />
   </p>
 
 
