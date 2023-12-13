@@ -67,6 +67,7 @@
 
   Lights are another type of category that is provided by OpenBot PlayGround which helps to make the use of indicators
   and can set the values of brightness dynamically.
+
   <img src="../../../../docs/images/playground_light_blocks.jpg" height="50%" width="50%"/>
 
   Below are some examples:
