@@ -67,21 +67,14 @@
 
   Lights are another type of category that is provided by OpenBot PlayGround which helps to make the use of indicators
   and can set the values of brightness dynamically.
+  <img src="../../../../docs/images/playground_light_blocks.jpg" height="50%" width="50%"/>
 
-<<<<<<< Updated upstream
-<img src="../../../../docs/images/playground_light_blocks.png" height="50%" width="50%"/>
-
-=======
-<img src="../../../../docs/images/playground_light_blocks.jpg" height="50%" width="50%"/>
-
-> > > > > > > Stashed changes
-> > > > > > > Below are some examples:
-
+  Below are some examples:
     - Indicators: Block used to enable indicators by turning them ON/OFF.
     - Brightness: used to set the brightness of tail and head LED by taking dynamic values.
 
-NOTE: Keeping the brightness at zero will make the brightness mode OFF and if the brightness is at the highest point
-ie.100 will turn ON the brightness mode.
+  NOTE: Keeping the brightness at zero will make the brightness mode OFF and if the brightness is at the highest point
+  ie.100 will turn ON the brightness mode.
 
 - ### Controller:
 
