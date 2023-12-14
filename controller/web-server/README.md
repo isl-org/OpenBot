@@ -5,7 +5,7 @@
 Here are some terms we will be using in this document:
 
 * ```Robot, bot``` - this is the Android software running on the phone on the [OpenBot](https://www.openbot.org/)
-  vehicle.
+vehicle.
 * ```Server``` - the web server, the server part of this project.
 * ```Client, UI``` - this is the client part of this project. It runs in the browser.
 
@@ -16,7 +16,7 @@ the [OpenBot](https://www.openbot.org/) vehicle. The software comprises two comp
 server is a cloud application deployed in a remote environment. The client component runs directly in the web browser.
 Here is a screenshot of the browser:
 
-![Screenshot](images/openbot_controller.png "image_tooltip")
+<img src="../../controller/web-server/images/openbot_controller.jpg" width="50%"/>
 
 ## Getting Started
 
@@ -41,7 +41,7 @@ or just:
 
     nohup npm start
 
-### Features of web controller
+## Features of web controller
 
 - The OpenBot controller operates on a cloud server accessible remotely via the internet. Clients can seamlessly access
   the controller directly, allowing for a convenient ``sign-in`` process using their Google accounts. Moreover, on the
@@ -56,7 +56,7 @@ or just:
   location of the server. This means that users with faster internet connections and servers located in closer proximity
   will generally experience lower latency during video streaming session.
 
-On the Robot Android app, go to the ```General``` panel and select ```Web``` as the controller. This will connect the
+- On the Robot Android app, go to the ```General``` panel and select ```Web``` as the controller. This will connect the
 Android app to the cloud server, and a video will appear on the UI.
 
 ## How it Works
@@ -65,16 +65,26 @@ Android app to the cloud server, and a video will appear on the UI.
    in the form of an email address, from the user's browser. Simultaneously, the robot application undergoes
    authentication using Google Sign-In. When the controller mode is set to ``Web``, server prompts the user for their
    email address.
+
+    <img src="../../controller/web-server/images/web_server_signIn.gif" width="50%"/>
+
 2. When a user signs in via Google on the browser, the email associated with the account is transmitted to the server.
    Subsequently, a dedicated ``room`` is dynamically generated, with the user's email serving as
    the ``unique identifier``. Within this room, two candidates are established. The initial candidate is configured for
    the browser client, which then enters a waiting state, poised to establish a connection with the robot application.
+
+    <img src="../../controller/web-server/images/set_controller.gif" height="25%" width="25%">
+
 3. After the controller is set to ```web```, the room reaches full capacity, with the second candidate being designated
    as the robot application. Concurrently, the robot application sends a request for an offer for WebRTC (Web Real-Time
    Communication). The first candidate, which is assigned to the browser client, responds with an answer to this
    request. This successful exchange results in the establishment of a robust and functional connection. And displays
    video stream on browser's UI.
-4. The user enters keyboard commands from the browser. These keypresses are sent to the Server via the WebSocket or
+
+    <img src="../../controller/web-server/images/web_server_video_streaming.gif" width="50%"/>
+
+ 
+4. The user enters keyboard commands from the browser. These key presses are sent to the Server via the WebSocket or
    webrtc. The server converts these to commands that the Robot can understand, like ```{driveCmd: {l:0.4, r:0.34}}``` (
    a list of all commands can be found in the documentation for the Android
    controller [here](https://github.com/isl-org/OpenBot/blob/master/docs/technical/OpenBotController.pdf)). These
@@ -82,7 +92,46 @@ Android app to the cloud server, and a video will appear on the UI.
 5. The WebSocket serves as a crucial data channel for WebRTC signaling proxy. WebRTC efficiently leverages the existing
    open socket connections for this purpose, eliminating the need for any additional connections or configurations. This
    streamlined approach enhances efficiency and minimizes setup requirements for seamless real-time communication
-   ![drawing](images/HowItWorks.png)
+   
+### Create your own server 
+
+- ``Server setup``: The code initiates a WebSocket server that listens on port 8080. Upon the server's readiness, it logs a confirmation message about its active state on the specified port. Subsequently, a Map named "rooms" is initialized, serving as a repository to manage and store details about individual rooms. Each room is uniquely identified by an ID.
+  
+- ``Client Connection Handling`` : The client and the robot app act as two candidates in the room generation process for establishing a server remotely. The system logs the connection of a client, providing information about the total number of connected clients. The askIdOfClient function engages with clients, prompting them to share their respective room IDs. Additionally, the system listens for incoming messages from clients. The browser client, functioning as the initial candidate, is configured and transitions into a waiting state, prepared to initiate a connection with the robot application.
+
+- `` Room Management``: The createOrJoinRoom function assesses the existence of a room identified by the specified roomId. If the room is not present, it initiates the creation of a new room. In cases where the room already exists, the function facilitates the joining of the existing room, taking into consideration its availability.
+
+- `` Client Disconnection Handling and interaction``: Upon a client's disconnection, the system generates logs that include information about the total number of connected clients. If there are associated rooms, these rooms are closed, and the entry of the disconnected client is expunged from the rooms Map. Additionally, the server prompts clients to provide their respective room IDs during the connection process.
+
+- ``Broadcast Functions``: 
+  - wss.broadcast: Broadcasts a message to all connected clients.
+  - broadcastToRoom: Broadcasts a message to all clients within a specific room.
+  - sendToBot: Sends a message to a bot (broadcasts to all clients except the sender).
+
+
+- Once the browser client responds with an answer to the offer request, it will finally lead to the display of a video stream on the browser's user interface.
+
+## Implementation of custom server:
+
+For testing purposes, we have opened new remote server on ``glitch`` but you can use any cloud environment for your web-server communication with openBot application.
+- First of all create a new account on [Glitch](https://glitch.com/). After, create your new project as shown in below image.
+
+    <img src="../../controller/web-server/images/glitch.jpg" width="50%"/>
+
+- After that you have to insert the code from [server.js](server/server.js) file to server.js file of your project(remote server) as shown in the following image.
+
+    <img src="../../controller/web-server/images/server_code.jpg" alt="server code image" width="50%"/>
+
+- In next step, you have to add ``webSocket`` dependency in your project as you can see in the below image
+
+    <img src="../../controller/web-server/images/dependency.jpg" alt="server code image" width="50%"/>
+
+-  To establish your own server, you need to specify the project name in the connection.js file, as demonstrated, to initiate the WebSocket connection.
+
+    ``new WebSocket(`ws://gossamer-southern-hygienic`);``
+
+
+
 
 ## Development
 
