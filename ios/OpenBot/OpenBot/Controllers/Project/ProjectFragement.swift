@@ -32,6 +32,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     var projectId: String = String()
     var isLoading: Bool = false
     weak var jsEval : jsEvaluator?
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /**
        Function calls after view will loaded.
@@ -463,6 +464,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         navigationController?.pushViewController(viewController, animated: true);
         bottomSheet.removeFromSuperview();
         jsEval = jsEvaluator(jsCode: command);
+        preferencesManager.setBlocklyCode(value: command);
         jsEval?.delegate = self
     }
 

@@ -48,16 +48,25 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     private var totalFrames: Int = 0;
     var counter: Int = 0;
     var object: String = "";
-
+    @IBOutlet weak var robotImage: UIImageView!
+    @IBOutlet weak var resetRobot: UIButton!
     /**
       override function calls when view of controller loaded
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        createImage(width: 230, height: 300, leadingAnchor: 80, topAnchor: 160, ImageType: robotImage);
+        createLabel(width: 20, height: 20, leadingAnchor: 130, topAnchor: 450, labelType: commandMessage);
+        createButton(width: 210, height: 45, leadingAnchor: 90, topAnchor: 500, buttonType: stopRobot);
+        createButton(width: 210, height: 45, leadingAnchor: 90, topAnchor: 570, buttonType: resetRobot);
         stopRobot.backgroundColor = Colors.title;
         stopRobot.setTitle("Stop Car", for: .normal);
         stopRobot.addTarget(self, action: #selector(cancel), for: .touchUpInside);
         stopRobot.layer.cornerRadius = 10;
+        resetRobot.backgroundColor = Colors.title
+        resetRobot.setTitle("Reset Robot", for: .normal);
+        resetRobot.addTarget(self, action: #selector(resetRobotFunction), for: .touchUpInside);
+        resetRobot.layer.cornerRadius = 10;
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandMsg), name: .commandName, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandObject), name: .commandObject, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(createCamera), name: .createCameraView, object: nil);
@@ -89,6 +98,31 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             self.view.sendSubviewToBack(super.cameraView);
         }
         temp = temp + 1;
+    }
+    
+    
+    func createButton(width: Double, height: Double, leadingAnchor: CGFloat, topAnchor: CGFloat, buttonType: UIButton) {
+        buttonType.translatesAutoresizingMaskIntoConstraints = false;
+//        buttonType.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant:  leadingAnchor).isActive = true
+        buttonType.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchor).isActive = true
+        buttonType.widthAnchor.constraint(equalToConstant: width).isActive = true
+        buttonType.heightAnchor.constraint(equalToConstant: height).isActive = true
+        buttonType.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true;
+    }
+    
+    func createLabel(width: Double, height: Double, leadingAnchor: CGFloat, topAnchor: CGFloat, labelType: UILabel){
+        labelType.text = "You code is executing..";
+        labelType.translatesAutoresizingMaskIntoConstraints = false;
+        labelType.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchor).isActive = true;
+        labelType.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true;
+    }
+    
+    func createImage(width: Double, height: Double, leadingAnchor: CGFloat, topAnchor: CGFloat, ImageType: UIImageView) {
+        ImageType.translatesAutoresizingMaskIntoConstraints = false;
+        ImageType.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchor).isActive = true
+        ImageType.widthAnchor.constraint(equalToConstant: width).isActive = true
+        ImageType.heightAnchor.constraint(equalToConstant: height).isActive = true
+        ImageType.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true;
     }
 
     /**
@@ -172,6 +206,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         self.count = self.count + 1;
         DispatchQueue.main.async {
             self.commandMessage.text = message;
+
         }
     }
 
@@ -184,7 +219,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             runRobot.detector?.setMultipleSelectedClass(newClasses: notification.object as! [String])
         }
     }
-
+    
     @objc func createCamera(_ notification: Notification) {
         if notification.object != nil {
             task = notification.object as! String
@@ -242,7 +277,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         _ = simd_normalize(endingPoint.simdPosition - startingPoint.simdPosition)
     }
 
-    @IBOutlet weak var runRobotConstraints: NSLayoutConstraint!
+//    @IBOutlet weak var runRobotConstraints: NSLayoutConstraint!
     let factor = 0.8;
 
     /**
@@ -269,9 +304,23 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     @objc func cancel() {
         NotificationCenter.default.post(name: .cancelThread, object: nil);
         NotificationCenter.default.post(name: .commandName, object: "\(Strings.cancel)ed");
-        stopCar()
+        stopCar();
+        stopRobot.setTitle("Back", for: .normal);
+        DispatchQueue.main.async {
+            if self.stopRobot.currentTitle == "Back" {
+                self.stopRobot.addTarget(self, action: #selector(self.backItem(sender:)), for: .touchUpInside);
+            }
+        }
     }
+    
 
+    @objc  func resetRobotFunction() {
+        print("i was tapped");
+        _ = jsEvaluator(jsCode: preferencesManager.getBlocklyCode()!);
+        stopRobot.setTitle("Stop Car", for: .normal);
+        stopRobot.addTarget(self, action: #selector(cancel), for: .touchUpInside);
+    }
+    
     /**
      Function to setup the navigation bar
      */
@@ -291,6 +340,11 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         _ = navigationController?.popViewController(animated: true)
         stopCar();
     }
+    
+    @objc func backItem(sender: UIButton){
+        _ = navigationController?.popViewController(animated: true)
+        stopCar();
+    }
 
 
     /**
@@ -298,9 +352,9 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      */
     fileprivate func updateConstraints() {
         if currentOrientation == .portrait {
-            runRobotConstraints.constant = 0;
+//            runRobotConstraints.constant = 0;
         } else {
-            runRobotConstraints.constant = -60;
+//            runRobotConstraints.constant = -60;
         }
     }
 
@@ -318,7 +372,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
         bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
         let indicatorValues = "i0,0\n";
-        bluetooth.sendDataFromJs(payloadData: indicatorValues)
+        bluetooth.sendDataFromJs(payloadData: indicatorValues);
     }
 
     /**
