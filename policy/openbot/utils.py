@@ -50,7 +50,11 @@ def prepare_for_training(
 
 
 def show_batch(dataset, policy="autopilot", model=None, fig_num=1):
-    (image_batch, cmd_batch), label_batch = next(iter(dataset))
+    try:
+        (image_batch, cmd_batch), label_batch = next(iter(dataset))
+    except StopIteration:
+        print("End of dataset")
+        return
     NUM_SAMPLES = min(image_batch.numpy().shape[0], 15)
 
     if policy == "autopilot":

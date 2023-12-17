@@ -13,6 +13,12 @@ class dataloader:
         if self.policy == "autopilot":
             self.processed_frames_file_name = "matched_frame_ctrl_cmd_processed.txt"
             self.labels = self.load_labels()
+            self.rewards = self.load_rewards()
+        # Create a tensor from the rewards list
+            self.rewards_value = tf.constant(
+                [(float(reward[0])) for reward in self.rewards.values()]
+            )
+            self.rewards_value = tf.reshape(self.rewards_value, (-1, 1))
             self.index_table = self.lookup_table()
             self.label_values = tf.constant(
                 [
@@ -65,8 +71,6 @@ class dataloader:
                             .replace("\t", " ")
                             .split("\n")
                         )
-                
-
                         data = [
                             [v.strip() for v in line.split(" ") if v.strip() != ""]
                             for line in lines
@@ -95,3 +99,57 @@ class dataloader:
     def get_label(self, file_path):
         index = self.index_table.lookup(file_path)
         return self.cmd_values[index], self.label_values[index]
+
+    def get_rewards(self, file_path):
+        index = self.index_table.lookup(file_path)
+        return self.rewards_value[index]
+
+    def load_rewards(self):
+        rewards = []
+        
+        for dataset in self.datasets:
+            for folder in [
+                f
+                for f in os.listdir(os.path.join(self.data_dir, dataset))
+                    if not f.startswith(".")
+                ]:
+                    rewards_file = os.path.join(
+                        self.data_dir,
+                        dataset,
+                        folder,
+                        "reward_data",
+                        "matched_frame_reward_processed.txt"
+                    )
+                    with open(rewards_file) as f_input:
+                        # discard header
+                        header = f_input.readline()
+                        data = f_input.read()
+                        lines = (
+                            data.replace(",", " ")
+                            .replace("\\", "/")
+                            .replace("\r", "")
+                            .replace("\t", " ")
+                            .split("\n")
+                        )
+                
+
+                        data = [
+                            [v.strip() for v in line.split(" ") if v.strip() != ""]
+                            for line in lines
+                            if len(line) > 0 and line[0] != "#"
+                        ]
+                        # Tuples containing id: framepath and respectively labels "left,right,cmd" for autopilot policy
+                        # and labels "left,right,dist,sinYaw,cosYaw" point_goal_nav policy
+                        data = [(line[1], line[2:]) for line in data if len(line) > 1]
+                        rewards.extend(data)
+                
+        return dict(rewards)
+
+    def get_data(self, file_path):
+        index = self.index_table.lookup(file_path)
+
+        return (
+            self.cmd_values[index],
+            self.label_values[index],
+            self.rewards_value[index]
+        )

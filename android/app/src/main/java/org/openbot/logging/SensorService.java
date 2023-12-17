@@ -17,6 +17,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.SystemClock;
+import android.util.Log;
+
 import androidx.annotation.RequiresApi;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -115,14 +117,22 @@ public class SensorService extends Service implements SensorEventListener {
   public int onStartCommand(Intent intent, int flags, int startId) {
     Bundle extras = intent.getExtras();
     String logFolder;
+    String rewardFolder;
     if (extras == null) {
       logFolder =
           Environment.getExternalStorageDirectory().getAbsolutePath()
               + File.separator
               + getString(R.string.app_name);
+      rewardFolder =
+              Environment.getExternalStorageDirectory().getAbsolutePath()
+                      + File.separator
+                      + getString(R.string.app_name);
     } else {
       logFolder = (String) extras.get("logFolder");
+      rewardFolder = (String) extras.get("rewardFolder");
     }
+
+
 
     int delay = (int) (preferencesManager.getDelay() * 1000);
     if (preferencesManager.getSensorStatus(Enums.SensorType.ACCELEROMETER.getSensor())
@@ -200,7 +210,7 @@ public class SensorService extends Service implements SensorEventListener {
       appendLog(gpsLog, "timestamp[ns],latitude,longitude,altitude[m],bearing,speed[m/s]");
     }
 
-    rewardLog = openLog(logFolder, "rewardLog.txt");
+    rewardLog = openLog(rewardFolder, "rewardLog.txt");
     appendLog(rewardLog, "timestamp[ns],reward");
 
     frameLog = openLog(logFolder, "rgbFrames.txt");
@@ -421,7 +431,12 @@ public class SensorService extends Service implements SensorEventListener {
         } else if (msg.what == MSG_REWARD) {
           long reward = msg.getData().getLong("rewardNumber");
           long timestamp = msg.getData().getLong("timestamp");
-          if (rewardLog != null) appendLog(rewardLog, timestamp + "," + reward);
+          if (rewardLog != null) {
+            appendLog(rewardLog, timestamp + "," + reward);
+
+          }
+
+
         } else if (msg.what == MSG_CONTROL) {
           // msg.arg1 and msg.arg2 contain left and right control signals respectively
           if (ctrlLog != null)

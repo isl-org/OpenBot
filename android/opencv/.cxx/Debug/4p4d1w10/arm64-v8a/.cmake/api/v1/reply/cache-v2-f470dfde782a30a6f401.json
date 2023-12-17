@@ -163,7 +163,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/lilou/Documents/Master's research/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/arm64-v8a"
+			"value" : "c:/Users/lilou/Documents/Master/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/arm64-v8a"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -715,7 +715,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/lilou/Documents/Master's research/OpenBot/android/opencv/libcxx_helper"
+			"value" : "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/libcxx_helper"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -751,7 +751,7 @@
 				}
 			],
 			"type" : "UNINITIALIZED",
-			"value" : "C:\\Users\\lilou\\Documents\\Master's research\\OpenBot\\android\\opencv\\build\\intermediates\\cxx\\Debug\\4p4d1w10\\obj\\arm64-v8a"
+			"value" : "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\android\\opencv\\build\\intermediates\\cxx\\Debug\\4p4d1w10\\obj\\arm64-v8a"
 		},
 		{
 			"name" : "CMAKE_LINKER",
@@ -1023,7 +1023,7 @@
 				}
 			],
 			"type" : "UNINITIALIZED",
-			"value" : "C:\\Users\\lilou\\Documents\\Master's research\\OpenBot\\android\\opencv\\build\\intermediates\\cxx\\Debug\\4p4d1w10\\obj\\arm64-v8a"
+			"value" : "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\android\\opencv\\build\\intermediates\\cxx\\Debug\\4p4d1w10\\obj\\arm64-v8a"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
@@ -1295,7 +1295,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/lilou/Documents/Master's research/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/arm64-v8a"
+			"value" : "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/arm64-v8a"
 		},
 		{
 			"name" : "Project_IS_TOP_LEVEL",
@@ -1319,7 +1319,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/lilou/Documents/Master's research/OpenBot/android/opencv/libcxx_helper"
+			"value" : "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/libcxx_helper"
 		}
 	],
 	"kind" : "cache",

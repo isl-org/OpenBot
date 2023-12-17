@@ -159,6 +159,40 @@ class MyCallback(tf.keras.callbacks.Callback):
             )
 
 
+# def process_data(tr: Training):
+#     tr.train_datasets = utils.list_dirs(tr.train_data_dir)
+#     tr.test_datasets = utils.list_dirs(tr.test_data_dir)
+
+#     print("Train Datasets: ", len(tr.train_datasets))
+#     print("Test Datasets: ", len(tr.test_datasets))
+
+#     # 1ms
+#     max_offset = 1e3
+#     train_frames = associate_frames.match_frame_ctrl_input(
+#         tr.train_data_dir,
+#         tr.train_datasets,
+#         max_offset,
+#         redo_matching=tr.redo_matching,
+#         remove_zeros=tr.remove_zeros,
+#         policy=tr.hyperparameters.POLICY,
+#     )
+
+#     test_frames = associate_frames.match_frame_ctrl_input(
+#         tr.test_data_dir,
+#         tr.test_datasets,
+#         max_offset,
+#         redo_matching=tr.redo_matching,
+#         remove_zeros=tr.remove_zeros,
+#         policy=tr.hyperparameters.POLICY,
+#     )
+
+#     tr.image_count_train = len(train_frames)
+#     tr.image_count_test = len(test_frames)
+#     print(
+#         "There are %d train images and %d test images"
+#         % (tr.image_count_train, tr.image_count_test)
+#     )
+
 def process_data(tr: Training):
     tr.train_datasets = utils.list_dirs(tr.train_data_dir)
     tr.test_datasets = utils.list_dirs(tr.test_data_dir)
@@ -193,6 +227,93 @@ def process_data(tr: Training):
         % (tr.image_count_train, tr.image_count_test)
     )
 
+    # Process reward data
+    train_rewards = associate_frames.match_frame_rewards_input(
+        tr.train_data_dir,
+        tr.train_datasets,
+        max_offset,
+        redo_matching=tr.redo_matching,
+        remove_zeros=tr.remove_zeros,
+        policy=tr.hyperparameters.POLICY,
+        
+    )
+
+    test_rewards = associate_frames.match_frame_rewards_input(
+        tr.test_data_dir,
+        tr.test_datasets,
+        max_offset,
+        redo_matching=tr.redo_matching,
+        remove_zeros=tr.remove_zeros,
+        policy=tr.hyperparameters.POLICY,
+        
+    )
+
+    common_list_train = list(set(train_rewards) & set(train_frames))
+    common_list_test = list(set(test_frames) & set(test_rewards))
+    
+
+    for dataset in tr.train_datasets:
+        for folder in utils.list_dirs(os.path.join(tr.train_data_dir, dataset)):
+            session_dir = os.path.join(tr.train_data_dir, dataset, folder, "reward_data", "matched_frame_reward_processed.txt")
+    # Read the existing content from the file
+            with open(session_dir, "r") as file:
+                lines = file.readlines()
+
+    # Filter lines based on specific words
+            filtered_lines = [line for line in lines if any(word in line for word in common_list_train)]
+
+    # Overwrite the file with filtered lines
+            with open(session_dir, "w") as file:
+                file.writelines(filtered_lines)
+
+                ###########
+
+    for dataset in tr.test_datasets:
+        for folder in utils.list_dirs(os.path.join(tr.test_data_dir, dataset)):
+            session_dir = os.path.join(tr.test_data_dir, dataset, folder, "reward_data", "matched_frame_reward_processed.txt")
+    # Read the existing content from the file
+            with open(session_dir, "r") as file:
+                lines = file.readlines()
+
+    # Filter lines based on specific words
+            filtered_lines = [line for line in lines if any(word in line for word in common_list_test)]
+
+    # Overwrite the file with filtered lines
+            with open(session_dir, "w") as file:
+                file.writelines(filtered_lines)
+
+                ################
+
+    for dataset in tr.test_datasets:
+        for folder in utils.list_dirs(os.path.join(tr.test_data_dir, dataset)):
+            session_dir = os.path.join(tr.test_data_dir, dataset, folder, "sensor_data", "matched_frame_ctrl_cmd_processed.txt")
+    # Read the existing content from the file
+            with open(session_dir, "r") as file:
+                lines = file.readlines()
+
+    # Filter lines based on specific words
+            filtered_lines = [line for line in lines if any(word in line for word in common_list_test)]
+
+    # Overwrite the file with filtered lines
+            with open(session_dir, "w") as file:
+                file.writelines(filtered_lines)
+                
+                #################
+
+    for dataset in tr.train_datasets:
+        for folder in utils.list_dirs(os.path.join(tr.train_data_dir, dataset)):
+            session_dir = os.path.join(tr.train_data_dir, dataset, folder, "sensor_data", "matched_frame_ctrl_cmd_processed.txt")
+    # Read the existing content from the file
+            with open(session_dir, "r") as file:
+                lines = file.readlines()
+
+    # Filter lines based on specific words
+            filtered_lines = [line for line in lines if any(word in line for word in common_list_train)]
+
+    # Overwrite the file with filtered lines
+            with open(session_dir, "w") as file:
+                file.writelines(filtered_lines)
+
 
 def load_tfrecord(tr: Training, verbose=0):
     def process_train_sample(features):
@@ -201,7 +322,7 @@ def load_tfrecord(tr: Training, verbose=0):
 
         if tr.hyperparameters.POLICY == "autopilot":
             cmd_input = features["cmd"]
-            label = [features["left"], features["right"]]
+            label = [features["left"], features["right"], features["reward"]]
             image = data_augmentation.augment_img(image)
             if tr.hyperparameters.FLIP_AUG:
                 image, cmd_input, label = data_augmentation.flip_sample(
@@ -239,7 +360,7 @@ def load_tfrecord(tr: Training, verbose=0):
             )
             cmd_input = [features["dist"], features["sinYaw"], features["cosYaw"]]
 
-        label = [features["left"], features["right"]]
+        label = [features["left"], features["right"], features["reward"]]
         return (image, cmd_input), label
 
     if tr.hyperparameters.POLICY == "autopilot":
@@ -265,9 +386,12 @@ def load_tfrecord(tr: Training, verbose=0):
         shape = image.numpy().shape
         tr.NETWORK_IMG_HEIGHT = shape[0]
         tr.NETWORK_IMG_WIDTH = shape[1]
+        reward = label[2]
+        label = label[:2]
         print("Image shape: ", shape)
         print("Command: ", cmd_input.numpy())
         print("Label: ", label.numpy())
+        print("Reward: ", reward.numpy())
 
     if tr.hyperparameters.POLICY == "autopilot":
         test_dataset = (
@@ -309,6 +433,7 @@ def load_tfrecord(tr: Training, verbose=0):
 
 
 def load_data(tr: Training, verbose=0):
+    print("STARTING LOAD_DATA")
     # list_train_ds = tf.data.Dataset.list_files(train_frames)
     # list_test_ds = tf.data.Dataset.list_files(test_frames)
     list_train_ds = tf.data.Dataset.list_files(
@@ -442,6 +567,8 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
         tr.loss_fn = losses.sq_weighted_mse_angle
     elif tr.hyperparameters.POLICY == "point_goal_nav":
         tr.loss_fn = losses.mae_raw_weighted_mse_angle
+    if tr.hyperparameters.MODEL == "pilot_reinforcement":
+        tr.loss_fn = losses.custom_loss
 
     tr.metric_list = [
         "mean_absolute_error",
@@ -472,7 +599,9 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
 
     if tr.hyperparameters.WANDB:
         callback_list += [WandbCallback()]
-    tr.history = model.fit(
+        
+    if tr.hyperparameters.MODEL == "pilot_reinforcement":
+        tr.history = model.fit(
         tr.train_ds,
         epochs=tr.hyperparameters.NUM_EPOCHS,
         steps_per_epoch=STEPS_PER_EPOCH,
@@ -480,7 +609,18 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
         validation_data=tr.test_ds,
         verbose=verbose,
         callbacks=callback_list,
-    )
+        )
+
+    else:
+        tr.history = model.fit(
+            tr.train_ds,
+            epochs=tr.hyperparameters.NUM_EPOCHS,
+            steps_per_epoch=STEPS_PER_EPOCH,
+            initial_epoch=tr.INITIAL_EPOCH,
+            validation_data=tr.test_ds,
+            verbose=verbose,
+            callbacks=callback_list,
+        )
 
     if tr.hyperparameters.WANDB:
         wandb.save(tr.log_path)
@@ -659,7 +799,7 @@ if __name__ == "__main__":
         "--model",
         type=str,
         default="pilot_net",
-        choices=["cil_mobile" , "reinforcement", "cil_mobile_fast", "cil", "pilot_net"],
+        choices=["cil_mobile", "cil_mobile_fast", "cil", "pilot_net"],
         help="network architecture (default: pilot_net)",
     )
     parser.add_argument(
@@ -728,4 +868,4 @@ if __name__ == "__main__":
     if args.create_tf_record:
         create_tfrecord(my_callback, args.policy)
 
-    start_train(params, my_callback, verbose=1, no_tf_record=args.no_tf_record)
+    start_train(params, my_callback, verbose=0, no_tf_record=args.no_tf_record)

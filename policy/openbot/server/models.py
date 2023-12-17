@@ -9,7 +9,8 @@ from openbot.utils import list_dirs, read_csv_dict
 
 
 def get_models():
-    return [name for name in list_dirs(models_dir)]
+    models = [name for name in list_dirs(models_dir)]
+    return models
 
 
 def get_model_info(name):

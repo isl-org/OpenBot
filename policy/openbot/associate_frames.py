@@ -93,9 +93,11 @@ def associate(first_list, second_list, max_offset):
     """
     first_keys = list(first_list)
     second_keys = list(second_list)
+    
     potential_matches = [
         (b - a, a, b) for a in first_keys for b in second_keys if (b - a) < max_offset
     ]  # Control before image or within max_offset
+    
     potential_matches.sort(reverse=True)
     matches = []
     for diff, a, b in potential_matches:
@@ -104,6 +106,7 @@ def associate(first_list, second_list, max_offset):
             matches.append((a, b))  # Append tuple
 
     matches.sort()
+    
     return matches
 
 
@@ -126,6 +129,28 @@ def match_frame_ctrl_input(
                 frames.append(frame_list[timestamp][0])
     return frames
 
+def match_frame_rewards_input(
+    data_dir,
+    datasets,
+    max_offset,
+    redo_matching=True,
+    remove_zeros=False,
+    policy="autopilot",
+    
+):
+    frames_reward = []
+
+    for dataset in datasets:
+        for folder in utils.list_dirs(os.path.join(data_dir, dataset)):
+            session_dir = os.path.join(data_dir, dataset, folder)
+            frame_list_reward = match_frame_session_rewards( 
+                session_dir, max_offset, redo_matching, remove_zeros, policy
+            )
+            for timestamp_reward in list(frame_list_reward):
+                frames_reward.append(frame_list_reward[timestamp_reward][0])
+
+    return frames_reward
+
 
 def match_frame_session(
     session_dir, max_offset, redo_matching=False, remove_zeros=True, policy="autopilot"
@@ -147,7 +172,7 @@ def match_frame_session(
 
     sensor_path = os.path.join(session_dir, "sensor_data")
     img_path = os.path.join(session_dir, "images")
-    print("Processing folder %s" % (session_dir))
+    #print("Processing folder %s" % (session_dir))
     if not redo_matching and os.path.isfile(
         os.path.join(sensor_path, "matched_frame_ctrl.txt")
     ):
@@ -173,7 +198,7 @@ def match_frame_session(
                         ",".join(ctrl_list[b]),
                     )
                 )
-        print(" Frames and controls matched.")
+        #print(" Frames and controls matched.")
 
     if not redo_matching and os.path.isfile(
         os.path.join(sensor_path, matched_frames_file_name)
@@ -203,7 +228,7 @@ def match_frame_session(
                     "%d,%d,%s,%s\n"
                     % (a, b - a, ",".join(frame_list[a]), ",".join(cmd_list[b]))
                 )
-        print(" Frames and high-level commands matched.")
+        #print(" Frames and high-level commands matched.")
 
     if not redo_matching and os.path.isfile(
         os.path.join(sensor_path, processed_frames_file_name)
@@ -223,10 +248,11 @@ def match_frame_session(
                 if policy == "autopilot":
                     left = int(frame[3])
                     right = int(frame[4])
+                    
                     # left = normalize(max_ctrl, frame[3])
                     # right = normalize(max_ctrl, frame[4])
                     if remove_zeros and left == 0 and right == 0:
-                        print(f" Removed timestamp: {timestamp}")
+                        #print(f" Removed timestamp: {timestamp}")
                         del frame
                     else:
                         frame_name = os.path.join(img_path, frame[2] + "_crop.jpeg")
@@ -240,7 +266,7 @@ def match_frame_session(
                     left = float(frame_list[timestamp][3])
                     right = float(frame_list[timestamp][4])
                     if remove_zeros and left == 0.0 and right == 0.0:
-                        print(" Removed timestamp:%s" % (timestamp))
+                        #print(" Removed timestamp:%s" % (timestamp))
                         del frame_list[timestamp]
                     else:
                         frame_name = os.path.join(
@@ -255,9 +281,79 @@ def match_frame_session(
                         )
 
         print(" Preprocessing completed.")
-
+        
     return read_file_list(os.path.join(sensor_path, processed_frames_file_name))
 
+def match_frame_session_rewards(
+   session_dir, max_offset, redo_matching=True, remove_zeros=False, policy="autopilot"
+):
+    print("STARTING REWARD SESSION")
+    matched_frames_file_name = "matched_frame_reward.txt"
+    processed_frames_file_name = "matched_frame_reward_processed.txt"
+    log_file = "rewardLog.txt"
+    csv_label_string = "timestamp (frame),time_offset (reward-frame),frame,reward\n"
+    csv_label_string_processed = "timestamp,frame,reward\n"
+
+    reward_path = os.path.join(session_dir, "reward_data")
+    sensor_path = os.path.join(session_dir, "sensor_data")
+    img_path = os.path.join(session_dir, "images")
+    print("Processing folder %s" % (session_dir))
+
+    if not redo_matching and os.path.isfile(
+        os.path.join(reward_path, matched_frames_file_name)
+    ):
+        print(" Frames and rewards already matched.")
+    else:
+        # Match frames with reward signals
+        frame_list = read_file_list(os.path.join(sensor_path, "rgbFrames.txt"))
+        if len(frame_list) == 0:
+            raise Exception("Empty rgbFrames.txt")
+        reward_list = read_file_list(os.path.join(reward_path, "rewardLog.txt"))
+        if len(reward_list) == 0:
+            raise Exception("Empty rewardLog.txt")
+        matches = associate(frame_list, reward_list, max_offset)
+        with open(os.path.join(reward_path, "matched_frame_reward.txt"), "w") as f:
+            f.write(csv_label_string)
+            for a, b in matches:
+                f.write(
+                    "%d,%d,%s,%s\n"
+                    % (
+                        a,
+                        b - a,
+                        ",".join(frame_list[a]),
+                        ",".join(reward_list[b]),
+                    )
+                )
+        print(" Frames and rewards matched.")
+
+    if not redo_matching and os.path.isfile(
+        os.path.join(reward_path, processed_frames_file_name)
+    ):
+        print(" Preprocessing already completed.")
+    else:
+        print("BLIBLI")
+        # Cleanup: Add path and remove frames where reward is 0
+        frame_list = read_file_list(os.path.join(reward_path, "matched_frame_reward.txt"))
+        with open(os.path.join(reward_path, processed_frames_file_name), "w") as f:
+            f.write(csv_label_string_processed)
+            for timestamp in list(frame_list):
+                frame = frame_list[timestamp]
+            
+                if len(frame) < 3:
+                    print("Just To Check")
+                    continue
+
+                reward = float(frame[2])
+                if remove_zeros and reward == 0.1:
+                    print(f" Removed timestamp: {timestamp}")
+                    del frame
+                else:
+                    frame_name = os.path.join(img_path, frame[1] + "_crop.jpeg")
+                    f.write("%s,%s,%f\n" % (timestamp, frame_name, reward))
+
+        print(" Preprocessing completed.")
+
+    return read_file_list(os.path.join(reward_path, processed_frames_file_name))
 
 def normalize(max_ctrl, val):
     return int(int(val) / max_ctrl * 255)

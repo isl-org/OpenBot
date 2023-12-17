@@ -42,6 +42,7 @@ def parse_tfrecord_fn_autopilot(example):
         "left": tf.io.FixedLenFeature([], tf.float32),
         "right": tf.io.FixedLenFeature([], tf.float32),
         "cmd": tf.io.FixedLenFeature([], tf.float32),
+        "reward": tf.io.FixedLenFeature([], tf.float32),
     }
 
     example = tf.io.parse_single_example(example, feature_description)
@@ -82,6 +83,7 @@ def create_example_autopilot(image, path, ctrl_cmd):
         "left": float_feature(float(ctrl_cmd[0]) / 255.0),
         "right": float_feature(float(ctrl_cmd[1]) / 255.0),
         "cmd": float_feature(float(ctrl_cmd[2])),
+        "reward": float_feature(float(ctrl_cmd[3])),
     }
 
     return tf.train.Example(features=tf.train.Features(feature=feature))

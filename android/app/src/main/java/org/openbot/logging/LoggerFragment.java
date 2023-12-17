@@ -299,13 +299,18 @@ public class LoggerFragment extends CameraFragment {
     }
   }
 
-  protected void sendRewardToSensorService(){
-    if (sensorMessenger != null){
+  protected void sendRewardToSensorService() {
+    if (sensorMessenger != null) {
       try {
+        Log.e("TEST", "Sending reward message...");
         sensorMessenger.send(LogDataUtils.generateRewardMessage(reward));
+        reward = 0;
       } catch (RemoteException e) {
+        Log.e("TEST", "Failed to send reward message.");
         e.printStackTrace();
       }
+    } else {
+      Log.e("TEST", "sensorMessenger is null.");
     }
   }
 
@@ -338,6 +343,7 @@ public class LoggerFragment extends CameraFragment {
             + File.separator
             + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
     intentSensorService.putExtra("logFolder", logFolder + File.separator + "sensor_data");
+    intentSensorService.putExtra("rewardFolder", logFolder + File.separator + "reward_data");
     requireActivity().startService(intentSensorService);
     requireActivity().bindService(intentSensorService, sensorConnection, Context.BIND_AUTO_CREATE);
     runInBackground(
@@ -347,7 +353,9 @@ public class LoggerFragment extends CameraFragment {
             TimeUnit.MILLISECONDS.sleep(500);
             sendControlToSensorService();
             sendIndicatorToSensorService();
-            //sendRewardToSensorService(reward);
+            sendRewardToSensorService();
+
+
 
           } catch (InterruptedException e) {
             Timber.e(e, "Got interrupted.");
@@ -362,8 +370,15 @@ public class LoggerFragment extends CameraFragment {
     try {
       // Initialize the autopilot if not already initialized
       if (autopilot == null) {
-        tfModel = new Model(1, Model.CLASS.AUTOPILOT, Model.TYPE.CMDNAV,
-                "CIL-Mobile-Cmd.tflite", Model.PATH_TYPE.ASSET, "networks/autopilot_float.tflite", "256x96");
+        // tfModel = new Model(1, Model.CLASS.AUTOPILOT, Model.TYPE.CMDNAV,
+                // "CIL-Mobile-Cmd.tflite", Model.PATH_TYPE.ASSET, "networks/autopilot_float.tflite", "256x96");
+        tfModel = new Model( masterList.size() + 1,
+                Model.CLASS.AUTOPILOT,
+                Model.TYPE.CMDNAV,
+                "reinforcement_learning.tflite",
+                Model.PATH_TYPE.FILE,
+                requireActivity().getFilesDir() + File.separator + "reinforcement_learning.tflite",
+                "256x96");
         Network.Device device = Network.Device.CPU; // Set your desired device here
         int numThreads = 4; // Set the number of threads you want to use
 
@@ -399,6 +414,7 @@ public class LoggerFragment extends CameraFragment {
                                     String.format(Locale.US, "%.0f,%.0f", left, right)));
 
     runInBackground(this::sendControlToSensorService);
+    runInBackground(this::sendRewardToSensorService);
 
   }
 
@@ -572,6 +588,7 @@ public class LoggerFragment extends CameraFragment {
     binding.controllerContainer.controlInfo.setText(
         String.format(Locale.US, "%.0f,%.0f", left, right));
     runInBackground(this::sendControlToSensorService);
+    runInBackground(this::sendRewardToSensorService);
   }
 
   private void setSpeedMode(Enums.SpeedMode speedMode) {
@@ -711,6 +728,7 @@ public class LoggerFragment extends CameraFragment {
         canvas2.drawBitmap(opencvProcessedBitmap, frameToCropTransform, null);
         ImageUtils.saveBitmap(
                 opencvProcessedBitmap, logFolder + File.separator + "opencv_images", frameNum + "_opencv.jpeg");
+
       }
     }
   }
@@ -718,51 +736,33 @@ public class LoggerFragment extends CameraFragment {
     // Ensure that the autopilot is initialized
     if (autopilot != null) {
       // Perform image recognition and get control commands
-      Bitmap resizedBitmap;
-      resizedBitmap = cropBitmap(frameBitmap,(int) 256, (int)96);
       Control control = autopilot.recognizeImage(frameBitmap, vehicle.getIndicator());
 
       // Handle the control commands (e.g., update vehicle control)
       handleDriveCommandAutonomous(control);
     }
   }
-  public Bitmap cropBitmap(Bitmap originalBitmap, int cropWidth, int cropHeight) {
-    int originalWidth = originalBitmap.getWidth();
-    int originalHeight = originalBitmap.getHeight();
-
-    // Calculate the coordinates for the top-left corner of the cropped region
-    int left = (originalWidth - cropWidth) / 2;
-    int top = (originalHeight - cropHeight) / 2;
-
-    // Create the cropped Bitmap
-    Bitmap croppedBitmap = Bitmap.createBitmap(originalBitmap, left, top, cropWidth, cropHeight);
-
-    return croppedBitmap;
-  }
   private void changeRewardNegative(){
-    reward = - 30;
-    sendRewardToSensorService();
+    reward = - 15;
   }
 
   private void changeRewardPositive(){
-    reward =  30;
-    sendRewardToSensorService();
+    reward =  15;
   }
 
   private void changeRewardDistance(double distance){
     if (abs(distance) < 100) {
-      reward =  100;
-    } else if (abs(distance) > 200) {
-      reward =  - 10;
-    } else if (abs(distance) < 200 ){
       reward =  10;
+    } else if (abs(distance) > 300) {
+      reward =  - 1;
+    } else if (abs(distance) < 300 ){
+      reward =  1;
 
-    } else {
-      reward = 2;
+    } else if (distance != Double.MAX_VALUE){
+      reward = -7;
     }
-    sendRewardToSensorService();
   }
- /* private void saveRewardToFile( String folderPath, long frameNumber) {
+  /*private void saveRewardToFile( String folderPath, long frameNumber) {
     File folder = new File(folderPath + File.separator + "reward");
 
     if (!folder.exists()) {
@@ -869,10 +869,10 @@ public class LoggerFragment extends CameraFragment {
     }
 
     double distance = findClosestCentroid(centroids, new Point(250, 310));
-    if (distance != Double.MAX_VALUE) {
+
       // Save the centroid to a TXT file
-      changeRewardDistance(distance);
-    }
+    changeRewardDistance(distance);
+
     Bitmap processedBitmap = Bitmap.createBitmap(bottom.cols(), bottom.rows(), Bitmap.Config.ARGB_8888);
     Utils.matToBitmap(bottom, processedBitmap);
 

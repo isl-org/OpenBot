@@ -154,46 +154,6 @@ def cil_mobile(img_width, img_height, bn=True, policy="autopilot"):
 
     return model
 
-def reinforcement(img_width, img_height, bn=True, policy="autopilot"):
-    if policy == "autopilot":
-        mlp = create_mlp(1, 16, 16, dropout=0.5, name="cmd")
-    elif policy == "point_goal_nav":
-        mlp = create_mlp(3, 16, 16, dropout=0.5, name="goal")
-    else:
-        raise Exception("Unknown policy")
-
-    cnn = create_cnn(
-        img_width,
-        img_height,
-        3,
-        cnn_filters=(32, 64, 96, 128, 256),
-        kernel_sz=(5, 3, 3, 3, 3),
-        stride=(2, 2, 2, 2, 2),
-        padding="same",
-        activation="relu",
-        conv_dropout=0.2,
-        mlp_filters=(128, 64),
-        mlp_dropout=0.5,
-        bn=bn,
-    )
-
-    # fuse input MLP and CNN
-    combinedInput = tf.keras.layers.concatenate([mlp.output, cnn.output])
-
-    # output MLP
-    x = tf.keras.layers.Dense(64, activation="relu")(combinedInput)
-    x = tf.keras.layers.Dropout(0.5)(x)
-    x = tf.keras.layers.concatenate([mlp.input, x])
-    x = tf.keras.layers.Dense(16, activation="relu")(x)
-    x = tf.keras.layers.Dropout(0.5)(x)
-    x = tf.keras.layers.concatenate([mlp.input, x])
-    x = tf.keras.layers.Dense(2, activation="linear")(x)
-
-    # our final model will accept commands on the MLP input
-    # and images on the CNN input, outputting two values (left/right ctrl)
-    model = tf.keras.Model(name="reinforcement", inputs=(cnn.input, mlp.input), outputs=x)
-
-    return model
 
 def cil_mobile_fast(img_width, img_height, bn=True, policy="autopilot"):
     if policy == "autopilot":
@@ -274,3 +234,46 @@ def cil(img_width, img_height, bn=True, policy="autopilot"):
     model = tf.keras.Model(name="cil", inputs=(cnn.input, mlp.input), outputs=x)
 
     return model
+
+def pilot_reinforcement(img_width, img_height, bn=True, policy="autopilot"):
+
+    # This model is only expected to be used on 'autopilot' 
+    if policy == "autopilot":
+        mlp = create_mlp(1, 1, 1, dropout=0, name="cmd")
+    elif policy == "point_goal_nav":
+        mlp = create_mlp(3, 16, 16, dropout=0, name="goal")
+    else:
+        raise Exception("Unknown policy")
+
+    # Convolutional neural network 
+    cnn = create_cnn(
+        img_width,
+        img_height,
+        3,
+        cnn_filters=(24, 36, 48, 64, 64),
+        kernel_sz=(5, 5, 5, 3, 3),
+        stride=(2, 2, 2, 1, 1),
+        padding="valid",
+        activation="relu",
+        mlp_filters=(1164, 100),
+        mlp_dropout=0,
+        bn=bn,
+    )
+
+    
+    # fuse input MLP and CNN
+    combinedInput = tf.keras.layers.concatenate([mlp.output, cnn.output])
+
+    # output MLP
+    x = tf.keras.layers.Dense(50, activation="relu")(combinedInput)
+    x = tf.keras.layers.concatenate([mlp.input, x])
+    x = tf.keras.layers.Dense(10, activation="relu")(x)
+    x = tf.keras.layers.concatenate([mlp.input, x])
+    x = tf.keras.layers.Dense(2, activation="linear")(x)
+
+    # our final model will accept commands on the MLP input
+    # and images on the CNN input, outputting two values (left/right ctrl)
+    model = tf.keras.Model(name="pilot_reinforcement", inputs=(cnn.input, mlp.input), outputs=x)
+    
+    return model
+
