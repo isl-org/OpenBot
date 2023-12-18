@@ -50,17 +50,23 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     var object: String = "";
     @IBOutlet weak var robotImage: UIImageView!
     @IBOutlet weak var resetRobot: UIButton!
+    var topAnchorConstraint: NSLayoutConstraint!;
+    var centerXConstraint: NSLayoutConstraint!;
+    var topLabelConstraint: NSLayoutConstraint!;
+    var centerlabelXConstraint: NSLayoutConstraint!;
+    var topStopButtonlConstraint: NSLayoutConstraint!;
+    var centerStopButtonXConstraint: NSLayoutConstraint!;
+    var topResetButtonlConstraint: NSLayoutConstraint!;
+    var centerResetButtonXConstraint: NSLayoutConstraint!;
+
     /**
       override function calls when view of controller loaded
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        createImage(width: 230, height: 300, leadingAnchor: 80, topAnchor: 160, ImageType: robotImage);
-        createLabel(width: 20, height: 20, leadingAnchor: 130, topAnchor: 450, labelType: commandMessage);
-        createButton(width: 210, height: 45, leadingAnchor: 90, topAnchor: 500, buttonType: stopRobot);
-        createButton(width: 210, height: 45, leadingAnchor: 90, topAnchor: 570, buttonType: resetRobot);
+        setUpUI();
         stopRobot.backgroundColor = Colors.title;
-        stopRobot.setTitle("Stop Car", for: .normal);
+        stopRobot.setTitle("Stop Robot", for: .normal);
         stopRobot.addTarget(self, action: #selector(cancel), for: .touchUpInside);
         stopRobot.layer.cornerRadius = 10;
         resetRobot.backgroundColor = Colors.title
@@ -72,7 +78,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(createCamera), name: .createCameraView, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(setPosForPointGoalnavigation), name: .pointGoalNav, object: nil);
         setupNavigationBarItem();
-        updateConstraints();
         let modelItems = Common.loadAllModelItemsFromBundle()
         if (modelItems.count > 0) {
             let detectorModel = modelItems.first(where: { $0.type == TYPE.DETECTOR.rawValue })
@@ -100,29 +105,77 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         temp = temp + 1;
     }
     
-    
-    func createButton(width: Double, height: Double, leadingAnchor: CGFloat, topAnchor: CGFloat, buttonType: UIButton) {
-        buttonType.translatesAutoresizingMaskIntoConstraints = false;
-//        buttonType.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant:  leadingAnchor).isActive = true
-        buttonType.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchor).isActive = true
-        buttonType.widthAnchor.constraint(equalToConstant: width).isActive = true
-        buttonType.heightAnchor.constraint(equalToConstant: height).isActive = true
-        buttonType.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true;
+    /**
+     function to create the UI for the run robot
+     */
+    func setUpUI(){
+        setUpImage();
+        setUpLabel();
+        setUpStopButton();
+        setUpResetButton();
     }
     
-    func createLabel(width: Double, height: Double, leadingAnchor: CGFloat, topAnchor: CGFloat, labelType: UILabel){
-        labelType.text = "You code is executing..";
-        labelType.translatesAutoresizingMaskIntoConstraints = false;
-        labelType.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchor).isActive = true;
-        labelType.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true;
+    func setUpStopButton(){
+        stopRobot.translatesAutoresizingMaskIntoConstraints = false;
+        stopRobot.widthAnchor.constraint(equalToConstant: 210).isActive = true
+        stopRobot.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        if currentOrientation == .portrait {
+            topStopButtonlConstraint = stopRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 500)
+            centerStopButtonXConstraint = stopRobot.centerXAnchor.constraint(equalTo: view.centerXAnchor);
+        } else {
+            topStopButtonlConstraint?.isActive = false;
+            centerStopButtonXConstraint?.isActive = false
+            topStopButtonlConstraint = stopRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 120)
+            centerStopButtonXConstraint = stopRobot.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 430)
+        }
+        NSLayoutConstraint.activate([topStopButtonlConstraint, centerStopButtonXConstraint])
     }
     
-    func createImage(width: Double, height: Double, leadingAnchor: CGFloat, topAnchor: CGFloat, ImageType: UIImageView) {
-        ImageType.translatesAutoresizingMaskIntoConstraints = false;
-        ImageType.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchor).isActive = true
-        ImageType.widthAnchor.constraint(equalToConstant: width).isActive = true
-        ImageType.heightAnchor.constraint(equalToConstant: height).isActive = true
-        ImageType.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true;
+    func setUpResetButton(){
+        resetRobot.translatesAutoresizingMaskIntoConstraints = false;
+        resetRobot.widthAnchor.constraint(equalToConstant: 210).isActive = true
+        resetRobot.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        if currentOrientation == .portrait {
+            topResetButtonlConstraint = resetRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 570)
+            centerResetButtonXConstraint = resetRobot.centerXAnchor.constraint(equalTo: view.centerXAnchor);
+        } else {
+            topResetButtonlConstraint?.isActive = false;
+            centerResetButtonXConstraint?.isActive = false
+            topResetButtonlConstraint = resetRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 210)
+            centerResetButtonXConstraint = resetRobot.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 430)
+        }
+        NSLayoutConstraint.activate([topResetButtonlConstraint, centerResetButtonXConstraint])
+    }
+    
+    func setUpLabel(){
+        commandMessage.text = "You code is executing..";
+        commandMessage.translatesAutoresizingMaskIntoConstraints = false;
+        if currentOrientation == .portrait {
+            topLabelConstraint = commandMessage.topAnchor.constraint(equalTo: view.topAnchor, constant: 450)
+            centerlabelXConstraint = commandMessage.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        } else {
+            topLabelConstraint?.isActive = false;
+            centerlabelXConstraint?.isActive = false
+            topLabelConstraint = commandMessage.topAnchor.constraint(equalTo: view.topAnchor, constant: 320)
+            centerlabelXConstraint = commandMessage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 115)
+        }
+        NSLayoutConstraint.activate([topLabelConstraint, centerlabelXConstraint])
+    }
+    
+    func setUpImage() {
+        robotImage.translatesAutoresizingMaskIntoConstraints = false;
+        robotImage.widthAnchor.constraint(equalToConstant: 230).isActive = true
+        robotImage.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        if currentOrientation == .portrait {
+            topAnchorConstraint = robotImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 160)
+            centerXConstraint = robotImage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0)
+        } else {
+            topAnchorConstraint?.isActive = false;
+            centerXConstraint?.isActive = false
+            topAnchorConstraint = robotImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 40)
+            centerXConstraint = robotImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 90)
+        }
+        NSLayoutConstraint.activate([centerXConstraint, topAnchorConstraint])
     }
 
     /**
@@ -349,11 +402,37 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      Function to update the constraints of image
      */
     fileprivate func updateConstraints() {
+        topAnchorConstraint.isActive = false;
+        centerXConstraint.isActive = false
+        topLabelConstraint.isActive = false;
+        centerlabelXConstraint.isActive = false;
+        topStopButtonlConstraint.isActive = false;
+        centerStopButtonXConstraint.isActive = false;
+        topResetButtonlConstraint.isActive = false;
+        centerResetButtonXConstraint.isActive = false;
         if currentOrientation == .portrait {
-//            runRobotConstraints.constant = 0;
+            topAnchorConstraint = robotImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 160)
+            centerXConstraint = robotImage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0)
+            topLabelConstraint = commandMessage.topAnchor.constraint(equalTo: view.topAnchor, constant: 450)
+            centerlabelXConstraint = commandMessage.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            topStopButtonlConstraint = stopRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 500)
+            centerStopButtonXConstraint = stopRobot.centerXAnchor.constraint(equalTo: view.centerXAnchor);
+            topResetButtonlConstraint = resetRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 570)
+            centerResetButtonXConstraint = resetRobot.centerXAnchor.constraint(equalTo: view.centerXAnchor);
         } else {
-//            runRobotConstraints.constant = -60;
+            topAnchorConstraint = robotImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 40)
+            centerXConstraint = robotImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 90)
+            topLabelConstraint = commandMessage.topAnchor.constraint(equalTo: view.topAnchor, constant: 320)
+            centerlabelXConstraint = commandMessage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 115)
+            topStopButtonlConstraint = stopRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 120)
+            centerStopButtonXConstraint = stopRobot.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 430)
+            topResetButtonlConstraint = resetRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 210)
+            centerResetButtonXConstraint = resetRobot.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 430)
         }
+        NSLayoutConstraint.activate([centerXConstraint, topAnchorConstraint])
+        NSLayoutConstraint.activate([topLabelConstraint, centerlabelXConstraint])
+        NSLayoutConstraint.activate([topStopButtonlConstraint, centerStopButtonXConstraint])
+        NSLayoutConstraint.activate([topResetButtonlConstraint, centerResetButtonXConstraint])
     }
 
     /**
