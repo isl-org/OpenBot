@@ -115,6 +115,9 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         setUpResetButton();
     }
     
+    /**
+     function to create stop button
+     */
     func setUpStopButton(){
         stopRobot.translatesAutoresizingMaskIntoConstraints = false;
         stopRobot.widthAnchor.constraint(equalToConstant: 210).isActive = true
@@ -131,6 +134,9 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         NSLayoutConstraint.activate([topStopButtonlConstraint, centerStopButtonXConstraint])
     }
     
+    /**
+     function to create reset button
+     */
     func setUpResetButton(){
         resetRobot.translatesAutoresizingMaskIntoConstraints = false;
         resetRobot.widthAnchor.constraint(equalToConstant: 210).isActive = true
@@ -147,6 +153,9 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         NSLayoutConstraint.activate([topResetButtonlConstraint, centerResetButtonXConstraint])
     }
     
+    /**
+     function to create label
+     */
     func setUpLabel(){
         commandMessage.text = "You code is executing..";
         commandMessage.translatesAutoresizingMaskIntoConstraints = false;
@@ -162,6 +171,9 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         NSLayoutConstraint.activate([topLabelConstraint, centerlabelXConstraint])
     }
     
+    /**
+     function to create openbot image
+     */
     func setUpImage() {
         robotImage.translatesAutoresizingMaskIntoConstraints = false;
         robotImage.widthAnchor.constraint(equalToConstant: 230).isActive = true
@@ -288,7 +300,8 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         DispatchQueue.main.async {
             self.sceneView = ARSCNView(frame: self.view.bounds)
             self.sceneView.debugOptions = []
-            self.view.insertSubview(self.sceneView, belowSubview: self.stopRobot)
+            self.view.insertSubview(self.sceneView, belowSubview: self.stopRobot);
+            self.view.insertSubview(self.sceneView, belowSubview: self.resetRobot);
             let scene = SCNScene()
             self.sceneView.scene = scene
             self.sceneView.delegate = self
@@ -330,7 +343,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         _ = simd_normalize(endingPoint.simdPosition - startingPoint.simdPosition)
     }
 
-//    @IBOutlet weak var runRobotConstraints: NSLayoutConstraint!
     let factor = 0.8;
 
     /**
@@ -363,9 +375,10 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         self.stopRobot.addTarget(self, action: #selector(self.backItem(sender:)), for: .touchUpInside);
     }
     
-
+    /**
+     function to reset blockly commands for robot
+     */
     @objc  func resetRobotFunction() {
-        print("i was tapped");
         _ = jsEvaluator(jsCode: preferencesManager.getBlocklyCode()!);
         stopRobot.setTitle("Stop Car", for: .normal);
         stopRobot.removeTarget(nil, action: nil, for: .touchUpInside)
@@ -392,11 +405,13 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         stopCar();
     }
     
+    /**
+     Function to remove current viewController from navigation stack on clicking back
+     */
     @objc func backItem(sender: UIButton){
         _ = navigationController?.popViewController(animated: true)
         stopCar();
     }
-
 
     /**
      Function to update the constraints of image
