@@ -136,14 +136,18 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     arCore = new ArCore(requireContext(), binding.GLSurfaceView, mainHandler);
     arCore.setArCoreListener(this);
     binding.stopCarBtn.setOnClickListener(
-        v -> {
-          myWebView.destroy();
-          binding.jsCommand.setText(getString(android.R.string.cancel));
-          vehicle.stopBot();
-          vehicle.setIndicator(0);
-          isFollow = false;
-          isAutopilot = false;
-        });
+            v -> {
+                 myWebView.destroy();
+                 binding.jsCommand.setText(getString(android.R.string.cancel));
+                 vehicle.stopBot();
+                 binding.stopBtnName.setText("Back");
+                 binding.stopCarBtn.setOnClickListener(null);
+                 binding.stopCarBtn.setOnClickListener(v1 -> requireActivity().onBackPressed());
+                 vehicle.setIndicator(0);
+                 isFollow = false;
+                 isAutopilot = false;
+
+  });
     // Execute the JavaScript code if the js code variable is not null and isRunJSCommand is true
     if (BarCodeScannerFragment.finalCode != null && isRunJSCommand) {
       runJSCommand(BarCodeScannerFragment.finalCode);
