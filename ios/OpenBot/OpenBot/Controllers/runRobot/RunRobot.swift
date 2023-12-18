@@ -379,6 +379,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      function to reset blockly commands for robot
      */
     @objc  func resetRobotFunction() {
+        stopCar()
         _ = jsEvaluator(jsCode: preferencesManager.getBlocklyCode()!);
         stopRobot.setTitle("Stop Car", for: .normal);
         stopRobot.removeTarget(nil, action: nil, for: .touchUpInside)
