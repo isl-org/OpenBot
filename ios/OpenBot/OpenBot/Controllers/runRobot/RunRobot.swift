@@ -305,12 +305,9 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         NotificationCenter.default.post(name: .cancelThread, object: nil);
         NotificationCenter.default.post(name: .commandName, object: "\(Strings.cancel)ed");
         stopCar();
-        stopRobot.setTitle("Back", for: .normal);
-        DispatchQueue.main.async {
-            if self.stopRobot.currentTitle == "Back" {
-                self.stopRobot.addTarget(self, action: #selector(self.backItem(sender:)), for: .touchUpInside);
-            }
-        }
+        self.stopRobot.setTitle("Back", for: .normal);
+        self.stopRobot.removeTarget(nil, action: nil, for: .touchUpInside)
+        self.stopRobot.addTarget(self, action: #selector(self.backItem(sender:)), for: .touchUpInside);
     }
     
 
@@ -318,6 +315,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         print("i was tapped");
         _ = jsEvaluator(jsCode: preferencesManager.getBlocklyCode()!);
         stopRobot.setTitle("Stop Car", for: .normal);
+        stopRobot.removeTarget(nil, action: nil, for: .touchUpInside)
         stopRobot.addTarget(self, action: #selector(cancel), for: .touchUpInside);
     }
     
