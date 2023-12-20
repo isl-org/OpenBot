@@ -101,7 +101,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   private Matrix cropToFrameTransform;
   public static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
   public static TaskStorage taskStorage = new TaskStorage();
-
+  
   @SuppressLint("SetJavaScriptEnabled")
   @Override
   public View onCreateView(
@@ -129,6 +129,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     return inflateFragment(binding, inflater, container);
   }
 
+  @SuppressLint("SetJavaScriptEnabled")
   @Override
   public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
@@ -137,17 +138,28 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     arCore.setArCoreListener(this);
     binding.stopCarBtn.setOnClickListener(
             v -> {
-                 myWebView.destroy();
-                 binding.jsCommand.setText(getString(android.R.string.cancel));
-                 vehicle.stopBot();
-                 binding.stopBtnName.setText("Back");
-                 binding.stopCarBtn.setOnClickListener(null);
-                 binding.stopCarBtn.setOnClickListener(v1 -> requireActivity().onBackPressed());
-                 vehicle.setIndicator(0);
-                 isFollow = false;
-                 isAutopilot = false;
+              myWebView.destroy();
+              binding.jsCommand.setText(getString(android.R.string.cancel));
+              stop();
+              handleStopCarButtonClick();
+            });
+       binding.resetBtn.setOnClickListener(
+            v -> {
+              stop();
+              myWebView = new WebView(requireContext());
+              // enable JavaScript in the web-view.
+              myWebView.getSettings().setJavaScriptEnabled(true);
+              runJSCommand(BarCodeScannerFragment.finalCode);
+              handelResetCarButtonClick();
+            }
+    );
 
-  });
+
+
+
+
+
+
     // Execute the JavaScript code if the js code variable is not null and isRunJSCommand is true
     if (BarCodeScannerFragment.finalCode != null && isRunJSCommand) {
       runJSCommand(BarCodeScannerFragment.finalCode);
@@ -169,6 +181,49 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     }
   }
 
+  /**
+   * Stops the robot and performs cleanup actions.
+   * - Destroys the WebView.
+   * - Stops the robot's movement.
+   */
+  private void stop()
+  {
+    myWebView.destroy();
+    vehicle.stopBot();
+    vehicle.setIndicator(0);
+    isAutopilot=false;
+    isFollow=false;
+    isFollowMultipleObject=false;
+    isStartDetectorAutoPilot=false;
+    isOnDetection=false;
+  }
+
+  /**
+   * Transitions "Stop Car" button to "Back" text
+   * and sets a listener to navigate back.
+   */
+  private void handleStopCarButtonClick(){
+    binding.stopBtnName.setText("Back");
+    binding.stopCarBtn.setOnClickListener(null);
+    binding.stopCarBtn.setOnClickListener(v1 -> requireActivity().onBackPressed());
+  }
+
+  /**
+   * Handles the click event of the "Reset Car" button.
+   * Updates the "Stop Car" button text to its initial state.
+   * Sets a listener to handle "Stop Car" button click, invoking
+   * actions to navigate back and stop the robot.
+   */
+  private void handelResetCarButtonClick()
+  {
+    //runJSCommand(BarCodeScannerFragment.finalCode);
+    binding.stopBtnName.setText("Stop Car");
+    binding.stopCarBtn.setOnClickListener(v -> {
+      handleStopCarButtonClick();
+      stop();
+    });
+
+  }
   @Override
   protected void processFrame(Bitmap bitmap, ImageProxy imageProxy) {
     // Check and execute modes based on blockly block code commands.
