@@ -3,15 +3,13 @@
 This Controller app serves as a `remote controller` for the [OpenBot](https://www.openbot.org) vehicle. Basically it
 performs similar function as PS3/4 or Xbox remote controller, but running on another Android/iOS device.
 
+ ## Getting Started
+- Begin by installing [Flutter](https://flutter.dev/) on your system. Choose the appropriate download for your operating system, which includes options for Windows, macOS, Linux, and ChromeOS. Follow the official Flutter installation guide for detailed instructions: [Flutter Installation Guide](https://docs.flutter.dev/get-started/install)
 
-## Setup:
-- First you need to install [Flutter](https://docs.flutter.dev/get-started/install) into your system to run this application directly from the code.
-### Get Started:
-- [Install](https://docs.flutter.dev/get-started/install) flutter.
-
-- Choose the operating system for the Flutter installation. Downloads available for Windows, macOS, Linux, and ChromeOS operating systems.
-- Once you've finished setting up Flutter, you can open the project in terminal by navigating into the `openBot/controller/flutter` folder.
-- You can run the application through the terminal using following commands.
+### Using Terminal
+- Once Flutter is installed successfully, open your **terminal** or **command prompt**.
+- Change your current directory to the location where the OpenBot project is stored then navigate to `openBot/controller/flutter` folder.
+- Use the following commands to run the Flutter application from the terminal.
 
   ####  Install Dependencies:
     ```bash
@@ -25,15 +23,17 @@ performs similar function as PS3/4 or Xbox remote controller, but running on ano
     ```bash
      flutter doctor
     ```
+### Using Editor
+- Follow the official Flutter guide for setting up an editor:  [Set up an editor ](https://docs.flutter.dev/tools/android-studio) 
+- Ensure that your editor is configured for Flutter development. Install any required plugins or extensions, following the editor-specific instructions in the Flutter documentation for the best development experience.
 
-- You can run the application through the editor as well and here is the link for [Setup an Editor](https://docs.flutter.dev/tools/android-studio) 
 - Once you open your project in editor after the setup, it will appear as shown in the following image.
 
   <p float="left">
     <img src="../../docs/images/android_editor.jpg" width="50%" />
   </p>
 
-- This is how you can run the application directly from editor.
+- Please follow the instructions similar to the ones mentioned above for running Flutter in the terminal and directly run from the ``run`` button for future repetitions.
 
   <p float="left">
     <img src="../../docs/images/run_editor.jpg" width="50%" />
@@ -48,16 +48,10 @@ When the controller app is started, it immediately tries to connect to the robot
 </p>
 
 To connect the controller to the robot, place the robot's app control setting into the **Phone** mode.
-
-<p float="left">
-  <img src="../../docs/images/app_controller_settings_1.jpg" width="25%" />
-  <img src="../../docs/images/app_controller_settings_2.jpg" width="25%" />
-</p>
-
 You can also connect to the controller from the `FreeRoamFragment` by selecting the phone as the controller:
 
 <p float="left">
-  <img src="../../docs/images/free-roam-fragment-selection.jpg" width="50%" />
+  <img src="../../docs/images/phone_selection.gif" width="50%" />
 </p>
 
 In a few seconds, the controller will change its screen to:
@@ -84,11 +78,11 @@ above/below the center of the slider.
   <img src="../../docs/images/flutter_controller_dual_drive_mode.jpg" width="50%" />
 </p>
 
-- Indicators: You can also set the left/right turn indicators <img src="../../docs/images/keyboard_arrow_left-24px.svg" height="24"/> <img src="../../docs/images/keyboard_arrow_right-24px.svg" height="24"/> by clicking on the arrows on the top-left of the screen.
+- ``Indicators``: You can also set the left/right turn indicators <img src="../../docs/images/keyboard_arrow_left-24px.svg" height="24"/> <img src="../../docs/images/keyboard_arrow_right-24px.svg" height="24"/> by clicking on the arrows on the top-left of the screen.
 
-- Switch Camera: You can choose the camera option to switch between the front and back camera modes.
-- Sound: Select the sound option to activate sound mode, and simply tap on it to mute if needed.
-- Mirror view: This allows you to display the view in a mirrored or flipped form. 
+- ``Switch Camera``: You can choose the camera option to switch between the front and back camera modes.
+- ``Mute``: Select the sound option to activate sound mode, and simply tap on it to mute if needed.
+- ``Mirror view``: This allows you to display the view in a mirrored or flipped form. 
 
 ### Tilt to drive
 
@@ -104,7 +98,7 @@ Here is a picture of the `tilt mode` screen:
 
 Use the `accelerator` and `brake` buttons to move forward/backward.
 
-- Pressing the `acceletator` will accelerate the robot to full speed within 2 seconds. When you release the button, the
+- Pressing the `accelerator` will accelerate the robot to full speed within 2 seconds. When you release the button, the
   robot will slow down to a stop (stop speed set to 0% of the maximum speed, can be adjusted).
 - Pressing the `brake` button will immediately stop the robot. If we hold the brake for another second, the robot will
   start moving backwards until it reaches the maximum reverse speed in one second. When we let go of the brake, the
