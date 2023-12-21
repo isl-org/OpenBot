@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -10,7 +9,6 @@ import 'package:nsd/nsd.dart';
 import 'package:openbot_controller/globals.dart';
 import 'package:openbot_controller/screens/controlSelector.dart';
 import 'package:openbot_controller/screens/settingsDrawer.dart';
-
 import '../utils/constants.dart';
 import 'discoveringDevices.dart';
 
@@ -34,6 +32,9 @@ class ControllerState extends State<Controller> {
   bool indicatorLeft = false;
   bool indicatorRight = false;
   bool isSettings = false;
+  bool isTiltingPhoneMode = false;
+  bool isScreenMode = false;
+
   var _nextPort = 56360;
 
   int get nextPort => _nextPort++;
@@ -256,17 +257,18 @@ class ControllerState extends State<Controller> {
               mirror: mirroredVideo,
             ),
             ControlSelector(setMirrorVideo, indicatorLeft, indicatorRight,
-                services, _peerConnection, isSettings),
+                services, _peerConnection, isTiltingPhoneMode, isScreenMode),
             Positioned(
-              left: 20,
+              left: isTiltingPhoneMode ? 45 : 110,
               top: 16.0, // Adjust the top margin as needed
               child: Container(
+                // padding: EdgeInsets.only(left: ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(45),
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.transparent,
                 ),
                 child: FloatingActionButton(
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: Colors.white.withOpacity(0.5),
                     onPressed: () {
                       setState(() {
                         isSettings = true;
@@ -278,7 +280,6 @@ class ControllerState extends State<Controller> {
             if (isSettings)
               Stack(
                 children: [
-                  // Add an invisible barrier to detect taps outside the drawer
                   GestureDetector(
                     onTap: () {
                       setState(() {
@@ -289,7 +290,15 @@ class ControllerState extends State<Controller> {
                       color: Colors.transparent,
                     ),
                   ),
-                  const SettingsDrawer(),
+                  SettingsDrawer(
+                    services,
+                    (bool newTiltingMode, bool newScreenMode) {
+                      setState(() {
+                        isTiltingPhoneMode = newTiltingMode;
+                        isScreenMode = newScreenMode;
+                      });
+                    },
+                  ),
                 ],
               ),
           ],
