@@ -4,7 +4,7 @@ This Controller app serves as a `remote controller` for the [OpenBot](https://ww
 performs similar function as PS3/4 or Xbox remote controller, but running on another Android/iOS device.
 
  ## Getting Started
-- Begin by installing [Flutter](https://flutter.dev/) on your system. Choose the appropriate download for your operating system, which includes options for Windows, macOS, Linux, and ChromeOS. Follow the official Flutter installation guide for detailed instructions: [Flutter Installation Guide](https://docs.flutter.dev/get-started/install)
+Begin by installing [Flutter](https://flutter.dev/) on your system. Choose the appropriate download for your operating system, which includes options for Windows, macOS, Linux, and ChromeOS. Follow the official Flutter installation guide for detailed instructions: [Flutter Installation Guide](https://docs.flutter.dev/get-started/install)
 
 ### Using Terminal
 - Once Flutter is installed successfully, open your **terminal** or **command prompt**.
