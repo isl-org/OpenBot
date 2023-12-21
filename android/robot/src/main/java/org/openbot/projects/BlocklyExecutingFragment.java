@@ -101,7 +101,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   private Matrix cropToFrameTransform;
   public static float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
   public static TaskStorage taskStorage = new TaskStorage();
-  
+
   @SuppressLint("SetJavaScriptEnabled")
   @Override
   public View onCreateView(
@@ -120,7 +120,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
       int orientation = getResources().getConfiguration().orientation;
       if (orientation == Configuration.ORIENTATION_LANDSCAPE
           || orientation == Configuration.ORIENTATION_PORTRAIT) {
-        myWebView.destroy();
+           myWebView.destroy();
         showAlertDialog();
       }
     }
@@ -143,7 +143,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
               stop();
               handleStopCarButtonClick();
             });
-       binding.resetBtn.setOnClickListener(
+             binding.resetBtn.setOnClickListener(
             v -> {
               stop();
               myWebView = new WebView(requireContext());
@@ -153,13 +153,6 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
               handelResetCarButtonClick();
             }
     );
-
-
-
-
-
-
-
     // Execute the JavaScript code if the js code variable is not null and isRunJSCommand is true
     if (BarCodeScannerFragment.finalCode != null && isRunJSCommand) {
       runJSCommand(BarCodeScannerFragment.finalCode);
