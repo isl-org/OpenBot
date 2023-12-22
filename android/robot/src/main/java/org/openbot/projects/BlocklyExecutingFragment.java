@@ -139,13 +139,15 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     binding.stopCarBtn.setOnClickListener(
             v -> {
               myWebView.destroy();
-              binding.jsCommand.setText(getString(android.R.string.cancel));
               stop();
+              binding.jsCommand.setText(getString(android.R.string.cancel));
               handleStopCarButtonClick();
             });
              binding.resetBtn.setOnClickListener(
             v -> {
               stop();
+              binding.jsCommand.setText(getString(android.R.string.cancel));
+              myWebView.destroy();
               myWebView = new WebView(requireContext());
               // enable JavaScript in the web-view.
               myWebView.getSettings().setJavaScriptEnabled(true);
@@ -209,7 +211,6 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
    */
   private void handelResetCarButtonClick()
   {
-    //runJSCommand(BarCodeScannerFragment.finalCode);
     binding.stopBtnName.setText("Stop Car");
     binding.stopCarBtn.setOnClickListener(v -> {
       handleStopCarButtonClick();
