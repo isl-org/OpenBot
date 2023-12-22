@@ -110,6 +110,12 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
         gameController.resetControl = false
         fragmentType.currentFragment = "FreeRoam";
+        sharedConnection?.isReady() { ready in
+            if(ready){
+                let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: self.fragmentType.currentFragment));
+                client.send(message: msg);
+            }
+        }
     }
 
     /**

@@ -61,6 +61,22 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         connection.start(queue: .main)
     }
 
+    func isReady(completion: @escaping (Bool) -> Void) {
+        connection.stateUpdateHandler = { newState in
+            print("connection.stateUpdateHandler \(newState)")
+            switch newState {
+            case .ready:
+                completion(true)
+            case .preparing:
+                // handle preparing state if needed
+                completion(false)
+            default:
+                // handle other states if needed
+                completion(false)
+            }
+        }
+    }
+    
     /// function to send data in utf8 format.
     func send(_ message: String) {
         connection.send(content: message.data(using: .utf8), contentContext: .defaultMessage, isComplete: true, completion: .contentProcessed({ error in
@@ -111,8 +127,10 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         client.send(message: msg);
         msg = JSON.toString(VideoCommandEvent(status: .init(VIDEO_COMMAND: "START")));
         client.send(message: msg);
-        msg = JSON.toString(VehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true, FRAGMENT_TYPE: fragmentType.currentFragment)));
+        msg = JSON.toString(VehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true)));
         client.send(message: msg)
+        msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: fragmentType.currentFragment));
+        client.send(message: msg);
     }
 
     /// function to start the video streams

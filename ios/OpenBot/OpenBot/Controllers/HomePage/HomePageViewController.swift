@@ -86,6 +86,12 @@ class HomePageViewController: CameraController, UICollectionViewDataSource, UICo
         gameController.resetControl = true
         fragmentType.currentFragment = "Home";
         setupOpenCodeIcon();
+        sharedConnection?.isReady() { ready in
+            if(ready){
+                let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: fragmentType.currentFragment));
+                client.send(message: msg);
+            }
+        }
     }
 
     override func initializeCamera() {
@@ -133,7 +139,6 @@ class HomePageViewController: CameraController, UICollectionViewDataSource, UICo
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
         }
         gameController.resetControl = true
-
     }
 
 
