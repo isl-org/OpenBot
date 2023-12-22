@@ -21,6 +21,7 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
     // outgoing connection
     weak var msgDelegate: sendInitialMessageDelegate?
     weak var startStreamDelegate: startStreamDelegate?
+    let fragmentType = FragmentType.shared
 
     /// initializing function; endpoint
     init(endpoint: NWEndpoint) {
@@ -110,7 +111,7 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         client.send(message: msg);
         msg = JSON.toString(VideoCommandEvent(status: .init(VIDEO_COMMAND: "START")));
         client.send(message: msg);
-        msg = JSON.toString(VehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true)));
+        msg = JSON.toString(VehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true, FRAGMENT_TYPE: fragmentType.currentFragment)));
         client.send(message: msg)
     }
 

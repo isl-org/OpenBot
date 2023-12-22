@@ -80,6 +80,7 @@ struct VehicleStatusEvent: Codable {
         var INDICATOR_LEFT: Bool
         var INDICATOR_RIGHT: Bool
         var INDICATOR_STOP: Bool
+        var FRAGMENT_TYPE: String
     }
 }
 

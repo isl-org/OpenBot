@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		06B219AD2ABD4D6100E65CEF /* SharedPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B219AC2ABD4D6100E65CEF /* SharedPreferences.swift */; };
+		06C87ABB2B3568E700454299 /* FragmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C87ABA2B3568E700454299 /* FragmentType.swift */; };
 		113A1E4E0F1483D107D53843 /* BlockyTasksStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113A10896533873FE2926AF5 /* BlockyTasksStorage.swift */; };
 		3A3C9E0D29E803AC008758C9 /* projectCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A3C9E0C29E803AC008758C9 /* projectCollectionViewCell.xib */; };
 		3A70CA1229C98E5800E4192B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */; };
@@ -146,6 +147,7 @@
 
 /* Begin PBXFileReference section */
 		06B219AC2ABD4D6100E65CEF /* SharedPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPreferences.swift; sourceTree = "<group>"; };
+		06C87ABA2B3568E700454299 /* FragmentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FragmentType.swift; sourceTree = "<group>"; };
 		113A10896533873FE2926AF5 /* BlockyTasksStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockyTasksStorage.swift; sourceTree = "<group>"; };
 		17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot_OpenBotUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A3C9E0C29E803AC008758C9 /* projectCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = projectCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -304,6 +306,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06C87AB92B3568AF00454299 /* Fragment */ = {
+			isa = PBXGroup;
+			children = (
+				06C87ABA2B3568E700454299 /* FragmentType.swift */,
+			);
+			path = Fragment;
+			sourceTree = "<group>";
+		};
 		158970C63E9775BD41F614A3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -514,6 +524,7 @@
 		66AC71E129B885410022108A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				06C87AB92B3568AF00454299 /* Fragment */,
 				66AC71E229B885410022108A /* Settings */,
 				66AC71E429B885410022108A /* DataCollection */,
 				66AC71E729B885410022108A /* PointGoalNavigation */,
@@ -1206,6 +1217,7 @@
 				66AC720629B885410022108A /* PointGoalFragment.swift in Sources */,
 				727D3E6881E8758C94FF74F4 /* GifLoader.swift in Sources */,
 				66AC721929B885C70022108A /* Navigation.swift in Sources */,
+				06C87ABB2B3568E700454299 /* FragmentType.swift in Sources */,
 				727D3D7ED38D147ECD48C9BA /* SignalingMessage.swift in Sources */,
 				727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */,
 				727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */,

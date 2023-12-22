@@ -29,6 +29,7 @@ class ObjectTrackingFragment: CameraController {
     private var bufferWidth = 0
     private let edgeOffset: CGFloat = 2.0
     private var useDynamicSpeed: Bool = false
+    let fragmentType = FragmentType.shared
 
     /// Called after the view fragment has loaded.
     override func viewDidLoad() {
@@ -78,6 +79,7 @@ class ObjectTrackingFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
         setupNavigationBarItem()
         gameController.resetControl = false
+        fragmentType.currentFragment = "ObjectDetection";
         calculateFrame()
         super.viewDidLoad()
     }
