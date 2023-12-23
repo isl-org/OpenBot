@@ -72,12 +72,11 @@ def custom_loss(y_true, y_pred):
 
     # Define weights for different components
     weight_label = 1.0
-    weight_reward = 0.5 # Adjust the weight based on the importance of rewards
+    weight_reward = 0.8 # Adjust the weight based on the importance of rewards
     weight_angle = 1.0
     
-    # Compute the mean squared error for label prediction
-    # angle_true = label[:, 1] - label[:, 0]
-    # angle_pred = predicted_label[:,1] - predicted_label[:,0]
+    # Compute the mean squared error for the angles
+    
     mse = mse_angle(label, predicted_label)
 
     # Compute the mean of the rewards

@@ -77,6 +77,7 @@ def load_labels(data_dir, datasets, policy="autopilot"):
                 corpus.extend(data)
     return dict(corpus)
 
+# Similar to load labels but adapted to the rewards folder
 def load_rewards(data_dir, datasets, policy="autopilot"):
     rewards = []
     for dataset in datasets:
@@ -112,8 +113,7 @@ def load_rewards(data_dir, datasets, policy="autopilot"):
                             for line in lines
                             if len(line) > 0 and line[0] != "#"
                         ]
-                        # Tuples containing id: framepath and respectively labels "left,right,cmd" for autopilot policy
-                        # and labels "left,right,dist,sinYaw,cosYaw" point_goal_nav policy
+                        
                         data = [(line[1], line[2:]) for line in data if len(line) > 1]
                         rewards.extend(data)
     

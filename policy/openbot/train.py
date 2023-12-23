@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 import absl.logging
-from tensorflow.keras.utils import plot_model
 from graphviz import Digraph
 
 from . import (
@@ -218,7 +217,7 @@ def process_data(tr: Training):
     common_list_train = list(set(train_rewards) & set(train_frames))
     common_list_test = list(set(test_frames) & set(test_rewards))
     
-
+    # match rewards and ctrl and vise versa
     for dataset in tr.train_datasets:
         for folder in utils.list_dirs(os.path.join(tr.train_data_dir, dataset)):
             session_dir = os.path.join(tr.train_data_dir, dataset, folder, "reward_data", "matched_frame_reward_processed.txt")
@@ -289,7 +288,7 @@ def load_tfrecord(tr: Training, verbose=0):
 
         if tr.hyperparameters.POLICY == "autopilot":
             cmd_input = features["cmd"]
-            label = [features["left"], features["right"], features["reward"]]
+            label = [features["left"], features["right"], features["reward"]]  # added reward
             image = data_augmentation.augment_img(image)
             if tr.hyperparameters.FLIP_AUG:
                 image, cmd_input, label = data_augmentation.flip_sample(
@@ -531,6 +530,7 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
 
     callback.broadcast("model", tr.model_name)
 
+    # change the loss function if the model is pilot_reinforcement
     if tr.hyperparameters.POLICY == "autopilot":
         tr.loss_fn = losses.sq_weighted_mse_angle
     elif tr.hyperparameters.POLICY == "point_goal_nav":
@@ -570,17 +570,6 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     if tr.hyperparameters.WANDB:
         callback_list += [WandbCallback()]
         
-    # if tr.hyperparameters.MODEL == "pilot_reinforcement":
-    #     tr.history = model.fit(
-    #     tr.train_ds,
-    #     epochs=tr.hyperparameters.NUM_EPOCHS,
-    #     steps_per_epoch=STEPS_PER_EPOCH,
-    #     initial_epoch=tr.INITIAL_EPOCH,
-    #     validation_data=tr.test_ds,
-    #     verbose=verbose,
-    #     callbacks=callback_list,
-    #     )
-
     
     tr.history = model.fit(
         tr.train_ds,

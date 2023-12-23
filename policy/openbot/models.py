@@ -236,6 +236,7 @@ def cil(img_width, img_height, bn=True, policy="autopilot"):
 
     return model
 
+# Model for pilot_reinforcement, it's the same as pilot_net
 def pilot_reinforcement(img_width, img_height, bn=True, policy="autopilot"):
 
     # This model is only expected to be used on 'autopilot' 

@@ -129,6 +129,7 @@ def match_frame_ctrl_input(
                 frames.append(frame_list[timestamp][0])
     return frames
 
+# Similar to match frame ctrl input but with the rewards
 def match_frame_rewards_input(
     data_dir,
     datasets,
@@ -284,6 +285,7 @@ def match_frame_session(
         
     return read_file_list(os.path.join(sensor_path, processed_frames_file_name))
 
+# Similar to the match frame session but with the rewards
 def match_frame_session_rewards(
    session_dir, max_offset, redo_matching=True, remove_zeros=False, policy="autopilot"
 ):

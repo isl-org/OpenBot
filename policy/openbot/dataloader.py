@@ -100,10 +100,11 @@ class dataloader:
         index = self.index_table.lookup(file_path)
         return self.cmd_values[index], self.label_values[index]
 
+    
     def get_rewards(self, file_path):
         index = self.index_table.lookup(file_path)
         return self.rewards_value[index]
-
+    #Similar to load labels but for rewards
     def load_rewards(self):
         rewards = []
         
