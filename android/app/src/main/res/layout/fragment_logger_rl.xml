@@ -2,8 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="400dp"
-    android:layout_gravity="end"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".logging.LoggerFragment">
 
@@ -63,6 +62,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view" />
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/autonomous_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            android:text="AUTONOMOUS"
+            app:layout_constraintBottom_toTopOf="@+id/previewText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view" />
 
         <TextView
             android:id="@+id/previewText"
@@ -177,6 +187,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/controllerContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -186,7 +200,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:layout_margin="4dp"
-                android:layout_marginTop="16dp"
                 android:background="@drawable/button_background_border"
                 android:foreground="?attr/selectableItemBackground"
                 android:paddingHorizontal="32dp"
@@ -196,16 +209,13 @@
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <CheckBox
                 android:id="@+id/previewCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
                 android:text="Preview Images"
-                app:layout_constraintBottom_toTopOf="@+id/trainingDataCheckBox"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/sensorDataButton"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -216,7 +226,6 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="Training Images"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/previewCheckBox"
                 app:layout_constraintTop_toBottomOf="@+id/previewCheckBox" />
 

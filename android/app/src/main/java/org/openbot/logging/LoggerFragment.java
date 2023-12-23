@@ -99,13 +99,6 @@ public class LoggerFragment extends CameraFragment {
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     binding = FragmentLoggerBinding.inflate(inflater, container, false);
-    if (!OpenCVLoader.initDebug()) {
-      // OpenCV initialization failed, handle the error
-      Log.e("OPENCV TEST", "OpenCV initialization failed");
-    } else {
-      // OpenCV initialized successfully, proceed with your code
-      Log.d("OPENCV TEST", "OpenCV initialized successfully");
-    }
 
     return inflateFragment(binding, inflater, container);
   }
@@ -143,11 +136,6 @@ public class LoggerFragment extends CameraFragment {
 
     binding.loggerSwitch.setOnCheckedChangeListener(
         (buttonView, isChecked) -> setLoggingActive(isChecked));
-
-    binding.autonomousSwitch.setOnCheckedChangeListener(
-            (buttonView, isChecked) -> {
-              autonomousControlEnabled = isChecked;
-            });
 
 
 
@@ -192,36 +180,22 @@ public class LoggerFragment extends CameraFragment {
           Navigation.findNavController(requireView()).navigate(R.id.open_settings_fragment);
         });
   }
-  private void stopAutonomousDriving() {
-
-    // Close the autopilot if it was initialized
-    vehicle.setControl((float)0, (float) 0);
-    if (autopilot != null) {
-      Log.e("AUTONOMOUS STOPPING", "AUTONOMOUS STOP SUCCESS !");
-      autopilot.close();
-      autopilot = null;
-      // autonomousControlEnabled = false;
-      //                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         autonomousStarted = false;
-    }
-  }
-
-
 
   @Override
   protected void setModel(Model selected) {
     frameToCropTransform = null;
     binding.cropInfo.setText(
-        String.format(
-            Locale.US,
-            "%d x %d",
-            selected.getInputSize().getWidth(),
-            selected.getInputSize().getHeight()));
+            String.format(
+                    Locale.US,
+                    "%d x %d",
+                    selected.getInputSize().getWidth(),
+                    selected.getInputSize().getHeight()));
 
     croppedBitmap =
-        Bitmap.createBitmap(
-            selected.getInputSize().getWidth(),
-            selected.getInputSize().getHeight(),
-            Bitmap.Config.ARGB_8888);
+            Bitmap.createBitmap(
+                    selected.getInputSize().getWidth(),
+                    selected.getInputSize().getHeight(),
+                    Bitmap.Config.ARGB_8888);
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());
     if (selected.type == Model.TYPE.CMDNAV) {
@@ -299,20 +273,6 @@ public class LoggerFragment extends CameraFragment {
     }
   }
 
-  protected void sendRewardToSensorService() {
-    if (sensorMessenger != null) {
-      try {
-        Log.e("TEST", "Sending reward message...");
-        sensorMessenger.send(LogDataUtils.generateRewardMessage(reward));
-        reward = 0;
-      } catch (RemoteException e) {
-        Log.e("TEST", "Failed to send reward message.");
-        e.printStackTrace();
-      }
-    } else {
-      Log.e("TEST", "sensorMessenger is null.");
-    }
-  }
 
   protected void sendVehicleDataToSensorService(long timestamp, String data, int type) {
     if (sensorMessenger != null) {
@@ -353,7 +313,6 @@ public class LoggerFragment extends CameraFragment {
             TimeUnit.MILLISECONDS.sleep(500);
             sendControlToSensorService();
             sendIndicatorToSensorService();
-            sendRewardToSensorService();
 
 
 
@@ -361,47 +320,11 @@ public class LoggerFragment extends CameraFragment {
             Timber.e(e, "Got interrupted.");
           }
         });
-    if(autonomousControlEnabled){
-      startAutonomousDriving();
-    }
-  }
-
-  private void startAutonomousDriving() {
-    try {
-      // Initialize the autopilot if not already initialized
-      if (autopilot == null) {
-        // tfModel = new Model(1, Model.CLASS.AUTOPILOT, Model.TYPE.CMDNAV,
-                // "CIL-Mobile-Cmd.tflite", Model.PATH_TYPE.ASSET, "networks/autopilot_float.tflite", "256x96");
-        tfModel = new Model( masterList.size() + 1,
-                Model.CLASS.AUTOPILOT,
-                Model.TYPE.CMDNAV,
-                "reinforcement_learning.tflite",
-                Model.PATH_TYPE.FILE,
-                requireActivity().getFilesDir() + File.separator + "reinforcement_learning.tflite",
-                "256x96");
-        Network.Device device = Network.Device.CPU; // Set your desired device here
-        int numThreads = 4; // Set the number of threads you want to use
-
-        autopilot = new Autopilot(getActivity(), tfModel, device, numThreads);
-        Log.e("AUTONOMOUS INIT", "Autopilot initialization succes: " );
-
-      }
-    } catch (Exception e) {
-      Log.e("AUTONOMOUS INIT", "Autopilot initialization failed: " + e.getMessage());
-      e.printStackTrace();
-    }
-
-    // Start continuous autopilot updates
-
-
-    if (autopilot != null) {
-      Timber.i("Running autopilot on image %s", frameNum);
-      final long startTime = SystemClock.elapsedRealtime();
-      handleDriveCommandAutonomous(autopilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
-
-    }
 
   }
+
+
+
 
   private void handleDriveCommandAutonomous(Control control) {
     vehicle.setControl(control);
@@ -414,7 +337,6 @@ public class LoggerFragment extends CameraFragment {
                                     String.format(Locale.US, "%.0f,%.0f", left, right)));
 
     runInBackground(this::sendControlToSensorService);
-    runInBackground(this::sendRewardToSensorService);
 
   }
 
@@ -439,10 +361,6 @@ public class LoggerFragment extends CameraFragment {
           }
         });
     loggingEnabled = false;
-    if (autonomousControlEnabled){
-      stopAutonomousDriving();
-    }
-
   }
 
   private File zip(File folder) {
@@ -543,12 +461,8 @@ public class LoggerFragment extends CameraFragment {
         break;
 
       case Constants.CMD_INDICATOR_LEFT:
-        changeRewardNegative();
-        break;
 
       case Constants.CMD_INDICATOR_RIGHT:
-        changeRewardPositive();
-        break;
 
       case Constants.CMD_INDICATOR_STOP:
         sendIndicatorToSensorService();
@@ -563,18 +477,18 @@ public class LoggerFragment extends CameraFragment {
         break;
 
       case Constants.CMD_SPEED_DOWN:
-        /*setSpeedMode(
+        setSpeedMode(
             Enums.toggleSpeed(
                 Enums.Direction.DOWN.getValue(),
-                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));*/
-        //changeRewardPositive();
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+
         break;
       case Constants.CMD_SPEED_UP:
-        /*setSpeedMode(
+        setSpeedMode(
             Enums.toggleSpeed(
                 Enums.Direction.UP.getValue(),
-                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));*/
-        //changeRewardNegative();
+                Enums.SpeedMode.getByID(preferencesManager.getSpeedMode())));
+
         break;
       case Constants.CMD_NETWORK:
         cancelLogging();
@@ -588,7 +502,6 @@ public class LoggerFragment extends CameraFragment {
     binding.controllerContainer.controlInfo.setText(
         String.format(Locale.US, "%.0f,%.0f", left, right));
     runInBackground(this::sendControlToSensorService);
-    runInBackground(this::sendRewardToSensorService);
   }
 
   private void setSpeedMode(Enums.SpeedMode speedMode) {
@@ -681,17 +594,7 @@ public class LoggerFragment extends CameraFragment {
                         String.format(Locale.US, "%d x %d", image.getWidth(), image.getHeight())));
 
       if (!binding.loggerSwitch.isChecked()) return;
-      if (autonomousControlEnabled)
-      {
 
-        if (croppedBitmap != null) {
-          processFrameForAutonomous(croppedBitmap);
-          Log.e("AutonomousProcessing", "Received a frameBitmap.");
-
-        } else {
-          Log.e("AutonomousProcessing", "Received a null frameBitmap.");
-        }
-      }
 
       if (binding.previewCheckBox.isChecked() || binding.trainingDataCheckBox.isChecked()) {
         sendFrameNumberToSensorService(frameNum);
@@ -721,186 +624,9 @@ public class LoggerFragment extends CameraFragment {
         ImageUtils.saveBitmap(
             croppedBitmap, logFolder + File.separator + "images", frameNum + "_crop.jpeg");
       }
-      // Apply OpenCV processing to the same bitmap and save it
-      Bitmap opencvProcessedBitmap = applyOpenCVProcessing(croppedBitmap);
-      if (opencvProcessedBitmap != null) {
-        final Canvas canvas2 = new Canvas(croppedBitmap);
-        canvas2.drawBitmap(opencvProcessedBitmap, frameToCropTransform, null);
-        ImageUtils.saveBitmap(
-                opencvProcessedBitmap, logFolder + File.separator + "opencv_images", frameNum + "_opencv.jpeg");
-
-      }
     }
   }
-  private void processFrameForAutonomous(Bitmap frameBitmap) {
-    // Ensure that the autopilot is initialized
-    if (autopilot != null) {
-      // Perform image recognition and get control commands
-      Control control = autopilot.recognizeImage(frameBitmap, vehicle.getIndicator());
 
-      // Handle the control commands (e.g., update vehicle control)
-      handleDriveCommandAutonomous(control);
-    }
-  }
-  private void changeRewardNegative(){
-    reward = - 15;
-  }
-
-  private void changeRewardPositive(){
-    reward =  15;
-  }
-
-  private void changeRewardDistance(double distance){
-    if (abs(distance) < 100) {
-      reward =  10;
-    } else if (abs(distance) > 300) {
-      reward =  - 1;
-    } else if (abs(distance) < 300 ){
-      reward =  1;
-
-    } else if (distance != Double.MAX_VALUE){
-      reward = -7;
-    }
-  }
-  /*private void saveRewardToFile( String folderPath, long frameNumber) {
-    File folder = new File(folderPath + File.separator + "reward");
-
-    if (!folder.exists()) {
-      folder.mkdirs();
-    }
-
-    String fileName = "reward_" + frameNumber + ".txt";
-    File file = new File(folder, fileName);
-
-    try {
-      FileWriter writer = new FileWriter(file);
-      writer.write("Frame Number: " + frameNumber + "\n");
-      writer.write("Reward: " + reward + "\n");
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }*/
-
-  public Point calculateCentroid(List<Point> contour) {
-    double sumX = 0.0;
-    double sumY = 0.0;
-
-    // Calculate the sum of x and y coordinates of all points
-    for (Point point : contour) {
-      sumX += point.x;
-      sumY += point.y;
-    }
-
-    // Calculate the mean (centroid) by dividing the sums by the number of points
-    double centerX = sumX / contour.size();
-    double centerY = sumY / contour.size();
-
-    return new Point(centerX, centerY);
-  }
-
-  private double findClosestCentroid(List<Point> centroids, Point targetPoint) {
-    double minDistance = Double.MAX_VALUE;
-    Point closestCentroid = null;
-
-    for (Point centroid : centroids) {
-      double distance = calculateDistance(centroid, targetPoint);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestCentroid = centroid;
-      }
-    }
-
-    return minDistance;
-  }
-
-  private double calculateDistance(Point point1, Point point2) {
-    double dx = point1.x - point2.x;
-
-    return dx;
-  }
-
-  private Bitmap applyOpenCVProcessing(Bitmap inputImage) {
-    Mat inputMat = new Mat(inputImage.getHeight(), inputImage.getWidth(), CvType.CV_8UC4);
-    Utils.bitmapToMat(inputImage, inputMat);
-
-    // Apply image processing operations (e.g., resize and convert to grayscale)
-    // Size newSize = new Size(300, 300);
-    // Imgproc.resize(inputMat, inputMat, newSize);
-    Imgproc.cvtColor(inputMat, inputMat, Imgproc.COLOR_RGBA2GRAY);
-
-    Mat rotatedMat = new Mat();
-
-// Transpose the image (swap rows and columns)
-    //Core.transpose(inputMat, rotatedMat);
-
-// Flip the transposed image horizontally (180 degrees rotation)
-   // Core.flip(rotatedMat, rotatedMat, 1);
-
-    Scalar lowerWhite = new Scalar(200, 170, 170);
-    Scalar higherWhite = new Scalar(254, 254, 254);
-
-    double contrastFactor = 1.2; // Increase contrast by 50%
-// Scale and convert the image data type
-    Mat contrastedMat = new Mat();
-    inputMat.convertTo(contrastedMat, -1, contrastFactor, -40);
-// Ensure pixel values are within the valid range
-    Core.normalize(contrastedMat, contrastedMat, 0, 255, Core.NORM_MINMAX, CvType.CV_8U);
-
-    Mat mask = new Mat();
-    Core.inRange(contrastedMat, lowerWhite, higherWhite, mask);
-
-    Mat blur = new Mat();
-    Imgproc.medianBlur(mask, blur, 9);
-    Mat edges = new Mat();
-    Imgproc.Canny(blur, edges, 100, 150);
-
-    Mat bottom = regionOfInterest(edges);
-    Mat thresholdMat = new Mat();
-    Imgproc.adaptiveThreshold(bottom, thresholdMat, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 11, 2);
-
-    Mat hierarchy = new Mat(); // Not used in this case
-    List<MatOfPoint> contours = new ArrayList<>();
-    Imgproc.findContours(bottom, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-    List<Point> centroids = new ArrayList<>();
-    for (MatOfPoint contour : contours) {
-      Point centroid = calculateCentroid(contour.toList());
-      centroids.add(centroid);
-    }
-
-    double distance = findClosestCentroid(centroids, new Point(250, 310));
-
-      // Save the centroid to a TXT file
-    changeRewardDistance(distance);
-
-    Bitmap processedBitmap = Bitmap.createBitmap(bottom.cols(), bottom.rows(), Bitmap.Config.ARGB_8888);
-    Utils.matToBitmap(bottom, processedBitmap);
-
-    return processedBitmap;
-  }
-  public static Mat regionOfInterest(Mat inputMat){
-
-    int width = inputMat.cols();
-    int height = inputMat.rows();
-
-    // Define the ROI as the bottom half of the image
-    Point[] roiPoints = new Point[4];
-    roiPoints[0] = new Point(width * 0.0, height * 0.8); // Top-left corner of ROI
-    roiPoints[1] = new Point(width, height * 0.8);        // Top-right corner of ROI
-    roiPoints[2] = new Point(width, height);              // Bottom-right corner of ROI
-    roiPoints[3] = new Point(0, height);
-    MatOfPoint roiContour = new MatOfPoint(roiPoints);
-    Mat mask = Mat.zeros(inputMat.size(), CvType.CV_8U);
-    List<MatOfPoint> roiContours = new ArrayList<>();
-    roiContours.add(roiContour);
-    Imgproc.fillPoly(mask, roiContours, new Scalar(255));
-    Mat resultImage = new Mat();
-    Core.bitwise_and(inputMat, inputMat, resultImage, mask);
-
-
-
-    return resultImage;
-  }
   @Override
   public void onConnectionEstablished(String ipAddress) {
     requireActivity().runOnUiThread(() -> binding.ipAddress.setText(ipAddress));

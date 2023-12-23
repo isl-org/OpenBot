@@ -1,3 +1,10 @@
+/*
+Author: Lilou Gras, 2023
+This feature was the first attempt to the lane detection for the reward function. It was tested with Reward Fragment to see if I could
+have fragment communicate with one another, however, this was not achieved. It still allowed for fine tuning and was a great learning
+experience.
+ */
+
 package org.openbot.rl;
 
 import android.graphics.Bitmap;
@@ -46,7 +53,6 @@ public class LaneDetectionFragment extends CameraFragment {
 
 
 
-    private SharedDataViewModel viewModel;
 
 
 
@@ -54,7 +60,7 @@ public class LaneDetectionFragment extends CameraFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedDataViewModel.class);
+
 
 
         if (!OpenCVLoader.initDebug()) {
@@ -225,20 +231,6 @@ public class LaneDetectionFragment extends CameraFragment {
             }
         });
 
-        requireActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                viewModel.setCentroidValue(result.getCentroid());
-                TextView centroidTextView = getView().findViewById(R.id.centroidTextView);
-
-                // Update the text of the TextView with the centroid values
-                if (result.getCentroid() != null) {
-                    centroidTextView.setText(" X=" + (int) result.getCentroid().x);
-                } else {
-                    centroidTextView.setText("Centroid not found");
-                }
-            }
-        });
 
     }
 

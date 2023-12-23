@@ -78,13 +78,6 @@ def load_labels(data_dir, datasets, policy="autopilot"):
     return dict(corpus)
 
 def load_rewards(data_dir, datasets, policy="autopilot"):
-    if policy == "autopilot":
-        processed_rewards_file_name = "matched_frame_reward_processed.txt"
-    elif policy == "point_goal_nav":
-        processed_rewards_file_name = "matched_frame_reward_processed.txt"
-    else:
-        raise Exception("Unknown policy")
-    
     rewards = []
     for dataset in datasets:
             for folder in [
@@ -197,7 +190,7 @@ def convert_dataset(
     samples = updated_samples
     with tf.io.TFRecordWriter(tfrecords_dir + "/" + tfrecords_name) as writer:
         for image_path, combined_input in combined_data.items():
-            image_path = "c:/Users/lilou/Documents/Openbot/OpenBot-master/policy/" + image_path
+            image_path = "c:/Users/lilou/Documents/Master/OpenBot/policy/" + image_path
             try:
                 
                 image = tf.io.decode_jpeg(tf.io.read_file(image_path))

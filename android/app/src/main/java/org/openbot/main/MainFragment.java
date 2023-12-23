@@ -73,6 +73,11 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
             .navigate(R.id.action_mainFragment_to_loggerFragment);
         break;
 
+      case FeatureList.DATA_COLLECTION_RL:
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_mainFragment_to_logger_rl_Fragment);
+        break;
+
       case FeatureList.CONTROLLER:
         // For a library module, uncomment the following line
         // intent = new Intent(this, ControllerActivity.class);

@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 import absl.logging
+from tensorflow.keras.utils import plot_model
+from graphviz import Digraph
 
 from . import (
     associate_frames,
@@ -157,41 +159,6 @@ class MyCallback(tf.keras.callbacks.Callback):
                     ),
                 ),
             )
-
-
-# def process_data(tr: Training):
-#     tr.train_datasets = utils.list_dirs(tr.train_data_dir)
-#     tr.test_datasets = utils.list_dirs(tr.test_data_dir)
-
-#     print("Train Datasets: ", len(tr.train_datasets))
-#     print("Test Datasets: ", len(tr.test_datasets))
-
-#     # 1ms
-#     max_offset = 1e3
-#     train_frames = associate_frames.match_frame_ctrl_input(
-#         tr.train_data_dir,
-#         tr.train_datasets,
-#         max_offset,
-#         redo_matching=tr.redo_matching,
-#         remove_zeros=tr.remove_zeros,
-#         policy=tr.hyperparameters.POLICY,
-#     )
-
-#     test_frames = associate_frames.match_frame_ctrl_input(
-#         tr.test_data_dir,
-#         tr.test_datasets,
-#         max_offset,
-#         redo_matching=tr.redo_matching,
-#         remove_zeros=tr.remove_zeros,
-#         policy=tr.hyperparameters.POLICY,
-#     )
-
-#     tr.image_count_train = len(train_frames)
-#     tr.image_count_test = len(test_frames)
-#     print(
-#         "There are %d train images and %d test images"
-#         % (tr.image_count_train, tr.image_count_test)
-#     )
 
 def process_data(tr: Training):
     tr.train_datasets = utils.list_dirs(tr.train_data_dir)
@@ -527,6 +494,7 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
 
     resume_training = False
     model: tf.keras.Model
+    
 
     if tr.hyperparameters.USE_LAST:
         try:
@@ -558,8 +526,8 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
             tr.hyperparameters.BATCH_NORM,
             tr.hyperparameters.POLICY,
         )
-        dot_img_file = os.path.join(models_dir, tr.model_name, "model.png")
-        tf.keras.utils.plot_model(model, to_file=dot_img_file, show_shapes=True)
+
+
 
     callback.broadcast("model", tr.model_name)
 
@@ -578,6 +546,8 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     optimizer = tf.keras.optimizers.Adam(learning_rate=tr.hyperparameters.LEARNING_RATE)
 
     model.compile(optimizer=optimizer, loss=tr.loss_fn, metrics=tr.metric_list)
+
+
     if verbose:
         print(model.summary())
 
@@ -600,8 +570,19 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
     if tr.hyperparameters.WANDB:
         callback_list += [WandbCallback()]
         
-    if tr.hyperparameters.MODEL == "pilot_reinforcement":
-        tr.history = model.fit(
+    # if tr.hyperparameters.MODEL == "pilot_reinforcement":
+    #     tr.history = model.fit(
+    #     tr.train_ds,
+    #     epochs=tr.hyperparameters.NUM_EPOCHS,
+    #     steps_per_epoch=STEPS_PER_EPOCH,
+    #     initial_epoch=tr.INITIAL_EPOCH,
+    #     validation_data=tr.test_ds,
+    #     verbose=verbose,
+    #     callbacks=callback_list,
+    #     )
+
+    
+    tr.history = model.fit(
         tr.train_ds,
         epochs=tr.hyperparameters.NUM_EPOCHS,
         steps_per_epoch=STEPS_PER_EPOCH,
@@ -609,17 +590,6 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
         validation_data=tr.test_ds,
         verbose=verbose,
         callbacks=callback_list,
-        )
-
-    else:
-        tr.history = model.fit(
-            tr.train_ds,
-            epochs=tr.hyperparameters.NUM_EPOCHS,
-            steps_per_epoch=STEPS_PER_EPOCH,
-            initial_epoch=tr.INITIAL_EPOCH,
-            validation_data=tr.test_ds,
-            verbose=verbose,
-            callbacks=callback_list,
         )
 
     if tr.hyperparameters.WANDB:

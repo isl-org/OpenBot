@@ -59,7 +59,7 @@ def sq_weighted_mse_angle(y_true, y_pred):
     weight = tf.math.abs(angle_true + 0.05)
     return tf.math.square(weight) * (
         tf.keras.losses.mean_squared_error(angle_true, angle_pred)
-        + tf.keras.losses.mean_squared_error(y_true, y_pred)
+        + tf.keras.losses.mean_squared_error(y_true[:,:2], y_pred)
     )
 
 def custom_loss(y_true, y_pred):
@@ -72,15 +72,18 @@ def custom_loss(y_true, y_pred):
 
     # Define weights for different components
     weight_label = 1.0
-    weight_reward = 0.0001  # Adjust the weight based on the importance of rewards
+    weight_reward = 0.5 # Adjust the weight based on the importance of rewards
+    weight_angle = 1.0
     
     # Compute the mean squared error for label prediction
-    mse_label = tf.math.reduce_mean(tf.math.square(label - predicted_label))
+    # angle_true = label[:, 1] - label[:, 0]
+    # angle_pred = predicted_label[:,1] - predicted_label[:,0]
+    mse = mse_angle(label, predicted_label)
 
-    # Compute the negative sum of rewards (assuming rewards are to be maximized)
-    negative_reward_sum = -tf.math.reduce_mean(rewards)
+    # Compute the mean of the rewards
+    negative_reward_mean = tf.math.reduce_mean(rewards)
 
     # Combine the components with weights
-    loss = weight_label * mse_label + weight_reward * negative_reward_sum
+    loss = weight_angle * mse + weight_label*tf.keras.losses.mean_squared_error(label, predicted_label) - weight_reward * negative_reward_mean
 
     return loss

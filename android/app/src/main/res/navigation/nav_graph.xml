@@ -23,6 +23,9 @@
             android:id="@+id/action_mainFragment_to_loggerFragment"
             app:destination="@id/loggerFragment" />
         <action
+            android:id="@+id/action_mainFragment_to_logger_rl_Fragment"
+            app:destination="@id/loggerRLFragment" />
+        <action
             android:id="@+id/action_mainFragment_to_autopilotFragment"
             app:destination="@id/AIFragment" />
         <action
@@ -61,6 +64,11 @@
         android:name="org.openbot.logging.LoggerFragment"
         android:label="fragment_logger"
         tools:layout="@layout/fragment_logger" />
+    <fragment
+        android:id="@+id/loggerRLFragment"
+        android:name="org.openbot.logging.LoggerFragmentRL"
+        android:label="fragment_logger_rl"
+        tools:layout="@layout/fragment_logger_rl" />
     <fragment
         android:id="@+id/laneDetectionFragment"
         android:name="org.openbot.rl.LaneDetectionFragment"

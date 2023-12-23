@@ -2,6 +2,7 @@
 
 import tensorflow as tf
 
+
 """
 Constructors for standard MLPs and CNNs
 """
@@ -275,5 +276,9 @@ def pilot_reinforcement(img_width, img_height, bn=True, policy="autopilot"):
     # and images on the CNN input, outputting two values (left/right ctrl)
     model = tf.keras.Model(name="pilot_reinforcement", inputs=(cnn.input, mlp.input), outputs=x)
     
+    
+
     return model
+
+
 

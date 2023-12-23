@@ -1,3 +1,11 @@
+/*
+Author: Lilou Gras, 2023
+This feature was added to try and communicate with the Lane Detection Fragment. By obtaining the centroid and distance, we could compute the reward.
+However, this never succeeded as intented, the best result obtained was getting the last value of the centroid and distance, but it was no longer
+computed when launching this Feature.
+It was a good learning experience for Android Studio Programming.
+ */
+
 package org.openbot.rl;
 
 import android.graphics.Bitmap;
@@ -23,9 +31,7 @@ public class RewardFragment extends CameraFragment {
     private TextView centroidTextView;
     private TextView distanceTextView;
 
-    private FragmentRewardBinding binding;
 
-    private SharedDataViewModel viewModel;
 
 
     private static final int BASE_X_VALUE = 270;
@@ -48,18 +54,7 @@ public class RewardFragment extends CameraFragment {
         centroidTextView = view.findViewById(R.id.centroidTextView);
         distanceTextView = view.findViewById(R.id.distanceTextView);
 
-        // Initialize the ViewModel here
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedDataViewModel.class);
 
-        // Observe changes to the centroid value
-        viewModel.getCentroidValue().observe(getViewLifecycleOwner(), new Observer<Point>() {
-            @Override
-            public void onChanged(Point centroid) {
-                // Handle centroid Point object change
-                // You can use the centroid Point object in RewardFragment as needed
-                updateCentroidAndCalculateDistance(centroid);
-            }
-        });
 
         return view;
     }

@@ -331,7 +331,6 @@ def match_frame_session_rewards(
     ):
         print(" Preprocessing already completed.")
     else:
-        print("BLIBLI")
         # Cleanup: Add path and remove frames where reward is 0
         frame_list = read_file_list(os.path.join(reward_path, "matched_frame_reward.txt"))
         with open(os.path.join(reward_path, processed_frames_file_name), "w") as f:
