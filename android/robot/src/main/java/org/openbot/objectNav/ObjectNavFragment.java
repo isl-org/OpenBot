@@ -58,6 +58,7 @@ public class ObjectNavFragment extends CameraFragment {
 
   private Detector detector;
 
+  private boolean mirrorControl;
   private Matrix frameToCropTransform;
   private Bitmap croppedBitmap;
   private int sensorOrientation;
@@ -146,6 +147,8 @@ public class ObjectNavFragment extends CameraFragment {
 
     binding.cameraToggle.setOnClickListener(v -> toggleCamera());
 
+    binding.mirrorControl.setOnClickListener(v -> mirrorControl());
+
     List<String> models =
         getModelNames(f -> f.type.equals(Model.TYPE.DETECTOR) && f.pathType != Model.PATH_TYPE.URL);
     initModelSpinner(binding.modelSpinner, models, preferencesManager.getObjectNavModel());
@@ -226,6 +229,10 @@ public class ObjectNavFragment extends CameraFragment {
           preferencesManager.setDynamicSpeed(binding.dynamicSpeed.isChecked());
           tracker.setDynamicSpeed(preferencesManager.getDynamicSpeed());
         });
+  }
+
+  private void mirrorControl() {
+    mirrorControl = !mirrorControl;
   }
 
   private void updateCropImageInfo() {
@@ -477,7 +484,12 @@ public class ObjectNavFragment extends CameraFragment {
               }
 
               tracker.trackResults(mappedRecognitions, frameNum);
-              handleDriveCommand(tracker.updateTarget());
+              Control target = tracker.updateTarget();
+              if (mirrorControl) {
+                handleDriveCommand(target.mirror());
+              } else {
+                handleDriveCommand(target);
+              }
               binding.trackingOverlay.postInvalidate();
             }
 
