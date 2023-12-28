@@ -60,25 +60,10 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         }
         connection.start(queue: .main)
     }
-
-    func isReady(completion: @escaping (Bool) -> Void) {
-        connection.stateUpdateHandler = { newState in
-            print("connection.stateUpdateHandler \(newState)")
-            switch newState {
-            case .ready:
-                completion(true)
-            case .preparing:
-                // handle preparing state if needed
-                completion(false)
-            default:
-                // handle other states if needed
-                completion(false)
-            }
-        }
-    }
     
     /// function to send data in utf8 format.
     func send(_ message: String) {
+        print("in the send function::::",message);
         connection.send(content: message.data(using: .utf8), contentContext: .defaultMessage, isComplete: true, completion: .contentProcessed({ error in
             print("Connection send error: \(String(describing: error))")
         }))

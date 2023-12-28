@@ -74,12 +74,8 @@ class AutopilotFragment: CameraController {
         gameController.resetControl = false
         fragmentType.currentFragment = "Autopilot";
         calculateFrame()
-        sharedConnection?.isReady() { ready in
-            if(ready){
-                let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: self.fragmentType.currentFragment));
-                client.send(message: msg);
-            }
-        }
+        let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: self.fragmentType.currentFragment));
+        client.send(message: msg);
         //start the server
         var serverListener = ServerListener();
         serverListener.start();
