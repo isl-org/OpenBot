@@ -34,7 +34,7 @@ class ControllerState extends State<Controller> {
   bool isSettings = false;
   bool isTiltingPhoneMode = false;
   bool isScreenMode = false;
-
+  String fragmentType = "";
   var _nextPort = 56360;
 
   int get nextPort => _nextPort++;
@@ -197,6 +197,9 @@ class ControllerState extends State<Controller> {
                   if (msgInObject["status"] != null) {
                     processMessageFromBot(msgInObject["status"]);
                   }
+                  if (msgInObject["FRAGMENT_TYPE"] != null) {
+                    fragmentType = msgInObject["FRAGMENT_TYPE"];
+                  }
                 }
               }
             } catch (e) {
@@ -257,7 +260,7 @@ class ControllerState extends State<Controller> {
               mirror: mirroredVideo,
             ),
             ControlSelector(setMirrorVideo, indicatorLeft, indicatorRight,
-                services, _peerConnection, isTiltingPhoneMode, isScreenMode),
+                services, _peerConnection, isTiltingPhoneMode, isScreenMode,fragmentType),
             Positioned(
               left: isTiltingPhoneMode ? 45 : 110,
               top: 16.0, // Adjust the top margin as needed

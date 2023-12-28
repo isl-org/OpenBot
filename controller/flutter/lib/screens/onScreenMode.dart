@@ -10,9 +10,10 @@ class OnScreenMode extends StatefulWidget {
   final bool indicatorLeft;
   final bool indicatorRight;
   final RTCPeerConnection? peerConnection;
+  final String fragmentType;
 
   const OnScreenMode(this.updateMirrorView, this.indicatorLeft,
-      this.indicatorRight, this.peerConnection,
+      this.indicatorRight, this.peerConnection, this.fragmentType,
       {super.key});
 
   @override
@@ -66,7 +67,7 @@ class OnScreenModeState extends State<OnScreenMode> {
             alignment: AlignmentDirectional.bottomEnd,
             margin: const EdgeInsets.only(bottom: 20),
             child: OnScreenIcon(widget.updateMirrorView, widget.indicatorLeft,
-                widget.indicatorRight, widget.peerConnection),
+                widget.indicatorRight, widget.peerConnection,widget.fragmentType),
           ),
           Container(
               margin: const EdgeInsets.only(right: 50),

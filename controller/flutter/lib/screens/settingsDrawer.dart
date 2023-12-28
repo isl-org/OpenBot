@@ -192,32 +192,6 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                   })
             ]),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, top: 35),
-            child: Row(children: [
-              const Text(
-                'Network',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF0071C5),
-                ),
-              ),
-              const SizedBox(
-                width: 30,
-              ),
-              Switch(
-                  value: isNetwork,
-                  onChanged: (bool value) {
-                    setState(() {
-                      isNetwork = value;
-                    });
-                    if (isNetwork) {
-                      clientSocket?.writeln("{command: NETWORK}");
-                    }
-                  })
-            ]),
-          ),
         ],
       ),
     );

@@ -13,6 +13,7 @@ class ControlSelector extends StatefulWidget {
   final RTCPeerConnection? peerConnection;
   final bool isTiltingPhoneMode;
   final bool isScreenMode;
+  final String fragmentType;
 
   const ControlSelector(
       this.updateMirrorView,
@@ -22,6 +23,7 @@ class ControlSelector extends StatefulWidget {
       this.peerConnection,
       this.isTiltingPhoneMode,
       this.isScreenMode,
+      this.fragmentType,
       {super.key});
 
   @override
@@ -49,12 +51,12 @@ class ControlSelectorState extends State<ControlSelector> {
     } else if (widget.isScreenMode) {
       return GestureDetector(
         child: OnScreenMode(widget.updateMirrorView, widget.indicatorLeft,
-            widget.indicatorRight, widget.peerConnection),
+            widget.indicatorRight, widget.peerConnection,widget.fragmentType),
       );
     } else {
       return GestureDetector(
         child: OnScreenMode(widget.updateMirrorView, widget.indicatorLeft,
-            widget.indicatorRight, widget.peerConnection),
+            widget.indicatorRight, widget.peerConnection,widget.fragmentType),
       );
     }
   }
