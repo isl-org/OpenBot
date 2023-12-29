@@ -198,7 +198,9 @@ class ControllerState extends State<Controller> {
                     processMessageFromBot(msgInObject["status"]);
                   }
                   if (msgInObject["FRAGMENT_TYPE"] != null) {
-                    fragmentType = msgInObject["FRAGMENT_TYPE"];
+                    setState(() {
+                      fragmentType = msgInObject["FRAGMENT_TYPE"];
+                    });
                   }
                 }
               }
