@@ -1,5 +1,6 @@
 package org.openbot.env;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import org.openbot.tflite.Network;
@@ -36,6 +37,9 @@ public class SharedPreferencesManager {
   private static final String SHEET_EXPANDED = "SHEET_EXPANDED";
   private static final String DELAY = "DELAY";
 
+  private static final String FRAGMENT_TYPE = "FRAGMENT_TYPE";
+
+
   private final SharedPreferences preferences;
 
   public SharedPreferencesManager(Context context) {
@@ -43,6 +47,11 @@ public class SharedPreferencesManager {
         context
             .getApplicationContext()
             .getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+  }
+  public String getFragment(){return preferences.getString(FRAGMENT_TYPE, "" );}
+  public void setFragment(String fragment)
+  {
+    preferences.edit().putString(FRAGMENT_TYPE, fragment).apply();
   }
 
   public int getBaudrate() {
