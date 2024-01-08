@@ -12,8 +12,10 @@ import {Keyboard} from './keyboard.js'
 import {BotMessageHandler} from './bot-message-handler'
 import {Commands} from './commands'
 import {RemoteKeyboard} from './remote_keyboard';
-import {googleSigIn} from "./authentication/authentication";
+import {googleSigIn, googleSignOut} from "./authentication/authentication";
 import {WebRTC} from './webrtc.js'
+import {auth} from "./authentication/authentication";
+import {signInWithCustomToken} from "firebase/auth";
 
 const connection = new Connection();
 (async () => {
@@ -73,6 +75,9 @@ const okButton = document.getElementById("logout-ok-button");
 cancelButton.addEventListener("click", handleCancelButtonClick);
 okButton.addEventListener("click", handleOkButtonClick);
 
+/**
+ * function to handle signIn on home page
+ */
 function handleSignInButtonClick() {
     if (localStorage.getItem("isSignIn") === "false") {
         googleSigIn()
@@ -95,6 +100,9 @@ function handleSignInButtonClick() {
     }
 }
 
+/**
+ * function to sendId to remote server
+ */
 function sendId() {
     const response = {
         roomId: signedInUser.email
@@ -102,6 +110,9 @@ function sendId() {
     connection.send(JSON.stringify(response));
 }
 
+/**
+ * function to handle signOut from google account
+ */
 function signOut() {
     console.log("sign out");
     signedInUser.signOut;
@@ -110,28 +121,124 @@ function signOut() {
     localStorage.setItem("isSignIn", false.toString());
     let signInBtn = document.getElementsByClassName("google-sign-in-button")[0]
     signInBtn.innerText = "Sign in with Google"
+    googleSignOut();
 }
 
+/**
+ * function to handle cancel button on logout popup
+ */
 function handleCancelButtonClick() {
-hideLogoutWrapper()
+    hideLogoutWrapper()
 }
 
-function hideLogoutWrapper(){
+/**
+ * function to hide logout popup
+ */
+function hideLogoutWrapper() {
     const logout = document.getElementsByClassName("logout-wrapper")[0];
     logout.style.display = 'none';
 }
 
-function showLogoutWrapper(){
+/**
+ * function to display logout popup
+ */
+function showLogoutWrapper() {
     const logout = document.getElementsByClassName("logout-wrapper")[0];
     logout.style.display = 'block';
 }
 
+/**
+ * function to handle "ok" button for logout popup
+ */
 function handleOkButtonClick() {
     hideLogoutWrapper();
     signOut();
 }
 
-window.onbeforeunload = function (event) {
-    localStorage.setItem("user", null);
-    localStorage.setItem("isSignIn", false.toString());
+/**
+ * function to get cookie from browser storage
+ * @param cname
+ * @returns {string}
+ */
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+/**
+ * function to delete cookie from browser storage
+ * @param name
+ */
+const delete_cookie = function (name) {
+    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
+
+/**
+ * function to handle single sign on from openbot dashboard
+ */
+function handleSingleSignOn() {
+    let cookie = getCookie("user");
+    if (cookie) {
+        let result = cookie
+        console.log("result:::", result);
+        localStorage.setItem("isSignIn", "true");
+        signInWithCustomToken(auth, result).then((res) => {
+            // Use the user data or store it in a variable for later use
+            signedInUser = res.user;
+            console.log("Signed-in user:", res.user);
+            let signInBtn = document.getElementsByClassName("google-sign-in-button")[0]
+            signInBtn.innerText = res.user.displayName
+            localStorage.setItem("user", JSON.stringify(res.user));
+            localStorage.setItem("isSignIn", true.toString());
+            sendId();// delete_cookie("user");
+            delete_cookie("user");
+        })
+            .catch((error) => {
+                console.log("error::", error);
+            })
+    }
+}
+
+/**
+ * function to handle access token
+ */
+function handleAccessToken() {
+    let tokenCookie = getCookie("accessToken");
+    if (tokenCookie) {
+        delete_cookie("accessToken");
+    }
+}
+
+/**
+ * function to handle auth status on refreshing page
+ */
+function handleAuthChangedOnRefresh() {
+    if (localStorage.getItem("isSignIn") === "true") {
+        auth.onAuthStateChanged((res) => {
+            if (res != null) {
+                signedInUser = res;
+                console.log("Signed-in user:", res);
+                let signInBtn = document.getElementsByClassName("google-sign-in-button")[0]
+                signInBtn.innerText = res.displayName
+                localStorage.setItem("user", JSON.stringify(res));
+                localStorage.setItem("isSignIn", "true");
+                sendId();//
+            }
+        })
+    }
+}
+
+handleAccessToken();
+handleSingleSignOn()
+handleAuthChangedOnRefresh()
