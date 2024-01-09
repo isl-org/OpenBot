@@ -59,26 +59,36 @@ function App() {
         }
     }, [])
 
+    /**
+     * function to get cookie from storage
+     * @param cname
+     * @returns {string}
+     */
     function getCookie(cname) {
         let name = cname + "=";
         let decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') {
-                c = c.substring(1);
+        let splitParams = decodedCookie.split(';');
+        for (let i = 0; i < splitParams.length; i++) {
+            let cookieName = splitParams[i];
+            while (cookieName.charAt(0) === ' ') {
+                cookieName = cookieName.substring(1);
             }
-            if (c.indexOf(name) === 0) {
-                return c.substring(name.length, c.length);
+            if (cookieName.indexOf(name) === 0) {
+                return cookieName.substring(name.length, cookieName.length);
             }
         }
         return "";
     }
 
+    /**
+     * function to delete a cookie
+     * @param name
+     */
     const delete_cookie = function (name) {
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     };
 
+    //handled single sign-on from dashboard
     useEffect(() => {
         let cookie = getCookie("user");
         if (cookie) {

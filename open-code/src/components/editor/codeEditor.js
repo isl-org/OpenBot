@@ -53,6 +53,7 @@ function CodeEditor(params) {
             mode = "ace/mode/javascript";
         }
         editor.session.setMode(mode);
+        editor.setOption("useWorker", false);
         editor.setReadOnly(true);
         editor.setTheme(theme === "dark" ? "ace/theme/one_dark" : "ace/theme/textmate");
         editor.session.setMode(mode);
