@@ -2,7 +2,10 @@ import React, {useContext, useEffect, useState} from 'react';
 import Triangle from '../../../assets/images/icon/triangle.png';
 import DarkTriangle from '../../../assets/images/icon/dark-triangle.png';
 import {ThemeContext} from '../../../App';
-import {getFilterProjects} from '../../../services/workspace';
+import {
+    getFilterProjects,
+    setUserUsageInFirebase
+} from '../../../services/workspace';
 import styles from './newProject.module.css';
 import Card from './card';
 import NewProjectButton from './newProjectButton';
@@ -45,7 +48,6 @@ export const NewProject = () => {
                 })
             });
         }
-
         return (
             <div className={`${styles.Main} ${theme === 'dark' ? styles.MainDark : styles.MainLight}`}>
                 <div className={`${styles.Heading} ${theme === 'dark' ? styles.MainDark : styles.MainLight}`}>

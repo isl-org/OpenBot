@@ -8,7 +8,7 @@ import BlueButton from "../buttonComponent/blueButtonComponent";
 import {ThemeContext} from "../../App";
 import {colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
-import {getConfigData, setConfigData} from "../../services/workspace";
+import {getConfigData, setConfigData, setUserUsageInFirebase} from "../../services/workspace";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 
 /**
@@ -69,10 +69,11 @@ export function ModelUploadingComponent(params) {
 
     //function to handle model type and class dependency on type
     const handleTypeMap = {
-        AUTOPILOT: { handleTypeDependency: ['AUTOPILOT'], modelClass: 'AUTOPILOT' },
-        DETECTOR: { handleTypeDependency: ['MOBILENET', 'EFFICIENTDET', 'YOLOV4', 'YOLOV5'], modelClass: 'MOBILENET' },
-        NAVIGATION: { handleTypeDependency: ['NAVIGATION'], modelClass: 'NAVIGATION' },
+        AUTOPILOT: {handleTypeDependency: ['AUTOPILOT'], modelClass: 'AUTOPILOT'},
+        DETECTOR: {handleTypeDependency: ['MOBILENET', 'EFFICIENTDET', 'YOLOV4', 'YOLOV5'], modelClass: 'MOBILENET'},
+        NAVIGATION: {handleTypeDependency: ['NAVIGATION'], modelClass: 'NAVIGATION'},
     };
+
     function handleTypeChange(e) {
         const handleTypeData = handleTypeMap[e] || {};
 
@@ -153,6 +154,7 @@ export function ModelUploadingComponent(params) {
                         configData.push(newModelData)
                         await uploadToGoogleDrive(JSON.stringify(configData), Constants.json).then(() => {
                             localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData))
+                            setUserUsageInFirebase("application/octet-stream").then();
                             setFileUploadLoader(false);
                             handleClose()
                         })

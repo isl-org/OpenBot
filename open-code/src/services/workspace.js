@@ -8,6 +8,7 @@ import {
     uploadToGoogleDrive,
 } from "./googleDrive";
 import configData from "../config.json"
+import {getProjects, uploadBlocklyData} from "./firebase";
 
 /**
  * get project from drive when user signedIn
@@ -28,7 +29,6 @@ async function getDriveProjects(driveProjects) {
                             driveProjects?.push({
                                 storage: "drive",
                                 xmlValue: doc.xmlValue,
-                                id: doc.appProperties.id,
                                 projectName: doc.name.replace(/\.[^/.]+$/, ""),
                                 updatedDate: doc.appProperties.date,
                                 updatedTime: doc.appProperties.updatedTime,
@@ -93,6 +93,7 @@ async function deleteProjectFromStorage(projectName) {
                 if (response.exists)
                     await deleteFileFromGoogleDrive(response?.fileId)
             })
+            await setUserUsageInFirebase(undefined);
         }
     } catch (err) {
         console.log(err);
@@ -207,10 +208,15 @@ async function getFilterProjects() {
     await setConfigData();
     let allProjects
     let filterProjects
+    let driveProjectsName = [];
     let allDriveProjects = [];
     let allLocalProjects = getAllLocalProjects()
     await getDriveProjects(allDriveProjects).then(() => {
         const allXmlProjects = allDriveProjects.filter((res) => res.projectType === undefined);// getting only xml projects from Google Drive
+        allXmlProjects.forEach((item) => {
+            driveProjectsName.push(item.projectName);
+        })
+        console.log("driveProjectName::", driveProjectsName);
         allProjects = allLocalProjects?.concat(allXmlProjects) || allXmlProjects
         const uniqueIds = {}; // object to keep track of unique id values
         filterProjects = allProjects.filter(project => {
@@ -289,7 +295,7 @@ async function renameProject(projectName, oldName, screen) {
                 await fileRename(projectName, oldName, "xml")
             if (jsFileExists.exists)
                 await fileRename(projectName, oldName, "js")
-
+            await setUserUsageInFirebase(undefined);
             // If user is not signed in, only update current project if it has the old project name
         } else {
             if (oldName === getCurrentProject()?.projectName) {
@@ -398,6 +404,43 @@ function handleChildBlockInWorkspace(array, child) {
         })
     }
     return child;
+}
+
+/**
+ * function to set projects in database
+ * @returns {Promise<void>}
+ */
+export async function setUserUsageInFirebase(projectType) {
+    const driveFiles = [];
+    const data = [];
+    await getDriveProjects(driveFiles).then(async () => {
+            const allXmlProjects = driveFiles.filter((res) => res.projectType === projectType);
+            if (allXmlProjects?.length > 0) {
+                allXmlProjects?.forEach((item) => {
+                    data.push(item.projectName);
+                })
+            }
+            if (projectType === undefined) {
+                await uploadBlocklyData({projects: data});
+            } else {
+                await uploadBlocklyData({models: data});
+            }
+        }
+    )
+}
+
+/**
+ * function to handle user restriction
+ * @returns {Promise<void>}
+ */
+export async function handleUserRestriction(projectName) {
+    await getProjects().then((res) => {
+        if (res?.includes(projectName)) {
+            console.log("project already present");
+        } else {
+            console.log("project not present");
+        }
+    })
 }
 
 export {

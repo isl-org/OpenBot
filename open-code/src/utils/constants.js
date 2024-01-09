@@ -159,12 +159,25 @@ export const Constants = {
  */
 export const Errors = {
     error1: "No start or forever block present in the playground.",
-    error2: "Detected adjacent AI blocks. Please review the Start block configuration. When using adjacent AI blocks,insert a 'disable AI' block between them." ,
+    error2: "Detected adjacent AI blocks. Please review the Start block configuration. When using adjacent AI blocks,insert a 'disable AI' block between them.",
     error3: "Identical objects for multiple detection AI block.",
     error4: "AI block present within the forever block. Please review the block code.",
     error5: "Similar classes present in the Advanvced AI blocks"
 }
 
+export const PlaygroundConstants = {
+    start: "start",
+    forever: "forever",
+    detectionOrUndetection: "detectionOrUndetection",
+    multipleObjectTracking: "multipleObjectTracking",
+    variableDetection: "variableDetection",
+    labels: "labels",
+    disableAI: "disableAI",
+    object_1: "object_1",
+    object_2: "object_2",
+    labels1: "labels1",
+    labels2: "labels2"
+}
 /**
  * AI models
  * @type {{type: string[]}}

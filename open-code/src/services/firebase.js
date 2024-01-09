@@ -90,11 +90,13 @@ export async function getDateOfBirth() {
     const docRef = doc(db, "users", auth.currentUser?.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-        const date = new Date(docSnap.data().dob.toDate());
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so we add 1
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        if (docSnap.data().dob) {
+            const date = new Date(docSnap.data().dob.toDate());
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so we add 1
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
     }
 }
 
@@ -104,6 +106,33 @@ export async function getDateOfBirth() {
  * @returns {Promise<void>}
  */
 export async function setDateOfBirth(DOB) {
-    const workspaceRef = doc(collection(db, "users"), auth.currentUser?.uid);
-    setDoc(workspaceRef, DOB).catch((e) => console.log(e));
+    try {
+        const workspaceRef = doc(collection(db, "users"), auth.currentUser?.uid);
+        setDoc(workspaceRef, DOB, {merge: true}).catch((e) => console.log(e));
+    } catch (e) {
+        console.log("error in setting DOB:", e);
+    }
+}
+
+export async function uploadBlocklyData(data) {
+    try {
+        const workspaceRef = doc(collection(db, "users"), auth.currentUser?.uid);
+        setDoc(workspaceRef, data, {merge: true}).catch((e) => console.log(e));
+    } catch (e) {
+        console.log("error in setting projects:", e);
+    }
+}
+
+export async function getProjects() {
+    try {
+        const docRef = doc(db, "users", auth.currentUser?.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            if (docSnap.data().projects) {
+                return docSnap.data().projects
+            }
+        }
+    } catch (e) {
+        console.log("error in getting projects:", e);
+    }
 }
