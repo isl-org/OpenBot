@@ -151,6 +151,7 @@ export const Constants = {
     json: "json",
     tflite: "tflite",
     InternetOffMsg: "Please check your internet connection.",
+    subscription: "Please subscribe to upload projects"
 }
 
 /**

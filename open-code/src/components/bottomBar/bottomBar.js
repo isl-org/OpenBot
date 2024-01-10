@@ -91,103 +91,109 @@ export const BottomBar = () => {
     /**
      * function to generate javascript or python code and upload to google drive, also handles error while compiling
      */
-    const generateCode = () => {
+    const generateCode = async () => {
         if (isOnline) {
             if (localStorage.getItem("isSigIn") === "true") {
                 setDrawer(false);
                 setIsLoader(true);
-                handleUserRestriction(getCurrentProject().projectName).then(
-                    () => {
-                        //javaScript generator
-                        let code = javascriptGenerator.workspaceToCode(
-                            workspace
-                        );
-                        const start = workspace.getBlocksByType(PlaygroundConstants.start);
-                        const forever = workspace.getBlocksByType(PlaygroundConstants.forever);
-                        const detection = workspace.getBlocksByType(PlaygroundConstants.detectionOrUndetection);
-                        const multipleObjectTracking = workspace.getBlocksByType(PlaygroundConstants.multipleObjectTracking);
-                        const variableDetection = workspace.getBlocksByType(PlaygroundConstants.variableDetection);
-                        let objNameArray = [];
-                        if (variableDetection?.length > 0) {
-                            for (let i = 0; i < variableDetection.length; i++) {
-                                objNameArray.push(variableDetection[i].getFieldValue(PlaygroundConstants.labels));
-                                console.log(objNameArray);
-                            }
-                        }
-                        let isClassesSimiliar = false;
-                        for (let i = 0; i < objNameArray.length; i++) {
-                            for (let j = i + 1; j < objNameArray.length; j++) {
-                                if (objNameArray[i] === objNameArray[j]) {
-                                    isClassesSimiliar = true;
+                await handleUserRestriction(getCurrentProject().projectName).then(
+                    (res) => {
+                        if (res === true) {
+                            //javaScript generator
+                            let code = javascriptGenerator.workspaceToCode(
+                                workspace
+                            );
+                            const start = workspace.getBlocksByType(PlaygroundConstants.start);
+                            const forever = workspace.getBlocksByType(PlaygroundConstants.forever);
+                            const detection = workspace.getBlocksByType(PlaygroundConstants.detectionOrUndetection);
+                            const multipleObjectTracking = workspace.getBlocksByType(PlaygroundConstants.multipleObjectTracking);
+                            const variableDetection = workspace.getBlocksByType(PlaygroundConstants.variableDetection);
+                            let objNameArray = [];
+                            if (variableDetection?.length > 0) {
+                                for (let i = 0; i < variableDetection.length; i++) {
+                                    objNameArray.push(variableDetection[i].getFieldValue(PlaygroundConstants.labels));
+                                    console.log(objNameArray);
                                 }
                             }
-                        }
-                        let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false);  //filtering multiple objectTracking connected blocks
-                        let isAIBlocksAdjacent = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
-                        let array = []
-                        let foreverChildBlocks = handleChildBlockInWorkspace(forever, array)
-                        let isForeverContainsAI;
-                        foreverChildBlocks.forEach((item) => {
-                            if (aiBlocks.includes(item)) {
-                                isForeverContainsAI = true;
-                            }
-                        })
-                        let object_1 = PlaygroundConstants.object_1;
-                        let object_2 = PlaygroundConstants.object_2;
-                        if (multipleObjectTrackingEnabledBlocks.length > 0) {
-                            object_1 = multipleObjectTrackingEnabledBlocks[0].getFieldValue(PlaygroundConstants.labels1)
-                            object_2 = multipleObjectTrackingEnabledBlocks[0].getFieldValue(PlaygroundConstants.labels2)
-                        }
-
-                        if (start.length === 0 && forever.length === 0 && detection.length === 0 && variableDetection.length === 0) {
-                            handleError(Errors.error1);
-                        } else if (isAIBlocksAdjacent === true && start.length > 0) {
-                            handleError(Errors.error2);
-                        } else if (object_1 === object_2) {
-                            handleError(Errors.error3)
-                        } else if (isForeverContainsAI === true) {
-                            handleError(Errors.error4)
-                        } else if (isClassesSimiliar === true) {
-                            handleError(Errors.error5)
-                        } else {
-
-                            // Replace comments with an empty string
-                            let codeWithoutComments = code.replace(/\/\/.*$/gm, '');
-                            if (start.length > 0)
-                                codeWithoutComments += "\nstart();";
-                            if (forever.length > 0)
-                                codeWithoutComments += "\nforever();";
-                            setGenerateCode(!generate);
-                            console.log(codeWithoutComments);
-                            uploadToGoogleDrive(codeWithoutComments, "js").then((res) => {
-                                    let linkCode = {
-                                        driveLink: res,
-                                        projectName: getCurrentProject().projectName
+                            let isClassesSimiliar = false;
+                            for (let i = 0; i < objNameArray.length; i++) {
+                                for (let j = i + 1; j < objNameArray.length; j++) {
+                                    if (objNameArray[i] === objNameArray[j]) {
+                                        isClassesSimiliar = true;
                                     }
-                                    const data = {
-                                        projectName: getCurrentProject().projectName,
-                                        xmlValue: getCurrentProject().xmlValue,
-                                        createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
-                                    }
-                                    uploadToGoogleDrive(data, "xml")   // Call function to upload xml data to Google Drive
-                                        .then(async () => {
-                                            setCode(linkCode);
-                                            setCategory(Constants.qr);
-                                            setIsLoader(false);
-                                            setDrawer(true);
-                                            await setUserUsageInFirebase(undefined);
-                                        })
-                                        .catch((err) => {
-                                            errorToast("Failed to upload");
-                                            console.log(err)
-                                            setIsLoader(false);
-                                        })
                                 }
-                            ).catch((err) => {
-                                console.log("err::", err)
-                                setIsLoader(false);
-                                errorToast("Failed to Upload");
+                            }
+                            let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false);  //filtering multiple objectTracking connected blocks
+                            let isAIBlocksAdjacent = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
+                            let array = []
+                            let foreverChildBlocks = handleChildBlockInWorkspace(forever, array)
+                            let isForeverContainsAI;
+                            foreverChildBlocks.forEach((item) => {
+                                if (aiBlocks.includes(item)) {
+                                    isForeverContainsAI = true;
+                                }
                             })
+                            let object_1 = PlaygroundConstants.object_1;
+                            let object_2 = PlaygroundConstants.object_2;
+                            if (multipleObjectTrackingEnabledBlocks.length > 0) {
+                                object_1 = multipleObjectTrackingEnabledBlocks[0].getFieldValue(PlaygroundConstants.labels1)
+                                object_2 = multipleObjectTrackingEnabledBlocks[0].getFieldValue(PlaygroundConstants.labels2)
+                            }
+
+                            if (start.length === 0 && forever.length === 0 && detection.length === 0 && variableDetection.length === 0) {
+                                handleError(Errors.error1);
+                            } else if (isAIBlocksAdjacent === true && start.length > 0) {
+                                handleError(Errors.error2);
+                            } else if (object_1 === object_2) {
+                                handleError(Errors.error3)
+                            } else if (isForeverContainsAI === true) {
+                                handleError(Errors.error4)
+                            } else if (isClassesSimiliar === true) {
+                                handleError(Errors.error5)
+                            } else {
+
+                                // Replace comments with an empty string
+                                let codeWithoutComments = code.replace(/\/\/.*$/gm, '');
+                                if (start.length > 0)
+                                    codeWithoutComments += "\nstart();";
+                                if (forever.length > 0)
+                                    codeWithoutComments += "\nforever();";
+                                setGenerateCode(!generate);
+                                console.log(codeWithoutComments);
+                                uploadToGoogleDrive(codeWithoutComments, "js").then((res) => {
+                                        let linkCode = {
+                                            driveLink: res,
+                                            projectName: getCurrentProject().projectName
+                                        }
+                                        const data = {
+                                            projectName: getCurrentProject().projectName,
+                                            xmlValue: getCurrentProject().xmlValue,
+                                            createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
+                                        }
+                                        uploadToGoogleDrive(data, "xml")   // Call function to upload xml data to Google Drive
+                                            .then(async () => {
+                                                setCode(linkCode);
+                                                setCategory(Constants.qr);
+                                                setIsLoader(false);
+                                                setDrawer(true);
+                                                await setUserUsageInFirebase("text/xml");
+                                            })
+                                            .catch((err) => {
+                                                errorToast("Failed to upload");
+                                                console.log(err)
+                                                setIsLoader(false);
+                                            })
+                                    }
+                                ).catch((err) => {
+                                    console.log("err::", err)
+                                    setIsLoader(false);
+                                    errorToast("Failed to Upload");
+                                })
+                            }
+                        } else {
+                            errorToast(Constants.subscription);
+                            //TODO add component for restriction user
+                            setIsLoader(false);
                         }
                     }
                 );
@@ -269,7 +275,7 @@ export const BottomBar = () => {
                 break;
             }
             case "uploadCode": {
-                generateCode();
+                generateCode().then();
                 break;
             }
             default: {

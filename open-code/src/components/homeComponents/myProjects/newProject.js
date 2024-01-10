@@ -4,7 +4,6 @@ import DarkTriangle from '../../../assets/images/icon/dark-triangle.png';
 import {ThemeContext} from '../../../App';
 import {
     getFilterProjects,
-    setUserUsageInFirebase
 } from '../../../services/workspace';
 import styles from './newProject.module.css';
 import Card from './card';

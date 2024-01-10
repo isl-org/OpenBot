@@ -152,9 +152,9 @@ export function ModelUploadingComponent(params) {
                             inputSize: `${modelDetails.width}x${modelDetails.height}`
                         }
                         configData.push(newModelData)
-                        await uploadToGoogleDrive(JSON.stringify(configData), Constants.json).then(() => {
+                        await uploadToGoogleDrive(JSON.stringify(configData), Constants.json).then(async () => {
                             localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData))
-                            setUserUsageInFirebase("application/octet-stream").then();
+                            await setUserUsageInFirebase("application/octet-stream").then();
                             setFileUploadLoader(false);
                             handleClose()
                         })
