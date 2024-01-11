@@ -5,7 +5,7 @@ import 'firebase/compat/firestore';
 import {getDoc, getFirestore} from "firebase/firestore";
 import {getAuth, signOut} from "firebase/auth";
 import {Constants, localStorageKeys, Month} from "../utils/constants";
-import {collection, doc, setDoc, updateDoc, increment} from "@firebase/firestore";
+import {collection, doc, setDoc, updateDoc} from "@firebase/firestore";
 import {getCurrentProject, setConfigData} from "./workspace";
 import configData from "../config.json";
 
