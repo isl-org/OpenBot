@@ -17,9 +17,10 @@ import {
     handleChildBlockInWorkspace,
     handleUserRestriction, setUserUsageInFirebase
 } from "../../services/workspace";
-import navbarStyle from "../navBar/navbar.module.css"
+import navbarStyle from "../navBar/navbar.module.css";
 import BlueText from "../fonts/blueText";
 import {ModelUploadingComponent} from "./modelUploadingComponent";
+import {uploadUserData} from "../../services/firebase";
 
 /**
  * Bottom Bar contains generate code, upload on drive icon , zoom in-out and undo redo functionality.
@@ -112,7 +113,6 @@ export const BottomBar = () => {
                             if (variableDetection?.length > 0) {
                                 for (let i = 0; i < variableDetection.length; i++) {
                                     objNameArray.push(variableDetection[i].getFieldValue(PlaygroundConstants.labels));
-                                    console.log(objNameArray);
                                 }
                             }
                             let isClassesSimiliar = false;
@@ -176,11 +176,13 @@ export const BottomBar = () => {
                                                 setCategory(Constants.qr);
                                                 setIsLoader(false);
                                                 setDrawer(true);
-                                                await setUserUsageInFirebase("text/xml");
+                                                await uploadUserData(Constants.projects).then(async () => {
+                                                    await setUserUsageInFirebase("text/xml").then()
+                                                });
                                             })
                                             .catch((err) => {
                                                 errorToast("Failed to upload");
-                                                console.log(err)
+                                                console.log(err);
                                                 setIsLoader(false);
                                             })
                                     }
@@ -222,7 +224,7 @@ export const BottomBar = () => {
     /**
      * handle click on bottom bar button event which affect workspace
      */
-    const clickedButton = (e) => {
+    const clickedButton = async (e) => {
         const {name} = e.target;
         setButtonSelected(name);
 
@@ -275,7 +277,7 @@ export const BottomBar = () => {
                 break;
             }
             case "uploadCode": {
-                generateCode().then();
+                await generateCode().then();
                 break;
             }
             default: {

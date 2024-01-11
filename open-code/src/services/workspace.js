@@ -1,4 +1,4 @@
-import {Constants, errorToast, Labels, localStorageKeys} from "../utils/constants";
+import {Constants, errorToast, Labels, localStorageKeys, Month} from "../utils/constants";
 import {
     checkFileExistsInFolder,
     deleteFileFromGoogleDrive,
@@ -8,7 +8,7 @@ import {
     uploadToGoogleDrive,
 } from "./googleDrive";
 import configData from "../config.json"
-import {getProjects, uploadBlocklyData} from "./firebase";
+import {getProjects, uploadBlocklyData, uploadUserData} from "./firebase";
 
 /**
  * get project from drive when user signedIn
@@ -444,9 +444,8 @@ export async function handleUserRestriction(projectName) {
                 }
                 return false;
             }
-        else {
+        else
             return true;
-        }
     })
 }
 

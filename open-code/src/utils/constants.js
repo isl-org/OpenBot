@@ -151,8 +151,13 @@ export const Constants = {
     json: "json",
     tflite: "tflite",
     InternetOffMsg: "Please check your internet connection.",
-    subscription: "Please subscribe to upload projects"
+    subscription: "Please subscribe to upload projects",
+    projects:"projects",
+    models:"models"
 }
+
+export const Month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
 
 /**
  * errors for openBot playground

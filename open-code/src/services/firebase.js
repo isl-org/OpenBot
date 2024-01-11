@@ -4,9 +4,9 @@ import {getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage';
 import 'firebase/compat/firestore';
 import {getDoc, getFirestore} from "firebase/firestore";
 import {getAuth, signOut} from "firebase/auth";
-import {localStorageKeys} from "../utils/constants";
-import {collection, doc, setDoc} from "@firebase/firestore";
-import {setConfigData} from "./workspace";
+import {Constants, localStorageKeys, Month} from "../utils/constants";
+import {collection, doc, setDoc, updateDoc, increment} from "@firebase/firestore";
+import {getCurrentProject, setConfigData} from "./workspace";
 import configData from "../config.json";
 
 
@@ -114,6 +114,11 @@ export async function setDateOfBirth(DOB) {
     }
 }
 
+/**
+ * uploading projects array in firebase for restriction
+ * @param data
+ * @returns {Promise<void>}
+ */
 export async function uploadBlocklyData(data) {
     try {
         const workspaceRef = doc(collection(db, "users"), auth.currentUser?.uid);
@@ -123,16 +128,77 @@ export async function uploadBlocklyData(data) {
     }
 }
 
+/**
+ * function to get projects from firebase
+ * @returns {Promise<any>}
+ */
 export async function getProjects() {
     try {
         const docRef = doc(db, "users", auth.currentUser?.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-            if (docSnap.data().projects) {
+            if (docSnap.data().projects !== undefined) {
                 return docSnap.data().projects
             }
         }
     } catch (e) {
         console.log("error in getting projects:", e);
+    }
+}
+
+/**
+ * function to upload user usage on monthly basis
+ * @param datatype
+ * @param newData
+ * @returns {Promise<void>}
+ */
+export async function uploadUserData(datatype) {
+    try {
+        const docRef = doc(db, "users", auth.currentUser?.uid)
+        const docSnapshot = await getDoc(docRef);
+        const dataArray = [];
+        const date = new Date();
+        let monthName = Month[date.getMonth()] + " " + date.getFullYear();
+        let userObject = {
+            [monthName]: {
+                projects: datatype === Constants.projects ? 1 : 0,
+                models: datatype === Constants.models ? 1 : 0
+            }
+        }
+        dataArray.push(userObject);
+        if (docSnapshot.exists()) {
+            if (docSnapshot.data().userData !== undefined) {
+                let docSnapData = docSnapshot.data().userData || []; // user data
+                const index = docSnapData.findIndex(entry => entry.hasOwnProperty(monthName));
+                if (index !== -1) {
+                    if (datatype === Constants.projects) {
+                        await getProjects().then((item) => {
+                            if (!item?.includes(getCurrentProject().projectName)) {
+                                docSnapData[index][monthName].projects += 1;
+                            }
+                        })
+                    } else {
+                        docSnapData[index][monthName].models += 1;
+                    }
+                } else {
+                    docSnapData.push(userObject)
+                }
+                await updateDoc(docRef, {
+                    userData: docSnapData
+                }).catch((e) => {
+                    console.log("error in updating:", e);
+                })
+            } else {
+                console.log("new array created");
+                await setDoc(docRef, {
+                    userData: dataArray
+                }, {merge: true}).catch((e) => {
+                    console.log("error in setting userData:", e);
+                });
+            }
+        }
+    } catch
+        (e) {
+        console.log("error in setting projects:", e);
     }
 }
