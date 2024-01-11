@@ -58,16 +58,6 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
             .navigate(R.id.action_mainFragment_to_freeRoamFragment);
         break;
 
-      case FeatureList.LANE_DETECTION:
-        Navigation.findNavController(requireView())
-                .navigate(R.id.action_mainFragment_to_laneDetectionFragment);
-        break;
-
-      case FeatureList.REWARD:
-        Navigation.findNavController(requireView())
-                .navigate(R.id.action_mainFragment_to_rewardFragment);
-        break;
-
       case FeatureList.DATA_COLLECTION:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_loggerFragment);
@@ -112,6 +102,11 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
       case FeatureList.MODEL_MANAGEMENT:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_modelManagementFragment);
+        break;
+
+      case FeatureList.RL:
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_mainFragment_to_rlFragment);
         break;
     }
   }
