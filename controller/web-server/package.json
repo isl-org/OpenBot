@@ -10,8 +10,7 @@
     "dev:server": "npm run start --prefix server",
     "dev:start-server-headless": "NODE_ENV=development snowpack build --watch",
     "dev:start-server": "npx snowpack dev --port 8081",
-    "build": "snowpack build",
-    "lint": "npx eslint server/*.js --fix && npx eslint client/*.js --fix"
+    "build": "snowpack build"
   },
   "keywords": [
     "webrtc",
@@ -30,7 +29,9 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@firebase/firestore": "^4.4.0",
     "firebase": "^10.1.0",
+    "js-cookie": "^3.0.5",
     "ws": "^8.13.0"
   }
 }

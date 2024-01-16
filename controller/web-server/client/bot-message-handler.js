@@ -18,7 +18,7 @@ export function BotMessageHandler(connection) {
 
     webRtc.onDataMessageReceived((message) => {
         // Do something on data received;
-    });
+    })
 
     this.handle = (msg, connection) => {
         if (msg === undefined || msg === null) {
@@ -52,10 +52,12 @@ export function BotMessageHandler(connection) {
                 webRtc.handle(msg.WEB_RTC_EVENT, connection)
                 break
             case 'driveCmd' :
-                webRtc.send(JSON.stringify(msg));
+                webRtc.send(JSON.stringify(msg))
+                break
 
-            case "command" :
-                webRtc.send(JSON.stringify(msg));
+            case 'command' :
+                webRtc.send(JSON.stringify(msg))
+                break
 
             default:
                 // Process other status information here

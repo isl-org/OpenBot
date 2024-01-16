@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js 8000 --watch",
-    "start-headless": "node server.js"
+    "start-headless": "node server.js",
+    "lint": "npx eslint server.js/*.js --fix"
   },
   "author": "Nitish Pratap",
   "dependencies": {
