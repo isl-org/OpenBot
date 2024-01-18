@@ -290,8 +290,8 @@ handleAccessToken()
 handleSingleSignOn()
 handleAuthChangedOnRefresh()
 
-// handling user usage for server duration
-window.onbeforeunload = function () {
+// handling user usage for server duration when refreshing or closing page
+window.onunload = function () {
     if (getCookie('serverStartTime')) {
         const serverStartTime = getCookie('serverStartTime')
         const endTIme = new Date()
