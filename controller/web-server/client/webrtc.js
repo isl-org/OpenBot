@@ -58,6 +58,7 @@ export function WebRTC (connection) {
         connection.send(JSON.stringify({webrtc_event: answer}))
     }
 
+    // starting webrtc connection
     this.start = () => {
         console.log('WebRTC: start...')
 

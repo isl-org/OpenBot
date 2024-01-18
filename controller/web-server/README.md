@@ -126,7 +126,7 @@ For testing purposes, we have opened new remote server on ``glitch`` but you can
 
     <img src="../../controller/web-server/images/dependency.jpg" alt="server code image" width="50%"/>
 
--  To establish your own server, you need to specify the project name in the connection.js file, as demonstrated, to initiate the WebSocket connection.
+-  To establish your own server, you need to specify the project name in the authentication.js file, as demonstrated, to initiate the WebSocket connection.
 
     ``new WebSocket(`ws://gossamer-southern-hygienic`);``
 

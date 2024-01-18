@@ -8,7 +8,7 @@
  */
 
 import {ErrorDisplay} from './error-display.js'
-import {uploadUserData} from './authentication/authentication'
+import {uploadUserData} from './firebase/APIs'
 import Cookies from 'js-cookie'
 import {deleteCookie, getCookie} from './index'
 

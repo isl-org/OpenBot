@@ -12,10 +12,11 @@ import {Keyboard} from './keyboard.js'
 import {BotMessageHandler} from './bot-message-handler'
 import {Commands} from './commands'
 import {RemoteKeyboard} from './remote_keyboard'
-import {googleSigIn, googleSignOut, auth, uploadUserData, getUserPlan} from './authentication/authentication'
+import {uploadUserData, getUserPlan} from './firebase/APIs'
 import {WebRTC} from './webrtc.js'
 import {signInWithCustomToken} from 'firebase/auth'
 import Cookies from 'js-cookie'
+import {auth, googleSigIn, googleSignOut} from './firebase/authentication'
 
 const connection = new Connection();
 (async () => {
@@ -77,7 +78,7 @@ subscribeButton.addEventListener('click', handleSubscription)
 /**
  * function to handle signIn on home page
  */
-function handleSignInButtonClick() {
+function handleSignInButtonClick () {
     if (localStorage.getItem('isSignIn') === 'false') {
         googleSigIn()
             .then((user) => {
@@ -112,7 +113,7 @@ function sendId() {
 /**
  * function to handle signOut from google account
  */
-function signOut() {
+function signOut () {
     signedInUser = null
     localStorage.setItem('user', null)
     localStorage.setItem('isSignIn', false.toString())
@@ -126,14 +127,14 @@ function signOut() {
 /**
  * function to handle cancel button on logout popup
  */
-function handleCancelButtonClick() {
+function handleCancelButtonClick () {
     hideLogoutWrapper()
 }
 
 /**
  * function to hide logout popup
  */
-function hideLogoutWrapper() {
+function hideLogoutWrapper () {
     const logout = document.getElementsByClassName('logout-wrapper')[0]
     logout.style.display = 'none'
 }
@@ -141,7 +142,7 @@ function hideLogoutWrapper() {
 /**
  * function to display logout popup
  */
-function showLogoutWrapper() {
+function showLogoutWrapper () {
     const logout = document.getElementsByClassName('logout-wrapper')[0]
     logout.style.display = 'block'
 }
@@ -149,7 +150,7 @@ function showLogoutWrapper() {
 /**
  * function to display expiration popup
  */
-function showExpirationWrapper() {
+function showExpirationWrapper () {
     const expire = document.getElementsByClassName('plan-expiration-model')[0]
     expire.style.display = 'block'
 }
@@ -157,7 +158,7 @@ function showExpirationWrapper() {
 /**
  * function to hide logout popup
  */
-function hideExpirationWrapper() {
+function hideExpirationWrapper () {
     const expire = document.getElementsByClassName('plan-expiration-model')[0]
     expire.style.display = 'none'
 }
@@ -173,7 +174,7 @@ function handleOkButtonClick() {
 /**
  * function to handle subscribe now button
  */
-function handleSubscription() {
+function handleSubscription () {
     console.log('Navigate to subscription page')
 }
 
@@ -182,7 +183,7 @@ function handleSubscription() {
  * @param cname
  * @returns {string}
  */
-export function getCookie(cname) {
+export function getCookie (cname) {
     const name = cname + '='
     const decodedCookie = decodeURIComponent(document.cookie)
     const ca = decodedCookie.split(';')
@@ -209,7 +210,7 @@ export const deleteCookie = (name) => {
 /**
  * function to handle single sign on from openbot dashboard
  */
-function handleSingleSignOn() {
+function handleSingleSignOn () {
     const cookie = getCookie('user')
     if (cookie) {
         const result = cookie
@@ -246,7 +247,7 @@ function handleSingleSignOn() {
 /**
  * function to handle access token
  */
-function handleAccessToken() {
+function handleAccessToken () {
     const tokenCookie = getCookie('accessToken')
     if (tokenCookie) {
         deleteCookie('accessToken')
@@ -256,7 +257,7 @@ function handleAccessToken() {
 /**
  * function to handle auth status on refreshing page
  */
-function handleAuthChangedOnRefresh() {
+function handleAuthChangedOnRefresh () {
     if (localStorage.getItem('isSignIn') === 'true') {
         setTimeout(() => {
             auth.onAuthStateChanged((res) => {
@@ -303,7 +304,7 @@ window.onbeforeunload = function () {
 /**
  * function to check whether user subscription expires or not
  */
-export function checkPlanExpiration() {
+export function checkPlanExpiration () {
     if (localStorage.getItem('isSignIn') === 'true') {
         if (getCookie('endTime')) {
             const endTimeCheckInterval = setInterval(() => {
