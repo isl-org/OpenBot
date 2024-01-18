@@ -1,4 +1,11 @@
-export function WebRTC(connection) {
+import Cookies from 'js-cookie';
+
+/**
+ * function to enable webRTC connection
+ * @param connection
+ * @constructor
+ */
+export function WebRTC (connection) {
     const {RTCPeerConnection} = window
 
     let peerConnection = null
@@ -56,6 +63,12 @@ export function WebRTC(connection) {
 
         peerConnection = new RTCPeerConnection()
 
+        peerConnection.onconnectionstatechange = () => {
+            if (peerConnection?.connectionState === 'connected') {
+                const serverStartTime = new Date()
+                Cookies.set('serverStartTime', serverStartTime)
+            }
+        }
         this.dataChannel = peerConnection.createDataChannel('dataChannel') // Use this.dataChannel to set it as a property
         this.dataChannel.onmessage = (event) => {
             // Handle incoming messages here

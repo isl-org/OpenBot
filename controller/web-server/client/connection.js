@@ -10,10 +10,13 @@
 import {ErrorDisplay} from './error-display.js'
 import {uploadUserData} from './authentication/authentication'
 import Cookies from 'js-cookie'
-import {deleteCookie, getCookie} from "./index";
+import {deleteCookie, getCookie} from './index'
 
+/**
+ * function to connect websocket to remote server
+ * @constructor
+ */
 export function Connection() {
-
     const connectToServer = async () => {
         const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`)
         // const ws = new WebSocket(`ws://verdant-imported-peanut.glitch.me`);
@@ -45,11 +48,6 @@ export function Connection() {
 
         ws.onmessage = (webSocketMessage) => {
             const msg = JSON.parse(webSocketMessage.data)
-            if (msg?.status?.WEB_RTC_EVENT?.candidate != null) {
-                console.log('client connected successfully::', msg?.roomId)
-                Cookies.set('startTime', new Date())
-                Cookies.set('server', true)
-            }
             if (Object.keys(msg)[0] === 'roomId' && !idSent) {
                 idSent = true
             } else {
@@ -62,18 +60,16 @@ export function Connection() {
             console.log('Disconnected from the server. To reconnect, reload this page.')
             errDisplay.set('Disconnected from the server. To reconnect, reload this page.')
             idSent = false
-            if (getCookie('server')) {
-                const startTime = getCookie('startTime')
+            if (getCookie('serverStartTime')) {
+                const serverStartTime = getCookie('serverStartTime')
                 const endTIme = new Date()
-                const previousStartTime = new Date(decodeURIComponent(startTime))
+                const previousStartTime = new Date(decodeURIComponent(serverStartTime))
                 const serverDuration = Math.floor((endTIme - previousStartTime) / 1000) // in seconds
                 Cookies.set('serverDuration', serverDuration)
-                Cookies.set('server', false)
                 if (getCookie('serverDuration')) {
                     uploadUserData(JSON.parse(getCookie('serverDuration'))).then(() => {
                         deleteCookie('serverDuration')
-                        deleteCookie('server')
-                        deleteCookie('startTime')
+                        deleteCookie('serverStartTime')
                     })
                 }
             }

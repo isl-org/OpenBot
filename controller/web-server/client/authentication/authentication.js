@@ -2,6 +2,8 @@ import {initializeApp} from 'firebase/app'
 import {getAuth, signOut, signInWithPopup, GoogleAuthProvider} from 'firebase/auth'
 import {doc, getDoc, getFirestore, setDoc, updateDoc} from '@firebase/firestore'
 import {getStorage} from 'firebase/storage'
+import Cookies from 'js-cookie'
+import {checkSubscriptionTime} from '../index'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -26,11 +28,17 @@ export const db = getFirestore(app)
  * @returns {Promise<unknown>}
  */
 export function googleSigIn () {
+    const serverValidity = 2 // 30 minutes free connection time
     return new Promise((resolve, reject) => {
         signInWithPopup(auth, provider)
             .then((result) => {
                 // The signed-in user info.
                 const user = result.user
+                getUserPlan().then((res) => {
+                    const endTime = res ?? new Date(new Date().getTime() + serverValidity * 60 * 1000)
+                    Cookies.set('endTime', endTime)
+                    checkSubscriptionTime()
+                })
                 resolve(user)
             })
             .catch((error) => {
@@ -44,7 +52,7 @@ export function googleSigIn () {
  * function to log out user from Google account
  * @returns {Promise<void>}
  */
-export function googleSignOut () {
+export function googleSignOut() {
     signOut(auth).then(() => {
         localStorage.setItem('isSignIn', 'false')
     }).catch((error) => {
@@ -52,9 +60,13 @@ export function googleSignOut () {
     })
 }
 
+/**
+ * function to store user usage on monthly basis
+ * @param time
+ * @returns {Promise<void>}
+ */
 export const uploadUserData = async (time) => {
     try {
-
         const Month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
         const docRef = doc(db, 'users', auth.currentUser?.uid)
         const docSnapshot = await getDoc(docRef)
@@ -65,7 +77,7 @@ export const uploadUserData = async (time) => {
             [monthName]: {
                 projects: 0,
                 models: 0,
-                remoteServer: time
+                serverDuration: time
             }
         }
         dataArray.push(userObject)
@@ -75,7 +87,7 @@ export const uploadUserData = async (time) => {
                 // eslint-disable-next-line no-prototype-builtins
                 const index = docSnapData.findIndex(entry => entry.hasOwnProperty(monthName))
                 if (index !== -1) {
-                    docSnapData[index][monthName].remoteServer += time
+                    docSnapData[index][monthName].serverDuration += time
                 } else {
                     docSnapData.push(userObject)
                 }
@@ -96,4 +108,27 @@ export const uploadUserData = async (time) => {
         (e) {
         console.log('error in setting projects:', e)
     }
+}
+
+/**
+ * function to get user current plan
+ * @returns {Promise<undefined|*>}
+ */
+export async function getUserPlan () {
+    const usersRef = doc(db, 'users', auth?.currentUser?.uid)
+    try {
+        const docSnapshot = await getDoc(usersRef)
+        if (!docSnapshot.exists()) {
+            return undefined
+        }
+        const subscriptionData = docSnapshot.data()?.subscription
+        if (subscriptionData?.paid) {
+            if (new Date() <= subscriptionData.planEndDate) {
+                return subscriptionData.planEndDate
+            }
+        }
+    } catch (error) {
+        console.error('Error retrieving user plan:', error)
+    }
+    return undefined
 }

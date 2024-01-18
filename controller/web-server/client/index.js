@@ -12,7 +12,7 @@ import {Keyboard} from './keyboard.js'
 import {BotMessageHandler} from './bot-message-handler'
 import {Commands} from './commands'
 import {RemoteKeyboard} from './remote_keyboard'
-import {googleSigIn, googleSignOut, auth, uploadUserData} from './authentication/authentication'
+import {googleSigIn, googleSignOut, auth, uploadUserData, getUserPlan} from './authentication/authentication'
 import {WebRTC} from './webrtc.js'
 import {signInWithCustomToken} from 'firebase/auth'
 import Cookies from 'js-cookie'
@@ -108,16 +108,15 @@ function sendId() {
 /**
  * function to handle signOut from google account
  */
-function signOut() {
+function signOut () {
     signedInUser = null
     localStorage.setItem('user', null)
     localStorage.setItem('isSignIn', false.toString())
     const signInBtn = document.getElementsByClassName('google-sign-in-button')[0]
     signInBtn.innerText = 'Sign in with Google'
-    googleSignOut().then()
+    googleSignOut()
     deleteCookie('serverDuration')
-    deleteCookie('server')
-    deleteCookie('startTime')
+    deleteCookie('serverStartTime')
 }
 
 /**
@@ -188,6 +187,12 @@ function handleSingleSignOn() {
     if (cookie) {
         const result = cookie
         localStorage.setItem('isSignIn', 'true')
+        if (getCookie('serverDuration')) {
+            uploadUserData(JSON.parse(getCookie('serverDuration'))).then(() => {
+                deleteCookie('serverDuration')
+                deleteCookie('serverStartTime')
+            })
+        }
         signInWithCustomToken(auth, result).then((res) => {
             // Use the user data or store it in a variable for later use
             signedInUser = res.user
@@ -227,12 +232,17 @@ function handleAuthChangedOnRefresh() {
                     signInBtn.innerText = res.displayName
                     localStorage.setItem('user', JSON.stringify(res))
                     localStorage.setItem('isSignIn', 'true')
-                    sendId()//
+                    sendId()
+                    getUserPlan().then((res) => {
+                        if (res !== undefined) {
+                            Cookies.set('endTime', res)
+                        }
+                        checkSubscriptionTime()
+                    })
                     if (getCookie('serverDuration')) {
                         uploadUserData(JSON.parse(getCookie('serverDuration'))).then(() => {
                             deleteCookie('serverDuration')
-                            deleteCookie('server')
-                            deleteCookie('startTime')
+                            deleteCookie('serverStartTime')
                         })
                     }
                 }
@@ -247,12 +257,29 @@ handleAuthChangedOnRefresh()
 
 // handling user usage for server duration
 window.onbeforeunload = function () {
-    if (getCookie('server')) {
-        const startTime = getCookie('startTime')
+    if (getCookie('serverStartTime')) {
+        const serverStartTime = getCookie('serverStartTime')
         const endTIme = new Date()
-        const previousStartTime = new Date(decodeURIComponent(startTime))
+        const previousStartTime = new Date(decodeURIComponent(serverStartTime))
         const serverDuration = Math.floor((endTIme - previousStartTime) / 1000) // in seconds
         Cookies.set('serverDuration', serverDuration)
-        Cookies.set('server', false)
+    }
+}
+
+/**
+ * function to check whether user subscription expires or not
+ */
+export function checkSubscriptionTime () {
+    if (localStorage.getItem('isSignIn') === 'true') {
+        if (getCookie('endTime')) {
+            const endTimeCheckInterval = setInterval(() => {
+                const currentTime = new Date()
+                // Check if the end time has been reached
+                if (currentTime >= new Date(decodeURIComponent(getCookie('endTime')))) {
+                    clearInterval(endTimeCheckInterval)
+                    // alert('Please subscribe to get started')
+                }
+            }, 100) // 1 minute in milliseconds
+        }
     }
 }
