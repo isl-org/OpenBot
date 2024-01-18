@@ -16,7 +16,7 @@ import {deleteCookie, getCookie} from './index'
  * function to connect websocket to remote server
  * @constructor
  */
-export function Connection() {
+export function Connection () {
     const connectToServer = async () => {
         const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`)
         // const ws = new WebSocket(`ws://verdant-imported-peanut.glitch.me`);

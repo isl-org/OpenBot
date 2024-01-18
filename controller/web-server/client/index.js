@@ -70,6 +70,9 @@ const cancelButton = document.getElementById('logout-cancel-button')
 const okButton = document.getElementById('logout-ok-button')
 cancelButton.addEventListener('click', handleCancelButtonClick)
 okButton.addEventListener('click', handleOkButtonClick)
+const subscribeButton = document.getElementById('subscribe-button')
+subscribeButton.addEventListener('click', handleSubscription)
+
 
 /**
  * function to handle signIn on home page
@@ -92,6 +95,7 @@ function handleSignInButtonClick() {
             })
     } else {
         showLogoutWrapper()
+        hideExpirationWrapper()
     }
 }
 
@@ -108,7 +112,7 @@ function sendId() {
 /**
  * function to handle signOut from google account
  */
-function signOut () {
+function signOut() {
     signedInUser = null
     localStorage.setItem('user', null)
     localStorage.setItem('isSignIn', false.toString())
@@ -143,11 +147,34 @@ function showLogoutWrapper() {
 }
 
 /**
+ * function to display expiration popup
+ */
+function showExpirationWrapper() {
+    const expire = document.getElementsByClassName('plan-expiration-model')[0]
+    expire.style.display = 'block'
+}
+
+/**
+ * function to hide logout popup
+ */
+function hideExpirationWrapper() {
+    const expire = document.getElementsByClassName('plan-expiration-model')[0]
+    expire.style.display = 'none'
+}
+
+/**
  * function to handle "ok" button for logout popup
  */
 function handleOkButtonClick() {
     hideLogoutWrapper()
     signOut()
+}
+
+/**
+ * function to handle subscribe now button
+ */
+function handleSubscription() {
+    console.log('Navigate to subscription page')
 }
 
 /**
@@ -191,6 +218,7 @@ function handleSingleSignOn() {
             uploadUserData(JSON.parse(getCookie('serverDuration'))).then(() => {
                 deleteCookie('serverDuration')
                 deleteCookie('serverStartTime')
+                deleteCookie('endTime')
             })
         }
         signInWithCustomToken(auth, result).then((res) => {
@@ -200,7 +228,13 @@ function handleSingleSignOn() {
             signInBtn.innerText = res.user.displayName
             localStorage.setItem('user', JSON.stringify(res.user))
             localStorage.setItem('isSignIn', true.toString())
-            sendId()// delete_cookie("user");
+            restrictUserOnExpiration()
+            getUserPlan().then((res) => {
+                if (res !== undefined) {
+                    Cookies.set('endTime', res)
+                }
+                checkPlanExpiration()
+            })
             deleteCookie('user')
         })
             .catch((error) => {
@@ -232,12 +266,12 @@ function handleAuthChangedOnRefresh() {
                     signInBtn.innerText = res.displayName
                     localStorage.setItem('user', JSON.stringify(res))
                     localStorage.setItem('isSignIn', 'true')
-                    sendId()
+                    restrictUserOnExpiration()
                     getUserPlan().then((res) => {
                         if (res !== undefined) {
                             Cookies.set('endTime', res)
                         }
-                        checkSubscriptionTime()
+                        checkPlanExpiration()
                     })
                     if (getCookie('serverDuration')) {
                         uploadUserData(JSON.parse(getCookie('serverDuration'))).then(() => {
@@ -269,7 +303,7 @@ window.onbeforeunload = function () {
 /**
  * function to check whether user subscription expires or not
  */
-export function checkSubscriptionTime () {
+export function checkPlanExpiration() {
     if (localStorage.getItem('isSignIn') === 'true') {
         if (getCookie('endTime')) {
             const endTimeCheckInterval = setInterval(() => {
@@ -277,9 +311,21 @@ export function checkSubscriptionTime () {
                 // Check if the end time has been reached
                 if (currentTime >= new Date(decodeURIComponent(getCookie('endTime')))) {
                     clearInterval(endTimeCheckInterval)
-                    // alert('Please subscribe to get started')
+                    showExpirationWrapper()
                 }
             }, 100) // 1 minute in milliseconds
+        }
+    }
+}
+
+/**
+ * function to restrict user for sending room key to remote server
+ */
+export function restrictUserOnExpiration () {
+    if (getCookie('endTime')) {
+        const currentTime = new Date()
+        if (currentTime < new Date(decodeURIComponent(getCookie('endTime')))) {
+            sendId()
         }
     }
 }

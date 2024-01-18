@@ -3,7 +3,7 @@ import {getAuth, signOut, signInWithPopup, GoogleAuthProvider} from 'firebase/au
 import {doc, getDoc, getFirestore, setDoc, updateDoc} from '@firebase/firestore'
 import {getStorage} from 'firebase/storage'
 import Cookies from 'js-cookie'
-import {checkSubscriptionTime} from '../index'
+import {checkPlanExpiration} from '../index'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -37,7 +37,7 @@ export function googleSigIn () {
                 getUserPlan().then((res) => {
                     const endTime = res ?? new Date(new Date().getTime() + serverValidity * 60 * 1000)
                     Cookies.set('endTime', endTime)
-                    checkSubscriptionTime()
+                    checkPlanExpiration()
                 })
                 resolve(user)
             })

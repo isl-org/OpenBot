@@ -45,7 +45,7 @@ ResizeObserver - loop limit exceeded */
 video::-webkit-media-controls-timeline {
     align-self: center;
     width: calc(100% - 64px);
-  }
+}
 
 .video-container {
     height: calc(100% - 4rem);
@@ -65,7 +65,7 @@ video::-webkit-media-controls-timeline {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-  }
+}
 
 .button {
     padding: 5px;
@@ -139,7 +139,7 @@ video::-webkit-media-controls-timeline {
     color: #757575;
     font-size: 14px;
     font-weight: 500;
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 
     background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTcuNiA5LjJsLS4xLTEuOEg5djMuNGg0LjhDMTMuNiAxMiAxMyAxMyAxMiAxMy42djIuMmgzYTguOCA4LjggMCAwIDAgMi42LTYuNnoiIGZpbGw9IiM0Mjg1RjQiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Ik05IDE4YzIuNCAwIDQuNS0uOCA2LTIuMmwtMy0yLjJhNS40IDUuNCAwIDAgMS04LTIuOUgxVjEzYTkgOSAwIDAgMCA4IDV6IiBmaWxsPSIjMzRBODUzIiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNNCAxMC43YTUuNCA1LjQgMCAwIDEgMC0zLjRWNUgxYTkgOSAwIDAgMCAwIDhsMy0yLjN6IiBmaWxsPSIjRkJCQzA1IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNOSAzLjZjMS4zIDAgMi41LjQgMy40IDEuM0wxNSAyLjNBOSA5IDAgMCAwIDEgNWwzIDIuNGE1LjQgNS40IDAgMCAxIDUtMy43eiIgZmlsbD0iI0VBNDMzNSIgZmlsbC1ydWxlPSJub256ZXJvIi8+PHBhdGggZD0iTTAgMGgxOHYxOEgweiIvPjwvZz48L3N2Zz4=);
     background-color: white;
@@ -157,16 +157,14 @@ video::-webkit-media-controls-timeline {
 
 .google-sign-in-button:active {
     outline: none;
-    box-shadow:
-            0 -1px 0 rgba(0, 0, 0, .04),
-            0 2px 4px rgba(0, 0, 0, .25),
-            0 0 0 3px #c8dafc;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, .04),
+    0 2px 4px rgba(0, 0, 0, .25),
+    0 0 0 3px #c8dafc;
 }
 
-.logout{
+.logout {
     margin-left: 15px;
     margin-top: 15px;
-
 }
 
 .video-container {
@@ -183,24 +181,79 @@ video::-webkit-media-controls-timeline {
     border-radius: 10px;
     display: none;
 }
-.logout-message{
+
+.logout-message {
     margin-top: 20px; /* Adjust the margin value as needed */
 }
-.logout-message p{
+
+.logout-message p {
     margin-bottom: 15px;
 }
 
-.logout-buttons{
+.logout-buttons {
     margin: 3.5rem 15px 15px 8rem;
     gap: 2rem;
 }
 
-.logout-buttons button{
+.logout-buttons button {
     width: 100px;
     height: 40px;
     border: 1px solid #0071C5;
     border-radius: 5px;
 }
-.logout-buttons  :hover{
+
+.logout-buttons :hover {
     background-color: #0071C5;
 }
+
+.plan-expiration-model {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    width: 400px;
+    height: 250px;
+    background-color: #FFFFFF;
+    transform: translate(-50%, -50%);
+    border: solid 1px #0071C5;
+    border-radius: 10px;
+    display: none;
+}
+
+.expire {
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.expire-main{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.expire-text {
+    color: black;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+.expiration-description{
+    font-size: 13px;
+}
+
+.subscribe-button{
+    cursor: pointer;
+    width: 90%;
+    height: 30px;
+    border: none;
+    color: #FFFFFF;
+    border-radius: 15px;
+    background-color: #0071C5;
+}
+
