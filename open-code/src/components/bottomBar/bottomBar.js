@@ -21,6 +21,7 @@ import navbarStyle from "../navBar/navbar.module.css";
 import BlueText from "../fonts/blueText";
 import {ModelUploadingComponent} from "./modelUploadingComponent";
 import {uploadUserData} from "../../services/firebase";
+import SubscriptionModel from "../subscription/subscriptionModel";
 
 /**
  * Bottom Bar contains generate code, upload on drive icon , zoom in-out and undo redo functionality.
@@ -39,6 +40,7 @@ export const BottomBar = () => {
     const [isAIModelComponent, setIsAIModelComponent] = useState(false);
     const [file, setFile] = useState(null);
     const [error, setError] = useState("");
+    const [isSubscriptionExpire, setIsSubscriptionExpire] = useState(null);
     const {
         isOnline,
         generate,
@@ -193,9 +195,10 @@ export const BottomBar = () => {
                                 })
                             }
                         } else {
-                            errorToast(Constants.subscription);
-                            //TODO add component for restriction user
                             setIsLoader(false);
+                            setIsSubscriptionExpire(true);
+                            // errorToast(Constants.subscription);
+                            //TODO add component for restriction user
                         }
                     }
                 );
@@ -321,48 +324,52 @@ export const BottomBar = () => {
     }
 
     return (
-        <div
-            className={isLoader || isError ? styles.loaderBarDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight) : styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
-            <div>
-                {isError && <div style={{display: "flex", flexDirection: "column"}}
-                                 className={styles.errorDiv}>
-                    <div>Compilation failed due to following error(s).</div>
-                    <div className={styles.errorItems}>error : &nbsp;&nbsp; {error}</div>
-                </div>
-                }
-                {isLoader &&
-                    <div style={{display: "flex", flexDirection: "column"}} className={styles.loaderText}>
-                        <CompilationLoader/>
-                        {theme === "dark" ?
-                            <WhiteText text={"Compiling Code..."} extraStyle={styles.textItem}/> :
-                            <BlackText text={"Compiling Code..."} extraStyle={styles.textItem}/>}
+        <>
+            {isSubscriptionExpire && <SubscriptionModel isSubscriptionExpire={isSubscriptionExpire}
+                                                        setIsSubscriptionExpire={setIsSubscriptionExpire}/>}
+            <div
+                className={isLoader || isError ? styles.loaderBarDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight) : styles.barDiv + " " + (theme === "dark" ? styles.barDivDark : styles.barDivLight)}>
+                <div>
+                    {isError && <div style={{display: "flex", flexDirection: "column"}}
+                                     className={styles.errorDiv}>
+                        <div>Compilation failed due to following error(s).</div>
+                        <div className={styles.errorItems}>error : &nbsp;&nbsp; {error}</div>
                     </div>
-                }
-            </div>
-            <div className={styles.buttonsDiv}>
-                {/*generate code*/}
-                <UploadCodeButton buttonSelected={buttonSelected} setDrawer={setDrawer}
-                                  buttonActive={buttonActive} clickedButton={clickedButton}
-                                  setIsAIModelComponent={setIsAIModelComponent} setFile={setFile}/>
-                {/*model upload pop up */}
-                {
-                    isAIModelComponent &&
-                    <ModelUploadingComponent isAIModelComponent={isAIModelComponent}
-                                             setIsAIModelComponent={setIsAIModelComponent} file={file}/>
-                }
+                    }
+                    {isLoader &&
+                        <div style={{display: "flex", flexDirection: "column"}} className={styles.loaderText}>
+                            <CompilationLoader/>
+                            {theme === "dark" ?
+                                <WhiteText text={"Compiling Code..."} extraStyle={styles.textItem}/> :
+                                <BlackText text={"Compiling Code..."} extraStyle={styles.textItem}/>}
+                        </div>
+                    }
+                </div>
+                <div className={styles.buttonsDiv}>
+                    {/*generate code*/}
+                    <UploadCodeButton buttonSelected={buttonSelected} setDrawer={setDrawer}
+                                      buttonActive={buttonActive} clickedButton={clickedButton}
+                                      setIsAIModelComponent={setIsAIModelComponent} setFile={setFile}/>
+                    {/*model upload pop up */}
+                    {
+                        isAIModelComponent &&
+                        <ModelUploadingComponent isAIModelComponent={isAIModelComponent}
+                                                 setIsAIModelComponent={setIsAIModelComponent} file={file}/>
+                    }
 
-                <div className={styles.operationsDiv}>
-                    {/*undo redo*/}
-                    <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
-                              buttonActive={buttonActive}/>
-                    {/*zoom in out*/}
-                    {isMobile || isLandscape || isDesktopSmallerScreen ? "" :
-                        <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
-                                   buttonActive={buttonActive}/>}
+                    <div className={styles.operationsDiv}>
+                        {/*undo redo*/}
+                        <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
+                                  buttonActive={buttonActive}/>
+                        {/*zoom in out*/}
+                        {isMobile || isLandscape || isDesktopSmallerScreen ? "" :
+                            <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
+                                       buttonActive={buttonActive}/>}
 
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

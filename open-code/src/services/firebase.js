@@ -164,7 +164,8 @@ export async function uploadUserData(datatype) {
         let userObject = {
             [monthName]: {
                 projects: datatype === Constants.projects ? 1 : 0,
-                models: datatype === Constants.models ? 1 : 0
+                models: datatype === Constants.models ? 1 : 0,
+                serverDuration : 0,
             }
         }
         dataArray.push(userObject);

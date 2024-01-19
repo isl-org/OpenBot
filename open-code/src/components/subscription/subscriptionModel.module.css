@@ -1,0 +1,63 @@
+.planExpirationModel {
+    outline: none;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 290px;
+    border-radius: 10px;
+}
+
+.expireModel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.expire {
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.expireMain{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.expireText {
+    font-family: Gilroy-Medium, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+.expirationDescription{
+    font-family: Gilroy-Medium, sans-serif;
+    font-size: 13px;
+}
+
+.subscribeButton{
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 95%;
+    height: 30px;
+    font-family: Gilroy-Medium, sans-serif;
+    border: none;
+    color: #FFFFFF;
+    border-radius: 15px;
+    background-color: #0071C5;
+}
+
+.closeModelDiv{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin-top: 10px;
+    margin-right: 10px
+}
