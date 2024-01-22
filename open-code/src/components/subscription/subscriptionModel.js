@@ -7,6 +7,7 @@ import BlackText from "../fonts/blackText";
 import BlueButton from "../buttonComponent/blueButtonComponent";
 import {ThemeContext} from "../../App";
 import WhiteText from "../fonts/whiteText";
+import {Constants, Themes} from "../../utils/constants";
 
 /**
  * function to display subscription expire for user
@@ -29,30 +30,31 @@ const SubscriptionModel = (props) => {
             open={isSubscriptionExpire}
             onClose={() => handleClose()}>
             {<Box
-                className={Styles.planExpirationModel + " " + (theme === "dark" ? styles.darkLogoutModalBox : styles.lightLogoutModalBox)}>
+                className={Styles.planExpirationModel + " " + (theme === Themes.dark ? styles.darkLogoutModalBox : styles.lightLogoutModalBox)}>
                 <div className={Styles.closeModelDiv}>
-                    <img alt={"cross"} src={theme === "dark" ? Images.darkCrossIcon : Images.crossIcon}
-                         style={{width: theme === "dark" ? 18 : 25, cursor: "pointer"}}
+                    <img alt={"cross"} src={theme === Themes.dark ? Images.darkCrossIcon : Images.crossIcon}
+                         style={{width: theme === Themes.dark ? 18 : 25, cursor: "pointer"}}
                          onClick={handleClose}/></div>
                 <div className={Styles.expireMain}>
                     <div className={Styles.expire}>
                         <img src={Images.subscriptionExpire} style={{width: 60}} alt={"expireTime"}/>
-                        {theme === "dark" ?
-                            <WhiteText text={"Your trial has just ended!"} extraStyle={Styles.expireText}/> :
-                            <BlackText text={"Your trial has just ended!"} extraStyle={Styles.expireText}/>}
-                        {theme === "dark" ?
-                            <WhiteText text={"To continue using OpenBot Playground, you"}
+                        {theme === Themes.dark ?
+                            <WhiteText text={Constants.subscriptionEnded} extraStyle={Styles.expireText}/> :
+                            <BlackText text={Constants.subscriptionEnded} extraStyle={Styles.expireText}/>}
+                        {theme === Themes.dark ?
+                            <WhiteText text={Constants.subscriptionContinueService}
                                        extraStyle={Styles.expirationDescription}/> :
-                            <BlackText text={"To continue using OpenBot Playground, you"}
+                            <BlackText text={Constants.subscriptionContinueService}
                                        extraStyle={Styles.expirationDescription}/>}
-                        {theme === "dark" ?
-                            <WhiteText text={"will need to upgrade your plan."}
+                        {theme === Themes.dark ?
+                            <WhiteText text={Constants.subscriptionContinueInfo}
                                        extraStyle={Styles.expirationDescription}/> :
-                            <BlackText text={"will need to upgrade your plan."}
+                            <BlackText text={Constants.subscriptionContinueInfo}
                                        extraStyle={Styles.expirationDescription}/>}
                         <BlueButton onClick={() => {
+                            //TODO add subscriptions page of dashboard
                         }} buttonType={"contained"}
-                                    buttonName={"Subscribe Now"}
+                                    buttonName={Constants.subscribeButton}
                                     extraStyle={Styles.subscribeButton}/>
                     </div>
                 </div>

@@ -12,7 +12,7 @@ import 'ace-builds/src-noconflict/theme-textmate';
 import {RightSlider} from "../drawer/drawer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@mui/material";
-
+import {Themes} from "../../utils/constants";
 
 /**x
  * Code Editor to display Js code and python code.
@@ -55,7 +55,7 @@ function CodeEditor(params) {
         editor.session.setMode(mode);
         editor.setOption("useWorker", false);
         editor.setReadOnly(true);
-        editor.setTheme(theme === "dark" ? "ace/theme/one_dark" : "ace/theme/textmate");
+        editor.setTheme(theme === Themes.dark ? "ace/theme/one_dark" : "ace/theme/textmate");
         editor.session.setMode(mode);
         editor.setValue(code);
         const gutterEl = editor.renderer.$gutter;

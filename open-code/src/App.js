@@ -15,7 +15,7 @@ export const ThemeContext = createContext(null);
  * @constructor
  */
 function App() {
-    let onPageLoad = localStorage.getItem("theme") || ""
+    let onPageLoad = localStorage.getItem(localStorageKeys.theme) || ""
     const [theme, setTheme] = useState(onPageLoad);
     const [internetOn, setInternetOn] = useState(window.navigator.onLine);
     const [user, setUser] = useState();
@@ -154,22 +154,22 @@ function App() {
 
 
     //check if user prefer theme is saved or not if not then saved it to system theme
-    if (!localStorage.getItem("theme")) {
+    if (!localStorage.getItem(localStorageKeys.theme)) {
         const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)"); //check system theme
         //set system prefer theme in localstorage
-        localStorage.setItem("theme", darkThemeMq.matches ? Themes.dark : Themes.light);
+        localStorage.setItem(localStorageKeys.theme, darkThemeMq.matches ? Themes.dark : Themes.light);
     }
 
     //if theme is dark and when click on change theme then setTheme light and vice-versa.
     const toggleTheme = () => {
-        if (theme === "light") {
-            setTheme("dark");
+        if (theme === Themes.light) {
+            setTheme(Themes.dark);
             localStorage.setItem("theme", Themes.dark)
-            document.body.classList.replace("light", "dark"); // for background theme
+            document.body.classList.replace(Themes.light, Themes.dark); // for background theme
         } else {
-            setTheme("light");
+            setTheme(Themes.light);
             localStorage.setItem("theme", Themes.light)
-            document.body.classList.replace("dark", "light"); //for background theme
+            document.body.classList.replace(Themes.dark, Themes.light); //for background theme
         }
     };
 

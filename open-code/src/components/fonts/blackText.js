@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import styles from "./fontStyle.module.css"
 import {ThemeContext} from "../../App";
-
+import {Themes} from "../../utils/constants";
 
 /**
  * Render the BlackText component with appropriate styles based on the theme
@@ -19,7 +19,7 @@ function BlackText(props) {
                     " " +
                     extraStyle +
                     " " +
-                    (theme.theme === "dark" ?
+                    (theme.theme === Themes.dark ?
                         styles.BlackTextDarkFont :
                         styles.BlackTextLightFont)}>
                 {text}

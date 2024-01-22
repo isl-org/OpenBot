@@ -12,7 +12,7 @@ import styles from "../qrcode/qrCode.module.css"
 import QrCode from "../qrcode/qrcode";
 import {Constants} from "../../utils/constants";
 import CodeEditor from "../editor/codeEditor";
-
+import {Themes} from "../../utils/constants"
 
 /**
  * QrDrawer component renders a drawer with a QR code and some instructions on how to use it.
@@ -45,9 +45,9 @@ export function RightDrawer() {
                             flexShrink: 0,
                             '& .MuiDrawer-paper': {
                                 width: drawer ? category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' : isLandscape ? '50%' : isTabletQuery ? '45%' : '25%' : isMobile ? isLandscape ? '3%' : '6%' : '2%',
-                                borderLeft: drawer ? theme === "dark" ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
-                                backgroundColor: theme === "dark" ? colors.blackBackground : colors.whiteBackground,
-                                color: theme === "dark" ? colors.whiteFont : colors.blackFont,
+                                borderLeft: drawer ? theme === Themes.dark ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
+                                backgroundColor: theme === Themes.dark ? colors.blackBackground : colors.whiteBackground,
+                                color: theme === Themes.dark ? colors.whiteFont : colors.blackFont,
                                 top: isLandscape ? "4rem" : isTabletQuery ? "6rem" : "5rem",
                                 bottom: isMobile ? "9%" : isLandscape ? "18%" : isTabletQuery ? "4.4rem" : "4.4rem",
                             },

@@ -130,7 +130,8 @@ export const localStorageKeys = {
     allProjects: "projects",
     currentProject: "currentProject",
     accessToken: "accessToken",
-    configData: "configData"
+    configData: "configData",
+    theme: "theme"
 }
 
 /**
@@ -152,11 +153,16 @@ export const Constants = {
     tflite: "tflite",
     InternetOffMsg: "Please check your internet connection.",
     subscription: "Please subscribe to upload projects",
-    projects:"projects",
-    models:"models"
+    projects: "projects",
+    models: "models",
+    theme: "theme",
+    subscriptionEnded:"Your trial has just ended!",
+    subscriptionContinueService:"To continue using OpenBot Playground, you",
+    subscriptionContinueInfo:"will need to upgrade your plan.",
+    subscribeButton:"Subscribe Now"
 }
 
-export const Month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+export const Month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 
 /**
