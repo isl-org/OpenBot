@@ -5,6 +5,7 @@ import {getStorage} from 'firebase/storage'
 import Cookies from 'js-cookie'
 import {checkPlanExpiration, getCookie} from '../index'
 import {getUserPlan} from './APIs'
+import {localStorageKeys} from "../utils/constants";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -29,15 +30,15 @@ export const db = getFirestore(app)
  * @returns {Promise<unknown>}
  */
 export function googleSigIn () {
-    const serverValidity = 60 // 60 minutes free connection time
+    const serverValidity = 2 // 60 minutes free connection time
     return new Promise((resolve, reject) => {
         signInWithPopup(auth, provider)
             .then((result) => {
                 // The signed-in user info.
                 const user = result.user
                 getUserPlan().then((res) => {
-                    const endTime = res ?? getCookie('endTime') !== '' ? getCookie('endTime') : new Date(new Date().getTime() + serverValidity * 60 * 1000)
-                    Cookies.set('endTime', endTime)
+                    const endTime = res ?? getCookie(localStorageKeys.endTime) !== '' ? getCookie('endTime') : new Date(new Date().getTime() + serverValidity * 60 * 1000)
+                    Cookies.set(localStorageKeys.endTime, endTime)
                     checkPlanExpiration()
                 })
                 resolve(user)
@@ -55,7 +56,7 @@ export function googleSigIn () {
  */
 export function googleSignOut() {
     signOut(auth).then(() => {
-        localStorage.setItem('isSignIn', 'false')
+        localStorage.setItem(localStorageKeys.isSignIn, 'false')
     }).catch((error) => {
         console.log('Sign-out error ', error)
     })

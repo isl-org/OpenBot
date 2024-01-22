@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+import {localStorageKeys} from "../utils/constants";
 
 /**
  * function to enable webRTC connection
@@ -67,7 +68,7 @@ export function WebRTC (connection) {
         peerConnection.onconnectionstatechange = () => {
             if (peerConnection?.connectionState === 'connected') {
                 const serverStartTime = new Date()
-                Cookies.set('serverStartTime', serverStartTime)
+                Cookies.set(localStorageKeys.serverStartTime, serverStartTime)
             }
         }
         this.dataChannel = peerConnection.createDataChannel('dataChannel') // Use this.dataChannel to set it as a property

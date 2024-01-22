@@ -13,31 +13,31 @@ p {
 /* Font */
 @font-face {
     font-family: 'Gilroy';
-    src: url('font/Gilroy/Gilroy-Black.ttf') format('truetype');
+    src: url('utils/font/Gilroy/Gilroy-Black.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Gilroy-Regular';
     /*400*/
-    src: url('font/Gilroy/Gilroy-Regular.ttf') format('truetype');
+    src: url('utils/font/Gilroy/Gilroy-Regular.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Gilroy-Medium';
     /*500*/
-    src: url('font/Gilroy/Gilroy-Medium.ttf') format('truetype');
+    src: url('utils/font/Gilroy/Gilroy-Medium.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Gilroy-SemiBold';
     /*600*/
-    src: url('font/Gilroy/Gilroy-SemiBold.ttf') format('truetype');
+    src: url('utils/font/Gilroy/Gilroy-SemiBold.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Gilroy-Bold';
     /*700*/
-    src: url('font/Gilroy/Gilroy-Bold.ttf') format('truetype');
+    src: url('utils/font/Gilroy/Gilroy-Bold.ttf') format('truetype');
 }
 
 /* Used to suppress error:

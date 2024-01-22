@@ -7,10 +7,11 @@
  * Date: Mon Nov 29 2021
  */
 
-import {ErrorDisplay} from './error-display.js'
-import {uploadUserData} from './firebase/APIs'
+import {ErrorDisplay} from '../utils/error-display.js'
+import {uploadUserData} from '../firebase/APIs'
 import Cookies from 'js-cookie'
-import {deleteCookie, getCookie} from './index'
+import {deleteCookie, getCookie} from '../index'
+import {localStorageKeys} from '../utils/constants'
 
 /**
  * function to connect websocket to remote server
@@ -60,16 +61,16 @@ export function Connection () {
             console.log('Disconnected from the server. To reconnect, reload this page.')
             errDisplay.set('Disconnected from the server. To reconnect, reload this page.')
             idSent = false
-            if (getCookie('serverStartTime')) {
-                const serverStartTime = getCookie('serverStartTime')
+            if (getCookie(localStorageKeys.serverStartTime)) {
+                const serverStartTime = getCookie(localStorageKeys.serverStartTime)
                 const endTIme = new Date()
                 const previousStartTime = new Date(decodeURIComponent(serverStartTime))
                 const serverDuration = Math.floor((endTIme - previousStartTime) / 1000) // in seconds
-                Cookies.set('serverDuration', serverDuration)
-                if (getCookie('serverDuration')) {
-                    uploadUserData(JSON.parse(getCookie('serverDuration'))).then(() => {
-                        deleteCookie('serverDuration')
-                        deleteCookie('serverStartTime')
+                Cookies.set(localStorageKeys.serverDuration, serverDuration)
+                if (getCookie(localStorageKeys.serverDuration)) {
+                    uploadUserData(JSON.parse(getCookie(localStorageKeys.serverDuration))).then(() => {
+                        deleteCookie(localStorageKeys.serverDuration)
+                        deleteCookie(localStorageKeys.serverStartTime)
                     })
                 }
             }

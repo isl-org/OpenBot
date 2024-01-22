@@ -7,11 +7,11 @@
  * Date: Mon Nov 29 2021
  */
 
-import {WebRTC} from './webrtc.js'
-import {ErrorDisplay} from './error-display.js'
+import {WebRTC} from '../webRTC/webrtc.js'
+import {ErrorDisplay} from '../utils/error-display.js'
 import {Buttons} from './buttons.js'
 
-export function BotMessageHandler(connection) {
+export function BotMessageHandler (connection) {
     const webRtc = new WebRTC(connection)
     const buttons = new Buttons(connection)
     const errDisplay = new ErrorDisplay()
