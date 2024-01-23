@@ -1,53 +1,65 @@
-import {doc, getDoc, setDoc, updateDoc} from '@firebase/firestore'
+import {addDoc, and, collection, doc, getDoc, getDocs, query, updateDoc, where} from '@firebase/firestore'
 import {auth, db} from './authentication'
+import {Month, tables} from '../utils/constants'
 
 /**
- * function to store user usage on monthly basis
- * @param time
+ * function to upload user usage on monthly basis on firebase firestore
  * @returns {Promise<void>}
+ * @param duration
  */
-export const uploadUserData = async (time) => {
+export async function uploadUserData (duration) {
     try {
-        const Month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-        const docRef = doc(db, 'users', auth.currentUser?.uid)
-        const docSnapshot = await getDoc(docRef)
-        const dataArray = []
         const date = new Date()
-        const monthName = Month[date.getMonth()] + ' ' + date.getFullYear()
-        const userObject = {
-            [monthName]: {
-                projects: 0,
-                models: 0,
-                serverDuration: time
-            }
+        const monthName = Month[date.getMonth()] + '-' + date.getFullYear()
+        const workspaceRef = doc(collection(db, tables.users), auth.currentUser?.uid)
+        const userMonthlyUsage = {
+            month: monthName,
+            projects: 0,
+            models: 0,
+            serverDuration: duration,
+            id: workspaceRef.id
         }
-        dataArray.push(userObject)
-        if (docSnapshot.exists()) {
-            if (docSnapshot.data().userData !== undefined) {
-                const docSnapData = docSnapshot.data().userData || [] // user data
-                // eslint-disable-next-line no-prototype-builtins
-                const index = docSnapData.findIndex(entry => entry.hasOwnProperty(monthName))
-                if (index !== -1) {
-                    docSnapData[index][monthName].serverDuration += time
-                } else {
-                    docSnapData.push(userObject)
-                }
-                await updateDoc(docRef, {
-                    userData: docSnapData
-                }).catch((e) => {
-                    console.log('error in updating:', e)
-                })
-            } else {
-                await setDoc(docRef, {
-                    userData: dataArray
-                }, {merge: true}).catch((e) => {
-                    console.log('error in setting userData:', e)
-                })
-            }
+        const docDetails = await getDocDetails(monthName, tables.userUsage, 'month', workspaceRef.id)
+        if (docDetails === null) {
+            await addDoc(collection(db, tables.userUsage),
+                userMonthlyUsage
+            ).then()
+        } else {
+            const updatedData = docDetails.data
+            const userUsageRef = doc(db, tables.userUsage, docDetails.id)
+            updatedData.serverDuration += duration
+            await updateDoc(userUsageRef,
+                updatedData
+            ).then()
         }
     } catch
         (e) {
         console.log('error in setting projects:', e)
+    }
+}
+
+/**
+ * function to get document details from the firebase firestore
+ * @param value
+ * @param table
+ * @param fieldName
+ * @param id
+ * @returns {Promise<null>}
+ */
+const getDocDetails = async (value, table, fieldName, id) => {
+    try {
+        const ordersQuery = query(collection(db, table), and(where(fieldName, '==', value), where('id', '==', id)));
+        const querySnapshot = await getDocs(ordersQuery)
+        let response = null
+        querySnapshot.forEach((doc) => {
+            return response = {
+                data: doc.data(),
+                id: doc.id
+            }
+        })
+        return response
+    } catch (error) {
+        console.log('error :', error)
     }
 }
 
