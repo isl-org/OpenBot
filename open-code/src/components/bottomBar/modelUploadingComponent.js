@@ -8,7 +8,7 @@ import BlueButton from "../buttonComponent/blueButtonComponent";
 import {ThemeContext} from "../../App";
 import {colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
-import {getConfigData, setConfigData, setUserUsageInFirebase} from "../../services/workspace";
+import {getConfigData, setConfigData} from "../../services/workspace";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {uploadUserData} from "../../services/firebase";
 
@@ -155,9 +155,7 @@ export function ModelUploadingComponent(params) {
                         configData.push(newModelData)
                         await uploadToGoogleDrive(JSON.stringify(configData), Constants.json).then(async () => {
                             localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData))
-                            await uploadUserData(Constants.models).then(async () => {
-                                await setUserUsageInFirebase("application/octet-stream").then();
-                            });
+                            await uploadUserData(Constants.models, false).then();
                             setFileUploadLoader(false);
                             handleClose()
                         })

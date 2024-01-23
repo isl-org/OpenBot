@@ -2,13 +2,22 @@ import firebase from "firebase/compat/app";
 import 'firebase/compat/auth';
 import {getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage';
 import 'firebase/compat/firestore';
-import {getDoc, getFirestore} from "firebase/firestore";
+import {
+    addDoc,
+    getDoc,
+    getFirestore,
+    collection,
+    doc,
+    setDoc,
+    updateDoc,
+    where,
+    query,
+    getDocs, and
+} from "firebase/firestore";
 import {getAuth, signOut} from "firebase/auth";
-import {Constants, localStorageKeys, Month} from "../utils/constants";
-import {collection, doc, setDoc, updateDoc} from "@firebase/firestore";
-import {getCurrentProject, setConfigData} from "./workspace";
+import {Constants, localStorageKeys, Month, tables} from "../utils/constants";
+import {setConfigData} from "./workspace";
 import configData from "../config.json";
-
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -58,7 +67,7 @@ export async function googleSigIn() {
     if (isAndroid) {
         await auth.signInWithRedirect(provider)
     } else {
-        const signIn = await auth.signInWithPopup(provider)
+        const signIn = await auth.signInWithPopup(provider);
         localStorage.setItem("isSigIn", "true");
         localStorage.setItem(localStorageKeys.accessToken, signIn.credential?.accessToken);
         await setConfigData();
@@ -77,6 +86,7 @@ export async function googleSignOut() {
         localStorage.setItem("isSigIn", "false")
         localStorage.setItem(localStorageKeys.accessToken, " ");
         localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData));
+        // delete_cookie("user");
     }).catch((error) => {
         console.log("Sign-out error ", error)
     });
@@ -87,7 +97,7 @@ export async function googleSignOut() {
  * @returns {Promise<string>}
  */
 export async function getDateOfBirth() {
-    const docRef = doc(db, "users", auth.currentUser?.uid);
+    const docRef = doc(db, tables.users, auth.currentUser?.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         if (docSnap.data()?.dob !== undefined) {
@@ -109,7 +119,7 @@ export async function getDateOfBirth() {
  */
 export async function setDateOfBirth(DOB) {
     try {
-        const workspaceRef = doc(collection(db, "users"), auth.currentUser?.uid);
+        const workspaceRef = doc(collection(db, tables.users), auth.currentUser?.uid);
         setDoc(workspaceRef, DOB, {merge: true}).catch((e) => console.log(e));
     } catch (e) {
         console.log("error in setting DOB:", e);
@@ -117,91 +127,70 @@ export async function setDateOfBirth(DOB) {
 }
 
 /**
- * uploading projects array in firebase for restriction
- * @param data
- * @returns {Promise<void>}
- */
-export async function uploadBlocklyData(data) {
-    try {
-        const workspaceRef = doc(collection(db, "users"), auth.currentUser?.uid);
-        setDoc(workspaceRef, data, {merge: true}).catch((e) => console.log(e));
-    } catch (e) {
-        console.log("error in setting projects:", e);
-    }
-}
-
-/**
- * function to get projects from firebase
- * @returns {Promise<any>}
- */
-export async function getProjects() {
-    try {
-        const docRef = doc(db, "users", auth.currentUser?.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            if (docSnap.data().projects !== undefined) {
-                return docSnap.data().projects
-            }
-        }
-    } catch (e) {
-        console.log("error in getting projects:", e);
-    }
-}
-
-/**
- * function to upload user usage on monthly basis
+ * function to upload user usage on monthly basis on firebase firestore
  * @param datatype
- * @param newData
+ * @param projectExist
  * @returns {Promise<void>}
  */
-export async function uploadUserData(datatype) {
+export async function uploadUserData(datatype, projectExist) {
     try {
-        const docRef = doc(db, "users", auth.currentUser?.uid)
-        const docSnapshot = await getDoc(docRef);
-        const dataArray = [];
         const date = new Date();
-        let monthName = Month[date.getMonth()] + " " + date.getFullYear();
-        let userObject = {
-            [monthName]: {
-                projects: datatype === Constants.projects ? 1 : 0,
-                models: datatype === Constants.models ? 1 : 0,
-                serverDuration : 0,
-            }
+        let monthName = Month[date.getMonth()] + "-" + date.getFullYear();
+        const workspaceRef = doc(collection(db, tables.users), auth.currentUser?.uid);
+        const userMonthlyUsage = {
+            month: monthName,
+            projects: datatype === Constants.projects ? 1 : 0,
+            models: datatype === Constants.models ? 1 : 0,
+            serverDuration: 0,
+            id: workspaceRef.id
         }
-        dataArray.push(userObject);
-        if (docSnapshot.exists()) {
-            if (docSnapshot.data().userData !== undefined) {
-                let docSnapData = docSnapshot.data().userData || []; // user data
-                const index = docSnapData.findIndex(entry => entry.hasOwnProperty(monthName));
-                if (index !== -1) {
-                    if (datatype === Constants.projects) {
-                        await getProjects().then((item) => {
-                            if (!item?.includes(getCurrentProject().projectName)) {
-                                docSnapData[index][monthName].projects += 1;
-                            }
-                        })
-                    } else {
-                        docSnapData[index][monthName].models += 1;
-                    }
-                } else {
-                    docSnapData.push(userObject)
+        let docDetails = await getDocDetails(monthName, tables.userUsage, "month", workspaceRef.id);
+        if (docDetails === null) {
+            await addDoc(collection(db, tables.userUsage),
+                userMonthlyUsage
+            ).then();
+        } else {
+            const updatedData = docDetails.data;
+            const userUsageRef = doc(db, tables.userUsage, docDetails.id);
+            if (datatype === Constants.projects) {
+                if (projectExist === false) {
+                    updatedData.projects += 1
                 }
-                await updateDoc(docRef, {
-                    userData: docSnapData
-                }).catch((e) => {
-                    console.log("error in updating:", e);
-                })
             } else {
-                console.log("new array created");
-                await setDoc(docRef, {
-                    userData: dataArray
-                }, {merge: true}).catch((e) => {
-                    console.log("error in setting userData:", e);
-                });
+                updatedData.models += 1
             }
+            await updateDoc(userUsageRef,
+                updatedData
+            ).then(() => {
+            });
         }
     } catch
         (e) {
         console.log("error in setting projects:", e);
+    }
+}
+
+/**
+ * function to get document details from the firebase firestore
+ * @param value
+ * @param table
+ * @param fieldName
+ * @param id
+ * @returns {Promise<null>}
+ */
+const getDocDetails = async (value, table, fieldName, id) => {
+    try {
+        const ordersQuery = query(collection(db, table), and(where(fieldName, '==', value), where("id", '==', id)));
+        const querySnapshot = await getDocs(ordersQuery);
+        let response = null;
+        querySnapshot.forEach((doc) => {
+            return response = {
+                data: doc.data(),
+                id: doc.id
+            }
+        });
+        return response
+    } catch (error) {
+        console.log("error :", error);
     }
 }

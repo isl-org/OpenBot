@@ -15,7 +15,7 @@ import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {
     getCurrentProject,
     handleChildBlockInWorkspace,
-    handleUserRestriction, setUserUsageInFirebase
+    handleUserRestriction
 } from "../../services/workspace";
 import navbarStyle from "../navBar/navbar.module.css";
 import BlueText from "../fonts/blueText";
@@ -99,9 +99,9 @@ export const BottomBar = () => {
             if (localStorage.getItem("isSigIn") === "true") {
                 setDrawer(false);
                 setIsLoader(true);
-                await handleUserRestriction(getCurrentProject().projectName).then(
-                    (res) => {
-                        if (res === true) {
+                await handleUserRestriction("text/xml", getCurrentProject().projectName).then(
+                    (response) => {
+                        if (response.isCreate === true) {
                             //javaScript generator
                             let code = javascriptGenerator.workspaceToCode(
                                 workspace
@@ -178,8 +178,9 @@ export const BottomBar = () => {
                                                 setCategory(Constants.qr);
                                                 setIsLoader(false);
                                                 setDrawer(true);
-                                                await uploadUserData(Constants.projects).then(async () => {
-                                                    await setUserUsageInFirebase("text/xml").then()
+                                                console.log("response.isProjectExist::",response.isProjectExist)
+                                                await uploadUserData(Constants.projects, response.isProjectExist).then(async () => {
+                                                    console.log("data uploaded successfully");
                                                 });
                                             })
                                             .catch((err) => {

@@ -8,7 +8,6 @@ import {
     uploadToGoogleDrive,
 } from "./googleDrive";
 import configData from "../config.json"
-import {getProjects, uploadBlocklyData} from "./firebase";
 
 /**
  * get project from drive when user signedIn
@@ -94,7 +93,6 @@ async function deleteProjectFromStorage(projectName) {
                 if (response.exists)
                     await deleteFileFromGoogleDrive(response?.fileId)
             })
-            await setUserUsageInFirebase("text/xml");
         }
     } catch (err) {
         console.log(err);
@@ -295,7 +293,6 @@ async function renameProject(projectName, oldName, screen) {
                 await fileRename(projectName, oldName, "xml")
             if (jsFileExists.exists)
                 await fileRename(projectName, oldName, "js")
-            await setUserUsageInFirebase("text/xml");
             // If user is not signed in, only update current project if it has the old project name
         } else {
             if (oldName === getCurrentProject()?.projectName) {
@@ -407,46 +404,37 @@ function handleChildBlockInWorkspace(array, child) {
 }
 
 /**
- * function to set projects in database
+ * function to handle user restriction
  * @returns {Promise<void>}
  */
-export async function setUserUsageInFirebase(projectType) {
+export async function handleUserRestriction(projectType, projectName) {
     const driveFiles = [];
     const data = [];
-    await getDriveProjects(driveFiles).then(async () => {
+    return await getDriveProjects(driveFiles).then(async () => {
             const allXmlProjects = driveFiles.filter((res) => res.projectType === projectType);
             if (allXmlProjects?.length > 0) {
                 allXmlProjects?.forEach((item) => {
                     data.push(item.projectName);
                 })
             }
-            if (projectType === "text/xml") {
-                await uploadBlocklyData({projects: data});
+            const restrictParams = {
+                isCreate: true,
+                isProjectExist: true
+            }
+            if (data?.length < 5) {
+                if (data.includes(projectName)) {
+                    return restrictParams;
+                } else {
+                    return {...restrictParams, isProjectExist: false};
+                }
             } else {
-                await uploadBlocklyData({models: data?.length});
+                if (data.includes(projectName)) {
+                    return restrictParams;
+                }
+                return {isCreate: false, isProjectExist: false};
             }
         }
     )
-}
-
-/**
- * function to handle user restriction
- * @returns {Promise<void>}
- */
-export async function handleUserRestriction(projectName) {
-    return await getProjects().then((res) => {
-        if (res !== undefined)
-            if (res.length < 5) {
-                return true;
-            } else {
-                if (res.includes(projectName)) {
-                    return true;
-                }
-                return false;
-            }
-        else
-            return true;
-    })
 }
 
 export {

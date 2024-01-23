@@ -350,3 +350,13 @@ export const errorToast = (message) => {
  * @type {string[]}
  */
 export const aiBlocks = ["objectTracking", "autopilot", "multipleObjectTracking", "navigateForwardAndLeft", "multipleAIDetection"];
+
+/**
+user usage tables
+ */
+export const tables = {
+    users : "users",
+    projects: "projects",
+    models:"models",
+    userUsage:"userUsage"
+}
