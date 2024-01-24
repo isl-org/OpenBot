@@ -10,7 +10,7 @@ import {colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
 import {getConfigData, setConfigData} from "../../services/workspace";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
-import {uploadUserData} from "../../services/firebase";
+import {uploadModelDetails} from "../../apis/models";
 
 /**
  * function to upload new model (.tflite)
@@ -155,8 +155,8 @@ export function ModelUploadingComponent(params) {
                         configData.push(newModelData)
                         await uploadToGoogleDrive(JSON.stringify(configData), Constants.json).then(async () => {
                             localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData))
-                            await uploadUserData(Constants.models, false).then();
                             setFileUploadLoader(false);
+                            await uploadModelDetails(newModelData.name).then()
                             handleClose()
                         })
                             .catch((err) => {

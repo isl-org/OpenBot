@@ -8,6 +8,7 @@ import {
     uploadToGoogleDrive,
 } from "./googleDrive";
 import configData from "../config.json"
+import {renameAllProjects} from "../apis/projects";
 
 /**
  * get project from drive when user signedIn
@@ -292,7 +293,9 @@ async function renameProject(projectName, oldName, screen) {
             if (xmlFileExists.exists)
                 await fileRename(projectName, oldName, "xml")
             if (jsFileExists.exists)
-                await fileRename(projectName, oldName, "js")
+                await fileRename(projectName, oldName, "js").then(() => {
+                    renameAllProjects(oldName, projectName).then()
+                })
             // If user is not signed in, only update current project if it has the old project name
         } else {
             if (oldName === getCurrentProject()?.projectName) {
@@ -417,21 +420,13 @@ export async function handleUserRestriction(projectType, projectName) {
                     data.push(item.projectName);
                 })
             }
-            const restrictParams = {
-                isCreate: true,
-                isProjectExist: true
-            }
             if (data?.length < 5) {
-                if (data.includes(projectName)) {
-                    return restrictParams;
-                } else {
-                    return {...restrictParams, isProjectExist: false};
-                }
+                return true;
             } else {
                 if (data.includes(projectName)) {
-                    return restrictParams;
+                    return true;
                 }
-                return {isCreate: false, isProjectExist: false};
+                return false;
             }
         }
     )

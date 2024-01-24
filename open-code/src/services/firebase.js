@@ -3,19 +3,14 @@ import 'firebase/compat/auth';
 import {getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage';
 import 'firebase/compat/firestore';
 import {
-    addDoc,
     getDoc,
     getFirestore,
     collection,
     doc,
     setDoc,
-    updateDoc,
-    where,
-    query,
-    getDocs, and
 } from "firebase/firestore";
 import {getAuth, signOut} from "firebase/auth";
-import {Constants, localStorageKeys, Month, tables} from "../utils/constants";
+import {localStorageKeys, tables} from "../utils/constants";
 import {setConfigData} from "./workspace";
 import configData from "../config.json";
 
@@ -123,74 +118,5 @@ export async function setDateOfBirth(DOB) {
         setDoc(workspaceRef, DOB, {merge: true}).catch((e) => console.log(e));
     } catch (e) {
         console.log("error in setting DOB:", e);
-    }
-}
-
-/**
- * function to upload user usage on monthly basis on firebase firestore
- * @param datatype
- * @param projectExist
- * @returns {Promise<void>}
- */
-export async function uploadUserData(datatype, projectExist) {
-    try {
-        const date = new Date();
-        let monthName = Month[date.getMonth()] + "-" + date.getFullYear();
-        const workspaceRef = doc(collection(db, tables.users), auth.currentUser?.uid);
-        const userMonthlyUsage = {
-            month: monthName,
-            projects: datatype === Constants.projects ? 1 : 0,
-            models: datatype === Constants.models ? 1 : 0,
-            serverDuration: 0,
-            id: workspaceRef.id
-        }
-        let docDetails = await getDocDetails(monthName, tables.userUsage, "month", workspaceRef.id);
-        if (docDetails === null) {
-            await addDoc(collection(db, tables.userUsage),
-                userMonthlyUsage
-            ).then();
-        } else {
-            const updatedData = docDetails.data;
-            const userUsageRef = doc(db, tables.userUsage, docDetails.id);
-            if (datatype === Constants.projects) {
-                if (projectExist === false) {
-                    updatedData.projects += 1
-                }
-            } else {
-                updatedData.models += 1
-            }
-            await updateDoc(userUsageRef,
-                updatedData
-            ).then(() => {
-            });
-        }
-    } catch
-        (e) {
-        console.log("error in setting projects:", e);
-    }
-}
-
-/**
- * function to get document details from the firebase firestore
- * @param value
- * @param table
- * @param fieldName
- * @param id
- * @returns {Promise<null>}
- */
-const getDocDetails = async (value, table, fieldName, id) => {
-    try {
-        const ordersQuery = query(collection(db, table), and(where(fieldName, '==', value), where("id", '==', id)));
-        const querySnapshot = await getDocs(ordersQuery);
-        let response = null;
-        querySnapshot.forEach((doc) => {
-            return response = {
-                data: doc.data(),
-                id: doc.id
-            }
-        });
-        return response
-    } catch (error) {
-        console.log("error :", error);
     }
 }

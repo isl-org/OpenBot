@@ -111,7 +111,6 @@ export function EditProfileModal(props) {
     function toTimeStamp(dob) {
         const date = new Date(dob);
         return firebase.firestore.Timestamp.fromDate(date).toDate();
-
     }
 
     //handle Date of birth change

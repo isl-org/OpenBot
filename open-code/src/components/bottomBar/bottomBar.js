@@ -20,8 +20,8 @@ import {
 import navbarStyle from "../navBar/navbar.module.css";
 import BlueText from "../fonts/blueText";
 import {ModelUploadingComponent} from "./modelUploadingComponent";
-import {uploadUserData} from "../../services/firebase";
 import SubscriptionModel from "../subscription/subscriptionModel";
+import {setProjectDetails} from "../../apis/projects";
 
 /**
  * Bottom Bar contains generate code, upload on drive icon , zoom in-out and undo redo functionality.
@@ -101,7 +101,7 @@ export const BottomBar = () => {
                 setIsLoader(true);
                 await handleUserRestriction("text/xml", getCurrentProject().projectName).then(
                     (response) => {
-                        if (response.isCreate === true) {
+                        if (response === true) {
                             //javaScript generator
                             let code = javascriptGenerator.workspaceToCode(
                                 workspace
@@ -178,10 +178,7 @@ export const BottomBar = () => {
                                                 setCategory(Constants.qr);
                                                 setIsLoader(false);
                                                 setDrawer(true);
-                                                console.log("response.isProjectExist::",response.isProjectExist)
-                                                await uploadUserData(Constants.projects, response.isProjectExist).then(async () => {
-                                                    console.log("data uploaded successfully");
-                                                });
+                                                await setProjectDetails(getCurrentProject().projectName).then()
                                             })
                                             .catch((err) => {
                                                 errorToast("Failed to upload");
@@ -231,6 +228,10 @@ export const BottomBar = () => {
     const clickedButton = async (e) => {
         const {name} = e.target;
         setButtonSelected(name);
+        setButtonActive(true);
+        setTimeout(() => {
+            setButtonActive(false);
+        }, 100);
 
         //to verify if undoStack has items, or if both undo and redo are empty (first Project)
         const isUndo = () => {
@@ -288,10 +289,6 @@ export const BottomBar = () => {
                 break;
             }
         }
-        setButtonActive(true);
-        setTimeout(() => {
-            setButtonActive(false);
-        }, 100);
     };
 
     //loader when uploading to google drive.
