@@ -8,16 +8,16 @@
  */
 
 import {ErrorDisplay} from '../utils/error-display.js'
-import {uploadUserData} from '../firebase/APIs'
-import Cookies from 'js-cookie'
 import {deleteCookie, getCookie} from '../index'
 import {localStorageKeys} from '../utils/constants'
+import {Timestamp} from '@firebase/firestore'
+import {uploadServerUsage} from '../firebase/APIs'
 
 /**
  * function to connect websocket to remote server
  * @constructor
  */
-export function Connection () {
+export function Connection() {
     const connectToServer = async () => {
         const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`)
         // const ws = new WebSocket(`ws://verdant-imported-peanut.glitch.me`);
@@ -58,19 +58,14 @@ export function Connection () {
         }
 
         ws.onclose = () => {
-            console.log('Disconnected from the server. To reconnect, reload this page.')
             errDisplay.set('Disconnected from the server. To reconnect, reload this page.')
             idSent = false
-            if (getCookie(localStorageKeys.serverStartTime)) {
-                const serverStartTime = getCookie(localStorageKeys.serverStartTime)
-                const endTIme = new Date()
-                const previousStartTime = new Date(decodeURIComponent(serverStartTime))
-                const serverDuration = Math.floor((endTIme - previousStartTime) / 1000) // in seconds
-                Cookies.set(localStorageKeys.serverDuration, serverDuration)
-                if (getCookie(localStorageKeys.serverDuration)) {
-                    uploadUserData(JSON.parse(getCookie(localStorageKeys.serverDuration))).then(() => {
-                        deleteCookie(localStorageKeys.serverDuration)
+            if (localStorage.getItem(localStorageKeys.isSignIn) === 'true') {
+                if (getCookie(localStorageKeys.serverStartTime)) {
+                    const time = Timestamp.fromDate(new Date()).toDate()
+                    uploadServerUsage(getCookie(localStorageKeys.serverStartTime), time).then(() => {
                         deleteCookie(localStorageKeys.serverStartTime)
+                        deleteCookie(localStorageKeys.serverEndTime)
                     })
                 }
             }
@@ -82,8 +77,10 @@ export function Connection () {
         }
 
         this.stop = () => {
-            ws.close()
-            ws = null
+            if (ws != null) {
+                ws.close()
+                ws = null
+            }
         }
     }
 }

@@ -1,40 +1,27 @@
-import {addDoc, and, collection, doc, getDoc, getDocs, query, updateDoc, where} from '@firebase/firestore'
+import {addDoc, and, collection, doc, getDoc, getDocs, query, where} from '@firebase/firestore'
 import {auth, db} from './authentication'
-import {Month, tables} from '../utils/constants'
+import {tables} from '../utils/constants'
 
 /**
  * function to upload user usage on monthly basis on firebase firestore
  * @returns {Promise<void>}
- * @param duration
+ * @param serverStartTime
+ * @param serverEndTime
  */
-export async function uploadUserData (duration) {
+export async function uploadServerUsage (serverStartTime, serverEndTime) {
+    const details = {
+        startTime: serverStartTime,
+        uid: auth?.currentUser.uid,
+        endTime: serverEndTime
+    }
     try {
-        const date = new Date()
-        const monthName = Month[date.getMonth()] + '-' + date.getFullYear()
-        const workspaceRef = doc(collection(db, tables.users), auth.currentUser?.uid)
-        const userMonthlyUsage = {
-            month: monthName,
-            projects: 0,
-            models: 0,
-            serverDuration: duration,
-            id: workspaceRef.id
-        }
-        const docDetails = await getDocDetails(monthName, tables.userUsage, 'month', workspaceRef.id)
-        if (docDetails === null) {
-            await addDoc(collection(db, tables.userUsage),
-                userMonthlyUsage
-            ).then()
-        } else {
-            const updatedData = docDetails.data
-            const userUsageRef = doc(db, tables.userUsage, docDetails.id)
-            updatedData.serverDuration += duration
-            await updateDoc(userUsageRef,
-                updatedData
-            ).then()
-        }
-    } catch
-        (e) {
-        console.log('error in setting projects:', e)
+        await addDoc(collection(db, tables.server),
+            details
+        ).then(() => {
+            console.log('server details successfully added')
+        })
+    } catch (e) {
+        console.log('error::', e)
     }
 }
 
@@ -43,12 +30,11 @@ export async function uploadUserData (duration) {
  * @param value
  * @param table
  * @param fieldName
- * @param id
  * @returns {Promise<null>}
  */
-const getDocDetails = async (value, table, fieldName, id) => {
+const getDocDetails = async (value, table, fieldName) => {
     try {
-        const ordersQuery = query(collection(db, table), and(where(fieldName, '==', value), where('id', '==', id)));
+        const ordersQuery = query(collection(db, table), and(where(fieldName, '==', value), where('uid', '==', auth?.currentUser.uid)));
         const querySnapshot = await getDocs(ordersQuery)
         let response = null
         querySnapshot.forEach((doc) => {

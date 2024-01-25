@@ -5,7 +5,7 @@ import {getStorage} from 'firebase/storage'
 import Cookies from 'js-cookie'
 import {checkPlanExpiration, getCookie} from '../index'
 import {getUserPlan} from './APIs'
-import {localStorageKeys} from "../utils/constants";
+import {localStorageKeys} from '../utils/constants'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -37,8 +37,8 @@ export function googleSigIn () {
                 // The signed-in user info.
                 const user = result.user
                 getUserPlan().then((res) => {
-                    const endTime = res ?? getCookie(localStorageKeys.endTime) !== '' ? getCookie('endTime') : new Date(new Date().getTime() + serverValidity * 60 * 1000)
-                    Cookies.set(localStorageKeys.endTime, endTime)
+                    const subscriptionEndTime = res ?? getCookie(localStorageKeys.subscriptionEndTime) !== '' ? getCookie(localStorageKeys.subscriptionEndTime) : new Date(new Date().getTime() + serverValidity * 60 * 1000)
+                    Cookies.set(localStorageKeys.subscriptionEndTime, subscriptionEndTime)
                     checkPlanExpiration()
                 })
                 resolve(user)
@@ -54,7 +54,7 @@ export function googleSigIn () {
  * function to log out user from Google account
  * @returns {Promise<void>}
  */
-export function googleSignOut() {
+export function googleSignOut () {
     signOut(auth).then(() => {
         localStorage.setItem(localStorageKeys.isSignIn, 'false')
     }).catch((error) => {

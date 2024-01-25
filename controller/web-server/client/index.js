@@ -12,12 +12,13 @@ import {Keyboard} from './keyboardHandlers/keyboard.js'
 import {BotMessageHandler} from './keyboardHandlers/bot-message-handler'
 import {Commands} from './keyboardHandlers/commands'
 import {RemoteKeyboard} from './keyboardHandlers/remote_keyboard'
-import {uploadUserData, getUserPlan} from './firebase/APIs'
+import {uploadServerUsage, getUserPlan} from './firebase/APIs'
 import {WebRTC} from './webRTC/webrtc.js'
 import {signInWithCustomToken} from 'firebase/auth'
 import Cookies from 'js-cookie'
 import {auth, googleSigIn, googleSignOut} from './firebase/authentication'
 import {localStorageKeys} from './utils/constants'
+import {Timestamp} from '@firebase/firestore'
 
 const connection = new Connection();
 (async () => {
@@ -57,7 +58,12 @@ const connection = new Connection();
         const remoteKeyboard = new RemoteKeyboard(command.getCommandHandler())
         // Send keypress to server
         const keyPressObj = {KEYPRESS: key}
-        console.log(keyPressObj)
+        console.log(keyPressObj.KEYPRESS.key)
+        if (keyPressObj.KEYPRESS.key === 'Escape') {
+            if (webRtc != null) {
+                webRtc.stop()
+            }
+        }
         remoteKeyboard.processKey(keyPressObj.KEYPRESS)
     }
 
@@ -79,7 +85,7 @@ subscribeButton.addEventListener('click', handleSubscription)
 /**
  * function to handle signIn on home page
  */
-function handleSignInButtonClick () {
+function handleSignInButtonClick() {
     if (localStorage.getItem(localStorageKeys.isSignIn) === 'false') {
         googleSigIn()
             .then((user) => {
@@ -104,7 +110,7 @@ function handleSignInButtonClick () {
 /**
  * function to sendId to remote server
  */
-function sendId () {
+function sendId() {
     const response = {
         roomId: signedInUser.email
     }
@@ -114,21 +120,28 @@ function sendId () {
 /**
  * function to handle signOut from google account
  */
-function signOut () {
+function signOut() {
     signedInUser = null
     localStorage.setItem(localStorageKeys.user, null)
     localStorage.setItem(localStorageKeys.isSignIn, false.toString())
     const signInBtn = document.getElementsByClassName('google-sign-in-button')[0]
     signInBtn.innerText = 'Sign in with Google'
-    googleSignOut()
-    deleteCookie(localStorageKeys.serverDuration)
-    deleteCookie(localStorageKeys.serverStartTime)
+    if (getCookie(localStorageKeys.serverStartTime)) {
+        const time = Timestamp.fromDate(new Date()).toDate()
+        uploadServerUsage(getCookie(localStorageKeys.serverStartTime), time).then(() => {
+            deleteCookie(localStorageKeys.serverStartTime)
+            deleteCookie(localStorageKeys.serverEndTime)
+            googleSignOut()
+        })
+    } else {
+        googleSignOut()
+    }
 }
 
 /**
  * function to handle cancel button on logout popup
  */
-function handleCancelButtonClick () {
+function handleCancelButtonClick() {
     hideLogoutWrapper()
 }
 
@@ -143,7 +156,7 @@ function hideLogoutWrapper() {
 /**
  * function to display logout popup
  */
-function showLogoutWrapper () {
+function showLogoutWrapper() {
     const logout = document.getElementsByClassName('logout-wrapper')[0]
     logout.style.display = 'block'
 }
@@ -151,7 +164,7 @@ function showLogoutWrapper () {
 /**
  * function to display expiration popup
  */
-function showExpirationWrapper () {
+function showExpirationWrapper() {
     const expire = document.getElementsByClassName('plan-expiration-model')[0]
     expire.style.display = 'block'
 }
@@ -159,7 +172,7 @@ function showExpirationWrapper () {
 /**
  * function to hide logout popup
  */
-function hideExpirationWrapper () {
+function hideExpirationWrapper() {
     const expire = document.getElementsByClassName('plan-expiration-model')[0]
     expire.style.display = 'none'
 }
@@ -167,7 +180,7 @@ function hideExpirationWrapper () {
 /**
  * function to handle "ok" button for logout popup
  */
-function handleOkButtonClick () {
+function handleOkButtonClick() {
     hideLogoutWrapper()
     signOut()
 }
@@ -208,6 +221,11 @@ export const deleteCookie = (name) => {
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;'
 }
 
+
+handleAccessToken()
+handleServerDetailsOnSSO()
+handleAuthChangedOnRefresh()
+
 /**
  * function to handle single sign on from openbot dashboard
  */
@@ -216,13 +234,6 @@ function handleSingleSignOn() {
     if (cookie) {
         const result = cookie
         localStorage.setItem(localStorageKeys.isSignIn, 'true')
-        if (getCookie(localStorageKeys.serverDuration)) {
-            uploadUserData(JSON.parse(getCookie(localStorageKeys.serverDuration))).then(() => {
-                deleteCookie('serverDuration')
-                deleteCookie(localStorageKeys.serverStartTime)
-                deleteCookie(localStorageKeys.endTime)
-            })
-        }
         signInWithCustomToken(auth, result).then((res) => {
             // Use the user data or store it in a variable for later use
             signedInUser = res.user
@@ -230,10 +241,9 @@ function handleSingleSignOn() {
             signInBtn.innerText = res.user.displayName
             localStorage.setItem(localStorageKeys.user, JSON.stringify(res.user))
             localStorage.setItem(localStorageKeys.isSignIn, true.toString())
-            restrictUserOnExpiration()
             getUserPlan().then((res) => {
                 if (res !== undefined) {
-                    Cookies.set(localStorageKeys.endTime, res)
+                    Cookies.set(localStorageKeys.subscriptionEndTime, res)
                 }
                 checkPlanExpiration()
             })
@@ -242,6 +252,20 @@ function handleSingleSignOn() {
             .catch((error) => {
                 console.log('error::', error)
             })
+    }
+}
+
+
+function handleServerDetailsOnSSO() {
+    if (getCookie(localStorageKeys.serverStartTime)) {
+        const time = Timestamp.fromDate(new Date()).toDate()
+        uploadServerUsage(getCookie(localStorageKeys.serverStartTime), time).then(() => {
+            deleteCookie(localStorageKeys.serverStartTime)
+            deleteCookie(localStorageKeys.serverEndTime)
+            handleSingleSignOn()
+        })
+    } else {
+        handleSingleSignOn()
     }
 }
 
@@ -268,50 +292,45 @@ function handleAuthChangedOnRefresh() {
                     signInBtn.innerText = res.displayName
                     localStorage.setItem(localStorageKeys.user, JSON.stringify(res))
                     localStorage.setItem(localStorageKeys.isSignIn, 'true')
+                    if (getCookie(localStorageKeys.serverStartTime)) {
+                        const time = Timestamp.fromDate(new Date()).toDate()
+                        uploadServerUsage(getCookie(localStorageKeys.serverStartTime), getCookie(localStorageKeys.serverEndTime) ?? time).then(() => {
+                            deleteCookie(localStorageKeys.serverStartTime)
+                            deleteCookie(localStorageKeys.serverEndTime)
+                        })
+                    }
                     restrictUserOnExpiration()
                     getUserPlan().then((res) => {
                         if (res !== undefined) {
-                            Cookies.set(localStorageKeys.endTime, res)
+                            Cookies.set(localStorageKeys.subscriptionEndTime, res)
                         }
                         checkPlanExpiration()
                     })
-                    if (getCookie(localStorageKeys.serverDuration)) {
-                        uploadUserData(JSON.parse(getCookie(localStorageKeys.serverDuration))).then(() => {
-                            deleteCookie(localStorageKeys.serverDuration)
-                            deleteCookie(localStorageKeys.serverStartTime)
-                        })
-                    }
                 }
             })
         }, 1000)
     }
 }
 
-handleAccessToken()
-handleSingleSignOn()
-handleAuthChangedOnRefresh()
 
 // handling user usage for server duration when refreshing or closing page
 window.onunload = function () {
     if (getCookie(localStorageKeys.serverStartTime)) {
-        const serverStartTime = getCookie(localStorageKeys.serverStartTime)
-        const endTIme = new Date()
-        const previousStartTime = new Date(decodeURIComponent(serverStartTime))
-        const serverDuration = Math.floor((endTIme - previousStartTime) / 1000) // in seconds
-        Cookies.set(localStorageKeys.serverDuration, serverDuration)
+        const time = Timestamp.fromDate(new Date()).toDate()
+        Cookies.set(localStorageKeys.serverEndTime, time)
     }
 }
 
 /**
  * function to check whether user subscription expires or not
  */
-export function checkPlanExpiration () {
+export function checkPlanExpiration() {
     if (localStorage.getItem(localStorageKeys.isSignIn) === 'true') {
-        if (getCookie(localStorageKeys.endTime)) {
+        if (getCookie(localStorageKeys.subscriptionEndTime)) {
             const endTimeCheckInterval = setInterval(() => {
                 const currentTime = new Date()
                 // Check if the end time has been reached
-                if (currentTime >= new Date(decodeURIComponent(getCookie(localStorageKeys.endTime)))) {
+                if (currentTime >= new Date(decodeURIComponent(getCookie(localStorageKeys.subscriptionEndTime)))) {
                     clearInterval(endTimeCheckInterval)
                     showExpirationWrapper()
                 }
@@ -324,9 +343,9 @@ export function checkPlanExpiration () {
  * function to restrict user for sending room key to remote server
  */
 export function restrictUserOnExpiration() {
-    if (getCookie(localStorageKeys.endTime)) {
+    if (getCookie(localStorageKeys.subscriptionEndTime)) {
         const currentTime = new Date()
-        if (currentTime < new Date(decodeURIComponent(getCookie(localStorageKeys.endTime)))) {
+        if (currentTime < new Date(decodeURIComponent(getCookie(localStorageKeys.subscriptionEndTime)))) {
             sendId()
         }
     }

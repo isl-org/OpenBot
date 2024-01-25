@@ -1,12 +1,13 @@
-import Cookies from 'js-cookie';
-import {localStorageKeys} from "../utils/constants";
+import Cookies from 'js-cookie'
+import {localStorageKeys} from '../utils/constants'
+import {Timestamp} from "@firebase/firestore";
 
 /**
  * function to enable webRTC connection
  * @param connection
  * @constructor
  */
-export function WebRTC (connection) {
+export function WebRTC(connection) {
     const {RTCPeerConnection} = window
 
     let peerConnection = null
@@ -67,8 +68,8 @@ export function WebRTC (connection) {
 
         peerConnection.onconnectionstatechange = () => {
             if (peerConnection?.connectionState === 'connected') {
-                const serverStartTime = new Date()
-                Cookies.set(localStorageKeys.serverStartTime, serverStartTime)
+                const time = Timestamp.fromDate(new Date()).toDate()
+                Cookies.set(localStorageKeys.serverStartTime, time)
             }
         }
         this.dataChannel = peerConnection.createDataChannel('dataChannel') // Use this.dataChannel to set it as a property
