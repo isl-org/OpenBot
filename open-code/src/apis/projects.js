@@ -8,8 +8,7 @@ import {
     getDocs, and, writeBatch
 } from "firebase/firestore";
 import {auth, db} from "../services/firebase";
-import {tables} from "../utils/constants";
-import firebase from "firebase/compat/app";
+import {Month, tables} from "../utils/constants";
 
 /**
  * function to set user usage for projects in firebase firestore
@@ -17,35 +16,31 @@ import firebase from "firebase/compat/app";
  * @returns {Promise<void>}
  */
 export async function setProjectDetails(projectName) {
-    const time = firebase.firestore.Timestamp.fromDate(new Date()).toDate();
-
+    const date = new Date();
+    const year = date.getFullYear();
+    const getMonth = date.getMonth();
     const details = {
         name: projectName,
         uid: auth?.currentUser.uid,
-        create: time,
-        update: null,
-    }
+        status: {
+            year: year,
+            monthlyUpdate: Object.fromEntries(Month.map((month, index) => [month, index === getMonth ? 1 : 0]))
+        },
+    };
     try {
         let docDetails = await getDocDetails(projectName, tables.projects, "name");
-
         if (docDetails === null) {
             await addDoc(collection(db, tables.projects),
                 details
             ).then();
-        } else if (docDetails?.data.update === null) {
-            const projectsRef = doc(db, tables.projects, docDetails.id);
+        } else {
+            const projectsRef = doc(db, tables.projects, docDetails?.id);
             let updatedData = docDetails?.data
-            updatedData.update = time
+            updatedData.status.monthlyUpdate[Month[getMonth]] += 1;
             await updateDoc(projectsRef,
                 updatedData
             ).then(() => {
             });
-        } else {
-            const newDetails = docDetails?.data
-            newDetails.update = time
-            await addDoc(collection(db, tables.projects),
-                newDetails
-            ).then();
         }
     } catch (e) {
         console.log("error in uploading projects::", e);
@@ -60,7 +55,7 @@ export async function setProjectDetails(projectName) {
  */
 export async function renameAllProjects(oldProjectName, newProjectName) {
     try {
-        const ordersQuery = queryBuilder(tables.projects, "name", oldProjectName)
+        const ordersQuery = query(collection(db, tables.projects), and(where("name", '==', oldProjectName), where("uid", '==', auth?.currentUser.uid)));
         const querySnapshot = await getDocs(ordersQuery);
         const batch = writeBatch(db);
         querySnapshot.forEach((document) => {
@@ -73,7 +68,8 @@ export async function renameAllProjects(oldProjectName, newProjectName) {
 }
 
 export function queryBuilder(table, fieldName, value) {
-    return query(collection(db, table), and(where(fieldName, '==', value), where("uid", '==', auth?.currentUser.uid)));
+    const year = new Date().getFullYear();
+    return query(collection(db, table), and(where(fieldName, '==', value), where("uid", '==', auth?.currentUser.uid), where("status.year", '==', year)));
 }
 
 
@@ -82,12 +78,11 @@ export function queryBuilder(table, fieldName, value) {
  * @param value
  * @param table
  * @param fieldName
- * @param id
  * @returns {Promise<null>}
  */
 export const getDocDetails = async (value, table, fieldName) => {
     try {
-        const ordersQuery = queryBuilder(table, fieldName, value)
+        const ordersQuery = queryBuilder(table, fieldName, value);
         const querySnapshot = await getDocs(ordersQuery);
         let response = null;
         querySnapshot.forEach((doc) => {
