@@ -24,7 +24,8 @@ export async function setProjectDetails(projectName) {
         uid: auth?.currentUser.uid,
         status: {
             year: year,
-            monthlyUpdate: Object.fromEntries(Month.map((month, index) => [month, index === getMonth ? 1 : 0]))
+            month: Month[getMonth],
+            update: 1
         },
     };
     try {
@@ -35,8 +36,8 @@ export async function setProjectDetails(projectName) {
             ).then();
         } else {
             const projectsRef = doc(db, tables.projects, docDetails?.id);
-            let updatedData = docDetails?.data
-            updatedData.status.monthlyUpdate[Month[getMonth]] += 1;
+            let updatedData = docDetails?.data;
+            updatedData.status.update += 1;
             await updateDoc(projectsRef,
                 updatedData
             ).then(() => {
@@ -67,12 +68,6 @@ export async function renameAllProjects(oldProjectName, newProjectName) {
     }
 }
 
-export function queryBuilder(table, fieldName, value) {
-    const year = new Date().getFullYear();
-    return query(collection(db, table), and(where(fieldName, '==', value), where("uid", '==', auth?.currentUser.uid), where("status.year", '==', year)));
-}
-
-
 /**
  * function to get document details from the firebase firestore
  * @param value
@@ -82,7 +77,9 @@ export function queryBuilder(table, fieldName, value) {
  */
 export const getDocDetails = async (value, table, fieldName) => {
     try {
-        const ordersQuery = queryBuilder(table, fieldName, value);
+        const year = new Date().getFullYear();
+        const getMonth = new Date().getMonth();
+        const ordersQuery = query(collection(db, table), and(where(fieldName, '==', value), where("uid", '==', auth?.currentUser.uid), where("status.year", '==', year), where("status.month", '==', Month[getMonth])));
         const querySnapshot = await getDocs(ordersQuery);
         let response = null;
         querySnapshot.forEach((doc) => {

@@ -2,9 +2,8 @@ import {
     addDoc,
     collection,
 } from "firebase/firestore";
-import firebase from "firebase/compat/app";
 import {auth, db} from "../services/firebase";
-import {tables} from "../utils/constants";
+import {Month, tables} from "../utils/constants";
 import {nanoid} from "nanoid";
 
 /**
@@ -13,11 +12,16 @@ import {nanoid} from "nanoid";
  * @returns {Promise<void>}
  */
 export async function uploadModelDetails(modelName) {
-    const time = firebase.firestore.Timestamp.fromDate(new Date()).toDate();
+    const date = new Date();
+    const year = date.getFullYear();
+    const getMonth = date.getMonth();
     const details = {
         name: modelName,
         uid: auth?.currentUser.uid,
-        create: time,
+        status : {
+            year: year,
+            month: Month[getMonth],
+        },
         id: nanoid()
     }
     try {
