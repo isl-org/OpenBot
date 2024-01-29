@@ -1,6 +1,6 @@
 import {addDoc, and, collection, doc, getDoc, getDocs, query, where} from '@firebase/firestore'
 import {auth, db} from './authentication'
-import {Month, tables} from '../utils/constants'
+import {localStorageKeys, Month, tables} from '../utils/constants'
 
 /**
  * function to upload user usage on monthly basis on firebase firestore
@@ -10,9 +10,10 @@ import {Month, tables} from '../utils/constants'
  */
 export async function uploadServerUsage (serverStartTime, serverEndTime) {
     const date = new Date(serverStartTime)
+    const user = JSON.parse(localStorage.getItem(localStorageKeys.user))
     const details = {
         startTime: serverStartTime,
-        uid: auth?.currentUser.uid,
+        uid: user?.uid,
         endTime: serverEndTime,
         status: {
             month: Month[date.getMonth()],

@@ -10,7 +10,6 @@
 import {ErrorDisplay} from '../utils/error-display.js'
 import {deleteCookie, getCookie} from '../index'
 import {localStorageKeys} from '../utils/constants'
-import {Timestamp} from '@firebase/firestore'
 import {uploadServerUsage} from '../firebase/APIs'
 
 /**
@@ -62,7 +61,7 @@ export function Connection() {
             idSent = false
             if (localStorage.getItem(localStorageKeys.isSignIn) === 'true') {
                 if (getCookie(localStorageKeys.serverStartTime)) {
-                    const time = Timestamp.fromDate(new Date()).toDate()
+                    const time = new Date()
                     uploadServerUsage(getCookie(localStorageKeys.serverStartTime), time).then(() => {
                         deleteCookie(localStorageKeys.serverStartTime)
                         deleteCookie(localStorageKeys.serverEndTime)

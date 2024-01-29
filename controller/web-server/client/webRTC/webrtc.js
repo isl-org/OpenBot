@@ -1,6 +1,5 @@
 import Cookies from 'js-cookie'
 import {localStorageKeys} from '../utils/constants'
-import {Timestamp} from "@firebase/firestore";
 
 /**
  * function to enable webRTC connection
@@ -68,7 +67,7 @@ export function WebRTC(connection) {
 
         peerConnection.onconnectionstatechange = () => {
             if (peerConnection?.connectionState === 'connected') {
-                const time = Timestamp.fromDate(new Date()).toDate()
+                const time = new Date()
                 Cookies.set(localStorageKeys.serverStartTime, time)
             }
         }

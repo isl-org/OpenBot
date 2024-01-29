@@ -18,7 +18,6 @@ import {signInWithCustomToken} from 'firebase/auth'
 import Cookies from 'js-cookie'
 import {auth, googleSigIn, googleSignOut} from './firebase/authentication'
 import {localStorageKeys} from './utils/constants'
-import {Timestamp} from '@firebase/firestore'
 
 const connection = new Connection();
 (async () => {
@@ -127,7 +126,7 @@ function signOut() {
     const signInBtn = document.getElementsByClassName('google-sign-in-button')[0]
     signInBtn.innerText = 'Sign in with Google'
     if (getCookie(localStorageKeys.serverStartTime)) {
-        const time = Timestamp.fromDate(new Date()).toDate()
+        const time = new Date()
         uploadServerUsage(getCookie(localStorageKeys.serverStartTime), time).then(() => {
             deleteCookie(localStorageKeys.serverStartTime)
             deleteCookie(localStorageKeys.serverEndTime)
@@ -256,16 +255,19 @@ function handleSingleSignOn() {
 }
 
 
-function handleServerDetailsOnSSO() {
-    if (getCookie(localStorageKeys.serverStartTime)) {
-        const time = Timestamp.fromDate(new Date()).toDate()
-        uploadServerUsage(getCookie(localStorageKeys.serverStartTime), time).then(() => {
-            deleteCookie(localStorageKeys.serverStartTime)
-            deleteCookie(localStorageKeys.serverEndTime)
+function handleServerDetailsOnSSO () {
+    const cookie = getCookie(localStorageKeys.user)
+    if (cookie) {
+        if (getCookie(localStorageKeys.serverStartTime)) {
+            const time = new Date()
+            uploadServerUsage(getCookie(localStorageKeys.serverStartTime), time).then(() => {
+                deleteCookie(localStorageKeys.serverStartTime)
+                deleteCookie(localStorageKeys.serverEndTime)
+                handleSingleSignOn()
+            })
+        } else {
             handleSingleSignOn()
-        })
-    } else {
-        handleSingleSignOn()
+        }
     }
 }
 
@@ -293,7 +295,7 @@ function handleAuthChangedOnRefresh() {
                     localStorage.setItem(localStorageKeys.user, JSON.stringify(res))
                     localStorage.setItem(localStorageKeys.isSignIn, 'true')
                     if (getCookie(localStorageKeys.serverStartTime)) {
-                        const time = Timestamp.fromDate(new Date()).toDate()
+                        const time = new Date()
                         uploadServerUsage(getCookie(localStorageKeys.serverStartTime), getCookie(localStorageKeys.serverEndTime) ?? time).then(() => {
                             deleteCookie(localStorageKeys.serverStartTime)
                             deleteCookie(localStorageKeys.serverEndTime)
@@ -316,7 +318,7 @@ function handleAuthChangedOnRefresh() {
 // handling user usage for server duration when refreshing or closing page
 window.onunload = function () {
     if (getCookie(localStorageKeys.serverStartTime)) {
-        const time = Timestamp.fromDate(new Date()).toDate()
+        const time = new Date()
         Cookies.set(localStorageKeys.serverEndTime, time)
     }
 }
