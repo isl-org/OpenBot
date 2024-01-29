@@ -1,6 +1,6 @@
 import {addDoc, and, collection, doc, getDoc, getDocs, query, where} from '@firebase/firestore'
 import {auth, db} from './authentication'
-import {tables} from '../utils/constants'
+import {Month, tables} from '../utils/constants'
 
 /**
  * function to upload user usage on monthly basis on firebase firestore
@@ -9,10 +9,15 @@ import {tables} from '../utils/constants'
  * @param serverEndTime
  */
 export async function uploadServerUsage (serverStartTime, serverEndTime) {
+    const date = new Date(serverStartTime)
     const details = {
         startTime: serverStartTime,
         uid: auth?.currentUser.uid,
-        endTime: serverEndTime
+        endTime: serverEndTime,
+        status: {
+            month: Month[date.getMonth()],
+            year: date.getFullYear()
+        }
     }
     try {
         await addDoc(collection(db, tables.server),
