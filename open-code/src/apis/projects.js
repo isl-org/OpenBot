@@ -5,7 +5,7 @@ import {
     updateDoc,
     where,
     query,
-    getDocs, and, writeBatch
+    getDocs, and, writeBatch, getAggregateFromServer, sum
 } from "firebase/firestore";
 import {auth, db} from "../services/firebase";
 import {Month, tables} from "../utils/constants";
@@ -91,5 +91,21 @@ export const getDocDetails = async (value, table, fieldName) => {
         return response
     } catch (error) {
         console.log("error :", error);
+    }
+}
+
+/**
+ * function to get projects compile time
+ * @returns {Promise<number>}
+ */
+export const sumUploadCode = async () => {
+    try {
+        const ordersQuery = query(collection(db, tables.projects), and(where("uid", '==', auth?.currentUser.uid)));
+        const snapshot = await getAggregateFromServer(ordersQuery, {
+            totalCompileCode: sum('status.update')
+        });
+        return snapshot.data().totalCompileCode;
+    } catch (e) {
+        console.log(e);
     }
 }

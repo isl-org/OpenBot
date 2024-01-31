@@ -94,13 +94,14 @@ export const BottomBar = () => {
     /**
      * function to generate javascript or python code and upload to google drive, also handles error while compiling
      */
-    const generateCode = async () => {
+    const generateCode = () => {
         if (isOnline) {
             if (localStorage.getItem("isSigIn") === "true") {
                 setDrawer(false);
                 setIsLoader(true);
-                await handleUserRestriction("text/xml", getCurrentProject().projectName).then(
+                handleUserRestriction().then(
                     (response) => {
+                        console.log("response::", response);
                         if (response === true) {
                             //javaScript generator
                             let code = javascriptGenerator.workspaceToCode(
@@ -282,7 +283,7 @@ export const BottomBar = () => {
                 break;
             }
             case "uploadCode": {
-                await generateCode().then();
+                generateCode();
                 break;
             }
             default: {

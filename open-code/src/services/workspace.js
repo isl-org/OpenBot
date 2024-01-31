@@ -8,7 +8,7 @@ import {
     uploadToGoogleDrive,
 } from "./googleDrive";
 import configData from "../config.json"
-import {renameAllProjects} from "../apis/projects";
+import {renameAllProjects, sumUploadCode} from "../apis/projects";
 
 /**
  * get project from drive when user signedIn
@@ -382,7 +382,7 @@ function filterLabels() {
  */
 async function autoSync() {
     await setConfigData().then(async () => {
-            let data = JSON.stringify(configData)
+            let data = JSON.stringify(configData);
             if (data === localStorage.getItem(localStorageKeys.configData)) {
                 await uploadToGoogleDrive(localStorage.getItem(localStorageKeys.configData), Constants.json)
             }
@@ -410,26 +410,10 @@ function handleChildBlockInWorkspace(array, child) {
  * function to handle user restriction
  * @returns {Promise<void>}
  */
-export async function handleUserRestriction(projectType, projectName) {
-    const driveFiles = [];
-    const data = [];
-    return await getDriveProjects(driveFiles).then(async () => {
-            const allXmlProjects = driveFiles.filter((res) => res.projectType === projectType);
-            if (allXmlProjects?.length > 0) {
-                allXmlProjects?.forEach((item) => {
-                    data.push(item.projectName);
-                })
-            }
-            if (data?.length < 5) {
-                return true;
-            } else {
-                if (data.includes(projectName)) {
-                    return true;
-                }
-                return false;
-            }
-        }
-    )
+export async function handleUserRestriction() {
+    return sumUploadCode().then((res) => {
+        return res < 15;
+    })
 }
 
 export {
