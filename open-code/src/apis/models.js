@@ -1,6 +1,6 @@
 import {
-    addDoc,
-    collection,
+    addDoc, and,
+    collection, getAggregateFromServer, getCountFromServer, query, sum, where,
 } from "firebase/firestore";
 import {auth, db} from "../services/firebase";
 import {Month, tables} from "../utils/constants";
@@ -18,7 +18,7 @@ export async function uploadModelDetails(modelName) {
     const details = {
         name: modelName,
         uid: auth?.currentUser.uid,
-        status : {
+        status: {
             year: year,
             month: Month[getMonth],
         },
@@ -30,5 +30,15 @@ export async function uploadModelDetails(modelName) {
         ).then();
     } catch (e) {
         console.log("error in uploading projects::", e);
+    }
+}
+
+export async function getModelsCount() {
+    try {
+        const ordersQuery = query(collection(db, tables.models), and(where("uid", '==', auth?.currentUser.uid)));
+        const snapshot = await getCountFromServer(ordersQuery);
+        return snapshot.data().count;
+    } catch (e) {
+        console.log(e);
     }
 }

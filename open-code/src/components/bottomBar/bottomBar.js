@@ -99,7 +99,7 @@ export const BottomBar = () => {
             if (localStorage.getItem("isSigIn") === "true") {
                 setDrawer(false);
                 setIsLoader(true);
-                handleUserRestriction().then(
+                handleUserRestriction(Constants.projects).then(
                     (response) => {
                         console.log("response::", response);
                         if (response === true) {
@@ -353,6 +353,7 @@ export const BottomBar = () => {
                     {
                         isAIModelComponent &&
                         <ModelUploadingComponent isAIModelComponent={isAIModelComponent}
+                                                 setIsSubscriptionExpire={setIsSubscriptionExpire}
                                                  setIsAIModelComponent={setIsAIModelComponent} file={file}/>
                     }
 

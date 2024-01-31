@@ -9,6 +9,7 @@ import {
 } from "./googleDrive";
 import configData from "../config.json"
 import {renameAllProjects, sumUploadCode} from "../apis/projects";
+import {getModelsCount} from "../apis/models";
 
 /**
  * get project from drive when user signedIn
@@ -410,10 +411,16 @@ function handleChildBlockInWorkspace(array, child) {
  * function to handle user restriction
  * @returns {Promise<void>}
  */
-export async function handleUserRestriction() {
-    return sumUploadCode().then((res) => {
-        return res < 15;
-    })
+export async function handleUserRestriction(type) {
+    if (type === Constants.projects) {
+        return sumUploadCode().then((res) => {
+            return res < 15;
+        })
+    } else {
+        return getModelsCount().then((res) => {
+            return res < 5;
+        })
+    }
 }
 
 export {
