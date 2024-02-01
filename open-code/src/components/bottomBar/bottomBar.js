@@ -31,7 +31,7 @@ import {setProjectDetails} from "../../apis/projects";
 export const BottomBar = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
-    const [isLoader, setIsLoader] = useState(true);
+    const [isLoader, setIsLoader] = useState(false);
     const {theme} = useContext(ThemeContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
