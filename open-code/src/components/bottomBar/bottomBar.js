@@ -31,7 +31,7 @@ import {setProjectDetails} from "../../apis/projects";
 export const BottomBar = () => {
     const [buttonSelected, setButtonSelected] = useState({backgroundColor: colors.openBotBlue});
     const [buttonActive, setButtonActive] = useState(false);
-    const [isLoader, setIsLoader] = useState(false);
+    const [isLoader, setIsLoader] = useState(true);
     const {theme} = useContext(ThemeContext);
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
@@ -336,7 +336,7 @@ export const BottomBar = () => {
                     </div>
                     }
                     {isLoader &&
-                        <div style={{display: "flex", flexDirection: "column"}} className={styles.loaderText}>
+                        <div className={styles.loaderText}>
                             <CompilationLoader/>
                             {theme === "dark" ?
                                 <WhiteText text={"Compiling Code..."} extraStyle={styles.textItem}/> :

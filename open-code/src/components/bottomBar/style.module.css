@@ -10,7 +10,7 @@
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 21%;
+    height: 20%;
     border-top: 0.5px solid gray;
 }
 
@@ -24,14 +24,17 @@
 }
 
 .loaderText {
-    margin-left: 50%;
+    position: absolute;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
     margin-top: 2%;
 }
 
 .textItem {
     font-family: Gilroy-medium, sans-serif;
     margin-top: 3px;
-    margin-left: -7%;
 }
 
 .errorDiv {
@@ -320,7 +323,6 @@
 
     .textItem {
         margin-top: 2px;
-        margin-left: -18%;
         font-size: 12px;
     }
 
@@ -331,7 +333,6 @@
     }
 
     .loaderText {
-        margin-left: 45%;
         margin-top: 8%;
     }
 
@@ -415,13 +416,11 @@
     }
 
     .loaderText {
-        margin-left: 50%;
         margin-top: 2%;
     }
 
     .textItem {
         margin-top: 3px;
-        margin-left: -12%;
         font-size: 14px;
     }
 
@@ -473,7 +472,6 @@
 
     .textItem {
         margin-top: 10px;
-        margin-left: -17%;
         font-size: 24px;
     }
 
