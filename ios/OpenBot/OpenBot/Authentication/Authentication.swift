@@ -139,8 +139,8 @@ class Authentication {
      */
     static func download(file: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let fileId = returnFileId(fileLink: file);
-        let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
-        let service: GTLRDriveService = GTLRDriveService()
+        let url = "https://www.googleapis.com/drive/v3/files/\(fileId)?alt=media&key=AIzaSyCITlkh63TnSnJQBlzqbJwwtBDr_w3e1Pg" //key extracted from google console
+        let service: GTLRDriveService = GTLRDriveService();
         let fetcher = service.fetcherService.fetcher(withURLString: url)
         fetcher.beginFetch(completionHandler: { data, error in
             if let error = error {
@@ -162,7 +162,7 @@ class Authentication {
      */
 
     static func download(fileId: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
-        let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
+        let url = "https://www.googleapis.com/drive/v3/files/\(fileId)?alt=media&key=AIzaSyCITlkh63TnSnJQBlzqbJwwtBDr_w3e1Pg" //key extracted from google console
         let service: GTLRDriveService = GTLRDriveService()
         let fetcher = service.fetcherService.fetcher(withURLString: url)
         fetcher.beginFetch(completionHandler: { data, error in
