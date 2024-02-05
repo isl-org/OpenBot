@@ -22,32 +22,32 @@
 
 - Enter a name for your project, select your country/region, and then click on the `Create Project` button.
     <p align="left">
-    <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%" src="../../../docs/images/firebase_create_project.png" alt="Create New Project" width="30%"/>
-    <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2% " src="../../../docs/images/firebase_success_creation.png" alt="Create New Project" width="30%"/>
+    <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%" src="../../../docs/images/firebase_create_project.jpg" alt="Create New Project" width="30%"/>
+    <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2% " src="../../../docs/images/firebase_success_creation.jpg" alt="Create New Project" width="30%"/>
     </p>
 
 - Once your project is created, click on the `Web` icon to add Firebase to your web app and then enter an App nickname
   and click on the `Register App` button.
   <p align="left">
-  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_web_icon.png" alt="Create New Project" width="30%"/>
-  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_register_app.png" alt="Create New Project" width="30%"/>
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_web_icon.jpg" alt="Create New Project" width="30%"/>
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_register_app.jpg" alt="Create New Project" width="30%"/>
   </p>
 
     - Add `firebase SDK` to your project's `env` file.
         - When creating project you will get firebase here, or you can get it from project setting.
           <p align="left">
-          <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_sdk.png" alt="Create New Project" width="30%"/>
-          <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_project_setting.png" alt="Create New Project" width="30%"/>
-          <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_project_setting_config.png" alt="Create New Project" width="30%"/>
+          <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_sdk.jpg" alt="Create New Project" width="30%"/>
+          <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_project_setting.jpg" alt="Create New Project" width="30%"/>
+          <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_project_setting_config.jpg" alt="Create New Project" width="30%"/>
           </p>
 
         - Using Environment Variables When using Firebase Authentication, you may need to store sensitive information
           such as API keys, database credentials, and other secrets. To do this securely, you can use environment
-          variables to store this information outside of your code. by doing following steps.
+          variables to store this information outside your code. by doing following steps.
 
             1. Create a new file in OpenBot Playground called .env.
                  <p align="left">
-                <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_env.png" alt="Create New Project" width="30%"/>
+                <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_env.jpg" alt="Create New Project" width="30%"/>
                  </p> 
 
             3. Add following environment variables to the .env file that will be used in firebase.js file.
@@ -67,11 +67,11 @@
 
   <p align="left">
 
-  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_authantication.png" alt="Create New Project" width="30%"/>
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_authantication.jpg" alt="Create New Project" width="30%"/>
 
-  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_google_option.png" alt="Create New Project" width="30%"/>
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_google_option.jpg" alt="Create New Project" width="30%"/>
 
-  <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_google_signin.png" alt="Create New Project" width="30%"/>
+  <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_google_signin.jpg" alt="Create New Project" width="30%"/>
 
   </p>
 
@@ -79,17 +79,17 @@
 - Enabling Firestore database, navigate to the Build menu on the left sidebar.
   Click on ``Firestore Database`` from the options. Then, Click on ``Create database`` button.
 
-  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firestore_database_setup.png" alt="Google Cloud Console" width="50%"/>
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firestore_database_setup.jpg" alt="Google Cloud Console" width="50%"/>
 
     - For secure rules, select ``Start in production mode`` and choose firestore location for the
       app and click on the ``Enable`` button.
 
-      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_database_production_build.png" alt="Google Cloud Console" width="30%"/>
-      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_database_location.png" alt="Google Cloud Console" width="30%"/>
+      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_database_production_build.jpg" alt="Google Cloud Console" width="30%"/>
+      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_database_location.jpg" alt="Google Cloud Console" width="30%"/>
 
         - Once your database is created, click on the ``Rules`` to configure permissions for read and write.
 
-          <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_database_rules.png" alt="Google Cloud Console" width="30%"/>
+          <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_database_rules.jpg" alt="Google Cloud Console" width="30%"/>
 
         - Replace the default rules with below code and click on ``Publish`` button.
 
@@ -112,26 +112,26 @@
   in using the same Google account that you
   use for Firebase. This ensures seamless integration between the services. At the top of the page, you'll see the current project name. Click on it to open the project selector. Under the `ALL` section, select the project you want to switch to.
 
-  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/googleCloud_console.png" alt="Google Cloud Console" width="30%"/>
-  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_cloud_project.png" alt="Google Cloud Console" width="30%"/>
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/googleCloud_console.jpg" alt="Google Cloud Console" width="30%"/>
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_cloud_project.jpg" alt="Google Cloud Console" width="30%"/>
 
 - After switching, under Quick access, you should see an option
   labeled ``APIs & Services``. Click on it.
   If you don't see it immediately, you might need to click on the menu icon (usually three horizontal lines) at the
   top left corner to expand the menu and reveal the options.
 
-  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_API_services.png" alt="Google Cloud Console" width="50%"/>
+  <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_API_services.jpg" alt="Google Cloud Console" width="50%"/>
 
     - After opening "APIs & Services", navigate to the ``Library`` section. This is where you can search for Google
       Drive API.
-      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/googleDrive_library.png" alt="Google Cloud Console" width="50%"/>
+      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/googleDrive_library.jpg" alt="Google Cloud Console" width="50%"/>
 
     - The Google Drive API should appear in the search results. Click on it.
       On the next page, you'll find information about the API. Click the "Enable" button to enable it for your project.
       Once enabled, you'll be able to access and manage the Google Drive and Drive API settings.
   
-      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_drive_result.png" alt="Google Cloud Console" width="30%"/>
-      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_drive_enable_API.png" alt="Google Cloud Console" width="30%"/>
+      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_drive_result.jpg" alt="Google Cloud Console" width="30%"/>
+      <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/google_drive_enable_API.jpg" alt="Google Cloud Console" width="30%"/>
 
 ### Troubleshooting
 

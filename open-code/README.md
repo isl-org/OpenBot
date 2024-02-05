@@ -85,23 +85,23 @@ The `OpenBot Playground` starts with homepage that contains following component:
 The `Playground` page is a key feature of the `OpenBot Playground` platform that provides a variety of coding blocks for
 users to create different types of functionality, such as Control, Loops, Movement, Operators, Sensors, and many more.
 
-- [Header](#header) : Header contains project name, help centre, change theme and signIn user section.
+- [Header](#header) : Header contains project name, help centre, AutoSync ,change theme and signIn user section.
 - [Workspace](#workSpace): Space where users can drag and drop the coding blocks to generate their code, which can be
   converted into both JavaScript and Python.
 - [Playground Bottom Bar](#Playground-Bottom-Bar) : Bottom bar Contains buttons to generate code ,upload project in
-  drive, zoom in and out blocks , undo and redo changes in workspace.
+  drive, zoom in and out blocks ,Add model ,undo and redo changes in workspace.
 
 ### Header
 
-The header of the `Openbot-Playground` website has it's logo in the top left section. The right side of the header have
+The header of the `Openbot-Playground` website has its logo in the top left section. The right side of the header have
 two buttons.
 
 - #### Change theme
   Theme icon allows you to switch between light mode and dark mode, and vice versa.
 
   <p align="left">
-  <img style="padding-right: 2%;" src="../docs/images/playground_home_light_theme_screen.png" alt="light theme screen" width="45%"/>
-  <img style="padding-right: 2%;" src="../docs/images/playground_home_dark_theme_screen.png" alt="dark theme screen" width="45%"/>
+  <img style="padding-right: 2%;" src="../docs/images/playground_home_light_theme_screen.jpg" alt="light theme screen" width="45%"/>
+  <img style="padding-right: 2%;" src="../docs/images/playground_home_dark_theme_screen.jpg" alt="dark theme screen" width="45%"/>
   </p>
 
 - #### Sign-in
@@ -116,39 +116,47 @@ two buttons.
   Upon successful sign-in, you will have options to edit your profile and log out. The "Edit Profile" button opens a
   popup where you can update your profile image, display name and date of birth.
   <p align="left">
-  <img style="padding-right: 2%;" src="../docs/images/playground_edit_profile_logout_popup.png" alt="Playground Sign In" width="45%"/>
-  <img style="padding-right: 2%;" src="../docs/images/playground_edit_profile_modal.png" alt="Playground Sign In" width="45%" />
+  <img style="padding-right: 2%;" src="../docs/images/playground_edit_profile_logout_popup 2.jpg" alt="Playground Sign In" width="45%"/>
+  <img style="padding-right: 2%;" src="../docs/images/playground_edit_profile_modal 2.jpg" alt="Playground Sign In" width="45%" />
   </p>
 
 - #### AutoSync:
-  - AutoSync is the additional feature of OpenBot robot app which lets you sync machine learning models(Tflite models) from AI detection blocks which comprises object tracking, autopilot, and point goal navigation and that models are pre-trained or can be added manually from the OpenBot Playground.
-  - If a user opts to manually add a model through the robot app, the initial step involves downloading the model within the app. Subsequently, the downloaded model will be displayed in Google Drive through the "config.json" file. AutoSync is the mechanism responsible for presenting this model on Google Drive, with the "config.json" file containing details such as the path and path type of the model.
-  - Following this process, the model will then appear within the OpenBot playground blocks. With the assistance of AutoSync, you can seamlessly select this model directly from the respective AI blocks.
-
-
+    - AutoSync enables users to seamlessly synchronize all machine learning models (Tflite models), from the OpenBot
+      robot app and conveniently display them in their respective ``Artificial Intelligence`` blocks. Additionally,
+      users have the flexibility to select the desired AI model directly within the block interface while structuring
+      the code.
+    - #### How it works
+        - The robot app uploads an updated config.json file to the user's Google Drive, including any newly added
+          models. This file lists all the models along with their configurations in JSON format.
+        - When the user clicks on ``Auto Sync`` all downloaded models, including those for detection, autopilot, and
+          point goal navigation, are filtered and displayed in their respective AI blocks.
+        - Following this process, the model will then appear within the OpenBot playground blocks. With the assistance
+          of
+          Google Drive, you can seamlessly select this model directly from the respective AI blocks.
 
 - #### Playground page additional
+
     - The Playground page header retains the same design as the homepage header, while incorporating additional
       functionalities. In the center, the project name is displayed with a downward arrow, providing options for
       renaming and deleting the project.
        <p align="left">
-       <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_rename_and_delete_options.png" alt="Playground Sign In" width="50%" height="50%" />
+       <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_rename__del 2.jpg" alt="Playground Sign In" width="50%" height="50%" />
        </p>
 
     - On the right side, a help button has been added, featuring three sections that explain how to effectively
       drag and drop blocks, save and download project progress, and upload to drive for seamless collaboration.
 
         <p align="left">
-        <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_help.png" alt="Playground Help" width="50%"/>
+        <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_help.jpg" alt="Playground Help" width="50%"/>
         </p>
 
 ### Carousal
 
 Carousal's container explains how Application works.
 <p>
-<img style="padding-right: 2%;" src="../docs/images/home_carousal1.png" alt="home_carousal1" width="30%"/>
-<img style="padding-right: 2%;" src="../docs/images/home_carousal2.png" alt="home_carousal2" width="30%"/>
-<img style="padding-right: 2%;" src="../docs/images/home_carousal3.png" alt="home_carousal3" width="30%"/>
+<img style="padding-right: 2%;" src="../docs/images/home_carousal1.jpg" alt="home_carousal1" width="30%"/>
+<img style="padding-right: 2%;" src="../docs/images/home_carousal2.jpg" alt="home_carousal2" width="30%"/>
+<img style="padding-right: 2%;" src="../docs/images/home_carousal3.jpg" alt="home_carousal3" width="30%"/>
 </p>
 
 ### Project Section
@@ -163,9 +171,9 @@ If the user enters a name already assigned to another project, the system will a
 appending an integer to the end of the name.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../docs/images/create_new_project.png" alt="Create New Project" width="30%"/>
-<img style="padding-right: 2%;" src="../docs/images/my_projects.png" alt="my Project" width="30%"/>
-<img style="padding-right: 2%;" src="../docs/images/my_project_option.png" alt="option" width="30%"/>
+<img style="padding-right: 2%;" src="../docs/images/create_new_Project.jpg" alt="Create New Project" width="30%"/>
+<img style="padding-right: 2%;" src="../docs/images/my_Project.jpg" alt="my Project" width="30%"/>
+<img style="padding-right: 2%;" src="../docs/images/myProjectOption.jpg" alt="option" width="30%"/>
 </p>
 
 ### WorkSpace
@@ -192,8 +200,8 @@ JavaScript and Python.
       openBot-PlayGround folder.
     - User should not create same name file in openBot-PlayGround folder.
   <p align="left">
-  <img style="padding-right: 2%; margin-top: 2%;" src="../docs/images/google_drive_folder.png" alt="Generate Code" width="35%" />
-  <img style="padding-right: 2%; margin-top: 2%" src="../docs/images/playground_drive_file.png" alt="Generate Code" width="70%"/>
+  <img style="padding-right: 2%; margin-top: 2%;" src="../docs/images/google_drive_folder.jpg" alt="Generate Code" width="35%" />
+  <img style="padding-right: 2%; margin-top: 2%" src="../docs/images/playground_Drive .jpg" alt="Generate Code" width="70%"/>
   </p>
 
 - #### Generate Code
@@ -223,7 +231,7 @@ JavaScript and Python.
   <br></br>
   Here is an upload in Drive and generate Code Demo :
   <p align="left">
-  <img style="padding-right: 2%;" src="../docs/images/playground_google_drive.gif" alt="Generate Code" width="95%"/>
+  <img style="padding-right: 2%;" src="../docs/images/playground_google_drive.gif" alt="Generate Code" width="50%"/>
   </p>
 
 - #### Code Editor
@@ -233,7 +241,17 @@ JavaScript and Python.
   corresponding code in the side window simultaneously. The options to choose a language enables you to examine and
   evaluate the correctness of the blocks.
   <p align="left">
-  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_code_editor.png" alt="Playground code editor" width="50%" height="50%" />
+  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_codeEditor.jpg" alt="Playground code editor" width="50%" height="50%" />
+  </p>
+
+- #### Add Model
+  The OpenBot playground provides a feature to externally add AI model (.tflite) to robot application. The model popup
+  allows user to edit the configuration of our model, including its name, type, class, and input size. Note that the
+  model will
+  automatically saved in the user's Google Drive, along with the updated config.json file.
+  <p align="left">
+  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_model_option.jpg" alt="Playground code editor" width="40%" height="50%" />
+  <img style="padding-right: 2%;margin-top: 2%" src="../docs/images/playground_workspace_model_popup.jpg" alt="Playground code editor" width="40%" height="50%" />
   </p>
 
 
