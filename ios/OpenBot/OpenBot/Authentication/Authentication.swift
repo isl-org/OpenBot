@@ -130,6 +130,18 @@ class Authentication {
             // Show the sign-out button and hide the GIDSignInButton
         }
     }
+    
+    /**
+     static method to get api key from google-service
+     */
+    static func getGoogleAPIKey() -> String {
+        if let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
+           let dict = NSDictionary(contentsOfFile: path),
+           let apiKey = dict["API_KEY"] as? String {
+            return apiKey
+        }
+        return ""
+    }
 
     /**
      static method to download a file
@@ -138,9 +150,10 @@ class Authentication {
        - completion:
      */
     static func download(file: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
+        let APIkey = getGoogleAPIKey();
         let fileId = returnFileId(fileLink: file);
-        let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
-        let service: GTLRDriveService = GTLRDriveService()
+        let url = "https://www.googleapis.com/drive/v3/files/\(fileId)?alt=media&key=\(APIkey)";
+        let service: GTLRDriveService = GTLRDriveService();
         let fetcher = service.fetcherService.fetcher(withURLString: url)
         fetcher.beginFetch(completionHandler: { data, error in
             if let error = error {
@@ -162,7 +175,8 @@ class Authentication {
      */
 
     static func download(fileId: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
-        let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
+        let APIkey = getGoogleAPIKey();
+        let url = "https://www.googleapis.com/drive/v3/files/\(fileId)?alt=media&key=\(APIkey)";
         let service: GTLRDriveService = GTLRDriveService()
         let fetcher = service.fetcherService.fetcher(withURLString: url)
         fetcher.beginFetch(completionHandler: { data, error in
