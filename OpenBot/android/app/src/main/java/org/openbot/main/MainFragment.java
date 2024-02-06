@@ -104,10 +104,6 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
             .navigate(R.id.action_mainFragment_to_modelManagementFragment);
         break;
 
-      case FeatureList.RL:
-        Navigation.findNavController(requireView())
-                .navigate(R.id.action_mainFragment_to_rlFragment);
-        break;
     }
   }
 }
