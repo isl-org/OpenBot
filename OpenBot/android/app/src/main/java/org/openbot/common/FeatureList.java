@@ -25,7 +25,8 @@ public class FeatureList {
 
   // Data Collection
   public static final String DATA_COLLECTION = "Data Collection";
-  public static final String DATA_COLLECTION_RL = "Data Collection RL";
+  // public static final String DATA_COLLECTION_RL = "Data Collection RL";
+  public static final String RL = "RL";
   public static final String LOCAL_SAVE_ON_PHONE = "Local (save On Phone)";
   public static final String EDGE_LOCAL_NETWORK = "Edge (local Network)";
   public static final String CLOUD_FIREBASE = "Cloud (firebase)";
@@ -72,12 +73,15 @@ public class FeatureList {
     ArrayList<SubCategory> subCategories;
 
     subCategories = new ArrayList<>();
+
     subCategories.add(new SubCategory(DEFAULT, R.drawable.ic_openbot, "#4B7BFF"));
     categories.add(new Category(LEGACY, subCategories));
 
     subCategories = new ArrayList<>();
+    subCategories.add(new SubCategory(RL, R.drawable.rtr_tt, "#7268A6"));
     subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
-    subCategories.add(new SubCategory(DATA_COLLECTION_RL, R.drawable.ic_storage, "#7268A6"));
+    // subCategories.add(new SubCategory(DATA_COLLECTION_RL, R.drawable.ic_storage, "#7268A6"));
+
 
     subCategories.add(new SubCategory(DATA_COLLECTION, R.drawable.ic_storage, "#93C47D"));
     subCategories.add(new SubCategory(CONTROLLER_MAPPING, R.drawable.ic_joystick, "#7268A6"));

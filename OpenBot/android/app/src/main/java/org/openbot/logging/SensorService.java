@@ -66,6 +66,7 @@ public class SensorService extends Service implements SensorEventListener {
   private BufferedWriter sonarLog;
   private BufferedWriter wheelsLog;
   private BufferedWriter bumperLog;
+  private BufferedWriter infoLog;
 
   //Lilou
   private BufferedWriter rewardLog;
@@ -86,6 +87,7 @@ public class SensorService extends Service implements SensorEventListener {
   public static final int MSG_BUMPER = 7;
 
   public static final int MSG_REWARD = 8;
+  public static final int MSG_INFO = 9;
   private static final Logger LOGGER = new Logger();
   Messenger messenger = new Messenger(new SensorMessageHandler());
 
@@ -117,19 +119,19 @@ public class SensorService extends Service implements SensorEventListener {
   public int onStartCommand(Intent intent, int flags, int startId) {
     Bundle extras = intent.getExtras();
     String logFolder;
-    String rewardFolder;
+    //String rewardFolder;
     if (extras == null) {
       logFolder =
           Environment.getExternalStorageDirectory().getAbsolutePath()
               + File.separator
               + getString(R.string.app_name);
-      rewardFolder =
+      /*rewardFolder =
               Environment.getExternalStorageDirectory().getAbsolutePath()
                       + File.separator
-                      + getString(R.string.app_name);
+                      + getString(R.string.app_name);*/
     } else {
       logFolder = (String) extras.get("logFolder");
-      rewardFolder = (String) extras.get("rewardFolder");
+      //rewardFolder = (String) extras.get("rewardFolder");
     }
 
 
@@ -210,8 +212,8 @@ public class SensorService extends Service implements SensorEventListener {
       appendLog(gpsLog, "timestamp[ns],latitude,longitude,altitude[m],bearing,speed[m/s]");
     }
 
-    rewardLog = openLog(rewardFolder, "rewardLog.txt");
-    appendLog(rewardLog, "timestamp[ns],reward");
+    /*rewardLog = openLog(rewardFolder, "rewardLog.txt");
+    appendLog(rewardLog, "timestamp[ns],reward");*/
 
     frameLog = openLog(logFolder, "rgbFrames.txt");
     appendLog(frameLog, "timestamp[ns],frame");
@@ -224,6 +226,9 @@ public class SensorService extends Service implements SensorEventListener {
 
     indicatorLog = openLog(logFolder, "indicatorLog.txt");
     appendLog(indicatorLog, "timestamp[ns],signal");
+
+    infoLog = openLog(logFolder, "indicatorLog.txt");
+    appendLog(infoLog, "timestamp[ns], actions, rewards, done");
 
     if (preferencesManager.getSensorStatus(Enums.SensorType.VEHICLE.getSensor())) {
       voltageLog = openLog(logFolder, "voltageLog.txt");
@@ -428,12 +433,18 @@ public class SensorService extends Service implements SensorEventListener {
           long inferenceTime = msg.getData().getLong("inferenceTime");
           if (inferenceLog != null) appendLog(inferenceLog, frameNumber + "," + inferenceTime);
 
-        } else if (msg.what == MSG_REWARD) {
+        /*} else if (msg.what == MSG_REWARD) {
           long reward = msg.getData().getLong("rewardNumber");
           long timestamp = msg.getData().getLong("timestamp");
           if (rewardLog != null) {
             appendLog(rewardLog, timestamp + "," + reward);
 
+          }*/
+        } else if (msg.what == MSG_INFO) {
+          String info = msg.getData().getString("info");
+          long timestamp = msg.getData().getLong("timestamp");
+          if (infoLog != null) {
+            appendLog(infoLog, timestamp + "," + info);
           }
 
 
@@ -492,7 +503,8 @@ public class SensorService extends Service implements SensorEventListener {
     if (sonarLog != null) closeLog(sonarLog);
     if (wheelsLog != null) closeLog(wheelsLog);
     if (bumperLog != null) closeLog(bumperLog);
-    if (rewardLog != null) closeLog(rewardLog);
+    // if (rewardLog != null) closeLog(rewardLog);
+    if (infoLog != null) closeLog(infoLog);
   }
 
   public BufferedWriter openLog(String path, String filename) {

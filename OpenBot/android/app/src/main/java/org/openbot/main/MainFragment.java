@@ -63,10 +63,10 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
             .navigate(R.id.action_mainFragment_to_loggerFragment);
         break;
 
-      case FeatureList.DATA_COLLECTION_RL:
+      /*case FeatureList.DATA_COLLECTION_RL:
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_mainFragment_to_logger_rl_Fragment);
-        break;
+        break;*/
 
       case FeatureList.CONTROLLER:
         // For a library module, uncomment the following line
@@ -103,6 +103,10 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_modelManagementFragment);
         break;
+
+      case FeatureList.RL:
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_mainFragment_to_rlFragment);
 
     }
   }

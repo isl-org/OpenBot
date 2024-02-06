@@ -61,4 +61,16 @@ public class LogDataUtils {
 
     return msg;
   }
+
+  public static Message generateRLMessage(String info)
+  {
+    Message msg = Message.obtain();
+    Bundle bundle = new Bundle();
+    bundle.putString("info", info);
+    bundle.putLong("timestamp", SystemClock.elapsedRealtimeNanos());
+    msg.setData(bundle);
+    msg.what = SensorService.MSG_INFO;
+
+    return msg;
+  }
 }
