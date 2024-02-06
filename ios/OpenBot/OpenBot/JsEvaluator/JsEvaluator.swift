@@ -107,8 +107,8 @@ class jsEvaluator {
                 let moveRight: @convention(block) (Float) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.moveRight(speed: speed)
                 }
-                let playSound: @convention(block) (Bool) -> Void = { (isPlaySound) in
-                    self.runOpenBotThreadClass?.playSound(isPlaySound: isPlaySound);
+                let playSound: @convention(block) (String) -> Void = { (inputString) in
+                    self.runOpenBotThreadClass?.playSound(inputString: inputString);
                 }
                 let playSoundSpeed: @convention(block) (String) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.playSoundSpeed(speedMode: speed);
@@ -577,11 +577,12 @@ class jsEvaluator {
             sendControl(control: carControl);
         }
 
-        func playSound(isPlaySound: Bool) {
+        func playSound(inputString: String) {
             if isCancelled {
                 return
             }
-            print("inside playsound");
+            NotificationCenter.default.post(name: .commandName, object: "Play input sound");
+            audioPlayer.playInputString(input: inputString);
         }
 
         func playSoundSpeed(speedMode: String) {

@@ -379,11 +379,11 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
      function to reset blockly commands for robot
      */
     @objc  func resetRobotFunction() {
-        stopCar()
-        _ = jsEvaluator(jsCode: preferencesManager.getBlocklyCode()!);
-        stopRobot.setTitle("Stop Car", for: .normal);
-        stopRobot.removeTarget(nil, action: nil, for: .touchUpInside)
-        stopRobot.addTarget(self, action: #selector(cancel), for: .touchUpInside);
+            self.stopCar()
+            _ = jsEvaluator(jsCode: self.preferencesManager.getBlocklyCode()!);
+            self.stopRobot.setTitle("Stop Car", for: .normal);
+            self.stopRobot.removeTarget(nil, action: nil, for: .touchUpInside)
+            self.stopRobot.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
     }
     
     /**
