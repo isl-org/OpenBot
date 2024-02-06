@@ -16,6 +16,10 @@
     bottom: 10px;
 }
 
+.blocklyMainBackground{
+    stroke: none;
+}
+
 /* Adds space between the categories, rounds the corners and adds space around the label. */
 .blocklyTreeRow {
     margin-bottom: 0;
