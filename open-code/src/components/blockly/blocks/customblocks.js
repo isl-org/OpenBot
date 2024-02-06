@@ -926,3 +926,25 @@ Blockly.Blocks["variableDetection"] = {
         });
     }
 };
+
+
+Blockly.Blocks["inputSound"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "play sound %1",
+            "args0": [
+                {
+                    "type": "field_input",
+                    "name": "text",
+                    "text": "move forward"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": "#709662",
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};

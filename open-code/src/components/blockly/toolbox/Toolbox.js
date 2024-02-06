@@ -107,9 +107,9 @@ export const Toolbox = (props) => {
 
             <Category name="Sound" colour={"#5BBC73"}>
                 <Label text="Sound" web-class="Heading"></Label>
-                <Block type="soundType"/>,
-                <Block type="soundMode">
-                </Block>,
+                <Block type="soundType"/>
+                <Block type="soundMode"/>
+                <Block type="inputSound"/>
             </Category>
 
             <Category name="Sensors" colour={"#49a2a5"}>

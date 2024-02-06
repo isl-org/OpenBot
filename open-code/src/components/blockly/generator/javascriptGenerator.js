@@ -334,3 +334,10 @@ javascriptGenerator.forBlock['variableDetection'] = function (block, generator) 
     code += "onDetect" + '("' + labels + '","' + models + '","' + detect_tasks + '");\n' + 'onLostFrames("' + labels + '",' + frames + ',"' + framesLost_tasks + '");\n';
     return code;
 };
+
+javascriptGenerator.forBlock['inputSound'] = function (block, generator) {
+    let text = block.getFieldValue('text');
+    let code = "";
+    code += "playSound('" + text + "');\n";
+    return code;
+};
