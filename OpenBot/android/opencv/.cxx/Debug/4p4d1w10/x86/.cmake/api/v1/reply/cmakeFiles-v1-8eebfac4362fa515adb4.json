@@ -37,7 +37,7 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86/CMakeFiles/3.22.1-g37088a8-dirty/CMakeSystem.cmake"
+			"path" : "C:/Users/lilou/Documents/Master/OpenBot/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86/CMakeFiles/3.22.1-g37088a8-dirty/CMakeSystem.cmake"
 		},
 		{
 			"isExternal" : true,
@@ -303,7 +303,7 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86/CMakeFiles/3.22.1-g37088a8-dirty/CMakeCCompiler.cmake"
+			"path" : "C:/Users/lilou/Documents/Master/OpenBot/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86/CMakeFiles/3.22.1-g37088a8-dirty/CMakeCCompiler.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -537,7 +537,7 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86/CMakeFiles/3.22.1-g37088a8-dirty/CMakeCXXCompiler.cmake"
+			"path" : "C:/Users/lilou/Documents/Master/OpenBot/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86/CMakeFiles/3.22.1-g37088a8-dirty/CMakeCXXCompiler.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -688,7 +688,7 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86/CMakeFiles/3.22.1-g37088a8-dirty/CMakeCCompiler.cmake"
+			"path" : "C:/Users/lilou/Documents/Master/OpenBot/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86/CMakeFiles/3.22.1-g37088a8-dirty/CMakeCCompiler.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -782,14 +782,14 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86/CMakeFiles/3.22.1-g37088a8-dirty/CMakeCXXCompiler.cmake"
+			"path" : "C:/Users/lilou/Documents/Master/OpenBot/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86/CMakeFiles/3.22.1-g37088a8-dirty/CMakeCXXCompiler.cmake"
 		}
 	],
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86",
-		"source" : "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/libcxx_helper"
+		"build" : "C:/Users/lilou/Documents/Master/OpenBot/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86",
+		"source" : "C:/Users/lilou/Documents/Master/OpenBot/OpenBot/android/opencv/libcxx_helper"
 	},
 	"version" : 
 	{

@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86",
-		"source" : "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/libcxx_helper"
+		"build" : "C:/Users/lilou/Documents/Master/OpenBot/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/x86",
+		"source" : "C:/Users/lilou/Documents/Master/OpenBot/OpenBot/android/opencv/libcxx_helper"
 	},
 	"version" : 
 	{
