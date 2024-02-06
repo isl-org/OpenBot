@@ -937,7 +937,7 @@ Blockly.Blocks["inputSound"] = {
                 {
                     "type": "field_input",
                     "name": "text",
-                    "text": "move forward"
+                    "text": "move straight"
                 }
             ],
             "previousStatement": null,
