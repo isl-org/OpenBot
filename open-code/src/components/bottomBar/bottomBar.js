@@ -14,8 +14,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {
     getCurrentProject,
-    handleChildBlockInWorkspace,
-    handleUserRestriction
+    handleChildBlockInWorkspace
 } from "../../services/workspace";
 import navbarStyle from "../navBar/navbar.module.css";
 import BlueText from "../fonts/blueText";
@@ -99,108 +98,96 @@ export const BottomBar = () => {
             if (localStorage.getItem("isSigIn") === "true") {
                 setDrawer(false);
                 setIsLoader(true);
-                handleUserRestriction(Constants.projects).then(
-                    (response) => {
-                        console.log("response::", response);
-                        if (response === true) {
-                            //javaScript generator
-                            let code = javascriptGenerator.workspaceToCode(
-                                workspace
-                            );
-                            const start = workspace.getBlocksByType(PlaygroundConstants.start);
-                            const forever = workspace.getBlocksByType(PlaygroundConstants.forever);
-                            const detection = workspace.getBlocksByType(PlaygroundConstants.detectionOrUndetection);
-                            const multipleObjectTracking = workspace.getBlocksByType(PlaygroundConstants.multipleObjectTracking);
-                            const variableDetection = workspace.getBlocksByType(PlaygroundConstants.variableDetection);
-                            let objNameArray = [];
-                            if (variableDetection?.length > 0) {
-                                for (let i = 0; i < variableDetection.length; i++) {
-                                    objNameArray.push(variableDetection[i].getFieldValue(PlaygroundConstants.labels));
-                                }
-                            }
-                            let isClassesSimiliar = false;
-                            for (let i = 0; i < objNameArray.length; i++) {
-                                for (let j = i + 1; j < objNameArray.length; j++) {
-                                    if (objNameArray[i] === objNameArray[j]) {
-                                        isClassesSimiliar = true;
-                                    }
-                                }
-                            }
-                            let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false);  //filtering multiple objectTracking connected blocks
-                            let isAIBlocksAdjacent = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
-                            let array = []
-                            let foreverChildBlocks = handleChildBlockInWorkspace(forever, array)
-                            let isForeverContainsAI;
-                            foreverChildBlocks.forEach((item) => {
-                                if (aiBlocks.includes(item)) {
-                                    isForeverContainsAI = true;
-                                }
-                            })
-                            let object_1 = PlaygroundConstants.object_1;
-                            let object_2 = PlaygroundConstants.object_2;
-                            if (multipleObjectTrackingEnabledBlocks.length > 0) {
-                                object_1 = multipleObjectTrackingEnabledBlocks[0].getFieldValue(PlaygroundConstants.labels1)
-                                object_2 = multipleObjectTrackingEnabledBlocks[0].getFieldValue(PlaygroundConstants.labels2)
-                            }
-
-                            if (start.length === 0 && forever.length === 0 && detection.length === 0 && variableDetection.length === 0) {
-                                handleError(Errors.error1);
-                            } else if (isAIBlocksAdjacent === true && start.length > 0) {
-                                handleError(Errors.error2);
-                            } else if (object_1 === object_2) {
-                                handleError(Errors.error3)
-                            } else if (isForeverContainsAI === true) {
-                                handleError(Errors.error4)
-                            } else if (isClassesSimiliar === true) {
-                                handleError(Errors.error5)
-                            } else {
-
-                                // Replace comments with an empty string
-                                let codeWithoutComments = code.replace(/\/\/.*$/gm, '');
-                                if (start.length > 0)
-                                    codeWithoutComments += "\nstart();";
-                                if (forever.length > 0)
-                                    codeWithoutComments += "\nforever();";
-                                setGenerateCode(!generate);
-                                console.log(codeWithoutComments);
-                                uploadToGoogleDrive(codeWithoutComments, "js").then((res) => {
-                                        let linkCode = {
-                                            driveLink: res,
-                                            projectName: getCurrentProject().projectName
-                                        }
-                                        const data = {
-                                            projectName: getCurrentProject().projectName,
-                                            xmlValue: getCurrentProject().xmlValue,
-                                            createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
-                                        }
-                                        uploadToGoogleDrive(data, "xml")   // Call function to upload xml data to Google Drive
-                                            .then(async () => {
-                                                setCode(linkCode);
-                                                setCategory(Constants.qr);
-                                                setIsLoader(false);
-                                                setDrawer(true);
-                                                await setProjectDetails(getCurrentProject().projectName).then()
-                                            })
-                                            .catch((err) => {
-                                                errorToast("Failed to upload");
-                                                console.log(err);
-                                                setIsLoader(false);
-                                            })
-                                    }
-                                ).catch((err) => {
-                                    console.log("err::", err)
-                                    setIsLoader(false);
-                                    errorToast("Failed to Upload");
-                                })
-                            }
-                        } else {
-                            setIsLoader(false);
-                            setIsSubscriptionExpire(true);
-                            // errorToast(Constants.subscription);
-                            //TODO add component for restriction user
+                //javaScript generator
+                let code = javascriptGenerator.workspaceToCode(
+                    workspace
+                );
+                const start = workspace.getBlocksByType(PlaygroundConstants.start);
+                const forever = workspace.getBlocksByType(PlaygroundConstants.forever);
+                const detection = workspace.getBlocksByType(PlaygroundConstants.detectionOrUndetection);
+                const multipleObjectTracking = workspace.getBlocksByType(PlaygroundConstants.multipleObjectTracking);
+                const variableDetection = workspace.getBlocksByType(PlaygroundConstants.variableDetection);
+                let objNameArray = [];
+                if (variableDetection?.length > 0) {
+                    for (let i = 0; i < variableDetection.length; i++) {
+                        objNameArray.push(variableDetection[i].getFieldValue(PlaygroundConstants.labels));
+                    }
+                }
+                let isClassesSimiliar = false;
+                for (let i = 0; i < objNameArray.length; i++) {
+                    for (let j = i + 1; j < objNameArray.length; j++) {
+                        if (objNameArray[i] === objNameArray[j]) {
+                            isClassesSimiliar = true;
                         }
                     }
-                );
+                }
+                let multipleObjectTrackingEnabledBlocks = multipleObjectTracking?.filter(obj => obj.disabled === false);  //filtering multiple objectTracking connected blocks
+                let isAIBlocksAdjacent = handlingMultipleAIBlocks(start)  // handling error for multiple ai blocks
+                let array = []
+                let foreverChildBlocks = handleChildBlockInWorkspace(forever, array)
+                let isForeverContainsAI;
+                foreverChildBlocks.forEach((item) => {
+                    if (aiBlocks.includes(item)) {
+                        isForeverContainsAI = true;
+                    }
+                })
+                let object_1 = PlaygroundConstants.object_1;
+                let object_2 = PlaygroundConstants.object_2;
+                if (multipleObjectTrackingEnabledBlocks.length > 0) {
+                    object_1 = multipleObjectTrackingEnabledBlocks[0].getFieldValue(PlaygroundConstants.labels1)
+                    object_2 = multipleObjectTrackingEnabledBlocks[0].getFieldValue(PlaygroundConstants.labels2)
+                }
+
+                if (start.length === 0 && forever.length === 0 && detection.length === 0 && variableDetection.length === 0) {
+                    handleError(Errors.error1);
+                } else if (isAIBlocksAdjacent === true && start.length > 0) {
+                    handleError(Errors.error2);
+                } else if (object_1 === object_2) {
+                    handleError(Errors.error3)
+                } else if (isForeverContainsAI === true) {
+                    handleError(Errors.error4)
+                } else if (isClassesSimiliar === true) {
+                    handleError(Errors.error5)
+                } else {
+
+                    // Replace comments with an empty string
+                    let codeWithoutComments = code.replace(/\/\/.*$/gm, '');
+                    if (start.length > 0)
+                        codeWithoutComments += "\nstart();";
+                    if (forever.length > 0)
+                        codeWithoutComments += "\nforever();";
+                    setGenerateCode(!generate);
+                    console.log(codeWithoutComments);
+                    uploadToGoogleDrive(codeWithoutComments, "js").then((res) => {
+                            let linkCode = {
+                                driveLink: res,
+                                projectName: getCurrentProject().projectName
+                            }
+                            const data = {
+                                projectName: getCurrentProject().projectName,
+                                xmlValue: getCurrentProject().xmlValue,
+                                createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
+                            }
+                            uploadToGoogleDrive(data, "xml")   // Call function to upload xml data to Google Drive
+                                .then(async () => {
+                                    setCode(linkCode);
+                                    setCategory(Constants.qr);
+                                    setIsLoader(false);
+                                    setDrawer(true);
+                                    await setProjectDetails(getCurrentProject().projectName).then()
+                                })
+                                .catch((err) => {
+                                    errorToast("Failed to upload");
+                                    console.log(err);
+                                    setIsLoader(false);
+                                })
+                        }
+                    ).catch((err) => {
+                        console.log("err::", err)
+                        setIsLoader(false);
+                        errorToast("Failed to Upload");
+                    })
+                }
             } else {
                 errorToast("Please sign-In to upload code.")
             }

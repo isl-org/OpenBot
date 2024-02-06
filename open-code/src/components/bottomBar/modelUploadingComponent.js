@@ -8,7 +8,7 @@ import BlueButton from "../buttonComponent/blueButtonComponent";
 import {ThemeContext} from "../../App";
 import {colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
-import {getConfigData, handleUserRestriction, setConfigData} from "../../services/workspace";
+import {getConfigData, setConfigData} from "../../services/workspace";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {uploadModelDetails} from "../../apis/models";
 
@@ -135,45 +135,39 @@ export function ModelUploadingComponent(params) {
     async function handleSubmit() {
         if (isOnline) {
             if (localStorage.getItem("isSigIn") === "true") {
-                handleUserRestriction(Constants.models).then(async (res) => {
-                    if (res === true) {
-                        setFileUploadLoader(true);
-                        const data = {
-                            fileData: file,
-                            name: modelDetails.displayName
+                setFileUploadLoader(true);
+                const data = {
+                    fileData: file,
+                    name: modelDetails.displayName
+                }
+                await setConfigData().then(async () => {
+                    let configData = getConfigData()
+                    await uploadToGoogleDrive(data, Constants.tflite).then(async (res) => {
+                        let newModelData = {
+                            id: configData.length + 1,
+                            name: modelDetails.displayName + `.${Constants.tflite}`,
+                            pathType: "URL",
+                            path: res,
+                            type: `${modelDetails.type}`,
+                            class: `${modelDetails.class}`,
+                            inputSize: `${modelDetails.width}x${modelDetails.height}`
                         }
-                        await setConfigData().then(async () => {
-                            let configData = getConfigData()
-                            await uploadToGoogleDrive(data, Constants.tflite).then(async (res) => {
-                                let newModelData = {
-                                    id: configData.length + 1,
-                                    name: modelDetails.displayName + `.${Constants.tflite}`,
-                                    pathType: "URL",
-                                    path: res,
-                                    type: `${modelDetails.type}`,
-                                    class: `${modelDetails.class}`,
-                                    inputSize: `${modelDetails.width}x${modelDetails.height}`
-                                }
-                                configData.push(newModelData)
-                                await uploadToGoogleDrive(JSON.stringify(configData), Constants.json).then(async () => {
-                                    localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData))
-                                    setFileUploadLoader(false);
-                                    await uploadModelDetails(newModelData.name).then()
-                                    handleClose()
-                                })
-                                    .catch((err) => {
-                                        setFileUploadLoader(false);
-                                        console.log(err);
-                                    })
-                            })
-                                .catch((err) => {
-                                    setFileUploadLoader(false);
-                                    console.log(err);
-                                })
+                        configData.push(newModelData)
+                        await uploadToGoogleDrive(JSON.stringify(configData), Constants.json).then(async () => {
+                            localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData))
+                            setFileUploadLoader(false);
+                            await uploadModelDetails(newModelData.name).then()
+                            handleClose()
                         })
-                    } else {
-                        setIsSubscriptionExpire(true);
-                    }
+                            .catch((err) => {
+                                setFileUploadLoader(false);
+                                console.log(err);
+                            })
+                    })
+                        .catch((err) => {
+                            setFileUploadLoader(false);
+                            console.log(err);
+                        })
                 })
             } else {
                 errorToast("Please sign-In to add model.")
