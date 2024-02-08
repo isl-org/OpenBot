@@ -877,6 +877,7 @@ Blockly.Blocks["multipleObjectTracking"] = {
     }
 };
 
+//Blockly json structure for multiple object detection
 Blockly.Blocks["variableDetection"] = {
     init: function () {
         this.jsonInit({
@@ -927,7 +928,7 @@ Blockly.Blocks["variableDetection"] = {
     }
 };
 
-
+//Blockly json structure for text to speech
 Blockly.Blocks["inputSound"] = {
     init: function () {
         this.jsonInit({
@@ -948,3 +949,47 @@ Blockly.Blocks["inputSound"] = {
         });
     }
 };
+
+//Blockly json structure for display sensors values
+Blockly.Blocks["display_sensors"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "display sensor data %1",
+            "args0": [
+                {
+                    "type": "input_value",
+                    "name": "value",
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": "#4860b7",
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+
+//Blockly json structure for display string
+Blockly.Blocks["display_string"] = {
+    init: function () {
+        this.jsonInit({
+            "type": "block_type",
+            "message0": "display string %1",
+            "args0": [
+                {
+                    "type": "field_input",
+                    "name": "text",
+                    "text": "Hello"
+                }
+            ],
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": "#4860b7",
+            "tooltip": "",
+            "helpUrl": ""
+        });
+    }
+};
+

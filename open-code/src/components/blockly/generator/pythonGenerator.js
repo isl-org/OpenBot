@@ -295,3 +295,21 @@ pythonGenerator.forBlock['inputSound'] = function (block, generator) {
     code += "playSound('" + text + "')\n";
     return code;
 };
+
+pythonGenerator.forBlock['display_sensors'] = function (block, generator) {
+    let text = pythonGenerator.blockToCode(block.getInputTargetBlock('value'), generator);
+    let code = "";
+    if (text[0] === undefined) {
+        code += "displayItems('')\n";
+    } else {
+        code += "displayItems('" + text[0] + "')\n";
+    }
+    return code;
+};
+
+pythonGenerator.forBlock['display_string'] = function (block, generator) {
+    let text = block.getFieldValue('text');
+    let code = "";
+    code += "displayItems('" + text + "')\n";
+    return code;
+};

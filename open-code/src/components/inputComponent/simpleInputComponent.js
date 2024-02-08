@@ -38,8 +38,8 @@ export default function SimpleInputComponent(props) {
     let currentDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
     const [inputDOBValue, setInputDOBValue] = useState(value ? value : currentDate);
     const [modelTypeDropdown, setModelTypeDropdown] = useState("AUTOPILOT");
-    const [modelWidth, setModelWidth] = useState(322);
-    const [modelHeight, setModelHeight] = useState(322);
+    const [modelWidth, setModelWidth] = useState(256);
+    const [modelHeight, setModelHeight] = useState(96);
 
     //name change event handling
     function handleChange(e) {

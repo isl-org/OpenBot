@@ -20,6 +20,8 @@ export const Toolbox = (props) => {
                 <Block type="start"/>
                 <Block type="forever"/>
                 <Block type="wait"/>
+                <Block type="display_sensors"/>
+                <Block type="display_string"/>
                 <Block type="controls_if" gap="8">
                     <Value name="IF0">
                         <Shadow type="logic_boolean">
@@ -88,7 +90,6 @@ export const Toolbox = (props) => {
                 <Block type="variables_get"/>
                 <Block type="math_change"/>
                 <Block type="math_number"/>
-                <Block type="text"/>
             </Category>
 
             <Category name="Lights" colour={"#506481"}>

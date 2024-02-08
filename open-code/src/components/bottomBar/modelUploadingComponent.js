@@ -31,8 +31,8 @@ export function ModelUploadingComponent(params) {
         displayName: localFileName,
         type: "AUTOPILOT",
         class: "AUTOPILOT",
-        width: 322,
-        height: 322
+        width: 256,
+        height: 96
     })
     const [handleTypeDependency, setHandleTypeDependency] = useState(["AUTOPILOT"]);
 
