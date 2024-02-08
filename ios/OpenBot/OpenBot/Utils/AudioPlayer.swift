@@ -4,14 +4,16 @@
 
 import AVFoundation
 import UIKit
+import AVKit
+
 /**
     class for playing audio
  */
 class AudioPlayer : AVPlayer, AVSpeechSynthesizerDelegate  {
     var player: AVPlayer?
     var playerItem: AVPlayerItem?
+    var speechSynthesizer = AVSpeechSynthesizer()
     static let shared : AudioPlayer = AudioPlayer();
-    private let speechSynthesizer = AVSpeechSynthesizer()
 
     /**
      Initializer of AudioPlayer class with observers
@@ -143,7 +145,7 @@ class AudioPlayer : AVPlayer, AVSpeechSynthesizerDelegate  {
         if !speechSynthesizer.isSpeaking {
             let utterance = AVSpeechUtterance(string: input)
             utterance.voice = AVSpeechSynthesisVoice(language: "en-GB")
-            utterance.rate = 0.1
+            utterance.rate = 0.3
             speechSynthesizer.speak(utterance)
         }
     }

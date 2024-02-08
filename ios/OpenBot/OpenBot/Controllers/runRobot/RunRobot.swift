@@ -58,6 +58,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     var centerStopButtonXConstraint: NSLayoutConstraint!;
     var topResetButtonlConstraint: NSLayoutConstraint!;
     var centerResetButtonXConstraint: NSLayoutConstraint!;
+    private let sensor = sensorDataRetrieve.shared
 
     /**
       override function calls when view of controller loaded
@@ -77,6 +78,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandObject), name: .commandObject, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(createCamera), name: .createCameraView, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(setPosForPointGoalnavigation), name: .pointGoalNav, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(display), name: .displayItems, object: nil);
         setupNavigationBarItem();
         let modelItems = Common.loadAllModelItemsFromBundle()
         if (modelItems.count > 0) {
@@ -146,7 +148,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             centerResetButtonXConstraint = resetRobot.centerXAnchor.constraint(equalTo: view.centerXAnchor);
         } else {
             topResetButtonlConstraint?.isActive = false;
-            centerResetButtonXConstraint?.isActive = false
+            centerResetButtonXConstraint?.isActive = false;
             topResetButtonlConstraint = resetRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 210)
             centerResetButtonXConstraint = resetRobot.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 430)
         }
@@ -164,7 +166,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             centerlabelXConstraint = commandMessage.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         } else {
             topLabelConstraint?.isActive = false;
-            centerlabelXConstraint?.isActive = false
+            centerlabelXConstraint?.isActive = false;
             topLabelConstraint = commandMessage.topAnchor.constraint(equalTo: view.topAnchor, constant: 320)
             centerlabelXConstraint = commandMessage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 115)
         }
@@ -271,7 +273,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         self.count = self.count + 1;
         DispatchQueue.main.async {
             self.commandMessage.text = message;
-
         }
     }
 
@@ -646,6 +647,55 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: .CPU, numThreads: 1) as? Detector
         DispatchQueue.main.async {
             runRobot.isDetection = true;
+        }
+    }
+    
+    @objc func display(_ notification: Notification){
+        var message = notification.object as! String;
+        DispatchQueue.main.async {
+            self.sensor.sampleIMU();
+            switch(message.trimmingCharacters(in: .whitespaces)){
+            case "sonarReading()" :
+                self.commandMessage.text = "sonar : \(self.bluetooth.getSonar())";
+                break;
+            case "speedReading()" :
+                self.commandMessage.text = "speed : \(self.bluetooth.getSpeed())";
+                break;
+            case "voltageDividerReading()" :
+                self.commandMessage.text = "voltage : \(self.bluetooth.getVoltage())";
+                break;
+            case "gyroscopeReadingX()" :
+                self.commandMessage.text = "gyroscopeX : \(self.sensor.angularRateX)";
+                break;
+            case "gyroscopeReadingY()" :
+                self.commandMessage.text = "gyroscopeY : \(self.sensor.angularRateY)";
+                break;
+            case "gyroscopeReadingZ()" :
+                self.commandMessage.text = "gyroscopeZ : \(self.sensor.angularRateZ)";
+                break;
+            case "accelerationReadingX()" :
+                self.commandMessage.text = "accelerationX : \(self.sensor.accelerationX)";
+                break;
+            case "accelerationReadingY()" :
+                self.commandMessage.text = "accelerationY : \(self.sensor.accelerationY)";
+                break;
+            case "accelerationReadingZ()" :
+                self.commandMessage.text = "accelerationZ : \(self.sensor.accelerationZ)";
+                break;
+            case "magneticReadingX()" :
+                self.commandMessage.text = "magneticFieldX : \(self.sensor.magneticFieldX)";
+                break;
+            case "magneticReadingY()" :
+                self.commandMessage.text = "magneticFieldY : \(self.sensor.magneticFieldY)";
+                break;
+            case "magneticReadingZ()" :
+                self.commandMessage.text = "magneticFieldZ : \(self.sensor.magneticFieldZ)";
+                break;
+            default:
+                print("message:::",message)
+                self.commandMessage.text = message;
+                break;
+            }
         }
     }
 

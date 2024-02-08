@@ -63,7 +63,7 @@ class jsEvaluator {
         runOpenBotThreadClass = nil
         bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
     }
-
+    
     /**
      function defined for all the methods of openBot blockly
      */
@@ -272,6 +272,10 @@ class jsEvaluator {
                 let onLostFrames: @convention(block) (String, Int, String) -> Void = { (object, frames, task) in
                     self.runOpenBotThreadClass?.onLostFrames(object: object, frames: frames, task: task);
                 }
+                
+                let displayItems: @convention(block) (String) -> Void = { (inputString) in
+                    self.runOpenBotThreadClass?.displayItems(inputString: inputString);
+                }
 
                 context.setObject(moveForward,
                         forKeyedSubscript: Strings.moveForward as NSString)
@@ -377,6 +381,8 @@ class jsEvaluator {
                         forKeyedSubscript: "onDetect" as NSString);
                 context.setObject(onLostFrames,
                         forKeyedSubscript: "onLostFrames" as NSString);
+                context.setObject(displayItems,
+                        forKeyedSubscript: "displayItems" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -1046,7 +1052,6 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
-            print("object::::", object);
             runRobot.onDetection(object: object, model: model, task: task);
             taskStorage.addAttribute(classType: object, task: task, frames: 0, type: "detect");
             NotificationCenter.default.post(name: .createCameraView, object: "");
@@ -1064,6 +1069,13 @@ class jsEvaluator {
                 return
             }
             taskStorage.addAttribute(classType: object, task: task, frames: frames, type: "unDetect");
+        }
+        
+        func displayItems(inputString: String){
+            if isCancelled {
+                return
+            }
+            NotificationCenter.default.post(name: .displayItems, object: inputString);
         }
     }
 }
