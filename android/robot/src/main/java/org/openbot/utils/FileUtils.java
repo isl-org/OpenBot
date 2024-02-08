@@ -112,10 +112,7 @@ public class FileUtils {
 
   public static boolean updateModelConfig(Activity activity, Context context , List<Model> modelList, boolean isDrive) {
     String configFile = "config.json";
-
      GoogleServices googleServices= new GoogleServices(activity, context, new GoogleSignInCallback() {
-
-
       @Override
       public void onSignInSuccess(FirebaseUser account) {
 
@@ -136,7 +133,6 @@ public class FileUtils {
 
       }
     });
-     if (!isDrive) googleServices.createAndUploadJsonFile(modelList);
     try {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
       Writer writer = new FileWriter(activity.getFilesDir() + File.separator + configFile);

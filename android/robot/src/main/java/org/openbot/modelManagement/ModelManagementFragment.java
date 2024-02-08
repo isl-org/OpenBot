@@ -22,6 +22,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -31,9 +32,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import org.openbot.googleServices.GoogleServices;
+
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.nononsenseapps.filepicker.Utils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.openbot.R;
 import org.openbot.databinding.FragmentModelManagementBinding;
 import org.openbot.googleServices.GoogleServices;
@@ -52,77 +57,100 @@ import org.openbot.utils.FileUtils;
 import org.openbot.utils.PermissionUtils;
 
 public class ModelManagementFragment extends Fragment
-    implements OnItemClickListener<Model>, ModelAdapter.OnItemClickListener<Model> {
+        implements OnItemClickListener<Model>, ModelAdapter.OnItemClickListener<Model> {
 
 
-  private FragmentModelManagementBinding binding;
-  public static final String ALL = "ALL";
-  private ModelAdapter adapter;
-  private List<Model> masterList;
-  private ActivityResultLauncher<Intent> mStartForResult;
-  private OnBackPressedCallback onBackPressedCallback;
-  private boolean isDownloading = false;
+    private FragmentModelManagementBinding binding;
+    public static final String ALL = "ALL";
+    private ModelAdapter adapter;
+    private List<Model> masterList;
+    private ActivityResultLauncher<Intent> mStartForResult;
+    private OnBackPressedCallback onBackPressedCallback;
+    private boolean isDownloading = false;
 
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+    private GoogleServices googleServices;
 
-    mStartForResult =
-        registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-              if (result.getResultCode() == Activity.RESULT_OK) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        googleServices = new GoogleServices(requireActivity(), requireContext(), new GoogleSignInCallback() {
+            @Override
+            public void onSignInSuccess(FirebaseUser account) {
 
-                Intent intent = result.getData();
-                // Handle the Intent
-                  assert intent != null;
-                  List<Uri> files = Utils.getSelectedFilesFromResult(intent);
-
-                String fileName = getFileNameFromUri(files.get(0));
-                if (FileUtils.checkFileExistence(requireActivity(), fileName)) {
-                  AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-                  builder.setTitle(R.string.file_available_title);
-                  builder.setMessage(R.string.file_available_body);
-                  builder.setPositiveButton(
-                      "Yes", (dialog, id) -> processModelFromStorage(files, fileName));
-                  builder.setNegativeButton(
-                      "Cancel",
-                      (dialog, id) -> {
-                        // User cancelled the dialog
-                      });
-                  AlertDialog dialog = builder.create();
-                  dialog.show();
-                } else {
-                  processModelFromStorage(files, fileName);
-                }
-              }
-            });
-
-    onBackPressedCallback =
-        new OnBackPressedCallback(true) {
-          @Override
-          public void handleOnBackPressed() {
-            if (isDownloading) {
-              AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-              builder.setTitle(R.string.model_download_title);
-              builder.setMessage(R.string.model_download_body);
-              builder.setPositiveButton(
-                  "Yes",
-                  (dialog, id) -> {
-                    onBackPressedCallback.setEnabled(false);
-                    requireActivity().onBackPressed();
-                  });
-              builder.setNegativeButton("Cancel", (dialog, id) -> {});
-              AlertDialog dialog = builder.create();
-              dialog.show();
-            } else {
-              onBackPressedCallback.setEnabled(false);
-              requireActivity().onBackPressed();
             }
-          }
-        };
-    requireActivity().getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
-  }
+
+            @Override
+            public void onSignInFailed(Exception exception) {
+
+            }
+
+            @Override
+            public void onSignOutSuccess() {
+
+            }
+
+            @Override
+            public void onSignOutFailed(Exception exception) {
+
+            }
+        });
+        mStartForResult =
+                registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            if (result.getResultCode() == Activity.RESULT_OK) {
+
+                                Intent intent = result.getData();
+                                // Handle the Intent
+                                assert intent != null;
+                                List<Uri> files = Utils.getSelectedFilesFromResult(intent);
+
+                                String fileName = getFileNameFromUri(files.get(0));
+                                if (FileUtils.checkFileExistence(requireActivity(), fileName)) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                                    builder.setTitle(R.string.file_available_title);
+                                    builder.setMessage(R.string.file_available_body);
+                                    builder.setPositiveButton(
+                                            "Yes", (dialog, id) -> processModelFromStorage(files, fileName));
+                                    builder.setNegativeButton(
+                                            "Cancel",
+                                            (dialog, id) -> {
+                                                // User cancelled the dialog
+                                            });
+                                    AlertDialog dialog = builder.create();
+                                    dialog.show();
+                                } else {
+                                    processModelFromStorage(files, fileName);
+                                }
+                            }
+                        });
+
+        onBackPressedCallback =
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        if (isDownloading) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                            builder.setTitle(R.string.model_download_title);
+                            builder.setMessage(R.string.model_download_body);
+                            builder.setPositiveButton(
+                                    "Yes",
+                                    (dialog, id) -> {
+                                        onBackPressedCallback.setEnabled(false);
+                                        requireActivity().onBackPressed();
+                                    });
+                            builder.setNegativeButton("Cancel", (dialog, id) -> {
+                            });
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        } else {
+                            onBackPressedCallback.setEnabled(false);
+                            requireActivity().onBackPressed();
+                        }
+                    }
+                };
+        requireActivity().getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
+    }
 
     /**
      * Extracts the file name from a given Uri.
@@ -155,244 +183,247 @@ public class ModelManagementFragment extends Fragment
         return fileName;
     }
 
-  private void processModelFromStorage(List<Uri> files, String fileName) {
+    private void processModelFromStorage(List<Uri> files, String fileName) {
 
-    Model item =
-        new Model(
-            masterList.size() + 1,
-            Model.CLASS.AUTOPILOT,
-            Model.TYPE.CMDNAV,
-            fileName,
-            Model.PATH_TYPE.FILE,
-            requireActivity().getFilesDir() + File.separator + fileName,
-            "256x96");
-    EditModelDialogFragment edMbS =
-        new EditModelDialogFragment(
-            item,
-            item1 -> {
-              try {
-                InputStream inputStream =
-                    requireActivity().getContentResolver().openInputStream(files.get(0));
-                FileUtils.copyFile(
-                    inputStream, fileName, requireActivity().getFilesDir().getAbsolutePath());
-              } catch (IOException e) {
-                e.printStackTrace();
-              }
-              masterList.add(item1);
-              showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
-              FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
-                Gson gson = new Gson();
-                String json = gson.toJson(masterList);
-              Toast.makeText(
-                      requireContext().getApplicationContext(),
-                      "Model added: " + fileName,
-                      Toast.LENGTH_SHORT)
-                  .show();
-            });
-    edMbS.show(getChildFragmentManager(), edMbS.getTag());
-  }
+        Model item =
+                new Model(
+                        masterList.size() + 1,
+                        Model.CLASS.AUTOPILOT,
+                        Model.TYPE.CMDNAV,
+                        fileName,
+                        Model.PATH_TYPE.FILE,
+                        requireActivity().getFilesDir() + File.separator + fileName,
+                        "256x96");
+        EditModelDialogFragment edMbS =
+                new EditModelDialogFragment(
+                        item,
+                        item1 -> {
+                            try {
+                                InputStream inputStream =
+                                        requireActivity().getContentResolver().openInputStream(files.get(0));
+                                FileUtils.copyFile(
+                                        inputStream, fileName, requireActivity().getFilesDir().getAbsolutePath());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            masterList.add(item1);
+                            showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
+                            FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
+                            Gson gson = new Gson();
+                            String json = gson.toJson(masterList);
+                            Toast.makeText(
+                                            requireContext().getApplicationContext(),
+                                            "Model added: " + fileName,
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                        });
+        edMbS.show(getChildFragmentManager(), edMbS.getTag());
+    }
 
-  private void openPicker() {
-      Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-      intent.setType("application/octet-stream"); // Specify the MIME type for TFLite files
-      intent.addCategory(Intent.CATEGORY_OPENABLE);
+    private void openPicker() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("application/octet-stream"); // Specify the MIME type for TFLite files
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-      mStartForResult.launch(intent);
-  }
+        mStartForResult.launch(intent);
+    }
 
-  @Nullable
-  @Override
-  public View onCreateView(
-      @NonNull LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    binding = FragmentModelManagementBinding.inflate(inflater, container, false);
-    return binding.getRoot();
-  }
+    @Nullable
+    @Override
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
+        binding = FragmentModelManagementBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-  @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
-    GoogleServices googleServices = new GoogleServices(requireActivity(), requireContext(), new GoogleSignInCallback() {
-          @Override
-          public void onSignInSuccess(FirebaseUser account) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
+        GoogleServices googleServices = new GoogleServices(requireActivity(), requireContext(), new GoogleSignInCallback() {
+            @Override
+            public void onSignInSuccess(FirebaseUser account) {
 
-          }
+            }
 
-          @Override
-          public void onSignInFailed(Exception exception) {
+            @Override
+            public void onSignInFailed(Exception exception) {
 
-          }
+            }
 
-          @Override
-          public void onSignOutSuccess() {
+            @Override
+            public void onSignOutSuccess() {
 
-          }
+            }
 
-          @Override
-          public void onSignOutFailed(Exception exception) {
+            @Override
+            public void onSignOutFailed(Exception exception) {
 
-          }
-      });
-    List<String> modelTypes =
-        Arrays.stream(Model.TYPE.values()).map(Enum::toString).collect(Collectors.toList());
-    modelTypes.add(0, ALL);
-      ObjectAnimator rotation = ObjectAnimator.ofFloat(binding.autoSync, "rotation", 360f, 0f);
-      rotation.setDuration(1000);
-      rotation.setRepeatCount(ObjectAnimator.INFINITE);
-      rotation.setInterpolator(new LinearInterpolator());
-
-    ArrayAdapter<String> modelAdapter =
-        new ArrayAdapter<>(
-            requireContext(), android.R.layout.simple_dropdown_item_1line, modelTypes);
-    binding.modelSpinner.setAdapter(modelAdapter);
-    binding.autoSync.setOnClickListener(v -> {
-        rotation.start();
-        googleServices.getConfigFileContent(rotation, binding.autoSync, adapter);
-    });
-    adapter = new ModelAdapter(loadModelList(ALL), requireContext(), this);
-    binding.modelListContainer.setLayoutManager(new LinearLayoutManager(requireContext()));
-    binding.modelListContainer.setAdapter(adapter);
-    binding.modelListContainer.addItemDecoration(
-        new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-    binding.modelSpinner.setOnItemSelectedListener(
-        new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            showModels(loadModelList(parent.getItemAtPosition(position).toString()));
-          }
-
-          @Override
-          public void onNothingSelected(AdapterView<?> parent) {}
+            }
         });
+        List<String> modelTypes =
+                Arrays.stream(Model.TYPE.values()).map(Enum::toString).collect(Collectors.toList());
+        modelTypes.add(0, ALL);
+        ObjectAnimator rotation = ObjectAnimator.ofFloat(binding.autoSync, "rotation", 360f, 0f);
+        rotation.setDuration(1000);
+        rotation.setRepeatCount(ObjectAnimator.INFINITE);
+        rotation.setInterpolator(new LinearInterpolator());
 
-    binding.addModel.setOnClickListener(
-        v -> {
-          if (!PermissionUtils.hasStoragePermission(requireActivity()))
-            requestPermissionLauncher.launch(Constants.PERMISSION_STORAGE);
-          else if (PermissionUtils.shouldShowRational(
-              requireActivity(), Constants.PERMISSION_STORAGE)) {
-            PermissionUtils.showStoragePermissionModelManagementToast(requireActivity());
-          } else openPicker();
+        ArrayAdapter<String> modelAdapter =
+                new ArrayAdapter<>(
+                        requireContext(), android.R.layout.simple_dropdown_item_1line, modelTypes);
+        binding.modelSpinner.setAdapter(modelAdapter);
+        binding.autoSync.setOnClickListener(v -> {
+            rotation.start();
+            googleServices.getConfigFileContent(rotation, binding.autoSync, adapter);
         });
-  }
+        adapter = new ModelAdapter(loadModelList(ALL), requireContext(), this);
+        binding.modelListContainer.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.modelListContainer.setAdapter(adapter);
+        binding.modelListContainer.addItemDecoration(
+                new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+        binding.modelSpinner.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        showModels(loadModelList(parent.getItemAtPosition(position).toString()));
+                    }
 
-  private void showModels(List<Model> modelList) {
-    adapter.setItems(modelList);
-  }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
 
-  private List<Model> loadModelList(String filter) {
-
-    if (masterList == null) masterList = new ArrayList<>();
-
-    List<Model> modelInfoList = new ArrayList<>();
-    if (filter.equals(Model.TYPE.CMDNAV.toString()) || filter.equals(ALL)) {
-      modelInfoList.addAll(
-          masterList.stream()
-              .filter(f -> f.type.equals(Model.TYPE.CMDNAV))
-              .collect(Collectors.toList()));
+        binding.addModel.setOnClickListener(
+                v -> {
+                    if (!PermissionUtils.hasStoragePermission(requireActivity()))
+                        requestPermissionLauncher.launch(Constants.PERMISSION_STORAGE);
+                    else if (PermissionUtils.shouldShowRational(
+                            requireActivity(), Constants.PERMISSION_STORAGE)) {
+                        PermissionUtils.showStoragePermissionModelManagementToast(requireActivity());
+                    } else openPicker();
+                });
     }
 
-    if (filter.equals(Model.TYPE.GOALNAV.toString()) || filter.equals(ALL)) {
-      modelInfoList.addAll(
-          masterList.stream()
-              .filter(f -> f.type.equals(Model.TYPE.GOALNAV))
-              .collect(Collectors.toList()));
+    private void showModels(List<Model> modelList) {
+        adapter.setItems(modelList);
     }
 
-    if (filter.equals(Model.TYPE.DETECTOR.toString()) || filter.equals(ALL)) {
-      modelInfoList.addAll(
-          masterList.stream()
-              .filter(f -> f.type.equals(Model.TYPE.DETECTOR))
-              .collect(Collectors.toList()));
-    }
-    return modelInfoList;
-  }
+    private List<Model> loadModelList(String filter) {
 
-  @Override
-  public void onItemClick(Model item) {
+        if (masterList == null) masterList = new ArrayList<>();
 
-    @SuppressLint("NotifyDataSetChanged") EditModelDialogFragment edMbS =
-        new EditModelDialogFragment(
-            item,
-            item1 -> {
-              adapter.notifyDataSetChanged();
-              FileUtils.updateModelConfig(requireActivity(),requireContext(), masterList, false);
-              System.out.println(requireActivity());
-            });
-    edMbS.show(getChildFragmentManager(), edMbS.getTag());
-  }
-
-  @Override
-  public boolean onModelDownloadClicked() {
-    ConnectivityManager cm =
-        (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-    NetworkInfo nInfo = cm.getActiveNetworkInfo();
-    isDownloading = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
-    if (!isDownloading)
-      Toast.makeText(
-              requireContext().getApplicationContext(),
-              "Please connect to the internet to download models.",
-              Toast.LENGTH_SHORT)
-          .show();
-    return isDownloading;
-  }
-
-  @Override
-  public void onModelDownloaded(boolean status, Model mItem) {
-    if (status && isAdded()) {
-      isDownloading = false;
-      for (Model model : masterList) {
-        if (model.id.equals(mItem.id)) {
-          model.setPath(requireActivity().getFilesDir() + File.separator + model.name);
-          model.setPathType(Model.PATH_TYPE.FILE);
-          //         adapter.notifyDataSetChanged();
-          FileUtils.updateModelConfig(requireActivity(),requireContext(), masterList, false);
-          break;
+        List<Model> modelInfoList = new ArrayList<>();
+        if (filter.equals(Model.TYPE.CMDNAV.toString()) || filter.equals(ALL)) {
+            modelInfoList.addAll(
+                    masterList.stream()
+                            .filter(f -> f.type.equals(Model.TYPE.CMDNAV))
+                            .collect(Collectors.toList()));
         }
-      }
+
+        if (filter.equals(Model.TYPE.GOALNAV.toString()) || filter.equals(ALL)) {
+            modelInfoList.addAll(
+                    masterList.stream()
+                            .filter(f -> f.type.equals(Model.TYPE.GOALNAV))
+                            .collect(Collectors.toList()));
+        }
+
+        if (filter.equals(Model.TYPE.DETECTOR.toString()) || filter.equals(ALL)) {
+            modelInfoList.addAll(
+                    masterList.stream()
+                            .filter(f -> f.type.equals(Model.TYPE.DETECTOR))
+                            .collect(Collectors.toList()));
+        }
+        return modelInfoList;
     }
-  }
 
-  @Override
-  public void onModelDelete(Model mItem) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-    builder.setTitle(R.string.model_delete_title);
-    builder.setMessage(R.string.model_delete_body);
-    builder.setPositiveButton(
-        "Yes",
-        (dialog, id) -> {
-          new File(mItem.path).delete();
-          int index = masterList.indexOf(mItem);
-          Model originalModelConfig =
-              FileUtils.getOriginalModelFromConfig(requireActivity(), mItem);
-          if (originalModelConfig == null) {
-            if (mItem.pathType == Model.PATH_TYPE.FILE) {
-              masterList.remove(mItem);
-              adapter.notifyItemRemoved(index);
+    @Override
+    public void onItemClick(Model item) {
+
+        @SuppressLint("NotifyDataSetChanged") EditModelDialogFragment edMbS =
+                new EditModelDialogFragment(
+                        item,
+                        item1 -> {
+                            adapter.notifyDataSetChanged();
+                            FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
+                        });
+        edMbS.show(getChildFragmentManager(), edMbS.getTag());
+    }
+
+    @Override
+    public boolean onModelDownloadClicked() {
+        ConnectivityManager cm =
+                (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo nInfo = cm.getActiveNetworkInfo();
+        isDownloading = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
+        if (!isDownloading)
+            Toast.makeText(
+                            requireContext().getApplicationContext(),
+                            "Please connect to the internet to download models.",
+                            Toast.LENGTH_SHORT)
+                    .show();
+        return isDownloading;
+    }
+
+    @Override
+    public void onModelDownloaded(boolean status, Model mItem) {
+        if (status && isAdded()) {
+            isDownloading = false;
+            for (Model model : masterList) {
+                if (model.id.equals(mItem.id)) {
+                    model.setPath(requireActivity().getFilesDir() + File.separator + model.name);
+                    model.setPathType(Model.PATH_TYPE.FILE);
+                    googleServices.createAndUploadJsonFile(masterList);
+                    FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
+                    //adapter.notifyDataSetChanged();
+                    break;
+                }
             }
-          } else {
-            mItem.setPath(originalModelConfig.path);
-            mItem.setPathType(originalModelConfig.pathType);
-            adapter.notifyItemChanged(index);
-          }
-            FileUtils.updateModelConfig(requireActivity(),requireContext(), masterList, false);
-            requireActivity().runOnUiThread(() -> adapter.setItems(loadModelList(binding.modelSpinner.getSelectedItem().toString())));
+        }
+    }
+
+    @Override
+    public void onModelDelete(Model mItem) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setTitle(R.string.model_delete_title);
+        builder.setMessage(R.string.model_delete_body);
+        builder.setPositiveButton(
+                "Yes",
+                (dialog, id) -> {
+                    new File(mItem.path).delete();
+                    int index = masterList.indexOf(mItem);
+                    Model originalModelConfig =
+                            FileUtils.getOriginalModelFromConfig(requireActivity(), mItem);
+                    if (originalModelConfig == null) {
+                        if (mItem.pathType == Model.PATH_TYPE.FILE) {
+                            masterList.remove(mItem);
+                            adapter.notifyItemRemoved(index);
+                        }
+                    } else {
+                        mItem.setPath(originalModelConfig.path);
+                        mItem.setPathType(originalModelConfig.pathType);
+                        adapter.notifyItemChanged(index);
+                    }
+                    FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
+                    requireActivity().runOnUiThread(() -> adapter.setItems(loadModelList(binding.modelSpinner.getSelectedItem().toString())));
+                    googleServices.createAndUploadJsonFile(masterList);
+                });
+        builder.setNegativeButton("Cancel", (dialog, id) -> {
         });
-    builder.setNegativeButton("Cancel", (dialog, id) -> {});
-    AlertDialog dialog = builder.create();
-    dialog.show();
-  }
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
-  private final ActivityResultLauncher<String> requestPermissionLauncher =
-      registerForActivityResult(
-          new ActivityResultContracts.RequestPermission(),
-          isGranted -> {
-            if (isGranted) {
-              openPicker();
-            } else {
-              PermissionUtils.showStoragePermissionModelManagementToast(requireActivity());
-            }
-          });
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.RequestPermission(),
+                    isGranted -> {
+                        if (isGranted) {
+                            openPicker();
+                        } else {
+                            PermissionUtils.showStoragePermissionModelManagementToast(requireActivity());
+                        }
+                    });
 }
