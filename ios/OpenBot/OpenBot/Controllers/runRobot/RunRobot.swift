@@ -691,6 +691,34 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             case "magneticReadingZ()" :
                 self.commandMessage.text = "magneticFieldZ : \(self.sensor.magneticFieldZ)";
                 break;
+            case "frontWheelReading()" :
+                let speedometer = self.bluetooth.speedometer;
+                if speedometer != "" {
+                    let index_1 = speedometer.index(after: speedometer.startIndex)
+                    let indexOfComma = speedometer.firstIndex(of: ",") ?? index_1
+                    let index_2 = speedometer.index(before: indexOfComma)
+                    if let leftFront = Float(speedometer[index_1...index_2]) {
+                        // 'leftFront' is now a non-optional Float
+                        self.commandMessage.text = "frontWheel : \(String(leftFront))";
+                    } else {
+                        self.commandMessage.text = "";
+                    }
+                }
+                break;
+            case "backWheelReading()" :
+                let speedometer = self.bluetooth.speedometer;
+                if speedometer != "" {
+                    let index_1 = speedometer.index(after: speedometer.startIndex)
+                    let indexOfComma = speedometer.firstIndex(of: ",") ?? index_1
+                    let index_2 = speedometer.index(before: indexOfComma)
+                    if let back = Float(speedometer[speedometer.index(after: indexOfComma)...]) {
+                        // 'leftFront' is now a non-optional Float
+                        self.commandMessage.text = "frontWheel : \(String(back))";
+                    } else {
+                        self.commandMessage.text = "";
+                    }
+                }
+                break;
             default:
                 print("message:::",message)
                 self.commandMessage.text = message;
