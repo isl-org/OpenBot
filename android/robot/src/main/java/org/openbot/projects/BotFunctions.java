@@ -489,6 +489,93 @@ public void ledBrightness(float value) {
   }
 
   @JavascriptInterface
+  public void displayString(String text) {
+    mActivity.runOnUiThread(() -> {
+      binding.jsCommand.setText(text);
+    });
+  }
+
+  @JavascriptInterface
+  public void displaySensorData(String sensorType) {
+      String type = "";
+      String finalText = "";
+      String prefix = "Android.";
+      if (sensorType.startsWith(prefix)) {
+        finalText = sensorType.substring(prefix.length());
+      }
+    switch (finalText.trim()){
+        case "sonarReading()" :
+            System.out.println("in sonar");
+            type = "sonar : " + vehicle.getSonarReading();
+            break;
+        case "speedReading()" :
+            type = "speed : " + (vehicle.getLeftWheelRpm() + vehicle.getRightWheelRpm()) / 2;
+            break;
+        case "voltageDividerReading()" :
+            type = "voltage : " + vehicle.getBatteryVoltage();
+            break;
+        case "frontWheelReading()" :
+            type = "frontWheel : " + vehicle.isHasWheelOdometryFront();
+            break;
+        case "backWheelReading()" :
+            type = "backWheel : " + vehicle.isHasWheelOdometryBack();
+            break;
+        case "gyroscopeReadingX()" :
+            sensorManager.registerListener(
+                    this, gyroscopeSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "gyroscopeX : " + gyroscopeValues[0];
+            break;
+        case "gyroscopeReadingY()" :
+            sensorManager.registerListener(
+                    this, gyroscopeSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "gyroscopeY : " + gyroscopeValues[1];
+            break;
+        case "gyroscopeReadingZ()" :
+            sensorManager.registerListener(
+                    this, gyroscopeSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "gyroscopeZ : " + gyroscopeValues[2];
+            break;
+        case "accelerationReadingX" :
+            sensorManager.registerListener(
+                    this, accelerometerSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "accelerationX : " + accelerometerValues[0];
+            break;
+        case "accelerationReadingY" :
+            sensorManager.registerListener(
+                    this, accelerometerSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "accelerationY : " + accelerometerValues[1];
+            break;
+        case "accelerationReadingZ" :
+            sensorManager.registerListener(
+                    this, accelerometerSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "accelerationZ : " + accelerometerValues[2];
+            break;
+        case "magneticReadingX" :
+            sensorManager.registerListener(
+                    this, magneticSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "magneticX : " + magneticFieldValues[0];
+            break;
+        case "magneticReadingY" :
+            sensorManager.registerListener(
+                    this, magneticSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "magneticY : " + magneticFieldValues[1];
+            break;
+        case "magneticReadingZ" :
+            sensorManager.registerListener(
+                    this, magneticSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "magneticZ : " + magneticFieldValues[2];
+            break;
+        default:
+            break;
+      }
+    String finalType = type;
+    mActivity.runOnUiThread(() -> {
+      binding.jsCommand.setText(finalType);
+    });
+  }
+
+
+    @JavascriptInterface
   public void reachPosition(int x, int y) {
     Timber.tag("Ai Blocks").i(x + ", " + y);
   }
