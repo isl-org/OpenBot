@@ -1,5 +1,7 @@
 package org.openbot.projects;
 
+import static org.webrtc.ContextUtils.getApplicationContext;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -7,6 +9,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.speech.tts.TextToSpeech;
 import android.webkit.JavascriptInterface;
 
 import com.google.ar.core.Pose;
@@ -19,6 +22,7 @@ import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -49,6 +53,7 @@ public class BotFunctions implements SensorEventListener {
   private final float[] gyroscopeValues = new float[3]; // Array to store gyroscope values
   private final float[] accelerometerValues = new float[3]; // Array to store accelerometer values
   private final float[] magneticFieldValues = new float[3]; // Array to store magnetic values
+  TextToSpeech tts;
 
   /**
    * get vehicle and audioPlayer in parameters to control openBot commands.
@@ -464,6 +469,23 @@ public void ledBrightness(float value) {
       }
     }
     BlocklyExecutingFragment.isOnDetection = true;
+  }
+
+  @JavascriptInterface
+  public void playSound(String classType) {
+    mActivity.runOnUiThread(() -> {
+      binding.jsCommand.setText("Playing input sound.");
+    });
+    tts = new TextToSpeech(mContext, new TextToSpeech.OnInitListener() {
+      @Override
+      public void onInit(int i) {
+        if(i == TextToSpeech.SUCCESS){
+          tts.setLanguage(Locale.US);
+          tts.setSpeechRate(1.0f);
+          tts.speak(classType,TextToSpeech.QUEUE_ADD,null);
+        }
+      }
+    });
   }
 
   @JavascriptInterface
