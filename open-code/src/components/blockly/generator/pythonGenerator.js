@@ -300,9 +300,9 @@ pythonGenerator.forBlock['display_sensors'] = function (block, generator) {
     let text = pythonGenerator.blockToCode(block.getInputTargetBlock('value'), generator);
     let code = "";
     if (text[0] === undefined) {
-        code += "displayItems('')\n";
+        code += "displaySensorData('')\n";
     } else {
-        code += "displayItems('" + text[0] + "')\n";
+        code += "displaySensorData('" + text[0] + "')\n";
     }
     return code;
 };
@@ -310,6 +310,6 @@ pythonGenerator.forBlock['display_sensors'] = function (block, generator) {
 pythonGenerator.forBlock['display_string'] = function (block, generator) {
     let text = block.getFieldValue('text');
     let code = "";
-    code += "displayItems('" + text + "')\n";
+    code += "displayString('" + text + "')\n";
     return code;
 };
