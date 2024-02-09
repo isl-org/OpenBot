@@ -273,8 +273,12 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.onLostFrames(object: object, frames: frames, task: task);
                 }
                 
-                let displayItems: @convention(block) (String) -> Void = { (inputString) in
-                    self.runOpenBotThreadClass?.displayItems(inputString: inputString);
+                let displaySensorData: @convention(block) (String) -> Void = { (inputString) in
+                    self.runOpenBotThreadClass?.displaySensorData(inputString: inputString);
+                }
+                
+                let displayString: @convention(block) (String) -> Void = { (inputString) in
+                    self.runOpenBotThreadClass?.displayString(inputString: inputString);
                 }
 
                 context.setObject(moveForward,
@@ -381,8 +385,10 @@ class jsEvaluator {
                         forKeyedSubscript: "onDetect" as NSString);
                 context.setObject(onLostFrames,
                         forKeyedSubscript: "onLostFrames" as NSString);
-                context.setObject(displayItems,
-                        forKeyedSubscript: "displayItems" as NSString);
+                context.setObject(displaySensorData,
+                        forKeyedSubscript: "displaySensorData" as NSString);
+                context.setObject(displayString,
+                        forKeyedSubscript: "displayString" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -1071,7 +1077,14 @@ class jsEvaluator {
             taskStorage.addAttribute(classType: object, task: task, frames: frames, type: "unDetect");
         }
         
-        func displayItems(inputString: String){
+        func displaySensorData(inputString: String){
+            if isCancelled {
+                return
+            }
+            NotificationCenter.default.post(name: .displayItems, object: inputString);
+        }
+        
+        func displayString(inputString: String){
             if isCancelled {
                 return
             }
