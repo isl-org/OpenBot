@@ -375,9 +375,9 @@ public class ModelManagementFragment extends Fragment
                 if (model.id.equals(mItem.id)) {
                     model.setPath(requireActivity().getFilesDir() + File.separator + model.name);
                     model.setPathType(Model.PATH_TYPE.FILE);
-                    googleServices.createAndUploadJsonFile(masterList);
                     FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
                     //adapter.notifyDataSetChanged();
+                    googleServices.createAndUploadJsonFile(masterList);
                     break;
                 }
             }
