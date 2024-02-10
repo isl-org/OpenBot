@@ -84,9 +84,12 @@ public class RLFragment extends CameraFragment {
 
 
 
-    private static final long LOGGING_DURATION_MILLIS = 20000; // 20 seconds
+    private static final long LOGGING_DURATION_MILLIS = 15000; // 15 seconds
     private long loggingStartTime;
     private Handler timerHandler;
+
+    private Handler randomActionsHandler;
+    private static final long RANDOM_ACTIONS_INTERVAL = 500;
 
 
 
@@ -219,6 +222,7 @@ public class RLFragment extends CameraFragment {
         handler = new Handler(handlerThread.getLooper());
 
         timerHandler = new Handler();
+        randomActionsHandler = new Handler();
         super.onResume();
     }
 
@@ -229,6 +233,8 @@ public class RLFragment extends CameraFragment {
             handlerThread.join();
             handlerThread = null;
             handler = null;
+            randomActionsHandler.removeCallbacksAndMessages(null); // Remove any pending callbacks
+            randomActionsHandler = null;
         } catch (final InterruptedException e) {
             e.printStackTrace();
         }
@@ -292,7 +298,7 @@ public class RLFragment extends CameraFragment {
     }
 
     protected void sendInfoToSensorService() { //This is to send the information for the action and reward
-        RandomActions();
+
         long[] info = {actions[0], actions[1], actions[2], rewards, done};
         String string_info = Arrays.toString(info);
         if (sensorMessenger != null) {
@@ -305,6 +311,7 @@ public class RLFragment extends CameraFragment {
     }
     private void startLogging() {
         done = 0;
+        startRandomActions();
         logFolder =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                         .getAbsolutePath()
@@ -324,7 +331,9 @@ public class RLFragment extends CameraFragment {
                     try {
                         // Send current vehicle state to log
                         TimeUnit.MILLISECONDS.sleep(500);
+                        RandomActions();
                         sendControlToSensorService();
+
                         sendInfoToSensorService();
                         //sendIndicatorToSensorService();
 
@@ -343,6 +352,7 @@ public class RLFragment extends CameraFragment {
         timerHandler.removeCallbacks(timerRunnable);
         done = 1;
         sendInfoToSensorService();
+        stopRandomActions();
 
         if (sensorConnection != null) requireActivity().unbindService(sensorConnection);
         requireActivity().stopService(intentSensorService);
@@ -689,17 +699,35 @@ public class RLFragment extends CameraFragment {
 
         // Set the randomly chosen index to 1
         actions[randomIndex] = 1;
-        if (actions[0] == 1)
-        {
-            vehicle.setControl(50,50);
-        }
-        if (actions[1] == 1 || actions[2] == 1)
-        {
-            vehicle.setControl(0f, 0f);
+        if(loggingEnabled) {
+            if (actions[0] == 1) {
+                vehicle.setControl(0.3f, 0.3f);
+                handleDriveCommand();
+            }
+            if (actions[1] == 1 || actions[2] == 1) {
+                vehicle.setControl(0f, 0f);
+                handleDriveCommand();
+            }
         }
 
         //New comment for testing
 
     }
+
+    private void startRandomActions() {
+        randomActionsHandler.postDelayed(randomActionsRunnable, RANDOM_ACTIONS_INTERVAL);
+    }
+
+    private void stopRandomActions() {
+        randomActionsHandler.removeCallbacks(randomActionsRunnable);
+    }
+
+    private Runnable randomActionsRunnable = new Runnable() {
+        @Override
+        public void run() {
+            RandomActions(); // Generate random actions
+            randomActionsHandler.postDelayed(this, RANDOM_ACTIONS_INTERVAL); // Schedule next random actions generation
+        }
+    };
 }
 

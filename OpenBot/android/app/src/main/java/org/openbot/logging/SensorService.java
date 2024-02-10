@@ -227,7 +227,7 @@ public class SensorService extends Service implements SensorEventListener {
     indicatorLog = openLog(logFolder, "indicatorLog.txt");
     appendLog(indicatorLog, "timestamp[ns],signal");
 
-    infoLog = openLog(logFolder, "indicatorLog.txt");
+    infoLog = openLog(logFolder, "infoLog.txt");
     appendLog(infoLog, "timestamp[ns], actions, rewards, done");
 
     if (preferencesManager.getSensorStatus(Enums.SensorType.VEHICLE.getSensor())) {

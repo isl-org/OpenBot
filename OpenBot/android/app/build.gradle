@@ -7,7 +7,9 @@ appVersioning {
      * Git root directory used for fetching git tags.
      * Use this to explicitly set the git root directory when the root Gradle project is not the git root directory.
      */
-    gitRootDirectory.set(rootProject.file("../")) // if the .git directory is in the root Gradle project's parent directory.
+    //gitRootDirectory.set(rootProject.file("../")) // if the .git directory is in the root Gradle project's parent directory.
+    gitRootDirectory.set(project.file("C:/Users/lilou/Documents/2Master/OpenBot"))
+
 }
 
 apply plugin: 'com.android.application'

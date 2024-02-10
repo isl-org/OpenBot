@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/lilou/Documents/Master/OpenBot/android/opencv/libcxx_helper
+# Install script for directory: C:/Users/lilou/Documents/2Master/OpenBot/OpenBot/android/opencv/libcxx_helper
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/lilou/Documents/Master/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/arm64-v8a/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/lilou/Documents/2Master/OpenBot/OpenBot/android/opencv/.cxx/Debug/4p4d1w10/arm64-v8a/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
