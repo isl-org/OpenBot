@@ -1,19 +1,19 @@
 {
   "buildFiles": [
-    "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\android\\opencv\\libcxx_helper\\CMakeLists.txt"
+    "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\OpenBot\\android\\opencv\\libcxx_helper\\CMakeLists.txt"
   ],
   "cleanCommandsComponents": [
     [
       "C:\\Users\\lilou\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
       "-C",
-      "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\android\\opencv\\.cxx\\RelWithDebInfo\\4e6r495m\\x86",
+      "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\OpenBot\\android\\opencv\\.cxx\\RelWithDebInfo\\4e6r495m\\x86",
       "clean"
     ]
   ],
   "buildTargetsCommandComponents": [
     "C:\\Users\\lilou\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
     "-C",
-    "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\android\\opencv\\.cxx\\RelWithDebInfo\\4e6r495m\\x86",
+    "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\OpenBot\\android\\opencv\\.cxx\\RelWithDebInfo\\4e6r495m\\x86",
     "{LIST_OF_TARGETS_TO_BUILD}"
   ],
   "libraries": {
@@ -21,7 +21,7 @@
       "toolchain": "toolchain",
       "abi": "x86",
       "artifactName": "opencv_jni_shared",
-      "output": "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\android\\opencv\\.cxx\\RelWithDebInfo\\4e6r495m\\x86\\libopencv_jni_shared.a"
+      "output": "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\OpenBot\\android\\opencv\\.cxx\\RelWithDebInfo\\4e6r495m\\x86\\libopencv_jni_shared.a"
     }
   },
   "toolchains": {

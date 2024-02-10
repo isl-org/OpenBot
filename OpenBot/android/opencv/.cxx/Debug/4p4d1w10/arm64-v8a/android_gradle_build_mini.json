@@ -1,26 +1,26 @@
 {
   "buildFiles": [
-    "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\android\\opencv\\libcxx_helper\\CMakeLists.txt"
+    "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\OpenBot\\android\\opencv\\libcxx_helper\\CMakeLists.txt"
   ],
   "cleanCommandsComponents": [
     [
       "C:\\Users\\lilou\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
       "-C",
-      "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\android\\opencv\\.cxx\\Debug\\4p4d1w10\\arm64-v8a",
+      "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\OpenBot\\android\\opencv\\.cxx\\Debug\\4p4d1w10\\arm64-v8a",
       "clean"
     ]
   ],
   "buildTargetsCommandComponents": [
     "C:\\Users\\lilou\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
     "-C",
-    "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\android\\opencv\\.cxx\\Debug\\4p4d1w10\\arm64-v8a",
+    "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\OpenBot\\android\\opencv\\.cxx\\Debug\\4p4d1w10\\arm64-v8a",
     "{LIST_OF_TARGETS_TO_BUILD}"
   ],
   "libraries": {
     "opencv_jni_shared::@6890427a1f51a3e7e1df": {
       "artifactName": "opencv_jni_shared",
       "abi": "arm64-v8a",
-      "output": "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\android\\opencv\\.cxx\\Debug\\4p4d1w10\\arm64-v8a\\libopencv_jni_shared.a",
+      "output": "C:\\Users\\lilou\\Documents\\Master\\OpenBot\\OpenBot\\android\\opencv\\.cxx\\Debug\\4p4d1w10\\arm64-v8a\\libopencv_jni_shared.a",
       "runtimeFiles": []
     }
   }
