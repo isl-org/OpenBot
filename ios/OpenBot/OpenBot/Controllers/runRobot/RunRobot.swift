@@ -720,8 +720,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
                 }
                 break;
             default:
-                print("message:::",message)
-                self.commandMessage.text = message;
                 break;
             }
         }
