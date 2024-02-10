@@ -689,6 +689,17 @@ public class RLFragment extends CameraFragment {
 
         // Set the randomly chosen index to 1
         actions[randomIndex] = 1;
+        if (actions[0] == 1)
+        {
+            vehicle.setControl(50,50);
+        }
+        if (actions[1] == 1 || actions[2] == 1)
+        {
+            vehicle.setControl(0f, 0f);
+        }
+
+        //New comment for testing
+
     }
 }
 
