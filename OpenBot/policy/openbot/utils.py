@@ -81,6 +81,7 @@ def show_batch(dataset, policy="autopilot", model=None, fig_num=1):
         raise Exception("Unknown policy")
 
     plt.figure(num=fig_num, figsize=size)
+ 
 
     for n in range(NUM_SAMPLES):
         ax = plt.subplot(5, 3, n + 1)
@@ -105,6 +106,58 @@ def show_batch(dataset, policy="autopilot", model=None, fig_num=1):
                     float(label_batch[n][1]),
                     float(pred_batch[n][0]),
                     float(pred_batch[n][1]),
+                )
+            )
+        plt.axis("off")
+
+def show_batch_RL(dataset, policy="Reinforcement", model=None, fig_num=1):
+    try:
+        (image_batch, actions_batch), rewards_batch, done_batch = next(iter(dataset))
+    except StopIteration:
+        print("End of dataset")
+        return
+    NUM_SAMPLES = min(image_batch.numpy().shape[0], 15)
+
+    if policy == "Reinforcement":
+        command_input_name = "Actions"
+        size = (15, 10)
+        if model is not None:
+            pred_batch = model.predict(
+                (
+                    tf.slice(image_batch, [0, 0, 0, 0], [NUM_SAMPLES, -1, -1, -1]),
+                    tf.slice(actions_batch, [0], [NUM_SAMPLES]),
+                )
+            )
+
+
+
+    plt.figure(num=fig_num, figsize=size)
+ 
+
+    for n in range(NUM_SAMPLES):
+        ax = plt.subplot(5, 3, n + 1)
+        plt.imshow(image_batch[n])
+        if model is None:
+            plt.title(
+                "%s: %s, Rewards: %i,  Done: %i"
+                % (
+                    command_input_name,
+                    actions_batch.numpy()[n],
+                    int(rewards_batch[n]),
+                    int(done_batch[n]),
+                )
+            )
+        else:
+            plt.title(
+                "%s: %s, %i, %i, Pred: [%i %i %i]"
+                % (
+                    command_input_name,
+                    actions_batch.numpy()[n],
+                    int(rewards_batch[n]),
+                    int(done_batch[n]),
+                    int(pred_batch[n][0]),
+                    int(pred_batch[n][1]),
+                    int(pred_batch[n][2])
                 )
             )
         plt.axis("off")

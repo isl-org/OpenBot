@@ -62,6 +62,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view" />
 
+        <TextView
+            android:id="@+id/percentage"
+            android:layout_width="137dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="168dp"
+            android:text="percentage"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="35dp" />
 
         <TextView
             android:id="@+id/previewText"

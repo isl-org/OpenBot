@@ -1,5 +1,6 @@
 package org.openbot.logging;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static java.lang.Math.abs;
@@ -21,6 +22,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,11 +54,17 @@ import org.openbot.utils.FormatUtils;
 import org.openbot.utils.PermissionUtils;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
+
+import kotlin.Triple;
 import timber.log.Timber;
 import java.util.Random;
 
@@ -81,10 +89,15 @@ public class RLFragment extends CameraFragment {
     private long rewards = 0;
     private long done = 0;
 
+    private boolean outOfCircuit;
+
+    private double percentage;
+    private boolean reachedCheckpoint;
 
 
 
-    private static final long LOGGING_DURATION_MILLIS = 15000; // 15 seconds
+
+    private static final long LOGGING_DURATION_MILLIS = 10000; // 15 seconds
     private long loggingStartTime;
     private Handler timerHandler;
 
@@ -274,6 +287,16 @@ public class RLFragment extends CameraFragment {
         }
     }
 
+    protected void sendIndicatorToSensorService() {
+        if (sensorMessenger != null) {
+            try {
+                sensorMessenger.send(LogDataUtils.generateIndicatorMessage(vehicle.getIndicator()));
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     protected void sendControlToSensorService() {
         if (sensorMessenger != null) {
             try {
@@ -311,6 +334,8 @@ public class RLFragment extends CameraFragment {
     }
     private void startLogging() {
         done = 0;
+        outOfCircuit = false;
+        reachedCheckpoint = false;
         startRandomActions();
         logFolder =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
@@ -323,7 +348,7 @@ public class RLFragment extends CameraFragment {
 
         // Record the start time
         loggingStartTime = System.currentTimeMillis();
-
+        timerHandler.post(timerRunnable);
         requireActivity().startService(intentSensorService);
         requireActivity().bindService(intentSensorService, sensorConnection, Context.BIND_AUTO_CREATE);
         runInBackground(
@@ -335,9 +360,10 @@ public class RLFragment extends CameraFragment {
                         sendControlToSensorService();
 
                         sendInfoToSensorService();
-                        //sendIndicatorToSensorService();
 
-                        timerHandler.postDelayed(timerRunnable, 1000);
+                        sendIndicatorToSensorService();
+
+                        //timerHandler.postDelayed(timerRunnable, 500);
 
 
                     } catch (InterruptedException e) {
@@ -350,7 +376,13 @@ public class RLFragment extends CameraFragment {
     private void stopLogging(boolean isCancel) {
 
         timerHandler.removeCallbacks(timerRunnable);
+
         done = 1;
+        if (outOfCircuit){
+            rewards += -1;
+        }
+        percentage = 0;
+        vehicle.setControl(0f,0f);
         sendInfoToSensorService();
         stopRandomActions();
 
@@ -385,15 +417,33 @@ public class RLFragment extends CameraFragment {
         @Override
         public void run() {
             long elapsedTime = System.currentTimeMillis() - loggingStartTime;
-
-            if (elapsedTime >= LOGGING_DURATION_MILLIS) {
+            Log.d("Timer", "Elapsed Time: " + elapsedTime + ", Percentage: " + percentage);
+            if (elapsedTime >= LOGGING_DURATION_MILLIS || percentage > 20) {
+                elapsedTime = 0;
                 // Stop logging when the duration is reached
+                if(elapsedTime >= LOGGING_DURATION_MILLIS) {
+                    rewards+=1;
+                    outOfCircuit = false;
+                }
+                if(percentage > 20)
+                {
+                    Log.d("PERCENT", "Percentage: " + percentage);
+                    outOfCircuit = true;
+                }
+
                 stopLogging(false);
-                binding.loggerSwitch.setChecked(false);
-                done = 1;
-            } else {
+
+                setLoggingActive(false);
+
+
+            } else{
                 // Continue checking elapsed time periodically
-                timerHandler.postDelayed(this, 1000);
+                if (elapsedTime >= 5000 && !reachedCheckpoint) // give reward if it runs for more than 5 seconds without stop
+                {
+                    reachedCheckpoint = true;
+                    rewards += 1;
+                }
+                timerHandler.postDelayed(this, 500);
             }
         }
     };
@@ -493,13 +543,12 @@ public class RLFragment extends CameraFragment {
             case Constants.CMD_LOGS:
                 toggleLogging();
                 break;
-
             case Constants.CMD_INDICATOR_LEFT:
 
             case Constants.CMD_INDICATOR_RIGHT:
 
             case Constants.CMD_INDICATOR_STOP:
-                //sendIndicatorToSensorService();
+                sendIndicatorToSensorService();
                 break;
             case Constants.CMD_DRIVE_MODE:
                 setDriveMode(Enums.switchDriveMode(vehicle.getDriveMode()));
@@ -661,30 +710,105 @@ public class RLFragment extends CameraFragment {
             }
 
             if(croppedBitmap != null){
-                Bitmap opencvProcessedBitmap = applyOpenCVProcessing(croppedBitmap);
-                if (opencvProcessedBitmap != null) {
+                Triple<Bitmap, Bitmap, Mat> images = applyOpenCVProcessing(croppedBitmap);
+                Bitmap edgesBitmap = images.component1();
+                Bitmap bottomBitmap = images.component2();
+                Mat bottom = images.component3();
+                binding.percentage.setText(String.valueOf(percentage));
+                if (edgesBitmap != null) {
                     final Canvas canvas2 = new Canvas(croppedBitmap);
-                    canvas2.drawBitmap(opencvProcessedBitmap, frameToCropTransform, null);
+                    canvas2.drawBitmap(edgesBitmap, frameToCropTransform, null);
                     ImageUtils.saveBitmap(
-                            opencvProcessedBitmap, logFolder + File.separator + "opencv_images", frameNum + "_opencv.jpeg");
+                            edgesBitmap, logFolder + File.separator + "edges_images", frameNum + "_edges.jpeg");
+
+                }
+
+                if (bottomBitmap != null) {
+                    final Canvas canvas2 = new Canvas(croppedBitmap);
+                    canvas2.drawBitmap(bottomBitmap, frameToCropTransform, null);
+                    ImageUtils.saveBitmap(
+                            bottomBitmap, logFolder + File.separator + "bottom_images", frameNum + "_bottom.jpeg");
 
                 }
             }
         }
     }
 
-    private Bitmap applyOpenCVProcessing(Bitmap inputImage) {
+    private Triple<Bitmap, Bitmap, Mat> applyOpenCVProcessing(Bitmap inputImage) {
 
         Mat inputMat = new Mat(inputImage.getHeight(), inputImage.getWidth(), CvType.CV_8UC4);
         Utils.bitmapToMat(inputImage, inputMat);
 
-        Imgproc.cvtColor(inputMat, inputMat, Imgproc.COLOR_RGBA2GRAY);
+        Mat bottom = regionOfInterest(inputMat);
 
-        Bitmap processedBitmap = Bitmap.createBitmap(inputMat.cols(), inputMat.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(inputMat, processedBitmap);
+        Imgproc.cvtColor(bottom, bottom, Imgproc.COLOR_RGBA2GRAY); // Turn the image Gray
+
+        Imgproc.threshold(bottom, bottom, 128, 255, Imgproc.THRESH_BINARY); // Using threshold to turn it black and white
 
 
-        return processedBitmap;
+        Mat edges = new Mat();
+        Imgproc.Canny(bottom, edges, 100, 150);
+
+        percentage = calculateWhitePixelPercentage(bottom);
+
+
+
+        Bitmap edgesBitmap = Bitmap.createBitmap(edges.cols(), edges.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(edges, edgesBitmap);
+        Bitmap bottomBitmap = Bitmap.createBitmap(bottom.cols(), bottom.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(bottom, bottomBitmap);
+
+
+        return new Triple<>(edgesBitmap, bottomBitmap, bottom);
+    }
+
+    //This function crops the image to only keep the region of interest
+    public static Mat regionOfInterest(Mat inputMat){
+
+        int width = inputMat.cols();
+        int height = inputMat.rows();
+
+        // Define the ROI as the bottom 30% of the image
+        Point[] roiPoints = new Point[4];
+        roiPoints[0] = new Point(width * 0.0, height * 0.7); // Top-left corner of ROI
+        roiPoints[1] = new Point(width, height * 0.7);        // Top-right corner of ROI
+        roiPoints[2] = new Point(width, height);              // Bottom-right corner of ROI
+        roiPoints[3] = new Point(0, height);
+        MatOfPoint roiContour = new MatOfPoint(roiPoints);
+        Mat mask = Mat.zeros(inputMat.size(), CvType.CV_8U);
+        List<MatOfPoint> roiContours = new ArrayList<>();
+        roiContours.add(roiContour);
+        Imgproc.fillPoly(mask, roiContours, new Scalar(255));
+        Mat resultImage = new Mat();
+        Core.bitwise_and(inputMat, inputMat, resultImage, mask);
+
+
+
+        return resultImage;
+    }
+
+    public double calculateWhitePixelPercentage(Mat binaryMat) {
+        // Convert the binary bitmap to a Mat object
+
+
+        // Verify pixel values after thresholding
+        byte[] pixels = new byte[binaryMat.rows() * binaryMat.cols()];
+        binaryMat.get(0, 0, pixels);
+
+
+        // Count the number of white pixels
+        int whiteCount = 0;
+        for (byte pixel : pixels) {
+            if (pixel == -1) { // white pixels are represented by -1
+                whiteCount++;
+            }
+        }
+
+        // Calculate the percentage of white pixels
+        double totalPixels = binaryMat.rows() * binaryMat.cols();
+        double whitePercentage = (whiteCount / totalPixels) * 100.0; // Ensure floating-point division
+
+        return whitePercentage;
     }
 
     @Override
@@ -699,19 +823,26 @@ public class RLFragment extends CameraFragment {
 
         // Set the randomly chosen index to 1
         actions[randomIndex] = 1;
+        MoveAction();
+
+    }
+
+    private void MoveAction()
+    {
         if(loggingEnabled) {
             if (actions[0] == 1) {
                 vehicle.setControl(0.3f, 0.3f);
                 handleDriveCommand();
             }
-            if (actions[1] == 1 || actions[2] == 1) {
-                vehicle.setControl(0f, 0f);
+            if (actions[1] == 1)  {
+                vehicle.setControl(0.4f, -0.1f);
+                handleDriveCommand();
+            }
+            if (actions[2] == 1)  {
+                vehicle.setControl(-0.1f, 0.4f);
                 handleDriveCommand();
             }
         }
-
-        //New comment for testing
-
     }
 
     private void startRandomActions() {

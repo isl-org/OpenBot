@@ -85,6 +85,19 @@
             app:layout_constraintStart_toEndOf="@+id/previewText"
             app:layout_constraintTop_toTopOf="@+id/previewText" />
 
+        <TextView
+            android:id="@+id/percentage"
+            android:layout_width="252dp"
+            android:layout_height="19dp"
+            android:layout_marginStart="176dp"
+            android:text="percentage"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.11"
+            tools:ignore="MissingConstraints" />
+
         <Spinner
             android:id="@+id/resolution_spinner"
             android:layout_width="0dp"

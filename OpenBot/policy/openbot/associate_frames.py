@@ -129,6 +129,25 @@ def match_frame_ctrl_input(
                 frames.append(frame_list[timestamp][0])
     return frames
 
+def match_frame_info_input(
+    data_dir,
+    datasets,
+    max_offset,
+    redo_matching=False,
+    remove_zeros=True,
+    policy="Reinforcement",
+):
+    frames_info = []
+    for dataset in datasets:
+        for folder in utils.list_dirs(os.path.join(data_dir, dataset)):
+            session_dir = os.path.join(data_dir, dataset, folder)
+            frame_list = match_frame_session_info(
+                session_dir, max_offset, redo_matching, remove_zeros, policy
+            )
+            for timestamp in list(frame_list):
+                frames_info.append(frame_list[timestamp][0])
+    return frames_info
+
 # Similar to match frame ctrl input but with the rewards
 def match_frame_rewards_input(
     data_dir,
@@ -152,6 +171,77 @@ def match_frame_rewards_input(
 
     return frames_reward
 
+
+def match_frame_session_info(
+   session_dir, max_offset, redo_matching=True, remove_zeros=False, policy="Reinforcement"
+):
+    print("STARTING INFO SESSION")
+    matched_frames_file_name = "matched_frame_info.txt"
+    processed_frames_file_name = "matched_frame_info_processed.txt"
+    log_file = "rewardLog.txt"
+    csv_label_string = "timestamp (frame),time_offset (reward-frame),frame, [forward, left, right, reward, done]\n"
+    csv_label_string_processed = "timestamp,frame, forward, left, right, reward, done\n"
+
+    sensor_path = os.path.join(session_dir, "sensor_data")
+    img_path = os.path.join(session_dir, "images")
+    print("Processing folder %s" % (session_dir))
+
+    if not redo_matching and os.path.isfile(
+        os.path.join(sensor_path, matched_frames_file_name)
+    ):
+        print(" Frames and rewards already matched.")
+    else:
+        # Match frames with reward signals
+        frame_list = read_file_list(os.path.join(sensor_path, "rgbFrames.txt"))
+        if len(frame_list) == 0:
+            raise Exception("Empty rgbFrames.txt")
+        info_list = read_file_list(os.path.join(sensor_path, "infoLog.txt"))
+
+        if len(info_list) == 0:
+            raise Exception("Empty INFOLog.txt")
+        matches = associate(frame_list, info_list, max_offset)
+        with open(os.path.join(sensor_path, "matched_frame_info.txt"), "w") as f:
+            f.write(csv_label_string)
+            for a, b in matches:
+                f.write(
+                    "%d,%d,%s,%s\n"
+                    % (
+                        a,
+                        b - a,
+                        ",".join(frame_list[a]),
+                        ",".join(info_list[b]),
+                    )
+                )
+        print(" Frames and info matched.")
+
+    if not redo_matching and os.path.isfile(
+        os.path.join(sensor_path, processed_frames_file_name)
+    ):
+        print(" Preprocessing already completed.")
+    else:
+        frame_list = read_file_list(os.path.join(sensor_path, "matched_frame_info.txt"))
+        with open(os.path.join(sensor_path, processed_frames_file_name), "w") as f:
+            f.write(csv_label_string_processed)
+            for timestamp in list(frame_list):
+                frame = frame_list[timestamp]
+                
+                            
+                if len(frame) < 7:
+                    print("Just To Check")
+                    continue
+
+                forward = int(frame[2].replace("[", "").replace("]", ""))
+                left = int(frame[3])
+                right = int(frame[4])
+                reward = int(frame[5])
+                done = int(frame[6].replace("[", "").replace("]", ""))
+                
+                frame_name = os.path.join(img_path, frame[1] + "_crop.jpeg")
+                f.write("%s,%s,%i,%i,%i,%i,%i\n" % (timestamp, frame_name, forward, left, right, reward, done))
+
+        print(" Preprocessing completed.")
+
+    return read_file_list(os.path.join(sensor_path, processed_frames_file_name))
 
 def match_frame_session(
     session_dir, max_offset, redo_matching=False, remove_zeros=True, policy="autopilot"

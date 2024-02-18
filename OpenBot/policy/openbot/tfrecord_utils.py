@@ -83,11 +83,46 @@ def create_example_autopilot(image, path, ctrl_cmd):
         "left": float_feature(float(ctrl_cmd[0]) / 255.0),
         "right": float_feature(float(ctrl_cmd[1]) / 255.0),
         "cmd": float_feature(float(ctrl_cmd[2])),
-        "reward": float_feature(float(ctrl_cmd[3])),
+        "rewards": float_feature(float(ctrl_cmd[3])),
     }
 
     return tf.train.Example(features=tf.train.Features(feature=feature))
 
+def parse_tfrecord_fn_reinforcement(example):
+    """Parse the input `tf.train.Example` proto."""
+
+    # Create a description of the features.
+    feature_description = {
+        "image": tf.io.FixedLenFeature([], tf.string),
+        "path": tf.io.FixedLenFeature([], tf.string),
+        "forward": tf.io.FixedLenFeature([], tf.int64),
+        "left": tf.io.FixedLenFeature([], tf.int64),
+        "right": tf.io.FixedLenFeature([], tf.int64),
+        "rewards": tf.io.FixedLenFeature([], tf.int64),
+        "done": tf.io.FixedLenFeature([], tf.int64),
+    }
+
+    example = tf.io.parse_single_example(example, feature_description)
+    img = tf.io.decode_jpeg(example["image"], channels=3)
+    img = tf.image.convert_image_dtype(img, tf.float32)
+    example["image"] = img
+    return example
+
+
+def create_example_reinforcement(image, path, info):
+    """Converts the train features into a `tf.train.Example` eady to be written to a tfrecord file."""
+    # Create a dictionary mapping the feature name to the tf.train.Example-compatible data type.
+    feature = {
+        "image": image_feature(image),
+        "path": bytes_feature(path),
+        "forward": int64_feature(int(info[0])),
+        "left": int64_feature(int(info[1])),
+        "right": int64_feature(int(info[2])),
+        "rewards": int64_feature(int(info[3])),
+        "done": int64_feature(int(info[4])),
+    }
+
+    return tf.train.Example(features=tf.train.Features(feature=feature))
 
 def create_example_point_goal_nav(image, path, ctrl_goal):
     """Converts the train features into a `tf.train.Example` eady to be written to a tfrecord file."""
