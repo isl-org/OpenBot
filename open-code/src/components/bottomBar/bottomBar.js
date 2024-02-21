@@ -174,7 +174,6 @@ export const BottomBar = () => {
                                     setCategory(Constants.qr);
                                     setIsLoader(false);
                                     setDrawer(true);
-                                    await setProjectDetails(getCurrentProject().projectName).then()
                                 })
                                 .catch((err) => {
                                     errorToast("Failed to upload");

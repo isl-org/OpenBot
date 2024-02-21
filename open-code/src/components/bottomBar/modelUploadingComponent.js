@@ -156,7 +156,6 @@ export function ModelUploadingComponent(params) {
                         await uploadToGoogleDrive(JSON.stringify(configData), Constants.json).then(async () => {
                             localStorage.setItem(localStorageKeys.configData, JSON.stringify(configData))
                             setFileUploadLoader(false);
-                            await uploadModelDetails(newModelData.name).then()
                             handleClose()
                         })
                             .catch((err) => {
