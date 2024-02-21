@@ -62,7 +62,7 @@ export function Connection() {
             if (localStorage.getItem(localStorageKeys.isSignIn) === 'true') {
                 if (getCookie(localStorageKeys.serverStartTime)) {
                     const time = new Date()
-                    uploadServerUsage(getCookie(localStorageKeys.serverStartTime), time).then(() => {
+                    uploadServerUsage(new Date(getCookie(localStorageKeys.serverStartTime)), time).then(() => {
                         deleteCookie(localStorageKeys.serverStartTime)
                         deleteCookie(localStorageKeys.serverEndTime)
                     })

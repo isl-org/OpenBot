@@ -127,7 +127,7 @@ function signOut() {
     signInBtn.innerText = 'Sign in with Google'
     if (getCookie(localStorageKeys.serverStartTime)) {
         const time = new Date()
-        uploadServerUsage(getCookie(localStorageKeys.serverStartTime), time).then(() => {
+        uploadServerUsage(new Date(getCookie(localStorageKeys.serverStartTime)), time).then(() => {
             deleteCookie(localStorageKeys.serverStartTime)
             deleteCookie(localStorageKeys.serverEndTime)
             googleSignOut()
@@ -255,12 +255,12 @@ function handleSingleSignOn() {
 }
 
 
-function handleServerDetailsOnSSO () {
+function handleServerDetailsOnSSO() {
     const cookie = getCookie(localStorageKeys.user)
     if (cookie) {
         if (getCookie(localStorageKeys.serverStartTime)) {
             const time = new Date()
-            uploadServerUsage(getCookie(localStorageKeys.serverStartTime), time).then(() => {
+            uploadServerUsage(new Date(getCookie(localStorageKeys.serverStartTime)), time).then(() => {
                 deleteCookie(localStorageKeys.serverStartTime)
                 deleteCookie(localStorageKeys.serverEndTime)
                 handleSingleSignOn()
@@ -296,7 +296,7 @@ function handleAuthChangedOnRefresh() {
                     localStorage.setItem(localStorageKeys.isSignIn, 'true')
                     if (getCookie(localStorageKeys.serverStartTime)) {
                         const time = new Date()
-                        uploadServerUsage(getCookie(localStorageKeys.serverStartTime), getCookie(localStorageKeys.serverEndTime) ?? time).then(() => {
+                        uploadServerUsage(new Date(Cookies.get(localStorageKeys.serverStartTime)), new Date(Cookies.get(localStorageKeys.serverEndTime)) ?? time).then(() => {
                             deleteCookie(localStorageKeys.serverStartTime)
                             deleteCookie(localStorageKeys.serverEndTime)
                         })
