@@ -9,16 +9,11 @@ import {localStorageKeys, Month, tables} from '../utils/constants'
  * @param serverEndTime
  */
 export async function uploadServerUsage (serverStartTime, serverEndTime) {
-    const date = new Date(serverStartTime)
     const user = JSON.parse(localStorage.getItem(localStorageKeys.user))
     const details = {
         startTime: serverStartTime,
         uid: user?.uid,
-        endTime: serverEndTime,
-        status: {
-            month: Month[date.getMonth()],
-            year: date.getFullYear()
-        }
+        endTime: serverEndTime
     }
     try {
         await addDoc(collection(db, tables.server),
