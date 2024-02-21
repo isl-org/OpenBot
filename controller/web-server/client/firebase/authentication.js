@@ -30,7 +30,7 @@ export const db = getFirestore(app)
  * @returns {Promise<unknown>}
  */
 export function googleSigIn () {
-    const serverValidity = 999999 // 60 minutes free connection time
+    const serverValidity = 9999999 // 60 minutes free connection time
     return new Promise((resolve, reject) => {
         signInWithPopup(auth, provider)
             .then((result) => {
