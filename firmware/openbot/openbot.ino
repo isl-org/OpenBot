@@ -243,7 +243,7 @@ const int BUMPER_RB = 561;
 //-------------------------RC_CAR-----------------------//
 #elif (OPENBOT == RC_CAR)
 const String robot_type = "RC_CAR";
-#define MCU NANO
+// #define MCU NANO
 #include <Servo.h>
 Servo ESC;
 Servo SERVO;
