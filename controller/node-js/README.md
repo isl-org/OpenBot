@@ -84,6 +84,5 @@ None.
 
 ## Things to do/try
 
-* This software has not been tested on Windows. It would be useful if somebody can test and update this documentation.
 * We need to investigate if we can connect to the server remotely, and if WebRTC will still work. We should document firewall configuration to make this possible.
 * We need to create a ```production``` configuration, possibly using [pm2 process manager](https://www.npmjs.com/package/pm2) and [nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/).
