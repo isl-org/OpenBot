@@ -25,6 +25,9 @@ class ObjectTrackingSettings: UIView {
     var modelDropDown = DropDown()
     var objectDropDown = DropDown();
     var objectDropDownView = UIView()
+    var dynamicSpeedLabel = UILabel()
+    var dynamicSpeedCheckbox = Checkbox()
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// Initialization routine.
     ///
@@ -49,6 +52,8 @@ class ObjectTrackingSettings: UIView {
         createBluetoothIcon()
         createCameraIcon()
         createSwitchButton()
+        addSubview(createLabel(text: Strings.dynamicSpeed, leadingAnchor: Int(adapted(dimensionSize: 150, to: .height)), topAnchor: Int(adapted(dimensionSize: 40, to: .height))))
+        setDynamicSpeed()
         addSubview(createLabel(text: Strings.model, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 60, to: .height))))
         createModelDropDown()
         addSubview(createLabel(text: Strings.speed, leadingAnchor: Int(adapted(dimensionSize: 20, to: .height)), topAnchor: Int(adapted(dimensionSize: 90, to: .height))))
@@ -65,7 +70,39 @@ class ObjectTrackingSettings: UIView {
         setupThreads();
         setupVehicleControls();
         createLeftSpeed()
+        if let model = preferencesManager.getObjectTrackModel(){
+            if Common.isModelItemAvailableInDocument(modelName: model) == true {
+                modelDropdownLabel.text = model
+                let returnModel = Common.returnModelItem(modelName: model)
+                self.selectedModel = returnModel
+                imageInputLabel.text = returnModel.inputSize
+            }
+            else{
+                preferencesManager.setObjectTrackModel(value: "");
+            }
+        }
+        
+        if let object = preferencesManager.getObjectTrackingObject(){
+            objectDropDownLabel.text = object
+        }
 
+        if let confidence = preferencesManager.getObjectTrackConfidence(){
+            confidenceLabel.text = String(confidence as! Int) + "%"
+        }
+        
+        if let device = preferencesManager.getDevice(){
+            deviceDropDownLabel.text = device;
+        }
+        
+        if let threads = preferencesManager.getThreads(){
+            threadLabel.text = threads;
+        }
+        
+        if let dynamicSpeed = preferencesManager.getDynamicSpeed(){
+            if dynamicSpeed as! Bool == true {
+                dynamicSpeedCheckbox.isChecked = true;
+            }
+        }
         // Setup callbacks
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateObject), name: .updateObject, object: nil)
@@ -220,7 +257,30 @@ class ObjectTrackingSettings: UIView {
         speedLabel = createLabel(text: "*** fps", leadingAnchor: 90, topAnchor: Int(adapted(dimensionSize: 90, to: .height)))
         addSubview(speedLabel)
     }
-
+    
+    /// function to create checkbox to enable or disable dynamic speed
+    func setDynamicSpeed(){
+        dynamicSpeedCheckbox = createCheckbox(leadingAnchor: 181.5, topAnchor: 68,action: #selector(updateDynamicSpeed(_:)))
+        addSubview(dynamicSpeedCheckbox);
+    }
+    
+    /// function to create checkbox for objects
+    func createCheckbox(leadingAnchor: CGFloat, topAnchor: CGFloat, action: Selector?) -> Checkbox {
+        let checkbox = Checkbox(frame: CGRect(x: leadingAnchor, y: topAnchor, width: 20, height: 20))
+        checkbox.checkedBorderColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
+        checkbox.uncheckedBorderColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
+        checkbox.checkmarkColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
+        checkbox.checkedBorderColor = traitCollection.userInterfaceStyle == .dark ? .white : .black;
+        checkbox.checkmarkStyle = .tick;
+        checkbox.isEnabled = true;
+        checkbox.addTarget(self, action: action!, for: .valueChanged);
+        return checkbox
+    }
+    
+    @objc func updateDynamicSpeed(_ sender: UIButton) {
+        preferencesManager.setDynamicSpeed(value: dynamicSpeedCheckbox.isChecked);
+    }
+        
     /// function to crete the dropdown for objects
     func setupObjectDropDown() {
         objectDropDown.backgroundColor = Colors.freeRoamButtonsColor;
@@ -520,12 +580,14 @@ class ObjectTrackingSettings: UIView {
         let model = Common.returnModelItem(modelName: selectedModel)
         self.selectedModel = model
         imageInputLabel.text = model.inputSize
+        preferencesManager.setObjectTrackModel(value: selectedModel);
     }
 
     /// Callback function to update the UI
     @objc func updateObject(_ notification: Notification) {
         let selectedObject = notification.object as! String
         objectDropDownLabel.text = selectedObject
+        preferencesManager.setObjectTrackingObject(value: selectedObject);
     }
 
     /// Callback function to update the BLE connection status

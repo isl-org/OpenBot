@@ -19,6 +19,7 @@ class Client {
 
     /// function to send the values to the connection.
     func send(message: String) {
+        print("in send---->",sharedConnection)
         sharedConnection?.send(message + "\n");
     }
 }

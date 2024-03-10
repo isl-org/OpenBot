@@ -7,19 +7,38 @@ import UIKit
 
 class VehicleControl: UIView {
     var controlMode: ControlMode = ControlMode.PHONE;
-    var speedMode: SpeedMode = SpeedMode.SLOW;
-    var driveMode: DriveMode = DriveMode.DUAL;
+    var speedMode: SpeedMode = SpeedMode.FAST;
+    var driveMode: DriveMode = DriveMode.GAME;
     var speedLabel = UILabel()
     var speedInRpm = UILabel()
     var isButtonEnable: Bool = true
     let gameController = GameController.shared
     var downSwipe: Bool = false
+    let audioPlayer = AudioPlayer.shared;
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// initializing function
     override init(frame: CGRect) {
         super.init(frame: frame)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         setupVehicleControl();
+        if let value = preferencesManager.getControlMode() {
+            if let mode = ControlMode(rawValue: value){
+                controlMode = mode
+            }
+        }
+        
+        if let value = preferencesManager.getDriveMode() {
+            if let mode = DriveMode(rawValue: value){
+                driveMode = mode;
+            }
+        }
+        
+        if let value = preferencesManager.getSpeedMode() {
+            if let mode = SpeedMode(rawValue: value) {
+                speedMode = mode;
+            }
+        }
         updateControlMode(self)
         updateDriveMode(self)
         updateSpeedMode(self)
@@ -90,33 +109,40 @@ class VehicleControl: UIView {
 
             } else {
                 controlMode = ControlMode.GAMEPAD;
-                driveMode = DriveMode.GAME;
                 createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
                 createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
                 client.send(message: msg);
 
-
             }
             gameController.selectedControlMode = controlMode
+            if(controlMode == ControlMode.GAMEPAD){
+                preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
+            }
+            else{
+                preferencesManager.setControlMode(value: ControlMode.GAMEPAD.rawValue);
+            }
         }
     }
 
     /// function to update the drive mode
     @objc func updateDriveMode(_ sender: UIView) {
-        if (controlMode == .GAMEPAD && isButtonEnable) {
+        if (controlMode == .GAMEPAD && isButtonEnable) {            
             switch (driveMode) {
             case .JOYSTICK:
                 driveMode = .GAME;
                 createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
+                preferencesManager.setDriveMode(value: DriveMode.JOYSTICK.rawValue)
                 break;
             case .GAME:
                 driveMode = .DUAL;
                 createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
+                preferencesManager.setDriveMode(value: DriveMode.GAME.rawValue)
                 break;
             case .DUAL:
                 driveMode = .JOYSTICK;
                 createAndUpdateButton(iconName: Images.joystickIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
+                preferencesManager.setDriveMode(value: DriveMode.DUAL.rawValue)
                 break;
             }
             gameController.selectedDriveMode = driveMode
@@ -130,18 +156,20 @@ class VehicleControl: UIView {
             case .SLOW:
                 speedMode = .NORMAL;
                 createAndUpdateButton(iconName: Images.mediumIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)), activated: true);
+                preferencesManager.setSpeedMode(value: SpeedMode.SLOW.rawValue)
                 break;
             case .NORMAL:
                 speedMode = .FAST;
                 createAndUpdateButton(iconName: Images.fastIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)), activated: true);
+                preferencesManager.setSpeedMode(value: SpeedMode.NORMAL.rawValue)
                 break;
             case .FAST:
                 speedMode = .SLOW;
                 createAndUpdateButton(iconName: Images.slowIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)), activated: true);
+                preferencesManager.setSpeedMode(value: SpeedMode.FAST.rawValue)
                 break;
             }
             gameController.selectedSpeedMode = speedMode
-
         }
     }
 
@@ -210,6 +238,7 @@ class VehicleControl: UIView {
             break;
         }
         updateSpeedMode(self);
+        audioPlayer.playSpeedMode(speedMode: speedMode);
     }
 
     ///function to increase the speed modes.
@@ -223,10 +252,12 @@ class VehicleControl: UIView {
         case .FAST:
             return;
         }
+        audioPlayer.playSpeedMode(speedMode: speedMode);
     }
 
     /// function to update the drive modes.
     @objc func updateDrive(_ notification: Notification) {
         updateDriveMode(self)
+        audioPlayer.playDriveMode(driveMode: driveMode);
     }
 }

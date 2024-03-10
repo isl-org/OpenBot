@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Scanner Fragment-->
+        <scene sceneID="eMD-78-Ccy">
+            <objects>
+                <viewController storyboardIdentifier="qrScanner" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3Px-Ta-prs" customClass="scannerFragment" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tL8-Vt-IBR">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PlR-Zh-eGN">
+                                <rect key="frame" x="335" y="59" width="40" height="40"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="cancel" translatesAutoresizingMaskIntoConstraints="NO" id="QfM-Xr-f8N">
+                                        <rect key="frame" x="6" y="6" width="30" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="gnK-jy-HE8"/>
+                                    <constraint firstAttribute="height" constant="40" id="wc9-rj-t11"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Fkn-4e-SDy"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="PlR-Zh-eGN" firstAttribute="top" secondItem="Fkn-4e-SDy" secondAttribute="top" id="goN-aw-cwm"/>
+                            <constraint firstItem="Fkn-4e-SDy" firstAttribute="trailing" secondItem="PlR-Zh-eGN" secondAttribute="trailing" constant="18" id="rJK-Ft-Thw"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cancelBtn" destination="PlR-Zh-eGN" id="svp-e2-jYh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wiu-Fv-Q4S" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-440.45801526717554" y="-257.04225352112678"/>
+        </scene>
+        <!--Open Code Web View-->
+        <scene sceneID="TIq-fI-1Jl">
+            <objects>
+                <viewController storyboardIdentifier="webView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wrM-wd-C6N" customClass="openCodeWebView" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="eNs-RD-5Sf">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="1Kh-yA-MIW"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mA6-6Q-LkR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-595" y="379"/>
+        </scene>
+        <!--Alert Fragment-->
+        <scene sceneID="JZi-O6-dum">
+            <objects>
+                <viewController storyboardIdentifier="alert" useStoryboardIdentifierAsRestorationIdentifier="YES" id="m9a-ZZ-Zyy" customClass="alertFragment" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="LCv-Be-cRg">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8lf-Zr-DGm">
+                                <rect key="frame" x="35" y="342" width="323" height="168"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cBx-4m-rvF">
+                                        <rect key="frame" x="80" y="117" width="90" height="18"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="18" id="2Hh-Ct-RNb"/>
+                                            <constraint firstAttribute="width" constant="90" id="AAN-Io-aJz"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="CANCEL">
+                                            <color key="baseForegroundColor" name="HomePageTitleColor"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="cancelBtn:" destination="m9a-ZZ-Zyy" eventType="touchUpInside" id="MxA-Li-Qc1"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ddC-HJ-0x5">
+                                        <rect key="frame" x="201" y="117" width="100" height="18"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="9v8-ai-lF7"/>
+                                            <constraint firstAttribute="height" constant="18" id="Ig1-gJ-Js1"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="LOG OUT">
+                                            <color key="baseForegroundColor" name="HomePageTitleColor"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="logOutBtn:" destination="m9a-ZZ-Zyy" eventType="touchUpInside" id="JIr-kz-ZQZ"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confirm Logout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p7T-Sc-pYT">
+                                        <rect key="frame" x="24" y="23" width="200" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="8sT-aq-nc8"/>
+                                            <constraint firstAttribute="height" constant="30" id="wfc-rz-DZa"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you sure you want to logout?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BhB-vU-Jms">
+                                        <rect key="frame" x="24" y="68" width="260" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="Ugc-TX-gEt"/>
+                                            <constraint firstAttribute="width" constant="260" id="bOL-9v-l0h"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="323" id="Eo7-3m-1R7"/>
+                                    <constraint firstAttribute="bottom" secondItem="ddC-HJ-0x5" secondAttribute="bottom" constant="33" id="N4T-3G-Zj4"/>
+                                    <constraint firstAttribute="height" constant="168" id="OYm-3u-9Lz"/>
+                                    <constraint firstItem="p7T-Sc-pYT" firstAttribute="leading" secondItem="8lf-Zr-DGm" secondAttribute="leading" constant="24" id="aOd-E3-tro"/>
+                                    <constraint firstItem="BhB-vU-Jms" firstAttribute="top" secondItem="p7T-Sc-pYT" secondAttribute="bottom" constant="15" id="dpB-eg-UKs"/>
+                                    <constraint firstItem="p7T-Sc-pYT" firstAttribute="top" secondItem="8lf-Zr-DGm" secondAttribute="top" constant="23" id="drC-bI-i6Y"/>
+                                    <constraint firstAttribute="bottom" secondItem="cBx-4m-rvF" secondAttribute="bottom" constant="33" id="lyp-4h-8ho"/>
+                                    <constraint firstItem="BhB-vU-Jms" firstAttribute="leading" secondItem="8lf-Zr-DGm" secondAttribute="leading" constant="24" id="mCe-K3-Zol"/>
+                                    <constraint firstAttribute="trailing" secondItem="ddC-HJ-0x5" secondAttribute="trailing" constant="22" id="mi9-cj-26e"/>
+                                    <constraint firstItem="ddC-HJ-0x5" firstAttribute="leading" secondItem="cBx-4m-rvF" secondAttribute="trailing" constant="31" id="nLP-yH-FT2"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="LdI-8h-ELH"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="8lf-Zr-DGm" firstAttribute="centerY" secondItem="LCv-Be-cRg" secondAttribute="centerY" id="jGv-UD-w0j"/>
+                            <constraint firstItem="8lf-Zr-DGm" firstAttribute="centerX" secondItem="LCv-Be-cRg" secondAttribute="centerX" id="qGf-c4-0wX"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="confirmLogoutLabel" destination="p7T-Sc-pYT" id="tiV-kt-4Gt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yAW-td-qNf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="443.51145038167937" y="433.80281690140845"/>
+        </scene>
+        <!--Run Robot-->
+        <scene sceneID="a1f-Wu-WLU">
+            <objects>
+                <viewController storyboardIdentifier="runOpenBot" useStoryboardIdentifierAsRestorationIdentifier="YES" id="EeT-XN-kSC" customClass="runRobot" customModule="OpenBot" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="u64-Zg-Hjz">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="runRobot" translatesAutoresizingMaskIntoConstraints="NO" id="4Ws-oO-4cz">
+                                <rect key="frame" x="90" y="319.66666666666669" width="213" height="213.00000000000006"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Your code is executing.." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HmK-zt-jbD">
+                                <rect key="frame" x="16" y="541.66666666666663" width="361" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q0V-TC-pAj">
+                                <rect key="frame" x="90" y="654" width="213" height="45"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gz8-dU-Lpa">
+                                <rect key="frame" x="90" y="593" width="212" height="45"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="BhC-0o-bFy"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="tintColor" name="textColor"/>
+                    </view>
+                    <connections>
+                        <outlet property="commandMessage" destination="HmK-zt-jbD" id="T85-PS-Lyv"/>
+                        <outlet property="resetRobot" destination="Q0V-TC-pAj" id="ctM-Cc-wE4"/>
+                        <outlet property="robotImage" destination="4Ws-oO-4cz" id="F5O-LH-oIW"/>
+                        <outlet property="stopRobot" destination="gz8-dU-Lpa" id="unS-Pd-pt7"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3kG-rd-Dqs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="287.78625954198475" y="-236.61971830985917"/>
+        </scene>
+        <!--Edit Profile Fragment-->
+        <scene sceneID="7Sh-gH-tIo">
+            <objects>
+                <viewController storyboardIdentifier="editProfile" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2pS-aH-r85" customClass="editProfileFragment" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1Jc-zi-hhl">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="dga-rv-clg"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="n8i-MP-DVI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1283" y="-237"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="cancel" width="25" height="25"/>
+        <image name="runRobot" width="213" height="213"/>
+        <namedColor name="HomePageTitleColor">
+            <color red="0.0" green="0.4392156862745098" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="textColor">
+            <color red="0.05000000074505806" green="0.05000000074505806" blue="0.05000000074505806" alpha="0.81999999284744263" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

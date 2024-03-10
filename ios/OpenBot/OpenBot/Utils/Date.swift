@@ -12,4 +12,13 @@ extension Date {
     init(milliseconds: Int64) {
         self = Date(timeIntervalSince1970: TimeInterval(milliseconds) / 1000)
     }
+
+    static func getCurrentDate() -> String {
+
+        let dateFormatter = DateFormatter()
+
+        dateFormatter.dateFormat = "dd/MM/yyyy"
+
+        return dateFormatter.string(from: Date())
+    }
 }

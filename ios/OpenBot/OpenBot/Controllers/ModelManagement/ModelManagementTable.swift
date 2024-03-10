@@ -5,6 +5,7 @@
 import Foundation
 import UIKit
 import DropDown
+import GoogleSignIn
 
 class ModelManagementTable: UITableViewController {
     var blankScreen = UIView()
@@ -19,12 +20,17 @@ class ModelManagementTable: UITableViewController {
     var popupWindow = UIView();
     var models: [String]!
     var selectedIndex: IndexPath!
-    var popupWindowWidth: NSLayoutConstraint!
-    var popupWindowHeight: NSLayoutConstraint!
-    var popupWindowLeadingAnchor: NSLayoutConstraint!
-    var popupWindowTopAnchor: NSLayoutConstraint!
+    var popupWindowWidth: NSLayoutConstraint?
+    var popupWindowHeight: NSLayoutConstraint?
+    var popupWindowLeadingAnchor: NSLayoutConstraint?
+    var popupWindowTopAnchor: NSLayoutConstraint?
     var dropDown = UIView()
     let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
+    var timer = Timer()
+    let autoSyncIcon = currentOrientation == .portrait ? UIImageView(frame: CGRect(x: width - 60, y: 15, width: 25, height: 20)) :
+            UIImageView(frame: CGRect(x: height - 100, y: 15, width: 25, height: 20))
+    let dropDownView = currentOrientation == .portrait ? UIView(frame: CGRect(x: width / 2, y: 70, width: width / 2 - 80, height: 200)) :
+            UIView(frame: CGRect(x: height / 2, y: 70, width: width / 2 - 80, height: 200));
 
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
@@ -36,6 +42,8 @@ class ModelManagementTable: UITableViewController {
         createAddModelButton()
         NotificationCenter.default.addObserver(self, selector: #selector(fileDownloaded), name: .fileDownloaded, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeBlankScreen), name: .removeBlankScreen, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(stopRotatingImageView), name: .autoSynced, object: nil);
+        autoSync()
     }
 
     /// Initialization routine
@@ -47,11 +55,16 @@ class ModelManagementTable: UITableViewController {
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 50));
         let modelLabel = createLabel(text: "Model");
-        modelLabel.frame = CGRect.init(x: 20, y: 5, width: headerView.frame.width - 10, height: headerView.frame.height - 10)
+        modelLabel.frame.size = CGSize(width: headerView.frame.width - 10, height: headerView.frame.height - 10);
         modelLabel.font = UIFont.boldSystemFont(ofSize: 25.0)
         headerView.addSubview(modelLabel)
-        dropDown = createDropDown()
+        modelLabel.translatesAutoresizingMaskIntoConstraints = false;
+        modelLabel.leadingAnchor.constraint(equalTo: headerView.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true;
+        modelLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 5).isActive = true;
+        dropDown = createDropDown();
         headerView.addSubview(dropDown);
+        let autoSync = createAutoSync();
+        headerView.addSubview(autoSync);
         return headerView
     }
 
@@ -65,8 +78,23 @@ class ModelManagementTable: UITableViewController {
         super.viewWillTransition(to: size, with: coordinator)
         if currentOrientation == .portrait {
             dropDown.frame.origin.x = width / 2;
+            dropDownView.frame.origin = CGPoint(x: width / 2, y: 70);
+            autoSyncIcon.frame.origin = CGPoint(x: width - 60, y: 15);
+            blankScreen.frame.size = CGSize(width: width, height: CGFloat(60 * models.count) + 80);
+            popupWindowLeadingAnchor?.constant = 10;
+            popupWindowHeight?.constant = 400;
+            popupWindowWidth?.constant = width - 20;
+            popupWindowTopAnchor?.constant = 100;
+
         } else {
             dropDown.frame.origin.x = height / 2;
+            dropDownView.frame.origin = CGPoint(x: height / 2, y: 70);
+            autoSyncIcon.frame.origin = CGPoint(x: height - 100, y: 15);
+            blankScreen.frame.size = CGSize(width: height, height: CGFloat(60 * models.count) + 80);
+            popupWindowLeadingAnchor?.constant = height / 2 - width / 2
+            popupWindowHeight?.constant = 400;
+            popupWindowWidth?.constant = width + 20;
+            popupWindowTopAnchor?.constant = -50;
         }
     }
 
@@ -103,7 +131,7 @@ class ModelManagementTable: UITableViewController {
     /// creating dropdowns.
     func createDropDown() -> UIView {
         let ddView = UIView();
-        ddView.frame = CGRect(x: Int(width) / 2, y: 0, width: Int(width) / 2, height: 50);
+        ddView.frame = CGRect(x: Int(width) / 2, y: 0, width: 100, height: 50);
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showModelDropdown(_:)))
         ddView.addGestureRecognizer(tapGesture)
         modelClassLabel = createLabel(text: "All");
@@ -115,7 +143,7 @@ class ModelManagementTable: UITableViewController {
         ddView.addSubview(downwardImage)
         downwardImage.tintColor = Colors.border
         downwardImage.translatesAutoresizingMaskIntoConstraints = false
-        downwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: -30).isActive = true
+        downwardImage.trailingAnchor.constraint(equalTo: ddView.trailingAnchor, constant: 0).isActive = true
         downwardImage.topAnchor.constraint(equalTo: ddView.topAnchor, constant: 11.5).isActive = true
         return ddView
     }
@@ -123,7 +151,7 @@ class ModelManagementTable: UITableViewController {
     /// creating select model dropdown.
     func createModelSelectorDropDown() {
         modelDropdown.backgroundColor = Colors.freeRoamButtonsColor;
-        modelDropdown.textColor =  traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
+        modelDropdown.textColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
         let dropDownView = UIView(frame: CGRect(x: width / 2 + 20, y: 100, width: width / 2 - 80, height: 200));
         view.addSubview(dropDownView);
         modelDropdown.dataSource = ["All", "AutoPilot", "Detector", "Navigation"];
@@ -165,18 +193,15 @@ class ModelManagementTable: UITableViewController {
     /// function to create the black screen.
     func createBlankScreen() {
         view.addSubview(blankScreen);
+        tableView.isScrollEnabled = false;
+        tableView.allowsSelection = false
         blankScreen.backgroundColor = Colors.freeRoamButtonsColor;
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
         blankScreen.addGestureRecognizer(tap)
+        blankScreen.isUserInteractionEnabled = false
         blankScreen.translatesAutoresizingMaskIntoConstraints = false
-        if currentOrientation == .portrait {
-            blankScreenWidth = blankScreen.widthAnchor.constraint(equalToConstant: width);
-            blankScreenHeight = blankScreen.heightAnchor.constraint(equalToConstant: height);
-        } else {
-            blankScreenWidth = blankScreen.widthAnchor.constraint(equalToConstant: height);
-            blankScreenHeight = blankScreen.heightAnchor.constraint(equalToConstant: width);
-        }
-        NSLayoutConstraint.activate([blankScreenWidth, blankScreenHeight]);
+        blankScreen.frame.size = currentOrientation == .portrait ? CGSize(width: width, height: CGFloat(60 * models.count) + 80) :
+                CGSize(width: height, height: CGFloat(60 * models.count) + 80)
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -199,7 +224,8 @@ class ModelManagementTable: UITableViewController {
             cell.downloadIconView.isHidden = true;
             return cell;
         }
-        if Common.returnModelItem(modelName: models[indexPath.item]).pathType == "ASSET" {
+        if Common.returnModelItem(modelName: models[indexPath.item]).pathType == "ASSET" || Common.returnModelItem(modelName: models[indexPath.item]).pathType == "" ||
+                   Common.returnModelItem(modelName: models[indexPath.item]).path == "" {
             cell.downloadIconView.isHidden = true;
             return cell;
         }
@@ -254,6 +280,19 @@ class ModelManagementTable: UITableViewController {
 
     }
 
+    /**
+     Function to create auto sync button
+     - Returns:
+     */
+    func createAutoSync() -> UIImageView {
+        autoSyncIcon.image = UIImage(systemName: "arrow.triangle.2.circlepath")
+        autoSyncIcon.tintColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black
+        autoSyncIcon.isUserInteractionEnabled = true;
+        let tap = UITapGestureRecognizer(target: self, action: #selector(autoSyncAction(_:)))
+        autoSyncIcon.addGestureRecognizer(tap)
+        return autoSyncIcon;
+    }
+
     /// download function to download the model from URL
     @objc func download(_ sender: UITapGestureRecognizer) {
         let indexOfSelectedModel = sender.view?.tag ?? 0
@@ -298,6 +337,12 @@ class ModelManagementTable: UITableViewController {
             let url = URL.init(string: model.path)!
             FileDownloader.loadFileAsync(url: url, completion: { s, error in
                 print("File downloaded to : \(s!)")
+                do {
+                    try Common.saveConfigFileToDocument(modelItems: Common.modifyModel(model: model, isDelete: false))
+                    try Authentication.googleAuthentication.saveConfigJsonToDrive();
+                } catch {
+                    print("unable to save config file to document");
+                }
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .fileDownloaded, object: nil);
                 }
@@ -313,18 +358,18 @@ class ModelManagementTable: UITableViewController {
         popupWindowLeadingAnchor = popupWindow.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10)
         if currentOrientation == .portrait {
             popupWindowHeight = popupWindow.heightAnchor.constraint(equalToConstant: 400);
-            popupWindowHeight.isActive = true;
+            popupWindowHeight?.isActive = true;
             popupWindowWidth = popupWindow.widthAnchor.constraint(equalToConstant: width - 20)
             popupWindowLeadingAnchor = popupWindow.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10)
             popupWindowTopAnchor = popupWindow.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100)
         } else {
             popupWindowHeight = popupWindow.heightAnchor.constraint(equalToConstant: width);
-            popupWindowHeight.isActive = true;
+            popupWindowHeight?.isActive = true;
             popupWindowWidth = popupWindow.widthAnchor.constraint(equalToConstant: width + 20);
-            popupWindowLeadingAnchor = popupWindow.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 25)
+            popupWindowLeadingAnchor = popupWindow.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: height / 2 - width / 2)
             popupWindowTopAnchor = popupWindow.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -50)
         }
-        NSLayoutConstraint.activate([popupWindowWidth, popupWindowTopAnchor, popupWindowLeadingAnchor])
+        NSLayoutConstraint.activate([popupWindowWidth!, popupWindowTopAnchor!, popupWindowLeadingAnchor!])
         popupWindow.backgroundColor = Colors.modelDetail;
     }
 
@@ -333,10 +378,21 @@ class ModelManagementTable: UITableViewController {
         let filesPath = DataLogger.shared.getDocumentDirectoryInformation()
         for url in filesPath {
             if Common.returnModelItem(modelName: modelName).name == url.lastPathComponent {
-                DataLogger.shared.deleteFiles(fileNameToDelete: url.lastPathComponent)
+                let item = Common.returnModelItem(modelName: modelName)
+                if (item.path == "" && item.pathType == "FILE") {
+                    print(Common.modifyModel(model: item, isDelete: true))
+                }
+                DataLogger.shared.deleteFiles(fileNameToDelete: url.lastPathComponent);
             }
         }
-        tableView.reloadRows(at: [selectedIndex], with: .bottom)
+        let model = Common.returnModelItem(modelName: modelName);
+        do {
+            try Common.saveConfigFileToDocument(modelItems: Common.modifyModel(model: model, isDelete: true))
+            try Authentication.googleAuthentication.saveConfigJsonToDrive();
+        } catch {
+            print("unable to save config file to document");
+        }
+        tableView.reloadRows(at: [selectedIndex], with: .bottom);
     }
 
     @objc func updateConnect(_ notification: Notification) {
@@ -357,13 +413,17 @@ class ModelManagementTable: UITableViewController {
 
     @objc func fileDownloaded() {
         alert.dismiss(animated: true);
-        tableView.reloadRows(at: [selectedIndex], with: .bottom)
+        if selectedIndex != nil {
+            tableView.reloadRows(at: [selectedIndex], with: .bottom)
+        }
     }
 
     /// function to remove the black screen and display screen with ALL items.
     @objc func removeBlankScreen(_ notification: Notification) {
         if notification.object == nil {
             blankScreen.removeFromSuperview();
+            tableView.isScrollEnabled = true;
+            tableView.allowsSelection = true
             updateModelItemList(type: "All")
             return;
         }
@@ -380,6 +440,41 @@ class ModelManagementTable: UITableViewController {
         updateModelItemList(type: "All")
     }
 
+    /**
+     Function to start the auto sync timer
+     */
+    @objc func autoSync() {
+        timer = Timer.scheduledTimer(timeInterval: 300, target: self, selector: #selector(autoSyncAction), userInfo: nil, repeats: true);
+    }
+
+    /**
+     Action performed after auto sync button tapped
+     */
+    @objc func autoSyncAction(_: UIButton) {
+        Authentication.googleAuthentication.downloadConfigFile();
+        startRotatingImageView();
+    }
+
+    /**
+     Function  to start the rotation of sync icon
+     */
+    func startRotatingImageView() {
+        // Create a CABasicAnimation for continuous rotation
+        let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotationAnimation.toValue = NSNumber(value: Double.pi * 2) // Full circle
+        rotationAnimation.duration = 2.0 // Duration for one rotation
+        rotationAnimation.isCumulative = true // Allows cumulative rotations
+        rotationAnimation.repeatCount = .infinity // Infinite rotation
+        // Add the animation to the image view's layer
+        autoSyncIcon.layer.add(rotationAnimation, forKey: "rotationAnimation")
+    }
+
+    /// Stop the rotation if needed
+    @objc func stopRotatingImageView() {
+        autoSyncIcon.layer.removeAnimation(forKey: "rotationAnimation");
+        viewWillAppear(true)
+    }
+    
 }
 
 class modelManagementCell: UITableViewCell {

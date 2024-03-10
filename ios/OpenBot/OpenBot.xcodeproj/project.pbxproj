@@ -3,10 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 53;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06B219AD2ABD4D6100E65CEF /* SharedPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B219AC2ABD4D6100E65CEF /* SharedPreferences.swift */; };
+		06C87ABB2B3568E700454299 /* FragmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C87ABA2B3568E700454299 /* FragmentType.swift */; };
+		113A1E4E0F1483D107D53843 /* BlockyTasksStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113A10896533873FE2926AF5 /* BlockyTasksStorage.swift */; };
+		3A3C9E0D29E803AC008758C9 /* projectCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A3C9E0C29E803AC008758C9 /* projectCollectionViewCell.xib */; };
+		3A70CA1229C98E5800E4192B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */; };
+		3AA7193929DD42CF00DE8336 /* openCode.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AA7193829DD42CF00DE8336 /* openCode.storyboard */; };
 		4FEF40039118AB286DD8CB0C /* DetectorDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47209A4C03D66945462E /* DetectorDefault.swift */; };
 		4FEF403935216C3C68714E27 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47C56474B6324A408225 /* UIViewExtension.swift */; };
 		4FEF41E8F6D7496059371C24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */; };
@@ -50,21 +56,21 @@
 		660FACBD29BFEDE000223373 /* PlaneIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660FACB629BFEDE000223373 /* PlaneIndex.swift */; };
 		66AC720329B885410022108A /* SettingsFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71E329B885410022108A /* SettingsFragment.swift */; };
 		66AC720429B885410022108A /* DataCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71E529B885410022108A /* DataCollectionController.swift */; };
-		66AC720529B885410022108A /* expandSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71E629B885410022108A /* expandSetting.swift */; };
+		66AC720529B885410022108A /* ExpandSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71E629B885410022108A /* ExpandSetting.swift */; };
 		66AC720629B885410022108A /* PointGoalFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71E829B885410022108A /* PointGoalFragment.swift */; };
 		66AC720729B885410022108A /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71E929B885410022108A /* CameraController.swift */; };
 		66AC720829B885410022108A /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71EB29B885410022108A /* HomePageViewController.swift */; };
-		66AC720929B885410022108A /* modesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71EC29B885410022108A /* modesCollectionViewCell.swift */; };
+		66AC720929B885410022108A /* ModesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71EC29B885410022108A /* ModesCollectionViewCell.swift */; };
 		66AC720A29B885410022108A /* VehicleControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71EE29B885410022108A /* VehicleControl.swift */; };
 		66AC720B29B885410022108A /* RobotInfoFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71F029B885410022108A /* RobotInfoFrame.swift */; };
 		66AC720C29B885410022108A /* CheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71F129B885410022108A /* CheckBox.swift */; };
-		66AC720D29B885410022108A /* popupWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71F329B885410022108A /* popupWindowView.swift */; };
+		66AC720D29B885410022108A /* PopupWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71F329B885410022108A /* PopupWindowView.swift */; };
 		66AC720E29B885410022108A /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71F429B885410022108A /* BottomSheet.swift */; };
 		66AC720F29B885410022108A /* ModelManagementTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71F529B885410022108A /* ModelManagementTable.swift */; };
 		66AC721029B885410022108A /* BluetoothTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71F729B885410022108A /* BluetoothTable.swift */; };
 		66AC721129B885410022108A /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71F929B885410022108A /* GameViewController.swift */; };
 		66AC721229B885410022108A /* AutopilotFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71FB29B885410022108A /* AutopilotFragment.swift */; };
-		66AC721329B885410022108A /* expandedAutoPilot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71FC29B885410022108A /* expandedAutoPilot.swift */; };
+		66AC721329B885410022108A /* ExpandedAutoPilot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71FC29B885410022108A /* ExpandedAutoPilot.swift */; };
 		66AC721429B885410022108A /* ObjectTrackingFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71FE29B885410022108A /* ObjectTrackingFragment.swift */; };
 		66AC721529B885410022108A /* ObjectTrackingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC71FF29B885410022108A /* ObjectTrackingSettings.swift */; };
 		66AC721629B885410022108A /* GaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC720129B885410022108A /* GaugeView.swift */; };
@@ -72,25 +78,51 @@
 		66AC721929B885C70022108A /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC721829B885C70022108A /* Navigation.swift */; };
 		66B3C59C2A1D673D0079BC16 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B3C59B2A1D673D0079BC16 /* UIButton.swift */; };
 		66E7A02C297697BE00283ED6 /* DetectorFloatYoloV5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */; };
-		727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */; };
+		727D301B0DA9C7F9CC3203D6 /* BluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* BluetoothDataController.swift */; };
+		727D303C061B9CA823E99905 /* Projects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33AFAD7EDEC111578DE8 /* Projects.swift */; };
+		727D30A012E8F58F2DD21369 /* ServerCommunication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D384E16A0157F2B8C7084 /* ServerCommunication.swift */; };
+		727D31480C80A069C9686CC2 /* JsEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D313C9325317487A840E7 /* JsEvaluator.swift */; };
+		727D31FC120BAB5F8CEB0D51 /* RunRobot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3EC5C93F255195145384 /* RunRobot.swift */; };
 		727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */; };
+		727D339EDE19D22D7B9D16B5 /* GoogleSignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3153BBE7A4D47749E6E8 /* GoogleSignInButton.swift */; };
+		727D33E21291B21856A1393B /* UiLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B76F53D6B069FF2A5C /* UiLabel.swift */; };
 		727D3457F432B9743263C307 /* sensorDataRetrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */; };
 		727D34602C26673639AA0D0B /* Dimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3946DB74E63117B32AF4 /* Dimension.swift */; };
 		727D348793BC7E328164FDB2 /* DataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3157F2B5E5DBB1565EDD /* DataLogger.swift */; };
+		727D34C317885120CF1DBC27 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D36143ED88C8E210BCEB1 /* AudioPlayer.swift */; };
 		727D34E3CC491BD7758C572F /* WebRTCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */; };
+		727D354EAA4CA78176DD1064 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D383824EABABFDE0806CE /* Toast.swift */; };
+		727D35D8CB673649BF1AD948 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3AB3E741A78099D79575 /* Endpoint.swift */; };
+		727D36856575D19091290CFF /* WebViewFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35EAA13908B142BC4773 /* WebViewFragment.swift */; };
 		727D36915DB88577316D9C46 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A8D7ACD08EF11740FC2 /* Connection.swift */; };
+		727D3693A3F8CF2A51BBC9C4 /* NsdService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3EA2158BC2BB77C83DF8 /* NsdService.swift */; };
 		727D3695CD23839015A90EFB /* DeviceCurrentOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */; };
+		727D37C2806C8F8AC502DDBE /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 727D3278D9F8247EB0FF1B73 /* README.md */; };
 		727D37CDD881685D4EF6BFF5 /* timestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F5FE3F054BE4FA52191 /* timestamp.swift */; };
+		727D37F0A374924D485368CD /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D38DAC31CD27C5DE891F4 /* Reachability.swift */; };
+		727D3825145AF7703ACAD6A2 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E5643531AC215E4101B /* UIButton.swift */; };
+		727D3928D96E5AD69D24DA6D /* ServerListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3937D1457F50C712CDD9 /* ServerListener.swift */; };
+		727D397E28A6A94840B702D4 /* AlertFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30892A4485EAE638E24F /* AlertFragment.swift */; };
+		727D39E11C9EAFDC77200946 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3CF1C0FE6DE0D04C762A /* UIImageView.swift */; };
+		727D3A13757F3F2493E61977 /* ProjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30F6A969E2122927A95D /* ProjectCollectionViewCell.swift */; };
 		727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */; };
+		727D3AC020F4956E20B53A9A /* UITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D5655D02C86CD08281C /* UITextField.swift */; };
 		727D3B42755B3A6BF1C5202F /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3189735FC4F7A4E4A6C1 /* Browser.swift */; };
 		727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */; };
+		727D3CCBA2ED9D056786AAC1 /* ProjectFragement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D326C57B2AFC7F2AEEDB1 /* ProjectFragement.swift */; };
+		727D3D05C58FC97350145FFD /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D388488E1FFD98E542061 /* Authentication.swift */; };
 		727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B02AB471D9F31B0747 /* Font.swift */; };
+		727D3D5ABACE7CF224FA3349 /* EditProfileFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D384384E67F20294222AC /* EditProfileFragment.swift */; };
 		727D3D7ED38D147ECD48C9BA /* SignalingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D37586F16DE497CEA62CE /* SignalingMessage.swift */; };
 		727D3D8A8059D87F84174B97 /* AdaptiveLayoutHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */; };
+		727D3E26C05E5911CC9BF342 /* Readme.md in Sources */ = {isa = PBXBuildFile; fileRef = 727D300DE421E6957CB4CD67 /* Readme.md */; };
 		727D3E359F26636BBDC6E3A4 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3C4EBE89B9B6E537BE8B /* Device.swift */; };
 		727D3E6881E8758C94FF74F4 /* GifLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A51A7A6155C22E62412 /* GifLoader.swift */; };
 		727D3E780CA6260A927019BD /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D368915F3602E605FEA51 /* Client.swift */; };
+		727D3EB96F3F1D250E9D32E7 /* ServerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D5C91B30251F62FA65B /* ServerItem.swift */; };
 		727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */; };
+		727D3EFB9016C8224990ACE8 /* ProfileFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A89E5445B66EEB3177C /* ProfileFragment.swift */; };
+		727D3FA70675D0042BFBB89A /* ScannerFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E372C09E1BADA2A03FA /* ScannerFragment.swift */; };
 		BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9BAED728AF94A800EF3E48 /* GameController.framework */; };
 		DB5B604C1844E78F9C021354 /* Pods_OpenBot_OpenBotUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */; };
 		FEC71CD19514A3FE19FEE5D1 /* Pods_OpenBotTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */; };
@@ -114,9 +146,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		14FEE4780CE79F3AAB630B6D /* Pods-OpenBotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.release.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.release.xcconfig"; sourceTree = "<group>"; };
+		06B219AC2ABD4D6100E65CEF /* SharedPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPreferences.swift; sourceTree = "<group>"; };
+		06C87ABA2B3568E700454299 /* FragmentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FragmentType.swift; sourceTree = "<group>"; };
+		113A10896533873FE2926AF5 /* BlockyTasksStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockyTasksStorage.swift; sourceTree = "<group>"; };
 		17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot_OpenBotUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		38BD59823D98022F3763FF79 /* Pods-OpenBot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.release.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.release.xcconfig"; sourceTree = "<group>"; };
+		3A3C9E0C29E803AC008758C9 /* projectCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = projectCollectionViewCell.xib; sourceTree = "<group>"; };
+		3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3AA7193829DD42CF00DE8336 /* openCode.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = openCode.storyboard; sourceTree = "<group>"; };
 		4FEF4178D0A2805591A6A3A6 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		4FEF41FCA3B501192D417D73 /* CVPixelBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CVPixelBuffer.swift; path = extensions/CVPixelBuffer.swift; sourceTree = "<group>"; };
 		4FEF421BF49FEE835C6DC5CB /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
@@ -163,21 +199,21 @@
 		660FACB629BFEDE000223373 /* PlaneIndex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaneIndex.swift; sourceTree = "<group>"; };
 		66AC71E329B885410022108A /* SettingsFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsFragment.swift; sourceTree = "<group>"; };
 		66AC71E529B885410022108A /* DataCollectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataCollectionController.swift; sourceTree = "<group>"; };
-		66AC71E629B885410022108A /* expandSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = expandSetting.swift; sourceTree = "<group>"; };
+		66AC71E629B885410022108A /* ExpandSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandSetting.swift; sourceTree = "<group>"; };
 		66AC71E829B885410022108A /* PointGoalFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointGoalFragment.swift; sourceTree = "<group>"; };
 		66AC71E929B885410022108A /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		66AC71EB29B885410022108A /* HomePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
-		66AC71EC29B885410022108A /* modesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = modesCollectionViewCell.swift; sourceTree = "<group>"; };
+		66AC71EC29B885410022108A /* ModesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModesCollectionViewCell.swift; sourceTree = "<group>"; };
 		66AC71EE29B885410022108A /* VehicleControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VehicleControl.swift; sourceTree = "<group>"; };
 		66AC71F029B885410022108A /* RobotInfoFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RobotInfoFrame.swift; sourceTree = "<group>"; };
 		66AC71F129B885410022108A /* CheckBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckBox.swift; sourceTree = "<group>"; };
-		66AC71F329B885410022108A /* popupWindowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = popupWindowView.swift; sourceTree = "<group>"; };
+		66AC71F329B885410022108A /* PopupWindowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupWindowView.swift; sourceTree = "<group>"; };
 		66AC71F429B885410022108A /* BottomSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
 		66AC71F529B885410022108A /* ModelManagementTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelManagementTable.swift; sourceTree = "<group>"; };
 		66AC71F729B885410022108A /* BluetoothTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothTable.swift; sourceTree = "<group>"; };
 		66AC71F929B885410022108A /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		66AC71FB29B885410022108A /* AutopilotFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutopilotFragment.swift; sourceTree = "<group>"; };
-		66AC71FC29B885410022108A /* expandedAutoPilot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = expandedAutoPilot.swift; sourceTree = "<group>"; };
+		66AC71FC29B885410022108A /* ExpandedAutoPilot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandedAutoPilot.swift; sourceTree = "<group>"; };
 		66AC71FE29B885410022108A /* ObjectTrackingFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectTrackingFragment.swift; sourceTree = "<group>"; };
 		66AC71FF29B885410022108A /* ObjectTrackingSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectTrackingSettings.swift; sourceTree = "<group>"; };
 		66AC720129B885410022108A /* GaugeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GaugeView.swift; sourceTree = "<group>"; };
@@ -185,32 +221,60 @@
 		66AC721829B885C70022108A /* Navigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		66B3C59B2A1D673D0079BC16 /* UIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
 		66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectorFloatYoloV5.swift; sourceTree = "<group>"; };
+		6F048E6F75C27D1520723C37 /* Pods-OpenBot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.release.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.release.xcconfig"; sourceTree = "<group>"; };
+		727D300DE421E6957CB4CD67 /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptedConstraint.swift; path = Adaptive/AdaptedConstraint.swift; sourceTree = "<group>"; };
+		727D30892A4485EAE638E24F /* AlertFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertFragment.swift; sourceTree = "<group>"; };
+		727D30F6A969E2122927A95D /* ProjectCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectCollectionViewCell.swift; sourceTree = "<group>"; };
+		727D313C9325317487A840E7 /* JsEvaluator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsEvaluator.swift; sourceTree = "<group>"; };
+		727D3153BBE7A4D47749E6E8 /* GoogleSignInButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleSignInButton.swift; sourceTree = "<group>"; };
 		727D3157F2B5E5DBB1565EDD /* DataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLogger.swift; sourceTree = "<group>"; };
 		727D3189735FC4F7A4E4A6C1 /* Browser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
+		727D326C57B2AFC7F2AEEDB1 /* ProjectFragement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectFragement.swift; sourceTree = "<group>"; };
+		727D3278D9F8247EB0FF1B73 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRTCDelegates.swift; path = WebRTC/WebRTCDelegates.swift; sourceTree = "<group>"; };
 		727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sensorDataRetrieve.swift; sourceTree = "<group>"; };
+		727D33AFAD7EDEC111578DE8 /* Projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Projects.swift; sourceTree = "<group>"; };
 		727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCCustomFrameCapture.swift; path = WebRTC/RTCCustomFrameCapture.swift; sourceTree = "<group>"; };
+		727D35EAA13908B142BC4773 /* WebViewFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewFragment.swift; sourceTree = "<group>"; };
+		727D36143ED88C8E210BCEB1 /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		727D368915F3602E605FEA51 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		727D37586F16DE497CEA62CE /* SignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalingMessage.swift; sourceTree = "<group>"; };
+		727D383824EABABFDE0806CE /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
+		727D384384E67F20294222AC /* EditProfileFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileFragment.swift; sourceTree = "<group>"; };
+		727D384E16A0157F2B8C7084 /* ServerCommunication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCommunication.swift; sourceTree = "<group>"; };
+		727D388488E1FFD98E542061 /* Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
+		727D38DAC31CD27C5DE891F4 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		727D3937D1457F50C712CDD9 /* ServerListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerListener.swift; sourceTree = "<group>"; };
 		727D3946DB74E63117B32AF4 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
 		727D39B02AB471D9F31B0747 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
+		727D39B76F53D6B069FF2A5C /* UiLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiLabel.swift; sourceTree = "<group>"; };
 		727D3A51A7A6155C22E62412 /* GifLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GifLoader.swift; sourceTree = "<group>"; };
-		727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bluetoothDataController.swift; sourceTree = "<group>"; };
+		727D3A55B16EF3CEDA3901BF /* BluetoothDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothDataController.swift; sourceTree = "<group>"; };
+		727D3A89E5445B66EEB3177C /* ProfileFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileFragment.swift; sourceTree = "<group>"; };
 		727D3A8D7ACD08EF11740FC2 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
+		727D3AB3E741A78099D79575 /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		727D3C4EBE89B9B6E537BE8B /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		727D3CF1C0FE6DE0D04C762A /* UIImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
+		727D3D5655D02C86CD08281C /* UITextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextField.swift; sourceTree = "<group>"; };
+		727D3D5C91B30251F62FA65B /* ServerItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerItem.swift; sourceTree = "<group>"; };
 		727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRTCClient.swift; path = WebRTC/WebRTCClient.swift; sourceTree = "<group>"; };
+		727D3E372C09E1BADA2A03FA /* ScannerFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScannerFragment.swift; sourceTree = "<group>"; };
+		727D3E5643531AC215E4101B /* UIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
+		727D3EA2158BC2BB77C83DF8 /* NsdService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NsdService.swift; sourceTree = "<group>"; };
+		727D3EC5C93F255195145384 /* RunRobot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RunRobot.swift; sourceTree = "<group>"; };
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
 		727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIDeviceExtension.swift; path = extensions/UIDeviceExtension.swift; sourceTree = "<group>"; };
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
-		74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
-		7D15502AB5B13CA6849277AC /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
+		808FD0EDC2699A60CAFB77BF /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
+		85028858BF84C30C93BF2CF7 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBotTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A342C9A4C1417EB2B878B82D /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		BF9BAED728AF94A800EF3E48 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		CADB8D624A9E1D1494E9F87D /* Pods_OpenBot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DBEAC972F15CC83E41C6AAA9 /* Pods-OpenBot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.debug.xcconfig"; sourceTree = "<group>"; };
+		D8CE9F77688B7B3F870BEA75 /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
+		DB93BBCA8A2B2872FB0CF679 /* Pods-OpenBotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.release.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.release.xcconfig"; sourceTree = "<group>"; };
+		F0AA8AF1DB97EAA31FE62D4A /* Pods-OpenBot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,6 +306,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06C87AB92B3568AF00454299 /* Fragment */ = {
+			isa = PBXGroup;
+			children = (
+				06C87ABA2B3568E700454299 /* FragmentType.swift */,
+			);
+			path = Fragment;
+			sourceTree = "<group>";
+		};
 		158970C63E9775BD41F614A3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -250,19 +322,6 @@
 				9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		37A05E57C6BA519D6B86A37B /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				DBEAC972F15CC83E41C6AAA9 /* Pods-OpenBot.debug.xcconfig */,
-				38BD59823D98022F3763FF79 /* Pods-OpenBot.release.xcconfig */,
-				A342C9A4C1417EB2B878B82D /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */,
-				7D15502AB5B13CA6849277AC /* Pods-OpenBot-OpenBotUITests.release.xcconfig */,
-				74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */,
-				14FEE4780CE79F3AAB630B6D /* Pods-OpenBotTests.release.xcconfig */,
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		4FEF4191C08EC7053A46679C /* OpenBotTests */ = {
@@ -299,6 +358,14 @@
 				727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */,
 				4FEF482EC43FA3B64007EBD2 /* JSON.swift */,
 				4FEF4A37AE5E709273A2ED40 /* Date.swift */,
+				727D36143ED88C8E210BCEB1 /* AudioPlayer.swift */,
+				727D39B76F53D6B069FF2A5C /* UiLabel.swift */,
+				727D3153BBE7A4D47749E6E8 /* GoogleSignInButton.swift */,
+				727D3CF1C0FE6DE0D04C762A /* UIImageView.swift */,
+				727D3D5655D02C86CD08281C /* UITextField.swift */,
+				727D3E5643531AC215E4101B /* UIButton.swift */,
+				727D383824EABABFDE0806CE /* Toast.swift */,
+				727D38DAC31CD27C5DE891F4 /* Reachability.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -323,6 +390,7 @@
 		4FEF489C07FD5C967FFDCDE8 /* OpenBot */ = {
 			isa = PBXGroup;
 			children = (
+				3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */,
 				66AC71E129B885410022108A /* Controllers */,
 				BF9BAED628AF94A800EF3E48 /* Frameworks */,
 				4FEF44F0837469F66D5A7156 /* Models */,
@@ -338,6 +406,10 @@
 				4FEF47EAC21A4C2BDD11B72B /* README.md */,
 				4FEF4FB9DCF0D8F0BFCB835B /* tflite */,
 				4FEF421BF49FEE835C6DC5CB /* config.json */,
+				727D3012CF4D90EBBE877212 /* server */,
+				727D3BBE14B8FA7877902A13 /* Authentication */,
+				727D317DC854B57A8D176DA7 /* JsEvaluator */,
+				727D3004C935D2676EA98064 /* Projects */,
 			);
 			path = OpenBot;
 			sourceTree = "<group>";
@@ -347,7 +419,7 @@
 			children = (
 				4FEF45E913E70DDE5DE7F387 /* GameController.swift */,
 				727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */,
-				727D3A55B16EF3CEDA3901BF /* bluetoothDataController.swift */,
+				727D3A55B16EF3CEDA3901BF /* BluetoothDataController.swift */,
 				727D3157F2B5E5DBB1565EDD /* DataLogger.swift */,
 				727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */,
 				4FEF4E8F0A2942C4C971E2BA /* Server */,
@@ -355,6 +427,7 @@
 				727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */,
 				727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */,
 				727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */,
+				06B219AC2ABD4D6100E65CEF /* SharedPreferences.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -375,6 +448,8 @@
 			children = (
 				4FEF4E0B9A9BAE2BD7321783 /* Main.storyboard */,
 				4FEF4EE1E197D3F52EFF3B88 /* Launch Screen.storyboard */,
+				3AA7193829DD42CF00DE8336 /* openCode.storyboard */,
+				3A3C9E0C29E803AC008758C9 /* projectCollectionViewCell.xib */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -419,8 +494,8 @@
 				4FEF4191C08EC7053A46679C /* OpenBotTests */,
 				4FEF4549B0D1FC8F591E63FE /* OpenBotUITests */,
 				4FEF4BD00A645A3985233A37 /* README.md */,
-				37A05E57C6BA519D6B86A37B /* Pods */,
 				158970C63E9775BD41F614A3 /* Frameworks */,
+				ED732554C69FE0395DA9AB35 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -449,6 +524,7 @@
 		66AC71E129B885410022108A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				06C87AB92B3568AF00454299 /* Fragment */,
 				66AC71E229B885410022108A /* Settings */,
 				66AC71E429B885410022108A /* DataCollection */,
 				66AC71E729B885410022108A /* PointGoalNavigation */,
@@ -462,6 +538,12 @@
 				66AC71FA29B885410022108A /* Autopilot */,
 				66AC71FD29B885410022108A /* ObjectTracking */,
 				66AC720029B885410022108A /* FreeRoam */,
+				727D3E7CACC6AC0539AC7BC4 /* Profile */,
+				727D3F1F46201738BE703091 /* Project */,
+				727D38A54661B9A54A681AC1 /* QrScanner */,
+				727D356FCD75B6B73D8C5A7C /* runRobot */,
+				727D3AD9225580EC94775651 /* WebView */,
+				727D3DEDE1506A0363E8D959 /* Alert */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -478,7 +560,7 @@
 			isa = PBXGroup;
 			children = (
 				66AC71E529B885410022108A /* DataCollectionController.swift */,
-				66AC71E629B885410022108A /* expandSetting.swift */,
+				66AC71E629B885410022108A /* ExpandSetting.swift */,
 			);
 			path = DataCollection;
 			sourceTree = "<group>";
@@ -495,7 +577,7 @@
 			isa = PBXGroup;
 			children = (
 				66AC71EB29B885410022108A /* HomePageViewController.swift */,
-				66AC71EC29B885410022108A /* modesCollectionViewCell.swift */,
+				66AC71EC29B885410022108A /* ModesCollectionViewCell.swift */,
 			);
 			path = HomePage;
 			sourceTree = "<group>";
@@ -520,7 +602,7 @@
 		66AC71F229B885410022108A /* ModelManagement */ = {
 			isa = PBXGroup;
 			children = (
-				66AC71F329B885410022108A /* popupWindowView.swift */,
+				66AC71F329B885410022108A /* PopupWindowView.swift */,
 				66AC71F429B885410022108A /* BottomSheet.swift */,
 				66AC71F529B885410022108A /* ModelManagementTable.swift */,
 			);
@@ -547,7 +629,7 @@
 			isa = PBXGroup;
 			children = (
 				66AC71FB29B885410022108A /* AutopilotFragment.swift */,
-				66AC71FC29B885410022108A /* expandedAutoPilot.swift */,
+				66AC71FC29B885410022108A /* ExpandedAutoPilot.swift */,
 			);
 			path = Autopilot;
 			sourceTree = "<group>";
@@ -570,6 +652,95 @@
 			path = FreeRoam;
 			sourceTree = "<group>";
 		};
+		727D3004C935D2676EA98064 /* Projects */ = {
+			isa = PBXGroup;
+			children = (
+				727D33AFAD7EDEC111578DE8 /* Projects.swift */,
+			);
+			path = Projects;
+			sourceTree = "<group>";
+		};
+		727D3012CF4D90EBBE877212 /* server */ = {
+			isa = PBXGroup;
+			children = (
+				727D3EA2158BC2BB77C83DF8 /* NsdService.swift */,
+				727D384E16A0157F2B8C7084 /* ServerCommunication.swift */,
+				727D3937D1457F50C712CDD9 /* ServerListener.swift */,
+				727D3AB3E741A78099D79575 /* Endpoint.swift */,
+				727D3D5C91B30251F62FA65B /* ServerItem.swift */,
+			);
+			path = server;
+			sourceTree = "<group>";
+		};
+		727D317DC854B57A8D176DA7 /* JsEvaluator */ = {
+			isa = PBXGroup;
+			children = (
+				727D313C9325317487A840E7 /* JsEvaluator.swift */,
+			);
+			path = JsEvaluator;
+			sourceTree = "<group>";
+		};
+		727D356FCD75B6B73D8C5A7C /* runRobot */ = {
+			isa = PBXGroup;
+			children = (
+				727D3EC5C93F255195145384 /* RunRobot.swift */,
+				113A10896533873FE2926AF5 /* BlockyTasksStorage.swift */,
+			);
+			path = runRobot;
+			sourceTree = "<group>";
+		};
+		727D38A54661B9A54A681AC1 /* QrScanner */ = {
+			isa = PBXGroup;
+			children = (
+				727D3E372C09E1BADA2A03FA /* ScannerFragment.swift */,
+			);
+			path = QrScanner;
+			sourceTree = "<group>";
+		};
+		727D3AD9225580EC94775651 /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				727D35EAA13908B142BC4773 /* WebViewFragment.swift */,
+				727D300DE421E6957CB4CD67 /* Readme.md */,
+			);
+			path = WebView;
+			sourceTree = "<group>";
+		};
+		727D3BBE14B8FA7877902A13 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				727D388488E1FFD98E542061 /* Authentication.swift */,
+				727D3278D9F8247EB0FF1B73 /* README.md */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		727D3DEDE1506A0363E8D959 /* Alert */ = {
+			isa = PBXGroup;
+			children = (
+				727D30892A4485EAE638E24F /* AlertFragment.swift */,
+			);
+			path = Alert;
+			sourceTree = "<group>";
+		};
+		727D3E7CACC6AC0539AC7BC4 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				727D3A89E5445B66EEB3177C /* ProfileFragment.swift */,
+				727D384384E67F20294222AC /* EditProfileFragment.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		727D3F1F46201738BE703091 /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				727D326C57B2AFC7F2AEEDB1 /* ProjectFragement.swift */,
+				727D30F6A969E2122927A95D /* ProjectCollectionViewCell.swift */,
+			);
+			path = Project;
+			sourceTree = "<group>";
+		};
 		BF9BAED628AF94A800EF3E48 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -577,6 +748,19 @@
 			);
 			name = Frameworks;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		ED732554C69FE0395DA9AB35 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F0AA8AF1DB97EAA31FE62D4A /* Pods-OpenBot.debug.xcconfig */,
+				6F048E6F75C27D1520723C37 /* Pods-OpenBot.release.xcconfig */,
+				85028858BF84C30C93BF2CF7 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */,
+				D8CE9F77688B7B3F870BEA75 /* Pods-OpenBot-OpenBotUITests.release.xcconfig */,
+				808FD0EDC2699A60CAFB77BF /* Pods-OpenBotTests.debug.xcconfig */,
+				DB93BBCA8A2B2872FB0CF679 /* Pods-OpenBotTests.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -697,7 +881,10 @@
 				4FEF41E8F6D7496059371C24 /* Assets.xcassets in Resources */,
 				4FEF434E29022789D4FB8985 /* Main.storyboard in Resources */,
 				4FEF43565A0B8A9578E85B54 /* Launch Screen.storyboard in Resources */,
+				3A3C9E0D29E803AC008758C9 /* projectCollectionViewCell.xib in Resources */,
+				3AA7193929DD42CF00DE8336 /* openCode.storyboard in Resources */,
 				4FEF4209E4568C06F71C8E86 /* config.json in Resources */,
+				3A70CA1229C98E5800E4192B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -711,15 +898,69 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework",
 				"${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAppCheckInterop/FirebaseAppCheckInterop.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAuth/FirebaseAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAuthInterop/FirebaseAuthInterop.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseFirestore/FirebaseFirestore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseFirestoreInternal/FirebaseFirestoreInternal.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseSharedSwift/FirebaseSharedSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseStorage/FirebaseStorage.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleAPIClientForREST/GoogleAPIClientForREST.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleSignIn/GoogleSignIn.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleSignInSwiftSupport/GoogleSignInSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
+				"${BUILT_PRODUCTS_DIR}/RecaptchaInterop/RecaptchaInterop.framework",
 				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
+				"${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework",
+				"${BUILT_PRODUCTS_DIR}/abseil/absl.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AppAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl_grpc.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DropDown.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAppCheckInterop.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuthInterop.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreExtension.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreInternal.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseFirestore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseFirestoreInternal.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseSharedSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseStorage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMAppAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleAPIClientForREST.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleSignIn.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleSignInSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RecaptchaInterop.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIPFoundation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/absl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -800,15 +1041,69 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OpenBot/Pods-OpenBot-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework",
 				"${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAppCheckInterop/FirebaseAppCheckInterop.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAuth/FirebaseAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAuthInterop/FirebaseAuthInterop.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseFirestore/FirebaseFirestore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseFirestoreInternal/FirebaseFirestoreInternal.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseSharedSwift/FirebaseSharedSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseStorage/FirebaseStorage.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleAPIClientForREST/GoogleAPIClientForREST.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleSignIn/GoogleSignIn.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleSignInSwiftSupport/GoogleSignInSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
+				"${BUILT_PRODUCTS_DIR}/RecaptchaInterop/RecaptchaInterop.framework",
 				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
+				"${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework",
+				"${BUILT_PRODUCTS_DIR}/abseil/absl.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AppAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl_grpc.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DropDown.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAppCheckInterop.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuthInterop.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreExtension.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreInternal.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseFirestore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseFirestoreInternal.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseSharedSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseStorage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMAppAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleAPIClientForREST.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleSignIn.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleSignInSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RecaptchaInterop.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIPFoundation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/absl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -861,6 +1156,7 @@
 				660FACB929BFEDE000223373 /* CVPixelBuffer+.swift in Sources */,
 				4FEF483FCB45A3257C181C30 /* README.md in Sources */,
 				4FEF49D3149212EA208C893B /* Constants.swift in Sources */,
+				06B219AD2ABD4D6100E65CEF /* SharedPreferences.swift in Sources */,
 				4FEF47B52607872D6B0CD56F /* Strings.swift in Sources */,
 				66AC721529B885410022108A /* ObjectTrackingSettings.swift in Sources */,
 				4FEF4A957CB4D38EBD818730 /* GameController.swift in Sources */,
@@ -869,7 +1165,7 @@
 				66AC720F29B885410022108A /* ModelManagementTable.swift in Sources */,
 				66E7A02C297697BE00283ED6 /* DetectorFloatYoloV5.swift in Sources */,
 				660FACB729BFEDE000223373 /* MTLDevice+.swift in Sources */,
-				727D301B0DA9C7F9CC3203D6 /* bluetoothDataController.swift in Sources */,
+				727D301B0DA9C7F9CC3203D6 /* BluetoothDataController.swift in Sources */,
 				660FACBB29BFEDE000223373 /* CVMetalTexture+.swift in Sources */,
 				66AC721729B885410022108A /* FreeRoamController.swift in Sources */,
 				66AC720B29B885410022108A /* RobotInfoFrame.swift in Sources */,
@@ -877,7 +1173,7 @@
 				4FEF4D4C829C1A8519999198 /* Control.swift in Sources */,
 				727D348793BC7E328164FDB2 /* DataLogger.swift in Sources */,
 				727D3695CD23839015A90EFB /* DeviceCurrentOrientation.swift in Sources */,
-				66AC720929B885410022108A /* modesCollectionViewCell.swift in Sources */,
+				66AC720929B885410022108A /* ModesCollectionViewCell.swift in Sources */,
 				660FACBC29BFEDE000223373 /* BlueDress.swift in Sources */,
 				4FEF43788A6975AED9390369 /* README.md in Sources */,
 				727D3E359F26636BBDC6E3A4 /* Device.swift in Sources */,
@@ -887,11 +1183,11 @@
 				66AC720829B885410022108A /* HomePageViewController.swift in Sources */,
 				727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */,
 				727D37CDD881685D4EF6BFF5 /* timestamp.swift in Sources */,
-				66AC720529B885410022108A /* expandSetting.swift in Sources */,
+				66AC720529B885410022108A /* ExpandSetting.swift in Sources */,
 				4FEF4BEFB4E329AFFBAB8B4D /* Autopilot.swift in Sources */,
 				4FEF44E677749DA0D24FB857 /* Network.swift in Sources */,
 				4FEF47E6E6A09E51C9FDF010 /* Model.swift in Sources */,
-				66AC720D29B885410022108A /* popupWindowView.swift in Sources */,
+				66AC720D29B885410022108A /* PopupWindowView.swift in Sources */,
 				66AC720A29B885410022108A /* VehicleControl.swift in Sources */,
 				4FEF4C449F206CF65324CD03 /* Common.swift in Sources */,
 				4FEF4A1F9280139D278509D3 /* Detector.swift in Sources */,
@@ -902,7 +1198,7 @@
 				66AC721229B885410022108A /* AutopilotFragment.swift in Sources */,
 				4FEF44068B0C9DBF44BFE5A2 /* CVPixelBuffer.swift in Sources */,
 				660FACBD29BFEDE000223373 /* PlaneIndex.swift in Sources */,
-				66AC721329B885410022108A /* expandedAutoPilot.swift in Sources */,
+				66AC721329B885410022108A /* ExpandedAutoPilot.swift in Sources */,
 				4FEF48E013A1477BE882AA7F /* FileDownloader.swift in Sources */,
 				4FEF47BB348E0DF6D9C4BA48 /* UIImage.swift in Sources */,
 				4FEF4647C767D9C244C2EB41 /* Data.swift in Sources */,
@@ -921,6 +1217,7 @@
 				66AC720629B885410022108A /* PointGoalFragment.swift in Sources */,
 				727D3E6881E8758C94FF74F4 /* GifLoader.swift in Sources */,
 				66AC721929B885C70022108A /* Navigation.swift in Sources */,
+				06C87ABB2B3568E700454299 /* FragmentType.swift in Sources */,
 				727D3D7ED38D147ECD48C9BA /* SignalingMessage.swift in Sources */,
 				727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */,
 				727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */,
@@ -929,6 +1226,33 @@
 				727D338AB7E821641A477554 /* WebRTCDelegates.swift in Sources */,
 				66AC721429B885410022108A /* ObjectTrackingFragment.swift in Sources */,
 				4FEF43D0E4F94DBBD4DB0614 /* Date.swift in Sources */,
+				727D3693A3F8CF2A51BBC9C4 /* NsdService.swift in Sources */,
+				727D30A012E8F58F2DD21369 /* ServerCommunication.swift in Sources */,
+				727D3928D96E5AD69D24DA6D /* ServerListener.swift in Sources */,
+				727D34C317885120CF1DBC27 /* AudioPlayer.swift in Sources */,
+				727D3D05C58FC97350145FFD /* Authentication.swift in Sources */,
+				727D33E21291B21856A1393B /* UiLabel.swift in Sources */,
+				727D339EDE19D22D7B9D16B5 /* GoogleSignInButton.swift in Sources */,
+				727D3CCBA2ED9D056786AAC1 /* ProjectFragement.swift in Sources */,
+				727D3EFB9016C8224990ACE8 /* ProfileFragment.swift in Sources */,
+				727D3FA70675D0042BFBB89A /* ScannerFragment.swift in Sources */,
+				727D31480C80A069C9686CC2 /* JsEvaluator.swift in Sources */,
+				727D31FC120BAB5F8CEB0D51 /* RunRobot.swift in Sources */,
+				727D3D5ABACE7CF224FA3349 /* EditProfileFragment.swift in Sources */,
+				727D39E11C9EAFDC77200946 /* UIImageView.swift in Sources */,
+				727D3AC020F4956E20B53A9A /* UITextField.swift in Sources */,
+				727D3825145AF7703ACAD6A2 /* UIButton.swift in Sources */,
+				727D3A13757F3F2493E61977 /* ProjectCollectionViewCell.swift in Sources */,
+				727D303C061B9CA823E99905 /* Projects.swift in Sources */,
+				727D37C2806C8F8AC502DDBE /* README.md in Sources */,
+				727D354EAA4CA78176DD1064 /* Toast.swift in Sources */,
+				727D37F0A374924D485368CD /* Reachability.swift in Sources */,
+				727D36856575D19091290CFF /* WebViewFragment.swift in Sources */,
+				727D3E26C05E5911CC9BF342 /* Readme.md in Sources */,
+				727D397E28A6A94840B702D4 /* AlertFragment.swift in Sources */,
+				113A1E4E0F1483D107D53843 /* BlockyTasksStorage.swift in Sources */,
+				727D35D8CB673649BF1AD948 /* Endpoint.swift in Sources */,
+				727D3EB96F3F1D250E9D32E7 /* ServerItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -958,7 +1282,7 @@
 /* Begin XCBuildConfiguration section */
 		4FEF43D6410B560C20FD769C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A342C9A4C1417EB2B878B82D /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */;
+			baseConfigurationReference = 85028858BF84C30C93BF2CF7 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */;
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -975,7 +1299,7 @@
 		};
 		4FEF442167610372B5B63F94 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 38BD59823D98022F3763FF79 /* Pods-OpenBot.release.xcconfig */;
+			baseConfigurationReference = 6F048E6F75C27D1520723C37 /* Pods-OpenBot.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -983,7 +1307,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 743KKCATL4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -1007,7 +1331,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.7.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.robot.openbot;
+				PRODUCT_BUNDLE_IDENTIFIER = org.robot.openbo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1018,7 +1342,7 @@
 		};
 		4FEF44CECB7978AC34B0EE6A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DBEAC972F15CC83E41C6AAA9 /* Pods-OpenBot.debug.xcconfig */;
+			baseConfigurationReference = F0AA8AF1DB97EAA31FE62D4A /* Pods-OpenBot.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1026,7 +1350,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 743KKCATL4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OpenBot/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -1050,7 +1374,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.7.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.robot.openbot;
+				PRODUCT_BUNDLE_IDENTIFIER = org.robot.openbo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1122,7 +1446,7 @@
 		};
 		4FEF4A7750256B55C807D1AF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 14FEE4780CE79F3AAB630B6D /* Pods-OpenBotTests.release.xcconfig */;
+			baseConfigurationReference = DB93BBCA8A2B2872FB0CF679 /* Pods-OpenBotTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OpenBot.app/OpenBot";
 				CURRENT_PROJECT_VERSION = 1;
@@ -1196,7 +1520,7 @@
 		};
 		4FEF4BD51157BE3E8D2839B5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7D15502AB5B13CA6849277AC /* Pods-OpenBot-OpenBotUITests.release.xcconfig */;
+			baseConfigurationReference = D8CE9F77688B7B3F870BEA75 /* Pods-OpenBot-OpenBotUITests.release.xcconfig */;
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -1213,7 +1537,7 @@
 		};
 		4FEF4D381CB9363B3F2093A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 74C2D1986343E6265E9CF9D7 /* Pods-OpenBotTests.debug.xcconfig */;
+			baseConfigurationReference = 808FD0EDC2699A60CAFB77BF /* Pods-OpenBotTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OpenBot.app/OpenBot";
 				CURRENT_PROJECT_VERSION = 1;
