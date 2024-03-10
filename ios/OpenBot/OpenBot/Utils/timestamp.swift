@@ -8,7 +8,7 @@ import Foundation
 ///
 /// - Returns: amount of time the system has been awake since the last time it was restarted in nanosecond.
 func returnCurrentTimestamp() -> Int {
-    Int(ProcessInfo.processInfo.systemUptime * 1000000)
+    Int(ProcessInfo.processInfo.systemUptime * 1000000000)
 }
 
 /// Precise timing function for fps count

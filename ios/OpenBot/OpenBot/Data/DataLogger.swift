@@ -40,6 +40,7 @@ class DataLogger {
     var openbotPath: String = ""
     var imagePath: String = ""
     var sensorDataPath: String = ""
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// initializing function
     init() {
@@ -154,16 +155,12 @@ class DataLogger {
     ///
     /// - Parameter fileNameToDelete: file name to be deleted in documents directory (also can provide path after doc directory).
     func deleteFiles(fileNameToDelete: String) {
-
-        print("fileNameToDelete : ", fileNameToDelete)
         var filePath = ""
         // Fine documents directory on device
         let dirs: [String] = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true)
         if dirs.count > 0 {
             let dir = dirs[0] //documents directory
             filePath = dir.appendingFormat("/" + fileNameToDelete)
-            print("Local path = \(filePath)")
-
         } else {
             print("Could not find local directory to store file")
             return
@@ -203,7 +200,9 @@ class DataLogger {
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentDirectoryURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
             for url in fileURLs {
-                if url.lastPathComponent.first == "2" && !url.lastPathComponent.contains(".") {
+                //deletes the all files
+                if !((url.lastPathComponent.contains(".tflite")) || (url.lastPathComponent.contains("config.json"))){
+                    print("deleting files ======", url.lastPathComponent);
                     deleteFiles(fileNameToDelete: url.lastPathComponent);
                 }
             }
@@ -346,14 +345,19 @@ class DataLogger {
         switch tag {
         case 1:
             isVehicleLogSelected = !isVehicleLogSelected
+            preferencesManager.updateSensorData(value: isVehicleLogSelected, sensor: "isVehicleLogSelected")
         case 2:
             isGpsLogSelected = !isGpsLogSelected
+            preferencesManager.updateSensorData(value: isGpsLogSelected, sensor: "isGpsLogSelected")
         case 3:
             isAccelerationLogSelected = !isAccelerationLogSelected
+            preferencesManager.updateSensorData(value: isAccelerationLogSelected, sensor: "isAccelerationLogSelected")
         case 4:
             isMagneticLogSelected = !isMagneticLogSelected
+            preferencesManager.updateSensorData(value: isMagneticLogSelected, sensor: "isMagneticLogSelected")
         default:
             isGyroscopeLogSelected = !isGyroscopeLogSelected
+            preferencesManager.updateSensorData(value: isGyroscopeLogSelected, sensor: "isGyroscopeLogSelected")
         }
     }
 

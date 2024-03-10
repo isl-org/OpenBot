@@ -81,7 +81,14 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
                         NotificationCenter.default.post(name: .switchCamera, object: nil);
                     }
                     if command.contains("answer") {
-                        NotificationCenter.default.post(name: .updateDataFromControllerApp, object: command.data(using: .utf8));
+                        if(command.contains("{\"webrtc_event\":")){
+                            NotificationCenter.default.post(name: .updateDataFromControllerApp, object: command.data(using: .utf8));
+                        }
+                        else{
+                            let y = command.components(separatedBy: "{webrtc_event: ");
+                            let newCommand = "{\"webrtc_event\":" + y[1];
+                            NotificationCenter.default.post(name: .updateDataFromControllerApp, object: newCommand.data(using: .utf8));
+                        }
                     }
                     if command.contains("driveCmd") {
                         NotificationCenter.default.post(name: .updateStringFromControllerApp, object: message);
