@@ -433,7 +433,10 @@ def do_training(tr: Training, callback: tf.keras.callbacks.Callback, verbose=0):
             tr.hyperparameters.BATCH_NORM,
             tr.hyperparameters.POLICY,
         )
-        dot_img_file = os.path.join(models_dir, tr.model_name, "model.png")
+        # Define the directory where the model image should be saved (if not already created)
+        model_dir = os.path.join(models_dir, tr.model_name)
+        os.makedirs(model_dir, exist_ok=True)
+        dot_img_file = os.path.join(model_dir, "model.png")
         tf.keras.utils.plot_model(model, to_file=dot_img_file, show_shapes=True)
 
     callback.broadcast("model", tr.model_name)
