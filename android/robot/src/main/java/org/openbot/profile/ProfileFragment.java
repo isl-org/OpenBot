@@ -69,7 +69,8 @@ public class ProfileFragment extends Fragment {
     AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
     builder.setTitle("Confirm Logout");
     builder.setMessage("Are you sure you want to logout?");
-    builder.setCancelable(false);
+    builder.setCancelable(true);
+
     builder.setPositiveButton("LOG OUT", (dialog, id) -> googleServices.signOut());
     builder.setNegativeButton("CANCEL", (dialog, id) -> dialog.cancel());
     AlertDialog alertDialog = builder.create();

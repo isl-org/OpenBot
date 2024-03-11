@@ -239,6 +239,9 @@ public class GoogleServices extends Fragment {
                                 Set<String> driveProjectId = new HashSet<>();
                                 // Create a HashSet to store the local project IDs.
                                 Set<String> localProjectId = new HashSet<>();
+                                // Create a HashSet to store the local project filename.
+                                Set<String> localProjectName = new HashSet<>();
+
                                 for (ProjectsDataInObject obj : projectsList) {
                                     localProjectId.add(obj.getProjectId());
                                 }
@@ -250,6 +253,7 @@ public class GoogleServices extends Fragment {
                                         String projectId = file.getId();
                                         DateTime projectDate = file.getModifiedTime();
 
+                                        System.out.println("Msg "+projectName);
                                         // Read the content of the file
                                         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                                         googleDriveService
@@ -258,11 +262,31 @@ public class GoogleServices extends Fragment {
                                                 .executeMediaAndDownloadTo(outputStream);
                                         String projectCommands = outputStream.toString();
 
+                                        System.out.println("ProjectIdlocal----->"+localProjectId);
+                                        System.out.println("ProjectIdfile------>"+file.getId());
                                         if (!localProjectId.contains(file.getId())) {
+
                                             // Create a Project object and add it to the ArrayList
+                                            //System.out.printf("UpdatedFileName",projectName);
+
                                             projectsList.add(
                                                     new ProjectsDataInObject(
                                                             projectId, projectName, projectDate, projectCommands));
+                                        }
+                                        else if(localProjectId.contains(file.getId())){
+                                            int projectIndex = -1;
+                                            for (int i = 0; i < projectsList.size(); i++) {
+                                                if (projectsList.get(i).getProjectId().equals(projectId)) {
+                                                    // Project with the same ID exists, store its index
+                                                    projectIndex = i;
+                                                    break; // No need to continue iterating
+                                                }
+                                            }
+                                            projectsList.remove(projectIndex);
+                                            projectsList.add(
+                                                    new ProjectsDataInObject(
+                                                            projectId, projectName, projectDate, projectCommands));
+//                                          projectsList.add(new ProjectsDataInObject(projectId,projectName,projectDate,projectCommands));
                                         }
                                     }
                                 }
