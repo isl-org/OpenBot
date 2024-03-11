@@ -1,191 +1,210 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-  <string name="app_name">OpenBot</string>
-  <string name="activity_name">OpenBot</string>
-  <string name="description_info">Info</string>
-  <string name="camera_error">This device doesn\'t support Camera2 API.</string>
-  <string name="threads">Threads</string>
-  <string name="camera_permission_denied">Camera permission is necessary</string>
-  <string name="storage_permission_denied">External storage permission is necessary</string>
-  <string name="location_permission_denied">Location permission is necessary</string>
-  <string name="record_audio_permission_denied">Recording audio permission is necessary</string>
-  <string name="permission_reason_logging"> to log datasets.</string>
-  <string name="permission_reason_ai"> to run AI models.</string>
-  <string name="permission_reason_ar_core"> to run AR Core.</string>
-  <string name="permission_reason_stream_video"> to stream video to the controller.</string>
-  <string name="permission_reason_preview"> to preview video.</string>
-  <string name="permission_reason_stream_audio"> to stream audio to the controller.</string>
-  <string name="permission_reason_find_controller"> to find the controller.</string>
-  <string name="permission_reason_model_from_phone"> to select a model from phone storage.</string>
-  <string name="permission_reason_settings"> to use all features of the app.</string>
+    <string name="app_name">OpenBot</string>
+    <string name="activity_name">OpenBot</string>
+    <string name="description_info">Info</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="threads">Threads</string>
+    <string name="camera_permission_denied">Camera permission is necessary</string>
+    <string name="storage_permission_denied">External storage permission is necessary</string>
+    <string name="location_permission_denied">Location permission is necessary</string>
+    <string name="record_audio_permission_denied">Recording audio permission is necessary</string>
+    <string name="permission_reason_logging"> to log datasets.</string>
+    <string name="permission_reason_ai"> to run AI models.</string>
+    <string name="permission_reason_ar_core"> to run AR Core.</string>
+    <string name="permission_reason_stream_video"> to stream video to the controller.</string>
+    <string name="permission_reason_preview"> to preview video.</string>
+    <string name="permission_reason_stream_audio"> to stream audio to the controller.</string>
+    <string name="permission_reason_find_controller"> to find the controller.</string>
+    <string name="permission_reason_model_from_phone"> to select a model from phone storage.</string>
+    <string name="permission_reason_settings"> to use all features of the app.</string>
 
-  <string name="off">Off</string>
-  <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
 
-  <string name="server">Server</string>
-  <string name="ip_placeholder">x.x.x.x</string>
-  <string name="model">Model</string>
+    <string name="server">Server</string>
+    <string name="save_as">Save As</string>
+    <string name="ip_placeholder">x.x.x.x</string>
+    <string name="model">Model</string>
 
-  <string name="device">Device</string>
-  <string name="baud_rate">Baud Rate</string>
+    <string name="device">Device</string>
+    <string name="baud_rate">Baud Rate</string>
 
-  <string name="log_setting">Log Setting</string>
-  <string name="camera_facing_back">Back</string>
+    <string name="log_setting">Log Setting</string>
+    <string name="camera_facing_back">Back</string>
 
-  <string name="camera_facing_front">Front</string>
-  <string name="logging">Logging</string>
+    <string name="camera_facing_front">Front</string>
+    <string name="logging">Logging</string>
 
-  <string name="not_logging">Not Logging</string>
+    <string name="not_logging">Not Logging</string>
 
-  <string name="no_device">No Device</string>
+    <string name="no_device">No Device</string>
 
-  <string name="data_log">Data Log</string>
+    <string name="data_log">Data Log</string>
 
-  <string name="usb_connection">USB Connection</string>
+    <string name="usb_connection">USB Connection</string>
 
-  <string name="camera">Camera</string>
+    <string name="camera">Camera</string>
 
-  <string name="control">Control</string>
-  <string name="battery">Battery</string>
-  <string name="speed">Speed (l,r)</string>
-  <string name="sonar">Sonar</string>
-  <string name="control_info">***,***</string>
-  <string name="rpm">***,*** rpm</string>
-  <string name="voltage">**.* V</string>
-  <string name="distance">*** cm</string>
-  <string name="time_ms">*** ms</string>
-  <string name="time_fps">*** fps</string>
-  <string name="resolution">*** x ***</string>
-  <string name="drive_mode">Drive Mode</string>
-  <string name="speed_mode">Speed Mode</string>
-  <string name="plus">plus</string>
-  <string name="arrow">arrow</string>
-  <string name="minus">minus</string>
-  <string name="controller">Controller</string>
-  <string name="control_mode">Control Mode</string>
-  <string name="crop">Crop</string>
-  <string name="frame">Frame</string>
-  <string name="_1">1</string>
-  <string name="settings">Settings</string>
-  <string name="inference">Speed</string>
-  <string name="input">Input</string>
-  <string name="confidence">Confidence</string>
-  <string name="object">Object</string>
-  <string name="speedTitle">Speed</string>
-  <string name="voltageInfo">%1$s V</string>
-  <string name="speedInfo">%1$s rpm</string>
-  <string name="distanceInfo">%1$s cm</string>
-  <string name="preview_resolution">Preview Resolution</string>
-  <string name="file_available_body">A model with the same name already exists. Would you like to replace it?</string>
-  <string name="file_available_title">File found</string>
-  <string name="model_delete_body">Are you sure you want to delete this model?</string>
-  <string name="model_delete_title">Confirm</string>
-  <string name="permissions">Permissions</string>
-  <string name="goal_reached">Goal reached.</string>
-  <string name="model_download_body">Going back would cancel the download. Are you sure?</string>
-  <string name="model_download_title">Model Download In Progress</string>
-  <string name="save">Save</string>
-  <string name="confirm_title">Are you sure?</string>
-  <string name="stream_change_body">The app needs to be restarted for this setting to take effect</string>
-  <string name="selectAll">Select All</string>
-  <string name="clearAll">Clear All</string>
-  <string name="tracking_lost">Tracking lost.</string>
-  <string name="no_initial_ar_core_pose">No initial AR Core pose.</string>
-  <string name="ar_core_session_paused">AR Core session paused.</string>
-  <string name="auto_mode">Auto Mode</string>
-  <string name="dynamic_speed">Dynamic Speed</string>
+    <string name="control">Control</string>
+    <string name="battery">Battery</string>
+    <string name="speed">Speed (l,r)</string>
+    <string name="sonar">Sonar</string>
+    <string name="control_info">***,***</string>
+    <string name="rpm">***,*** rpm</string>
+    <string name="voltage">**.* V</string>
+    <string name="distance">*** cm</string>
+    <string name="time_ms">*** ms</string>
+    <string name="time_fps">*** fps</string>
+    <string name="resolution">*** x ***</string>
+    <string name="drive_mode">Drive Mode</string>
+    <string name="speed_mode">Speed Mode</string>
+    <string name="plus">plus</string>
+    <string name="arrow">arrow</string>
+    <string name="minus">minus</string>
+    <string name="controller">Controller</string>
+    <string name="control_mode">Control Mode</string>
+    <string name="crop">Crop</string>
+    <string name="frame">Frame</string>
+    <string name="_1">1</string>
+    <string name="settings">Settings</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="inference">Speed</string>
+    <string name="input">Input</string>
+    <string name="confidence">Confidence</string>
+    <string name="object">Object</string>
+    <string name="speedTitle">Speed</string>
+    <string name="voltageInfo">%1$s V</string>
+    <string name="speedInfo">%1$s rpm</string>
+    <string name="distanceInfo">%1$s cm</string>
+    <string name="preview_resolution">Preview Resolution</string>
+    <string name="save_option">Save Options</string>
+    <string name="file_available_body">A model with the same name already exists. Would you like to replace it?</string>
+    <string name="file_available_title">File found</string>
+    <string name="model_delete_body">Are you sure you want to delete this model?</string>
+    <string name="model_delete_title">Confirm</string>
+    <string name="permissions">Permissions</string>
+    <string name="goal_reached">Goal reached.</string>
+    <string name="model_download_body">Going back would cancel the download. Are you sure?</string>
+    <string name="model_download_title">Model Download In Progress</string>
+    <string name="save">Save</string>
+    <string name="confirm_title">Are you sure?</string>
+    <string name="stream_change_body">The app needs to be restarted for this setting to take effect</string>
+    <string name="selectAll">Select All</string>
+    <string name="clearAll">Clear All</string>
+    <string name="tracking_lost">Tracking lost.</string>
+    <string name="no_initial_ar_core_pose">No initial AR Core pose.</string>
+    <string name="ar_core_session_paused">AR Core session paused.</string>
+    <string name="tips_connect_timeout">connect timeout</string>
+    <string name="tips_connect_fail">connect fail</string>
+    <string name="tips_connection_disconnected">connection has disconnected</string>
+    <string name="tips_write_operation">please enter a hex string</string>
+    <string-array name="servers">
+        <item>No server</item>
+    </string-array>
+    <string-array name="models">
+        <item>Autopilot_F</item>
+        <item>MobileNetV1_1_0_Q</item>
+        <item>MobileNetV3_S_Q</item>
+        <item>YoloV4</item>
+    </string-array>
+    <string-array name="devices">
+        <item>CPU</item>
+        <item>GPU</item>
+        <item>NNAPI</item>
+    </string-array>
+    <string-array name="baud_rates">
+        <item>9600</item>
+        <item>14400</item>
+        <item>19200</item>
+        <item>38400</item>
+        <item>57600</item>
+        <item>115200</item>
+        <item>230400</item>
+        <item>460800</item>
+        <item>921600</item>
+    </string-array>
+    <string-array name="log_settings">
+        <item>all_imgs</item>
+        <item>crop_img</item>
+        <item>preview_img</item>
+        <item>only_sensors</item>
+    </string-array>
+    <string-array name="control_modes">
+        <item>Gamepad</item>
+        <item>Phone</item>
+        <!--        <item>WebRTC</item>-->
+    </string-array>
+    <string-array name="drive_modes">
+        <item>Dual</item>
+        <item>Game</item>
+        <item>Joystick</item>
+    </string-array>
 
-  <string name="bumpers">Bumpers</string>
-  <string name="n_a">N/A</string>
-  <string name="robot_type">Robot Type:</string>
-  <string name="indicators">Indicators</string>
-  <string name="back">Back</string>
-  <string name="voltage_divider">Voltage Divider</string>
-  <string name="status">Status</string>
-  <string name="front">Front</string>
-  <string name="robot_icon">Robot Icon</string>
-  <string name="wheel_odometry_front">Wheel Odometry Front</string>
-  <string name="wheel_odometry_back">Wheel Odometry Back</string>
-  <string name="backward">Backward</string>
-  <string name="forward">Forward</string>
-  <string name="stop">Stop</string>
-  <string name="motors">Motors</string>
-  <string name="leds">LEDs</string>
-  <string name="lights">Lights</string>
-  <string name="sensors">Sensors</string>
-  <string name="send_commands">Send Commands</string>
-  <string name="wheel_odometry">Wheel Odometry</string>
-  <string name="readings">Readings</string>
-  <string name="lights_slider">lights slider</string>
-  <string name="tips_connect_timeout">connect timeout</string>
-  <string name="tips_connect_fail">connect fail</string>
-  <string name="tips_connection_disconnected">connection has disconnected</string>
-  <string name="tips_write_operation">please enter a hex string</string>
-  <string name="indicator_leds">Indicator LEDs</string>
-  <string name="back_leds">Back LEDs</string>
-  <string name="status_leds">Status LEDs</string>
-  <string name="front_leds">Front LEDs</string>
-  <string name="bluetooth">Bluetooth</string>
-  <string name="usb">USB</string>
-  <string-array name="servers">
-    <item>No server</item>
-  </string-array>
-  <string-array name="models">
-    <item>CmdNav</item>
-    <item>GoalNav</item>
-    <item>MobileNet</item>
-    <item>EfficientDet</item>
-    <item>YoloV4</item>
-    <item>YoloV5</item>
-  </string-array>
-  <string-array name="devices">
-    <item>CPU</item>
-    <item>GPU</item>
-    <item>NNAPI</item>
-  </string-array>
-  <string-array name="baud_rates">
-    <item>9600</item>
-    <item>14400</item>
-    <item>19200</item>
-    <item>38400</item>
-    <item>57600</item>
-    <item>115200</item>
-    <item>230400</item>
-    <item>460800</item>
-    <item>921600</item>
-  </string-array>
-  <string-array name="log_settings">
-    <item>all_imgs</item>
-    <item>crop_img</item>
-    <item>preview_img</item>
-    <item>only_sensors</item>
-  </string-array>
-  <string-array name="control_modes">
-    <item>Gamepad</item>
-    <item>Phone</item>
-    <!--        <item>WebRTC</item>-->
-  </string-array>
-  <string-array name="drive_modes">
-    <item>Dual</item>
-    <item>Game</item>
-    <item>Joystick</item>
-  </string-array>
-  <string-array name="preview_resolutions">
-    <item>Low</item>
-    <item>Medium</item>
-    <item>High</item>
-  </string-array>
-  <string-array name="stream_server">
-    <item>WebRTC</item>
-    <item>RTSP</item>
-  </string-array>
-  <string-array name="speed_modes">
-    <item>Slow</item>
-    <item>Normal</item>
-    <item>Fast</item>
-  </string-array>
-  <string-array name="connection_type">
-    <item>Bluetooth</item>
-    <item>USB</item>
-  </string-array>
+    <string-array name="preview_resolutions">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+
+    <string-array name="save_data">
+        <item>Local Storage</item>
+        <item>Google Drive</item>
+        <item>Local Server</item>
+    </string-array>
+
+    <string-array name="stream_server">
+        <item>WebRTC</item>
+        <item>RTSP</item>
+    </string-array>
+    <string-array name="connection_type">
+        <item>Bluetooth</item>
+        <item>USB</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="speed_modes">
+        <item>Slow</item>
+        <item>Normal</item>
+        <item>Fast</item>
+    </string-array>
+    <string name="profile">Profile</string>
+    <string name="projects">Projects</string>
+    <string name="scanner">Scanner</string>
+    <string name="home">Home</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="playground">Playground</string>
+    <string name="text_on_qr_screen">Place QR code inside the frame to scan. Please avoid shake to get results quickly.</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="logout">Logout</string>
+    <string name="auto_mode">Auto Mode</string>
+    <string name="dynamic_speed">Dynamic Speed</string>
+
+    <string name="bumpers">Bumpers</string>
+    <string name="n_a">N/A</string>
+    <string name="robot_type">Robot Type:</string>
+    <string name="indicators">Indicators</string>
+    <string name="back">Back</string>
+    <string name="voltage_divider">Voltage Divider</string>
+    <string name="status">Status</string>
+    <string name="front">Front</string>
+    <string name="robot_icon">Robot Icon</string>
+    <string name="wheel_odometry_front">Wheel Odometry Front</string>
+    <string name="wheel_odometry_back">Wheel Odometry Back</string>
+    <string name="backward">Backward</string>
+    <string name="forward">Forward</string>
+    <string name="stop">Stop</string>
+    <string name="motors">Motors</string>
+    <string name="leds">LEDs</string>
+    <string name="lights">Lights</string>
+    <string name="sensors">Sensors</string>
+    <string name="send_commands">Send Commands</string>
+    <string name="wheel_odometry">Wheel Odometry</string>
+    <string name="readings">Readings</string>
+    <string name="lights_slider">lights slider</string>
+    <string name="indicator_leds">Indicator LEDs</string>
+    <string name="back_leds">Back LEDs</string>
+    <string name="status_leds">Status LEDs</string>
+    <string name="front_leds">Front LEDs</string>
+    <string name="usb">USB</string>
+    <string name="cancel">Cancel</string>
 </resources>

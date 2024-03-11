@@ -75,7 +75,6 @@ public class AutopilotFragment extends CameraFragment {
       @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     binding = FragmentAutopilotBinding.inflate(inflater, container, false);
-
     return inflateFragment(binding, inflater, container);
   }
 
@@ -100,7 +99,6 @@ public class AutopilotFragment extends CameraFragment {
         getModelNames(f -> f.type.equals(Model.TYPE.CMDNAV) && f.pathType != Model.PATH_TYPE.URL);
     initModelSpinner(binding.modelSpinner, models, preferencesManager.getAutopilotModel());
     initServerSpinner(binding.serverSpinner);
-
     setAnalyserResolution(Enums.Preview.HD.getValue());
     binding.deviceSpinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
@@ -150,6 +148,11 @@ public class AutopilotFragment extends CameraFragment {
           binding.bleToggle.setChecked(vehicle.bleConnected());
           Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
         });
+    binding.bleToggle.setOnClickListener(
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
+        });
 
     setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
     setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));
@@ -175,9 +178,9 @@ public class AutopilotFragment extends CameraFragment {
   }
 
   private void updateCropImageInfo() {
-    //    Timber.i("%s x %s",getPreviewSize().getWidth(), getPreviewSize().getHeight());
-    //    Timber.i("%s x %s",getMaxAnalyseImageSize().getWidth(),
-    // getMaxAnalyseImageSize().getHeight());
+    //        Timber.i("%s x %s",getPreviewSize().getWidth(), getPreviewSize().getHeight());
+    //        Timber.i("%s x %s",getMaxAnalyseImageSize().getWidth(),
+    //     getMaxAnalyseImageSize().getHeight());
     frameToCropTransform = null;
 
     sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());

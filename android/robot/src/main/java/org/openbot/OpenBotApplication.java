@@ -26,6 +26,7 @@ public class OpenBotApplication extends Application {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     int baudRate = Integer.parseInt(sharedPreferences.getString("baud_rate", "115200"));
     vehicle = new Vehicle(this, baudRate);
+    vehicle.initBle();
     vehicle.connectUsb();
     vehicle.initBle();
     if (BuildConfig.DEBUG) {
