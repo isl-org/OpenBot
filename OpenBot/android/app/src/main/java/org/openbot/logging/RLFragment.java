@@ -220,7 +220,7 @@ public class RLFragment extends CameraFragment {
 
         sensorOrientation = 90 - ImageUtils.getScreenOrientation(requireActivity());
         if (selected.type == Model.TYPE.CMDNAV) {
-            cropRect = new RectF(0.0f, 240.0f / 720.0f, 0.0f, 0.0f);
+            cropRect = new RectF(0.0f, 300.0f / 720.0f, 0.0f, 0.0f);
             maintainAspectRatio = true;
         } else {
             cropRect = new RectF(0.0f, 0.0f, 0.0f, 0.0f);
@@ -334,6 +334,7 @@ public class RLFragment extends CameraFragment {
     }
     private void startLogging() {
         done = 0;
+        rewards = 0;
         outOfCircuit = false;
         reachedCheckpoint = false;
         startRandomActions();
@@ -379,7 +380,7 @@ public class RLFragment extends CameraFragment {
 
         done = 1;
         if (outOfCircuit){
-            rewards += -1;
+            rewards = -1;
         }
         percentage = 0;
         vehicle.setControl(0f,0f);
@@ -418,11 +419,11 @@ public class RLFragment extends CameraFragment {
         public void run() {
             long elapsedTime = System.currentTimeMillis() - loggingStartTime;
             Log.d("Timer", "Elapsed Time: " + elapsedTime + ", Percentage: " + percentage);
-            if (elapsedTime >= LOGGING_DURATION_MILLIS || percentage > 20) {
+            if (elapsedTime >= LOGGING_DURATION_MILLIS || percentage > 25) {
                 elapsedTime = 0;
                 // Stop logging when the duration is reached
                 if(elapsedTime >= LOGGING_DURATION_MILLIS) {
-                    rewards+=1;
+                    rewards=2;
                     outOfCircuit = false;
                 }
                 if(percentage > 20)
@@ -441,7 +442,7 @@ public class RLFragment extends CameraFragment {
                 if (elapsedTime >= 5000 && !reachedCheckpoint) // give reward if it runs for more than 5 seconds without stop
                 {
                     reachedCheckpoint = true;
-                    rewards += 1;
+                    rewards = 1;
                 }
                 timerHandler.postDelayed(this, 500);
             }
@@ -706,7 +707,7 @@ public class RLFragment extends CameraFragment {
 
 
                 ImageUtils.saveBitmap(
-                        croppedBitmap, logFolder + File.separator + "images", frameNum + "_crop.jpeg");
+                        croppedBitmap, logFolder + File.separator + "images_true", frameNum + "_crop.jpeg");
             }
 
             if(croppedBitmap != null){
@@ -727,7 +728,7 @@ public class RLFragment extends CameraFragment {
                     final Canvas canvas2 = new Canvas(croppedBitmap);
                     canvas2.drawBitmap(bottomBitmap, frameToCropTransform, null);
                     ImageUtils.saveBitmap(
-                            bottomBitmap, logFolder + File.separator + "bottom_images", frameNum + "_bottom.jpeg");
+                            bottomBitmap, logFolder + File.separator + "images", frameNum + "_crop.jpeg");
 
                 }
             }
@@ -831,15 +832,15 @@ public class RLFragment extends CameraFragment {
     {
         if(loggingEnabled) {
             if (actions[0] == 1) {
-                vehicle.setControl(0.3f, 0.3f);
+                vehicle.setControl(0.45f, 0.45f);
                 handleDriveCommand();
             }
             if (actions[1] == 1)  {
-                vehicle.setControl(0.4f, -0.1f);
+                vehicle.setControl(0.5f, -0.1f);
                 handleDriveCommand();
             }
             if (actions[2] == 1)  {
-                vehicle.setControl(-0.1f, 0.4f);
+                vehicle.setControl(-0.1f, 0.5f);
                 handleDriveCommand();
             }
         }
