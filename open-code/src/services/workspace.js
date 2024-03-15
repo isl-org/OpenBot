@@ -354,14 +354,16 @@ function filterModels(modelType, assetType) {
     filterLabels()
     let modelsArray = []
     let updatedData = localStorage.getItem(localStorageKeys.configData)
+    console.log(updatedData);
     if (updatedData !== " " || null) {
-        let data = JSON.parse(updatedData)?.filter(obj => (obj.type === modelType && obj.pathType === "FILE") || (obj.pathType === "ASSET" && obj.type === assetType))
+        let data = JSON.parse(updatedData)?.filter(obj => (modelType.includes(obj.type) && obj.pathType === "FILE") || (obj.pathType === "ASSET" && obj.type === assetType))
         if (data?.length === 0) {
             return null
         } else if (data?.length > 0) {
             data?.forEach((item) => {
                 modelsArray.push(item.name.replace(/\.[^/.]+$/, ""))
             })
+            // console.log(modelsArray);
             return modelsArray?.map((type) => [type, type])
         }
     } else {

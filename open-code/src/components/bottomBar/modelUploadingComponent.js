@@ -73,6 +73,7 @@ export function ModelUploadingComponent(params) {
         AUTOPILOT: {handleTypeDependency: ['AUTOPILOT'], modelClass: 'AUTOPILOT'},
         DETECTOR: {handleTypeDependency: ['MOBILENET', 'EFFICIENTDET', 'YOLOV4', 'YOLOV5'], modelClass: 'MOBILENET'},
         NAVIGATION: {handleTypeDependency: ['NAVIGATION'], modelClass: 'NAVIGATION'},
+        CMDNAV: {handleTypeDependency: ['AUTOPILOT'], modelClass: 'AUTOPILOT'},
     };
 
     function handleTypeChange(e) {

@@ -199,6 +199,7 @@ export const Models = {
         'AUTOPILOT',
         'DETECTOR',
         'NAVIGATION',
+        'CMDNAV',
     ],
 }
 

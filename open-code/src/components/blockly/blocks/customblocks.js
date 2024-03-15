@@ -684,7 +684,7 @@ Blockly.Blocks["objectTracking"] = {
                 {
                     "type": "field_dropdown",
                     "name": "models",
-                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
+                    "options": filterModels(["DETECTOR"], "DETECTOR") ?? [
                         [
                             "MobileNetV1-300",
                             "MobileNetV1-300"
@@ -711,7 +711,7 @@ Blockly.Blocks["autopilot"] = {
                 {
                     "type": "field_dropdown",
                     "name": "autopilot models",
-                    "options": filterModels("AUTOPILOT", "CMDNAV") ?? [[
+                    "options": filterModels(["AUTOPILOT","CMDNAV"], "CMDNAV") ?? [[
                         "CIL-Mobile-Cmd",
                         "CIL-Mobile-Cmd"
                     ],
@@ -747,7 +747,7 @@ Blockly.Blocks["navigateForwardAndLeft"] = {
                 {
                     "type": "field_dropdown",
                     "name": "navigation_models",
-                    "options": filterModels("NAVIGATION", "GOALNAV") ?? [
+                    "options": filterModels(["NAVIGATION"], "GOALNAV") ?? [
                         [
                             "PilotNet-Goal",
                             "PilotNet-Goal"
@@ -789,7 +789,7 @@ Blockly.Blocks["multipleAIDetection"] = {
                 {
                     "type": "field_dropdown",
                     "name": "autopilot_models",
-                    "options": filterModels("AUTOPILOT", "CMDNAV") ?? [[
+                    "options": filterModels(["AUTOPILOT","CMDNAV"], "CMDNAV") ?? [[
                         "CIL-Mobile-Cmd",
                         "CIL-Mobile-Cmd"
                     ],
@@ -806,7 +806,7 @@ Blockly.Blocks["multipleAIDetection"] = {
                 {
                     "type": "field_dropdown",
                     "name": "objectTracking_models",
-                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
+                    "options": filterModels(["DETECTOR"], "DETECTOR") ?? [
                         [
                             "MobileNetV1-300",
                             "MobileNetV1-300"
@@ -845,7 +845,7 @@ Blockly.Blocks["multipleObjectTracking"] = {
                 {
                     "type": "field_dropdown",
                     "name": "models",
-                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
+                    "options": filterModels(["DETECTOR"], "DETECTOR") ?? [
                         [
                             "MobileNetV1-300",
                             "MobileNetV1-300"
@@ -892,7 +892,7 @@ Blockly.Blocks["variableDetection"] = {
                 {
                     "type": "field_dropdown",
                     "name": "models",
-                    "options": filterModels("DETECTOR", "DETECTOR") ?? [
+                    "options": filterModels(["DETECTOR"], "DETECTOR") ?? [
                         [
                             "MobileNetV1-300",
                             "MobileNetV1-300"
