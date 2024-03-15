@@ -1,0 +1,47 @@
+
+.whiteFont {
+    /*font-size: 18px;*/
+    color: #f2f2f2;
+    font-family: 'Gilroy-Regular', serif;
+}
+
+.blackFont {
+    font-size: 18px;
+    font-family: 'Gilroy-Regular', serif;
+}
+
+.BlackTextDarkFont {
+    color: #FFFFFF
+}
+
+.BlackTextLightFont {
+    color: #000000;
+}
+
+.blueFont {
+    color: #0071C5;
+    font-family: 'Gilroy-Regular', serif;
+}
+
+@media (max-width: 768px) {
+    .blackFont{
+        font-size: 14px;
+    }
+
+    .blueFont {
+        font-size: 14px;
+    }
+}
+@media (min-width: 744px) and (max-width: 1024px){
+
+    .blueFont {
+        font-size: 18px;
+    }
+    .whiteFont {
+        font-size: 18px;
+    }
+    .blackFont {
+        font-size: 16px;
+    }
+
+}

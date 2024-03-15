@@ -1,0 +1,61 @@
+.containedButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 150px;
+    border-radius: 6px;
+    font-family: Gilroy-SemiBold, serif;
+    color: #ffffff;
+    font-size: 22px;
+    background: #0071C5;
+    margin: 20px;
+    cursor: pointer;
+
+}
+
+.normalButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 150px;
+    border: 1px solid #0071C5;
+    border-radius: 6px;
+    font-family: Gilroy-SemiBold, serif;
+    color: #0071C5;
+    font-size: 22px;
+    margin: 20px;
+    cursor: pointer;
+}
+@media (max-width: 768px) {
+    .containedButton {
+        height: 35px;
+        width: 85px;
+        font-size: 14px;
+        margin: 20px 0 20px 20px;
+        font-weight: 700;
+    }
+    .normalButton {
+        height: 35px;
+        width: 85px;
+        font-size: 14px;
+        margin: 20px 0px 20px 20px;
+        font-weight: 700;
+    }
+}
+
+@media (min-width: 744px) and (max-width: 1024px){
+    .containedButton {
+        height: 53px;
+        width: 167px;
+        font-size: 18px;
+        margin: 20px 0px 20px 20px;
+    }
+    .normalButton {
+        height: 53px;
+        width: 167px;
+        font-size: 18px;
+        margin: 20px 0px 20px 20px;
+    }
+}

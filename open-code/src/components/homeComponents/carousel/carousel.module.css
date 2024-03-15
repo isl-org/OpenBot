@@ -1,0 +1,165 @@
+.Content {
+    justify-content: space-between;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    padding-right: 7.4%;
+    align-items: center;
+}
+
+.darkBg {
+    background-color: #202020;
+}
+
+.lightBg {
+    background-color: #f8f9fb;
+}
+
+.HeadingContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+    margin-left: 7.8%;
+}
+
+.DragAndDropHeading {
+    font-family: 'Gilroy-SemiBold', serif;
+    font-size: 22px;
+    line-height: 26px;
+    color: #000000;
+}
+
+.DragAndDropContent {
+    font-family: 'Gilroy-Regular', serif;
+    font-size: 18px;
+    line-height: 27px;
+    color: #000000;
+    text-align: left;
+}
+
+.ImageDrag {
+    padding-top: 100px;
+}
+
+.videoStyle{
+    width: 26% !important;
+    height: auto!important;
+}
+
+.ImageSave {
+    width: 35.5% !important;
+    height: 374px;
+}
+
+.MainDark {
+    color: #FFFFFF;
+}
+
+.loading {
+    width: 100%;
+    margin-top: 27%;
+    display: flex;
+    justify-content: center;
+}
+
+.spin {
+    animation: spin 1ms 1;
+    margin-top: 15px;
+    padding-right: 2px;
+    color: #333e48;
+}
+
+.MainLight {
+    color: #000000;
+}
+
+[class~=control-dots ] {
+    background-color: transparent;
+    bottom: -10px !important;
+    display: flex;
+    height: 50px;
+    margin: -39px 0 !important;
+    align-items: center;
+    justify-content: center;
+}
+
+[class~=dot ] {
+    width: 10px !important;
+    height: 10px !important;
+    background-color: #0071C5 !important;
+    box-shadow: none !important;
+}
+
+[class~=thumbs-wrapper ] {
+    display: none;
+}
+
+[class~=control-arrow ] {
+    display: none;
+}
+
+[class~=carousel-status ] {
+    display: none;
+}
+
+[class~=carousel-slider] {
+    overflow: inherit !important;
+}
+
+.carousel .control-dots .dot{
+    margin: 0 8px;
+}
+
+@media (max-width: 979px) {
+    .Content {
+        /*padding-right: 3.4%;*/
+        flex-direction: column;
+        padding-top: 6.5%;
+    }
+
+    .HeadingContent {
+        gap: 17px;
+        margin-left: 3.8%;
+    }
+
+    .DragAndDropHeading {
+        font-size: 1.1rem;
+        line-height: 26px;
+    }
+
+    .DragAndDropContent {
+        font-size: 14px;
+        line-height: 20px;
+        width: 101%;
+    }
+
+    .ImageDrag {
+        padding-top: 20px;
+    }
+
+    .videoStyle {
+        width: 40% !important;
+    }
+
+    [class~=dot ] {
+        width: 5px !important;
+        height: 5px !important;
+    }
+
+    /*TODO margin of carousal dots in mobile view*/
+    /*.carousel .control-dots .dot {*/
+    /*    margin: 0 3px !important;*/
+    /*}*/
+}
+
+
+/*tablet portrait mode*/
+@media (min-width: 744px) and (max-width: 800px){
+    .DragAndDropHeading{
+        font-size: 22px;
+    }
+    .DragAndDropContent{
+        font-size: 18px;
+    }
+}

@@ -1,0 +1,217 @@
+.main {
+    width: 88% !important;
+    height: 164px !important;
+    border-radius: 20px !important;
+    box-shadow: 0px 14px 42px rgba(8, 15, 52, 0.06);
+    left: 87px !important;
+    bottom: 37px !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 100px;
+}
+
+.mainDark {
+    background-color: #303030 !important;
+    border: none;
+}
+
+.mainLight {
+    background-color: #FFFFFF !important;
+    border: 1px solid #D9DBE9;
+}
+
+.ContentAndImage {
+    font-family: 'Gilroy-Regular', serif;
+    font-size: 18px;
+    line-height: 30px;
+    margin: 0px !important;
+    display: flex;
+    flex: 0 1 auto !important;
+    padding-left: 48px;
+    gap: 22px;
+    width: 735px;
+}
+
+.ContentAndImageLight {
+    color: #6F6C90;
+}
+
+.ContentAndImageDark {
+    color: #FFFFFF;
+}
+
+.cookieImage {
+    width: 68px;
+    height: 68px;
+}
+
+.buttonWrapper {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.iosButtonDiv{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.androidButtonDiv{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.acceptButton {
+    width: 185px;
+    height: 54px;
+    background: #0071C5 !important;
+    box-shadow: 0px 3px 12px rgba(74, 58, 255, 0.18) !important;
+    border-radius: 7px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0px !important;
+    margin: 10px !important;
+}
+
+.declineButton {
+    width: 107px;
+    height: 54px;
+    border-radius: 7px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0px !important;
+    margin: 10px !important;
+}
+
+.declineButtonDark {
+    background: #303030 !important;
+    border: 1px solid #EFF0F7 !important;
+
+}
+
+.declineButtonLight {
+    background: #FFFFFF !important;
+    box-shadow: 0px 3px 12px rgba(74, 58, 255, 0.18) !important;
+}
+
+.btnDeclineText {
+    font-family: 'Gilroy-Medium', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 18px;
+
+}
+
+.btnDeclineTextDark {
+    color: #FFFFFF;
+}
+
+.btnDeclineTextLight {
+    color: #0071C5;
+}
+
+.btnText {
+    font-family: 'Gilroy-Medium', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 18px;
+    color: #FFFFFF;
+}
+
+.btnImage {
+    width: 14px;
+    height: 14px;
+}
+
+@media (max-width: 768px) {
+    .main {
+        width: 92% !important;
+        left: 16px !important;
+        right: 20px !important;
+        height: 180px !important;
+        gap: 10px;
+    }
+
+    .ContentAndImage {
+        font-size: 10px !important;
+        line-height: 20px;
+        padding: 20px 20px 0px 20px;
+        gap: 20px;
+    }
+
+    .cookieImage {
+        width: 35px;
+        height: 35px;
+    }
+
+    .acceptButton {
+        width: 42%;
+        height: 38px;
+    }
+
+    .btnText {
+        font-size: 12px;
+    }
+
+    .declineButton {
+        width: 42%;
+        height: 38px;
+    }
+
+    .btnDeclineText {
+        font-size: 12px;
+    }
+
+    .buttonWrapper {
+        margin: 0px 10px 10px 15px;
+        padding-right: 20px;
+        width: 100%;
+    }
+    .iosButtonDiv{
+        margin: 0px 10px 10px 15px;
+        padding-right: 20px;
+        width: 100%;
+    }
+    .androidButtonDiv{
+        margin: 0px 10px 10px 15px;
+        padding-right: 20px;
+        width: 100%;
+    }
+}
+
+@media only screen and (max-height: 440px) and (min-width: 400px) and (max-width: 1024px) and (orientation: landscape) {
+    .main {
+        left: 4% !important;
+    }
+
+    .ContentAndImage {
+        padding: 20px 0 0 30px;
+        width:90% ;
+    }
+
+    .cookieImage {
+        width: 40px;
+        height: 40px;
+    }
+
+    .buttonWrapper {
+    }
+
+    .iosButtonDiv{
+        margin: -20px 0 0 0;
+    }
+
+    .androidButtonDiv{
+        margin: -110px 0 0 80px;
+
+    }
+
+    .btnText {
+        font-size: 12px;
+    }
+}

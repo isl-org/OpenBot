@@ -1,0 +1,45 @@
+.mainDiv {
+    margin: 20px;
+}
+
+.inputSection {
+    background-color: transparent;
+    font-family: Gilroy-Regular, sans-serif;
+    font-size: 20px;
+    height: 96%;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    padding: 0 10px;
+    outline: none;
+}
+
+.inputBorder {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70%;
+    width: 100%;
+    border: 1px solid rgba(0, 113, 197, 0.4);
+    border-radius: 6px;
+}
+
+.extensionName {
+    padding-right: 13%;
+    font-family: Gilroy-Regular, sans-serif;
+    font-size: 18px;
+}
+
+.dropdownItem {
+    font-family: Gilroy-Regular, sans-serif;
+    font-size: 17px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+

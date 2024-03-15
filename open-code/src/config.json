@@ -1,0 +1,129 @@
+[
+  {
+    "id": 1,
+    "class": "AUTOPILOT",
+    "type": "CMDNAV",
+    "name": "CIL-Mobile-Cmd.tflite",
+    "pathType": "ASSET",
+    "path": "networks/autopilot_float.tflite",
+    "inputSize": "256x96"
+  },
+  {
+    "id": 2,
+    "class": "NAVIGATION",
+    "type": "GOALNAV",
+    "name": "PilotNet-Goal.tflite",
+    "pathType": "ASSET",
+    "path": "networks/navigation.tflite",
+    "inputSize": "160x90"
+  },
+  {
+    "id": 3,
+    "class": "MOBILENET",
+    "type": "DETECTOR",
+    "name": "MobileNetV1-300.tflite",
+    "pathType": "ASSET",
+    "path": "networks/mobile_ssd_v1_1.0_quant_coco.tflite",
+    "inputSize": "300x300"
+  },
+  {
+    "id": 4,
+    "class": "MOBILENET",
+    "type": "DETECTOR",
+    "name": "MobileNetV3-320.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/mobile_ssd_v3_small_quant_coco.tflite",
+    "inputSize": "320x320"
+  },
+  
+  {
+    "id": 5,
+    "class": "YOLOV4",
+    "type": "DETECTOR",
+    "name": "YoloV4-tiny-224.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/yolov4-tiny-224-int8.tflite",
+    "inputSize": "224x224"
+  },
+  {
+    "id": 6,
+    "class": "YOLOV4",
+    "type": "DETECTOR",
+    "name": "YoloV4-tiny-416.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/yolov4-tiny-416-int8.tflite",
+    "inputSize": "416x416"
+  },
+  {
+    "id": 7,
+    "class": "YOLOV4",
+    "type": "DETECTOR",
+    "name": "YoloV4-224.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/yolov4-224-int8.tflite",
+    "inputSize": "224x224"
+  },
+  {
+    "id": 8,
+    "class": "YOLOV5",
+    "type": "DETECTOR",
+    "name": "YoloV5s-320-int8.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/yolov5s-320-int8.tflite",
+    "inputSize": "320x320"
+  },
+  {
+    "id": 9,
+    "class": "YOLOV5",
+    "type": "DETECTOR",
+    "name": "YoloV5s-640-int8.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/yolov5s-640-int8.tflite",
+    "inputSize": "640x640"
+  },
+  {
+    "id": 10,
+    "class": "YOLOV5",
+    "type": "DETECTOR",
+    "name": "YoloV5m-320-int8.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/yolov5m-320-int8.tflite",
+    "inputSize": "320x320"
+  },
+  {
+    "id": 11,
+    "class": "YOLOV5",
+    "type": "DETECTOR",
+    "name": "YoloV5l-320-int8.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/yolov5l-320-int8.tflite",
+    "inputSize": "320x320"
+  },
+  {
+    "id": 12,
+    "class": "EFFICIENTDET",
+    "type": "DETECTOR",
+    "name": "EfficientDet-L0-320.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/efficientdet_lite0_metadata.tflite",
+    "inputSize": "320x320"
+  },
+  {
+    "id": 13,
+    "class": "EFFICIENTDET",
+    "type": "DETECTOR",
+    "name": "EfficientDet-L1-384.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/efficientdet_lite1_metadata.tflite",
+    "inputSize": "384x384"
+  },
+  {
+    "id": 14,
+    "class": "EFFICIENTDET",
+    "type": "DETECTOR",
+    "name": "EfficientDet-L2-448.tflite",
+    "pathType": "URL",
+    "path": "https://storage.googleapis.com/openbot_models/efficientdet_lite2_metadata.tflite",
+    "inputSize": "448x448"
+  }
+]

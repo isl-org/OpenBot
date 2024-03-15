@@ -1,0 +1,483 @@
+.barDiv {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 4.4rem;
+    border-top: 0.5px solid gray;
+}
+
+.loaderBarDiv {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 20%;
+    border-top: 0.5px solid gray;
+}
+
+.buttonsDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.loaderText {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2%;
+}
+
+.textItem {
+    font-family: Gilroy-medium, sans-serif;
+    margin-top: 3px;
+}
+
+.errorDiv {
+    font-family: Gilroy-medium, sans-serif;
+    color: #D70000;
+    font-weight: 600;
+    margin-left: 5%;
+    font-size: 20px;
+    margin-top: 1%;
+}
+
+.errorItems {
+    font-size: 15px;
+    line-height: 30px;
+}
+
+.barDivLight {
+    background-color: white;
+}
+
+.barDivDark {
+    background-color: #202020;
+}
+
+.uploadCodeButton {
+    margin-left: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 0.5rem 0 0 0.5rem;
+    height: 3.1rem;
+    width: 100%;
+    background: rgb(0, 113, 197);
+    cursor: pointer;
+}
+
+.features {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 0 0.5rem 0.5rem 0;
+    height: 3.1rem;
+    width: 20%;
+    background-color: #005B9F;
+    cursor: pointer;
+}
+
+.features:hover {
+    opacity: 85%;
+}
+
+.leftButton {
+    display: flex;
+    font-family: Gilroy-medium, sans-serif;
+    align-items: center;
+    font-size: 1.2rem;
+    color: rgb(248, 249, 251);
+    pointer-events: none;
+}
+
+.optionExtraStyle {
+    height: 125px;
+    width: 260px;
+    position: sticky;
+    top: 65px;
+    left: 39vw;
+}
+
+
+.iconDiv {
+    height: 1.5rem;
+    width: 1.5rem;
+    pointer-events: none;
+}
+
+.operationsDiv {
+    display: flex;
+    align-items: center;
+    margin-right: 4rem;
+}
+
+.driveIconStyle {
+    width: 2.2rem;
+    cursor: pointer;
+}
+
+.shrinkDriveIcon {
+    width: 1.7rem;
+    cursor: pointer;
+    margin-bottom: 0.3rem;
+}
+
+.buttonStyle {
+    width: 4.2rem;
+    height: 3.1rem;
+    border: none;
+    background: rgb(0, 113, 197);
+    color: rgb(248, 249, 251);
+    font-family: Gilroy-Medium, sans-serif;
+    cursor: pointer;
+}
+
+.undoButtonStyle {
+    border-radius: 0.4rem 0px 0px 0.4rem;
+    border: none;
+}
+
+.borderStyle {
+    border-right: 1px solid black
+}
+
+
+.commandSize {
+    width: 1.4rem;
+    height: 1.2rem;
+    pointer-events: none;
+}
+
+.minusStyle {
+    border-radius: 0.4rem 0 0 0.4rem;
+}
+
+.plusStyle {
+    border-radius: 0 0.4rem 0.4rem 0
+}
+
+.operationSize {
+    font-size: 2.4rem;
+    color: white;
+    pointer-events: none;
+    font-weight: 100
+}
+
+.iconMargin {
+    margin: 10px;
+}
+
+.noSpace {
+    display: flex;
+}
+
+.driveStyle {
+    border: none;
+    background: none;
+}
+
+.buttonColor {
+    background: #0071c5;
+    opacity: 0.8;
+}
+
+.buttonMargin {
+    margin-right: 1px;
+}
+
+.langOption {
+    height: 140px;
+    width: 220px;
+    position: absolute;
+    top: -190px;
+    left: -7vw;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 22px rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    font-family: Gilroy-Regular, sans-serif;
+}
+
+.langItem {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: space-around;
+    cursor: pointer;
+    padding: 0 0 0.5rem 1rem;
+    border-style: none none none solid;
+}
+
+.darkTitleModel {
+    background-color: #303030;
+}
+
+.lightTitleModel {
+    background-color: #ffffff;
+}
+
+.jsDivMargin {
+    padding-right: 2rem;
+    margin-top: 0.8rem;
+    padding-top: 6px;
+}
+
+.pyDivMargin {
+    padding-top: 6px;
+    padding-right: 4rem;
+}
+
+.langIcon {
+    width: 24px;
+    height: 24px;
+}
+
+.pyFont {
+    padding-left: 6px !important;
+}
+
+@media (max-width: 767px) {
+
+    .barDiv {
+        height: 9%;
+    }
+
+    .pyText {
+        padding-right: 21px
+    }
+
+    .langIcon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .uploadCodeButton {
+        height: 2.5rem;
+        width: 55%;
+        border-radius: 0.4rem 0 0 0.4rem;
+        margin-left: 0.5rem;
+        margin-top: 0.40rem;
+    }
+
+    .features {
+        height: 2.5rem;
+        border-radius: 0 0.4rem 0.4rem 0;
+        width: 30%;
+        cursor: pointer;
+        margin-left: 0;
+        margin-top: 0.40rem;
+    }
+
+    .operationsDiv {
+        margin-right: -7rem;
+    }
+
+    .buttonMargin {
+        display: flex;
+        margin-top: 20px;
+    }
+
+    .iconMargin {
+        width: 40%;
+    }
+
+    .iconDiv {
+        height: 1.4rem;
+        width: 1.5rem;
+    }
+
+    .iconSpace {
+        width: 12%;
+        margin-left: 5rem;
+    }
+
+    .buttonsDiv {
+        height: 10%;
+    }
+
+    .shrinkDriveIcon {
+        width: 1.5rem;
+    }
+
+    .driveIconStyle {
+        width: 2rem;
+        margin-top: 0.5rem;
+    }
+
+    .buttonStyle {
+        width: 7rem;
+        height: 2.5rem;
+    }
+
+    .commandSize {
+        width: 1rem;
+        height: 0.98rem;
+    }
+
+    .textItem {
+        margin-top: 2px;
+        font-size: 12px;
+    }
+
+    .errorDiv {
+        font-size: 15px;
+        margin-left: 5%;
+        margin-top: 3%;
+    }
+
+    .loaderText {
+        margin-top: 8%;
+    }
+
+    .errorItems {
+        font-size: 12px;
+        line-height: 50px;
+    }
+
+    .langOption {
+        height: 95px;
+        width: 140px;
+        top: -135px;
+        left: -15vw;
+    }
+
+    .langItem {
+        padding: 0 0 0.5rem 0;
+    }
+
+    .pyFont {
+        padding-left: 6px !important;
+    }
+
+    .langItem {
+        font-size: 15px;
+    }
+
+}
+
+
+@media only screen and (min-width: 400px) and (max-width: 1024px) and (max-height: 500px)  and (orientation: landscape) {
+
+    .pyText {
+        padding-right: 22px
+    }
+
+    .langIcon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .jsDivMargin {
+        padding-right: 1rem;
+        padding-top: 3px;
+    }
+
+    .pyDivMargin {
+        padding-top: 6px;
+        padding-right: 1.3rem;
+    }
+
+
+    .barDiv {
+        height: 18%;
+    }
+
+    .uploadCodeButton {
+        height: 2.3rem;
+        margin-left: 1.4rem;
+        width: 100px;
+        margin-bottom: 0.3rem;
+    }
+
+    .features {
+        height: 2.3rem;
+        width: 20%;
+        margin-bottom: 0.3rem;
+    }
+
+    .buttonsDiv {
+        height: 18%;
+    }
+
+    .buttonStyle {
+        margin-bottom: 0.3rem;
+        height: 2.3rem;
+    }
+
+    .loaderBarDiv {
+        height: 30%;
+    }
+
+    .loaderText {
+        margin-top: 2%;
+    }
+
+    .textItem {
+        margin-top: 3px;
+        font-size: 14px;
+    }
+
+    .errorDiv {
+        margin-top: 1.5%;
+        font-size: 15px;
+    }
+
+    .errorItems {
+        font-size: 12px;
+        line-height: 20px;
+    }
+
+    .langOption {
+        height: 130px;
+        width: 160px;
+        top: -170px;
+        left: -10vw;
+    }
+
+}
+
+
+@media (min-width: 768px) and (max-width: 1024px) and (min-height: 650px) {
+
+    .features {
+        width: 40%;
+    }
+
+    .jsDivMargin {
+        padding-right: 1rem;
+    }
+
+    .pyDivMargin {
+        padding-right: 2.6rem;
+    }
+
+    .operationsDiv {
+        margin-right: 2rem;
+    }
+
+    .noSpace {
+        margin-left: -2%;
+    }
+
+    .loaderText {
+        margin-top: 6%;
+    }
+
+    .textItem {
+        margin-top: 10px;
+        font-size: 24px;
+    }
+
+    .langOption {
+        height: 140px;
+        width: 160px;
+    }
+
+}

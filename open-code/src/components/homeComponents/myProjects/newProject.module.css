@@ -1,0 +1,579 @@
+.Main {
+    min-height: 307px;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    padding-left: 7%;
+    padding-top: 5.6%;
+    padding-bottom: 4.3%;
+}
+
+.Heading {
+    font-size: 25px;
+    font-family: Gilroy-SemiBold, sans-serif;
+    font-weight: 600;
+    line-height: 30px;
+}
+
+.ButtonsMessage {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.loaderStyle {
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 20px;
+    padding-left: 45%;
+}
+
+.Content {
+    margin-top: 22px;
+    display: flex;
+    width: 260px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.Button {
+    width: 260px;
+    height: 160px;
+    background-color: #ffffff;
+    border: 1.3px dashed #0071C5;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ButtonLight {
+    box-shadow: rgb(0 0 0 / 13%) 0px 2px 7px;
+    background-color: #f8f9fb;
+    color: #202020;
+}
+
+.ButtonDark {
+    box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.13);
+    background-color: #202020;
+    color: #ffffff;
+}
+
+.AddIconImage {
+    width: 23%;
+    height: 36%;
+    border: 1.5px solid #0071C5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Message {
+    width: 76%;
+    height: 100%;
+    background: #FFFFFF;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Gilroy-Medium, sans-serif;
+    font-size: 18px;
+    line-height: 21px;
+    margin-left: -1px;
+    color: #292929;
+    padding: 25px 25px;
+}
+
+.MessageIcon {
+    display: flex;
+    width: 24%;
+    align-items: center;
+    justify-content: center;
+}
+
+.TriangleIcon {
+    width: 7%;
+    height: 7%;
+}
+
+.plus {
+    width: 36%;
+    height: 36%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    color: #0071C5;
+}
+
+.model {
+    width: 694px;
+    height: 343px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: rgb(0 0 0 / 25%) 0px 4px 15px;
+    border-radius: 6px;
+    outline: none;
+}
+
+.modelDark {
+    background: #303030;
+}
+
+.modelLight {
+    background: #FFFFFF;
+}
+
+.ModelHeading {
+    font-family: Gilroy-SemiBold, sans-serif;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    padding: 25px 25px 20px 25px;
+    justify-content: space-between;
+}
+
+.ModelHeadingDark {
+    color: #FFFFFF;
+    border-color: #4d4c4c;
+}
+
+.ModelHeadingLight {
+    color: #000000;
+    border-color: #CCCCCC;
+}
+
+.CrossIcon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.Input {
+    display: flex;
+    flex-direction: column;
+    padding-top: 2%;
+    padding-left: 4%;
+    margin-bottom: 5%;
+}
+
+.label {
+    font-family: Gilroy-Medium, sans-serif;
+    font-size: 18px;
+    line-height: 21px;
+    color: #000000;
+    margin-bottom: 5%;
+}
+
+.InputArea {
+    height: 100%;
+    width: 87%;
+    font-family: Gilroy-Regular, sans-serif;
+    padding: 13px 20px;
+    font-size: 20px;
+    line-height: 27px;
+    border-width: 1px;
+    border-color: #0071C5;
+    background-color: #FFFFFF;
+    color: #000000;
+    border-style: solid;
+    border-radius: 6px;
+}
+
+.SaveBtn {
+    width: 21%;
+    height: 14.5%;
+    border-radius: 6px;
+    font-family: Gilroy-SemiBold, sans-serif;
+    color: #ffffff;
+    font-size: 22px;
+    background: #0071c5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 73%;
+}
+
+.MainDark {
+    background-color: #202020;
+    color: #ffffff;
+}
+
+.MainLight {
+    background-color: #f8f9fb;
+    color: #202020;
+}
+
+.MessageDark {
+    background-color: #303030;
+    color: #ffffff;
+}
+
+.MessageLight {
+    background-color: #FFFFFF;
+    color: #292929;
+}
+
+.inputExtraStyle {
+    width: 90%;
+    height: 75px;
+}
+
+.inputBoxMargin {
+    margin-top: 30px;
+}
+
+
+.cardContent {
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+}
+
+.optionExtraStyle {
+    height: 125px;
+    width: 260px;
+    position: sticky;
+    top: 65px;
+    left: 39vw;
+}
+
+.Card {
+    width: 260px;
+    height: 162px;
+    background-color: transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-right: 42px;
+}
+
+.rowDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.lightBoxShadow {
+    box-shadow: rgb(0 0 0 / 13%) 0px 2px 7px;
+}
+
+.darkBoxShadow {
+    box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+.CardHeadingIcon {
+    display: flex;
+    margin-left: 31px;
+    margin-top: 33px;
+    align-items: center;
+    /* Vector */
+}
+
+.CardHeading {
+    font-family: Gilroy-SemiBold, sans-serif;
+    font-weight: 600;
+    font-size: 25px;
+}
+
+
+.PencilIcon {
+    /*background-color: red;*/
+    width: 18px;
+    height: 18px;
+    margin: 18px 20px 0 0;
+    display: inline-block;
+    padding: 3px 10px 10px 10px;
+    pointer-events: auto;
+}
+
+.Date {
+    padding-left: 31px;
+    padding-top: 5px;
+    font-family: Gilroy-Regular, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.line {
+    border: 0.5px solid;
+    opacity: 0.2;
+    margin: 5px 0px 0 0px;
+}
+
+.inputTitle {
+    /*margin-left: -10px;*/
+}
+
+@media (max-width: 767px) {
+    .Main {
+        padding-left: 3.8%;
+        padding-top: 12.6%;
+    }
+
+    .Heading {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 21px;
+    }
+
+    .Content {
+        width: 50%;
+    }
+
+    .MessageIcon {
+        width: 50%;
+        line-height: 12px;
+        margin-left: -5%;
+        margin-top: 20px;
+    }
+
+    .Message {
+        font-size: 10px;
+        padding: 10px 10px;
+    }
+
+    .Button {
+        width: 100%;
+        height: 99.07px;
+    }
+
+    .cardContent {
+        width: 50%;
+        margin-top: 26px;
+    }
+
+    .Card {
+        width: 90%;
+        height: 99.07px;
+        margin-right: 0;
+    }
+
+    .CardHeadingIcon {
+        margin-left: 15%;
+        margin-top: 10%;
+    }
+
+    .CardHeading {
+        font-weight: 600;
+        font-size: 1rem !important;
+    }
+
+    .PencilIcon {
+        margin: 12% 10% 0 0px;
+    }
+
+    .Date {
+        padding-left: 15%;
+        font-size: 10px !important;
+        font-weight: 200;
+    }
+
+    .model {
+        width: 80%;
+        height: 11rem;
+        padding: 18px 20px 0px 20px;
+    }
+
+    .ModelHeading {
+        padding: 5px 5px 5px 5px;
+        font-size: 15px;
+    }
+
+    .CrossIcon {
+        width: 12px;
+        height: 12px;
+        margin-left: 10px;
+    }
+
+    .line {
+        border: 0.5px solid;
+        opacity: 0.2;
+        margin: 5px -20px 0 -20px;
+    }
+
+    .Input {
+        padding-top: 10px;
+        padding-left: 0%;
+        margin: -20px;
+    }
+
+    .inputTitle {
+        /*margin-left: -10px;*/
+    }
+
+    .inputExtraStyle {
+        height: 50px;
+        width: 80%;
+    }
+
+    .extraInputStyle {
+        font-size: 13px !important;
+    }
+
+    .SaveBtn {
+        width: 150px;
+        height: 30px;
+        font-size: 14px;
+        margin-left: 62%;
+        font-family: Gilroy-Regular, sans-serif;
+    }
+
+    .creatButton {
+        width: 91%;
+        margin-top: 35px;
+        display: flex;
+    }
+
+    .iosButton {
+        width: 91%;
+        margin-top: 35px;
+        display: flex;
+    }
+
+    .androidButton {
+        width: 91%;
+        margin-top: 35px;
+        display: flex;
+    }
+
+    .inputBoxMargin {
+        margin-top: 15px;
+    }
+}
+
+
+/*tablet portrait mode*/
+@media (min-width: 744px) and (max-width: 1024px) {
+    .Main {
+        padding-left: 3.8%;
+        padding-top: 12.6%;
+    }
+
+    .Button {
+        width: 100%;
+        height: 140px;
+    }
+
+    .MessageIcon {
+        width: 45%;
+        margin-top: 3%;
+        margin-left: -3%;
+    }
+
+    .Message {
+        font-size: 12px;
+        padding: 10px 2px;
+        margin-left: -15px;
+    }
+
+    .cardContent {
+        width: 33%;
+    }
+
+    .Card {
+        width: 100%;
+        height: 140px;
+    }
+
+    .Content {
+        width: 33%;
+    }
+
+    .SaveBtn {
+        width: 150px;
+        padding: 0.5rem;
+        margin-left: 70%;
+    }
+}
+
+@media only screen and (min-width: 350px) and (max-width: 1024px) and (orientation: landscape) {
+
+    .Card {
+        width: 100%;
+        height: 130px;
+        margin-right: 42px;
+    }
+
+    .cardContent {
+        width: 33%;
+    }
+
+    .Button {
+        width: 100%;
+        height: 130px;
+    }
+
+    .Content {
+        width: 33%;
+    }
+
+    .AddIconImage {
+        width: 18%;
+        height: 30%;
+    }
+
+    .CardHeading {
+        font-weight: 600;
+        font-size: 1rem !important;
+    }
+
+    .ModelHeading {
+        font-size: 15px;
+        padding: 2px 2px 10px 2px;
+    }
+
+    .CrossIcon {
+        width: 14px;
+        height: 14px;
+        margin-right: 10px;
+    }
+
+    .inputExtraStyle {
+        height: 50px;
+        width: 80%;
+    }
+
+    .inputBoxMargin {
+        margin-top: 15px;
+    }
+
+    .SaveBtn {
+        width: 100px;
+        height: 30px;
+        font-size: 14px;
+        font-family: Gilroy-Medium, sans-serif;
+    }
+
+    .model {
+        width: 50%;
+        height: 13rem;
+        padding: 18px 20px 0px 20px;
+    }
+
+    .androidButton {
+        width: 84%;
+    }
+
+    .iosButton {
+        width: 100%;
+    }
+
+    .creatButton {
+        width: 91%;
+    }
+
+    .line {
+        margin: 5px -20px 0 -20px;
+    }
+
+}
