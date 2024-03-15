@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import org.openbot.googleServices.GoogleServices;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -209,8 +210,10 @@ public class ModelManagementFragment extends Fragment
                             masterList.add(item1);
                             showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
                             FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
+                            googleServices.createAndUploadJsonFile(masterList);
                             Gson gson = new Gson();
                             String json = gson.toJson(masterList);
+                            System.out.println("filenameId:::"+masterList.indexOf(item1));
                             Toast.makeText(
                                             requireContext().getApplicationContext(),
                                             "Model added: " + fileName,
@@ -224,8 +227,8 @@ public class ModelManagementFragment extends Fragment
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("application/octet-stream"); // Specify the MIME type for TFLite files
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-
         mStartForResult.launch(intent);
+        googleServices.createAndUploadJsonFile(masterList);
     }
 
     @Nullable
@@ -242,6 +245,8 @@ public class ModelManagementFragment extends Fragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
+
+       // load all model first
         GoogleServices googleServices = new GoogleServices(requireActivity(), requireContext(), new GoogleSignInCallback() {
             @Override
             public void onSignInSuccess(FirebaseUser account) {
@@ -272,14 +277,17 @@ public class ModelManagementFragment extends Fragment
         rotation.setInterpolator(new LinearInterpolator());
 
         ArrayAdapter<String> modelAdapter =
+
                 new ArrayAdapter<>(
                         requireContext(), android.R.layout.simple_dropdown_item_1line, modelTypes);
+
         binding.modelSpinner.setAdapter(modelAdapter);
         binding.autoSync.setOnClickListener(v -> {
             rotation.start();
             googleServices.getConfigFileContent(rotation, binding.autoSync, adapter);
         });
         adapter = new ModelAdapter(loadModelList(ALL), requireContext(), this);
+
         binding.modelListContainer.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.modelListContainer.setAdapter(adapter);
         binding.modelListContainer.addItemDecoration(
@@ -306,6 +314,10 @@ public class ModelManagementFragment extends Fragment
                     } else openPicker();
                 });
     }
+
+    // locally data saved in masterList
+    // and individual data is called modelList
+
 
     private void showModels(List<Model> modelList) {
         adapter.setItems(modelList);
@@ -336,6 +348,7 @@ public class ModelManagementFragment extends Fragment
                             .filter(f -> f.type.equals(Model.TYPE.DETECTOR))
                             .collect(Collectors.toList()));
         }
+
         return modelInfoList;
     }
 
@@ -354,6 +367,7 @@ public class ModelManagementFragment extends Fragment
 
     @Override
     public boolean onModelDownloadClicked() {
+        System.out.println("Download button clicked");
         ConnectivityManager cm =
                 (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cm.getActiveNetworkInfo();
@@ -361,7 +375,7 @@ public class ModelManagementFragment extends Fragment
         if (!isDownloading)
             Toast.makeText(
                             requireContext().getApplicationContext(),
-                            "Please connect to the internet to download models.",
+                            "Please connect to the internet to download models....",
                             Toast.LENGTH_SHORT)
                     .show();
         return isDownloading;
@@ -369,6 +383,7 @@ public class ModelManagementFragment extends Fragment
 
     @Override
     public void onModelDownloaded(boolean status, Model mItem) {
+        masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
         if (status && isAdded()) {
             isDownloading = false;
             for (Model model : masterList) {
@@ -394,6 +409,7 @@ public class ModelManagementFragment extends Fragment
                 (dialog, id) -> {
                     new File(mItem.path).delete();
                     int index = masterList.indexOf(mItem);
+
                     Model originalModelConfig =
                             FileUtils.getOriginalModelFromConfig(requireActivity(), mItem);
                     if (originalModelConfig == null) {

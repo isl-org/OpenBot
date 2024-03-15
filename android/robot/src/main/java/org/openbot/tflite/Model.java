@@ -37,7 +37,6 @@ public class Model {
     CMDNAV,
     DETECTOR,
     GOALNAV,
-    AUTOPILOT
   }
 
   public enum PATH_TYPE {

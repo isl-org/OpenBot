@@ -249,9 +249,11 @@ public class GoogleServices extends Fragment {
                                 }
                                 // Iterate through the files
                                 for (File file : driveProjectFiles) {
+
                                     if (file.getName().endsWith(".js")) {
                                         driveProjectId.add(file.getId());
                                         String projectName = file.getName();
+//                                        System.out.println("name"+projectName);
                                         String projectId = file.getId();
                                         DateTime projectDate = file.getModifiedTime();
 
@@ -274,10 +276,12 @@ public class GoogleServices extends Fragment {
 
                                 // Iterate over the local projects and remove any that are not present in the
                                 // driveProjectId set
+                                // MyProject
                                 Iterator<ProjectsDataInObject> iterator = projectsList.iterator();
                                 while (iterator.hasNext()) {
                                     ProjectsDataInObject project = iterator.next();
-                                    if (!driveProjectId.contains(project.getProjectId())) {
+
+                                    if (!driveProjectId.contains(project.getProjectName())) {
                                         iterator.remove();
                                     }
                                     sharedPreferencesManager.setProjectLIst(projectsList);
@@ -669,6 +673,7 @@ public class GoogleServices extends Fragment {
 
                                 List<Model> modelList = gson.fromJson(updatedModelList, new TypeToken<List<Model>>() {
                                 }.getType());
+
                                 for (int i = 0; i < modelList.size(); i++) {
                                     if (modelList.get(i).pathType == Model.PATH_TYPE.FILE && !FileUtils.checkFileExistence(mActivity, modelList.get(i).name)) {
                                         modelList.get(i).setPathType(Model.PATH_TYPE.URL);

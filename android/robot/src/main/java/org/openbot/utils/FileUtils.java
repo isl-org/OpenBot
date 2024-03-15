@@ -80,6 +80,7 @@ public class FileUtils {
     JsonElement jsonElement;
     Type listType = new TypeToken<List<Model>>() {}.getType();
     boolean fileExists = checkFileExistence(activity, configFile);
+    System.out.println("fileExist::::"+fileExists);
     if (fileExists) {
       try {
         jsonElement =
