@@ -49,6 +49,7 @@ public abstract class CameraFragment extends ControlsFragment {
     return addCamera(inflater.inflate(resId, container, false), inflater, container);
   }
 
+
   protected View inflateFragment(
       ViewBinding viewBinding, LayoutInflater inflater, ViewGroup container) {
     return addCamera(viewBinding.getRoot(), inflater, container);
@@ -131,6 +132,7 @@ public abstract class CameraFragment extends ControlsFragment {
 
           processFrame(bitmapBuffer, image);
         });
+
     try {
       if (cameraProvider != null) {
         cameraProvider.unbindAll();

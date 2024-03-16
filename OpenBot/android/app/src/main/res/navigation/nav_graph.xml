@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_mainFragment_to_rlFragment"
             app:destination="@id/rlFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_policyGradientFragment"
+            app:destination="@id/policyGradientFragment" />
 
 
     </fragment>
@@ -104,4 +107,10 @@
         android:name="org.openbot.logging.RLFragment"
         android:label="fragment_rl"
         tools:layout="@layout/fragment_rl" />
+
+    <fragment
+        android:id="@+id/policyGradientFragment"
+        android:name="org.openbot.logging.PolicyGradientFragment"
+        android:label="fragment_policyGradient"
+        tools:layout="@layout/policy_gradient" />
 </navigation>

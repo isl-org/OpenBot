@@ -94,6 +94,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation project(path: ':opencv')
+    implementation 'org.apache.commons:commons-math3:3.6.1'
+
 
     def nav_version = "2.3.5"
     // Java language implementation

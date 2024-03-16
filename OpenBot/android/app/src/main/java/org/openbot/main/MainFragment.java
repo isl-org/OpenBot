@@ -108,6 +108,13 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_mainFragment_to_rlFragment);
 
+        break;
+
+      case FeatureList.POLICY_GRADIENT:
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_mainFragment_to_policyGradientFragment);
+        break;
+
     }
   }
 }

@@ -62,6 +62,17 @@ public class LogDataUtils {
     return msg;
   }
 
+  public static Message generateRewardsArrayMessage(String rewardArray){
+    Message msg = Message.obtain();
+    Bundle bundle = new Bundle();
+    bundle.putString("rewardNumber",  rewardArray);
+    bundle.putLong("timestamp", SystemClock.elapsedRealtimeNanos());
+    msg.setData(bundle);
+    msg.what = SensorService.MSG_TOTAL_REWARD;
+
+    return msg;
+  }
+
   public static Message generateRLMessage(String info)
   {
     Message msg = Message.obtain();
