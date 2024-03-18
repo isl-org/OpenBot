@@ -182,4 +182,140 @@ public class DetectorYoloV5 extends Detector {
     }
     return nms(recognitions);
   }
+
+  /**
+   * Retrieves both recognized objects from the model's output and organizes them into ArrayLists
+   * based on class names.
+   *
+   * @return An ArrayList of ArrayLists containing Recognition results for both classes.
+   */
+  @Override
+  protected ArrayList<ArrayList<Recognition>> getMultipleRecognitions(String classNameFirst, String classNameSecond) {
+    // Show the best detections.
+    // after scaling them back to the input size.
+    ByteBuffer byteBuffer = (ByteBuffer) outputMap.get(0);
+    byteBuffer.rewind();
+
+    final ArrayList<ArrayList<Recognition>> allRecognitions = new ArrayList<>(getNumDetections());
+    allRecognitions.add(new ArrayList<>());
+    allRecognitions.add(new ArrayList<>());
+
+    float[][][] out = new float[1][output_box][numClass + 5];
+    for (int i = 0; i < output_box; ++i) {
+      for (int j = 0; j < numClass + 5; ++j) {
+        if (isModelQuantized) {
+          out[0][i][j] = outputScale * (((int) byteBuffer.get() & 0xFF) - outputZeroPoint);
+        } else {
+          out[0][i][j] = byteBuffer.getFloat();
+        }
+      }
+      // Denormalize xywh
+      for (int j = 0; j < 4; ++j) {
+        out[0][i][j] *= inputSize;
+      }
+    }
+
+    for (int i = 0; i < output_box; ++i) {
+      final int offset = 0;
+      final float confidence = out[0][i][4];
+      int classId = -1;
+      float maxClass = 0;
+
+      final float[] classes = new float[labels.size()];
+      for (int c = 0; c < labels.size(); ++c) {
+        classes[c] = out[0][i][5 + c];
+      }
+
+      for (int c = 0; c < labels.size(); ++c) {
+        if (classes[c] > maxClass) {
+          classId = c;
+          maxClass = classes[c];
+        }
+      }
+
+      final float score = maxClass * confidence;
+      if (score > getObjThresh()) {
+        final float xPos = out[0][i][0];
+        final float yPos = out[0][i][1];
+
+        final float w = out[0][i][2];
+        final float h = out[0][i][3];
+
+        final RectF detection =
+                new RectF(
+                        Math.max(0, xPos - w / 2),
+                        Math.max(0, yPos - h / 2),
+                        Math.min(getImageSizeX() - 1, xPos + w / 2),
+                        Math.min(getImageSizeY() - 1, yPos + h / 2));
+        if (classId > -1 && labels.get(classId).contentEquals(classNameFirst)) {
+          allRecognitions.get(0).add(new Recognition("" + i, labels.get(classId), score, detection, classId));
+        } else if (classId > -1 && labels.get(classId).contentEquals(classNameSecond)) {
+          allRecognitions.get(1).add(new Recognition("" + i, labels.get(classId), score, detection, classId));
+        }
+      }
+    }
+    return multipleNMS(allRecognitions);
+  }
+
+  @Override
+  protected List<Recognition> getAllRecognition() {
+    // Show the best detections.
+    // after scaling them back to the input size.
+    ByteBuffer byteBuffer = (ByteBuffer) outputMap.get(0);
+    byteBuffer.rewind();
+
+    ArrayList<Recognition> recognitions = new ArrayList<>();
+
+    float[][][] out = new float[1][output_box][numClass + 5];
+    for (int i = 0; i < output_box; ++i) {
+      for (int j = 0; j < numClass + 5; ++j) {
+        if (isModelQuantized) {
+          out[0][i][j] = outputScale * (((int) byteBuffer.get() & 0xFF) - outputZeroPoint);
+        } else {
+          out[0][i][j] = byteBuffer.getFloat();
+        }
+      }
+      // Denormalize xywh
+      for (int j = 0; j < 4; ++j) {
+        out[0][i][j] *= inputSize;
+      }
+    }
+
+    for (int i = 0; i < output_box; ++i) {
+      final int offset = 0;
+      final float confidence = out[0][i][4];
+      int classId = -1;
+      float maxClass = 0;
+
+      final float[] classes = new float[labels.size()];
+      for (int c = 0; c < labels.size(); ++c) {
+        classes[c] = out[0][i][5 + c];
+      }
+
+      for (int c = 0; c < labels.size(); ++c) {
+        if (classes[c] > maxClass) {
+          classId = c;
+          maxClass = classes[c];
+        }
+      }
+
+      final float score = maxClass * confidence;
+      if (score > getObjThresh()) {
+        final float xPos = out[0][i][0];
+        final float yPos = out[0][i][1];
+
+        final float w = out[0][i][2];
+        final float h = out[0][i][3];
+
+        final RectF detection =
+                new RectF(
+                        Math.max(0, xPos - w / 2),
+                        Math.max(0, yPos - h / 2),
+                        Math.min(getImageSizeX() - 1, xPos + w / 2),
+                        Math.min(getImageSizeY() - 1, yPos + h / 2));
+        recognitions.add(new Recognition("" + i, labels.get(classId), score, detection, classId));
+      }
+    }
+    return nms(recognitions);
+  }
 }

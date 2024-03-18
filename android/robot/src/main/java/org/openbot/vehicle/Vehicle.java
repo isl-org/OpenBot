@@ -170,7 +170,6 @@ public class Vehicle {
   }
 
   public void processVehicleConfig(String message) {
-
     setVehicleType(message.split(":")[0]);
 
     if (message.contains(":v:")) {
@@ -390,6 +389,7 @@ public class Vehicle {
   }
 
   private void sendStringToDevice(String message) {
+    System.out.println("sanjeev == " + message);
     if (getConnectionType().equals("USB") && usbConnection != null) {
       usbConnection.send(message);
     } else if (getConnectionType().equals("Bluetooth")
@@ -414,8 +414,10 @@ public class Vehicle {
   }
 
   public void sendControl() {
+
     int left = (int) (getLeftSpeed());
     int right = (int) (getRightSpeed());
+
     if (noiseEnabled && noise.getDirection() < 0)
       left =
           (int)
@@ -424,6 +426,7 @@ public class Vehicle {
     // raw control value is used
     if (noiseEnabled && noise.getDirection() > 0)
       right = (int) ((control.getRight() - noise.getValue()) * speedMultiplier);
+
     sendStringToDevice(String.format(Locale.US, "c%d,%d\n", left, right));
   }
 
