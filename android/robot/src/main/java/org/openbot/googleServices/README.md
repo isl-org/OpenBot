@@ -63,7 +63,7 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
     ```
     This command is similar to the Mac command, but uses a `different path` to locate the debug.keystore file. `%USERPROFILE%` is a system environment variable that points to the current user's profile directory, which contains the `.android` directory where the `debug.keystore` file is located.
 
-- Download the `google-services.json` file and `add` it to your Application's `app directory`.
+- Download the `google-services.json` file and `add` it to your Application's `app directory` and also `assets directory`.
 - Click on the next button, And you have to skip the third step because we already **add firebase SDK** in gradle file for this project.
 - Continue to the Firebase Console to configure the Firebase services you want to use in your Android app.
 

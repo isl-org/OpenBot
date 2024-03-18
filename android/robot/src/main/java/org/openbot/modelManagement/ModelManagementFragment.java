@@ -185,7 +185,6 @@ public class ModelManagementFragment extends Fragment
     }
 
     private void processModelFromStorage(List<Uri> files, String fileName) {
-
         Model item =
                 new Model(
                         masterList.size() + 1,
@@ -195,6 +194,7 @@ public class ModelManagementFragment extends Fragment
                         Model.PATH_TYPE.FILE,
                         requireActivity().getFilesDir() + File.separator + fileName,
                         "256x96");
+
         EditModelDialogFragment edMbS =
                 new EditModelDialogFragment(
                         item,
