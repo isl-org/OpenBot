@@ -28,7 +28,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
           height: 30,
           width: 85,
           decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(3)),
+            borderRadius: BorderRadius.all(Radius.circular(30)),
             color: Color(0xFF0071C5),
           ),
           alignment: Alignment.center,
@@ -180,6 +180,7 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
               const SizedBox(
                 width: 54,
               ),
+
               Switch(
                   value: isNoise,
                   onChanged: (bool value) {
@@ -189,7 +190,9 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
                     if (isNoise) {
                       clientSocket?.writeln("{command: NOISE}");
                     }
-                  })
+                  },
+                activeColor: const Color(0xFF0071C5),
+              )
             ]),
           ),
         ],
