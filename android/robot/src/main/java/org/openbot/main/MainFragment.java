@@ -48,6 +48,9 @@ public class MainFragment extends Fragment implements OnItemClickListener<SubCat
     Timber.d("onItemClick: %s", subCategory.getTitle());
 
     switch (subCategory.getTitle()) {
+      case FeatureList.PROJECTS:
+        Navigation.findNavController(requireView()).navigate(R.id.projectsFragment);
+        break;
       case FeatureList.FREE_ROAM:
         Navigation.findNavController(requireView())
             .navigate(R.id.action_mainFragment_to_freeRoamFragment);

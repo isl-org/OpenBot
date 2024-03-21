@@ -167,18 +167,18 @@
             android:text="@string/server"
             android:textColor="@android:color/black"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-            app:layout_constraintEnd_toStartOf="@+id/ipAddress"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/ipAddress"
-            android:layout_width="wrap_content"
+        <Spinner
+            android:id="@+id/save_as"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:gravity="center"
-            android:text="@string/ip_placeholder"
+            android:entries="@array/save_data"
             android:textColor="@android:color/black"
+            android:prompt="@string/save_option"
             app:layout_constraintBottom_toBottomOf="@+id/server"
             app:layout_constraintEnd_toEndOf="@+id/crop_info"
+            app:layout_constraintStart_toEndOf="@+id/server"
             app:layout_constraintTop_toTopOf="@+id/server" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

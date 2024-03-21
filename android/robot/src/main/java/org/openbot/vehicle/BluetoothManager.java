@@ -206,7 +206,6 @@ public class BluetoothManager {
           Logger.e("mtu fail:" + info + " " + failCode);
         }
       };
-
   public BleWriteCallback writeCallback =
       new BleWriteCallback() {
         @Override

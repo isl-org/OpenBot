@@ -12,6 +12,7 @@ import { ErrorDisplay } from './error-display.js'
 export function Connection () {
   const connectToServer = async () => {
     const ws = new WebSocket(`ws://${window.location.hostname}:7071/ws`)
+    console.log(`ws://${window.location.hostname}:7071/ws`)
     return new Promise((resolve, reject) => {
       const timer = setInterval(() => {
         if (ws.readyState === 1) {

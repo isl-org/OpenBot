@@ -103,3 +103,7 @@ struct CandidateEvent: Codable {
         var WEB_RTC_EVENT: Candidate
     }
 }
+
+struct OpenBotSignal : Codable {
+    var openbot : Int
+}

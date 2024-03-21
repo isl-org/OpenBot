@@ -3,6 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/playGroundFragment"
+        android:icon="@drawable/ic_playground"
+        android:title="@string/playground"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/usbFragment"
         android:icon="@drawable/ic_usb_menu_item"
         android:title="@string/usb"
@@ -16,5 +21,10 @@
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
         android:title="@string/settings"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/barCodeScannerFragment"
+        android:icon="@drawable/ic_qr_code_scanner"
+        android:title="@string/scanner"
         app:showAsAction="ifRoom"/>
 </menu>

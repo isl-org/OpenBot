@@ -1,5 +1,7 @@
 package org.openbot.modelManagement;
 
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -9,11 +11,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -26,6 +28,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.google.firebase.auth.FirebaseUser;
 import com.nononsenseapps.filepicker.Utils;
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +40,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.openbot.R;
 import org.openbot.databinding.FragmentModelManagementBinding;
+import org.openbot.googleServices.GoogleServices;
 import org.openbot.main.OnItemClickListener;
+import org.openbot.projects.GoogleSignInCallback;
 import org.openbot.tflite.Model;
 import org.openbot.utils.Constants;
 import org.openbot.utils.FileUtils;
@@ -65,8 +71,10 @@ public class ModelManagementFragment extends Fragment
 
                 Intent intent = result.getData();
                 // Handle the Intent
-                List<Uri> files = Utils.getSelectedFilesFromResult(intent);
-                String fileName = getFileNameFromUri(files.get(0));
+                  assert intent != null;
+                  List<Uri> files = Utils.getSelectedFilesFromResult(intent);
+
+                String fileName = new File(files.get(0).getPath()).getName();
                 if (FileUtils.checkFileExistence(requireActivity(), fileName)) {
                   AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
                   builder.setTitle(R.string.file_available_title);
@@ -168,7 +176,7 @@ public class ModelManagementFragment extends Fragment
               }
               masterList.add(item1);
               showModels(loadModelList(binding.modelSpinner.getSelectedItem().toString()));
-              FileUtils.updateModelConfig(requireActivity(), masterList);
+              FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
               Toast.makeText(
                       requireContext().getApplicationContext(),
                       "Model added: " + fileName,
@@ -200,17 +208,45 @@ public class ModelManagementFragment extends Fragment
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     masterList = FileUtils.loadConfigJSONFromAsset(requireActivity());
+    GoogleServices googleServices = new GoogleServices(requireActivity(), requireContext(), new GoogleSignInCallback() {
+          @Override
+          public void onSignInSuccess(FirebaseUser account) {
 
+          }
+
+          @Override
+          public void onSignInFailed(Exception exception) {
+
+          }
+
+          @Override
+          public void onSignOutSuccess() {
+
+          }
+
+          @Override
+          public void onSignOutFailed(Exception exception) {
+
+          }
+      });
     List<String> modelTypes =
         Arrays.stream(Model.TYPE.values()).map(Enum::toString).collect(Collectors.toList());
     modelTypes.add(0, ALL);
+      ObjectAnimator rotation = ObjectAnimator.ofFloat(binding.autoSync, "rotation", 360f, 0f);
+      rotation.setDuration(1000);
+      rotation.setRepeatCount(ObjectAnimator.INFINITE);
+      rotation.setInterpolator(new LinearInterpolator());
 
     ArrayAdapter<String> modelAdapter =
         new ArrayAdapter<>(
             requireContext(), android.R.layout.simple_dropdown_item_1line, modelTypes);
     binding.modelSpinner.setAdapter(modelAdapter);
-
-    adapter = new ModelAdapter(loadModelList(ALL), this);
+    binding.autoSync.setOnClickListener(v -> {
+        rotation.start();
+        googleServices.getConfigFileContent(rotation, binding.autoSync);
+    });
+      googleServices.getConfigFileContent(rotation, binding.autoSync);
+    adapter = new ModelAdapter(loadModelList(ALL), requireContext(), this);
     binding.modelListContainer.setLayoutManager(new LinearLayoutManager(requireContext()));
     binding.modelListContainer.setAdapter(adapter);
     binding.modelListContainer.addItemDecoration(
@@ -273,12 +309,12 @@ public class ModelManagementFragment extends Fragment
   @Override
   public void onItemClick(Model item) {
 
-    EditModelDialogFragment edMbS =
+    @SuppressLint("NotifyDataSetChanged") EditModelDialogFragment edMbS =
         new EditModelDialogFragment(
             item,
             item1 -> {
               adapter.notifyDataSetChanged();
-              FileUtils.updateModelConfig(requireActivity(), masterList);
+              FileUtils.updateModelConfig(requireActivity(), requireActivity(), masterList, false);
             });
     edMbS.show(getChildFragmentManager(), edMbS.getTag());
   }
@@ -307,7 +343,7 @@ public class ModelManagementFragment extends Fragment
           model.setPath(requireActivity().getFilesDir() + File.separator + model.name);
           model.setPathType(Model.PATH_TYPE.FILE);
           //          adapter.notifyDataSetChanged();
-          FileUtils.updateModelConfig(requireActivity(), masterList);
+          FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
           break;
         }
       }
@@ -336,7 +372,7 @@ public class ModelManagementFragment extends Fragment
             mItem.setPathType(originalModelConfig.pathType);
             adapter.notifyItemChanged(index);
           }
-          FileUtils.updateModelConfig(requireActivity(), masterList);
+          FileUtils.updateModelConfig(requireActivity(), requireContext(), masterList, false);
           requireActivity().runOnUiThread(() -> adapter.setItems(loadModelList(binding.modelSpinner.getSelectedItem().toString())));
         });
     builder.setNegativeButton("Cancel", (dialog, id) -> {});
