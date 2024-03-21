@@ -84,7 +84,7 @@ subscribeButton.addEventListener('click', handleSubscription)
 /**
  * function to handle signIn on home page
  */
-function handleSignInButtonClick() {
+function handleSignInButtonClick () {
     if (localStorage.getItem(localStorageKeys.isSignIn) === 'false') {
         googleSigIn()
             .then((user) => {

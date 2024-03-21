@@ -52,11 +52,13 @@ export function BotMessageHandler (connection) {
                 webRtc.handle(msg.WEB_RTC_EVENT, connection)
                 break
             case 'driveCmd' :
-                webRtc.send(JSON.stringify(msg))
+                connection.send(JSON.stringify(msg))
+                // webRtc.send(JSON.stringify(msg))
                 break
 
             case 'command' :
-                webRtc.send(JSON.stringify(msg))
+                connection.send(JSON.stringify(msg))
+                // webRtc.send(JSON.stringify(msg))
                 break
 
             default:

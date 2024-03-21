@@ -8,6 +8,7 @@ wss.on('connection', (ws) => {
     console.log(`Client connected. Total connected clients: ${wss.clients.size}`);
     askIdOfClient(ws);
     ws.on("message", function message(data, isBinary) {
+
         const message = isBinary ? data : data.toString();
         // console.log(JSON.parse(message));
         let msg = JSON.parse(message);
@@ -87,8 +88,6 @@ const createOrJoinRoom = (roomId, ws) => {
     }
 };
 
-
-
 // Broadcast to all.
 wss.broadcast = (ws, data) => {
     let obj = JSON.parse(data);
@@ -105,6 +104,7 @@ const broadcastToRoom = (room, message) => {
     room.clients.forEach((client) => {
         if (client && client.readyState === WebSocket.OPEN) {
             client.send(message);
+
         }
     });
 };

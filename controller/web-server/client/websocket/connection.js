@@ -16,7 +16,7 @@ import {uploadServerUsage} from '../firebase/APIs'
  * function to connect websocket to remote server
  * @constructor
  */
-export function Connection() {
+export function Connection () {
     const connectToServer = async () => {
         const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`)
         // const ws = new WebSocket(`ws://verdant-imported-peanut.glitch.me`);
@@ -37,6 +37,7 @@ export function Connection() {
 
     this.start = async (onData) => {
         let ws = await connectToServer()
+        console.log(ws)
         this.send = (data) => {
             if (ws) {
                 console.log(('sending to server' + data))
@@ -52,6 +53,7 @@ export function Connection() {
                 idSent = true
             } else {
                 console.log(webSocketMessage.data)
+                console.log('Data Displayed')
                 onData(webSocketMessage.data)
             }
         }
