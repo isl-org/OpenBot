@@ -67,7 +67,7 @@ public class SensorService extends Service implements SensorEventListener {
   private BufferedWriter wheelsLog;
   private BufferedWriter bumperLog;
   private BufferedWriter infoLog;
-  private BufferedWriter totalRewardLog; // for PPO
+  // private BufferedWriter totalRewardLog; // for PPO
 
   //Lilou
   private BufferedWriter rewardLog;
@@ -89,7 +89,7 @@ public class SensorService extends Service implements SensorEventListener {
 
   public static final int MSG_REWARD = 8;
   public static final int MSG_INFO = 9;
-  public static final int MSG_TOTAL_REWARD = 10;
+  //public static final int MSG_TOTAL_REWARD = 10;
   private static final Logger LOGGER = new Logger();
   Messenger messenger = new Messenger(new SensorMessageHandler());
 
@@ -232,8 +232,8 @@ public class SensorService extends Service implements SensorEventListener {
     infoLog = openLog(logFolder, "infoLog.txt");
     appendLog(infoLog, "timestamp[ns], actions, rewards, done");
 
-    totalRewardLog = openLog(logFolder, "totalReward.txt");
-    appendLog(infoLog, "timestamp[ns], Reward");
+    //totalRewardLog = openLog(logFolder, "totalReward.txt");
+    //appendLog(infoLog, "timestamp[ns], Reward");
 
     if (preferencesManager.getSensorStatus(Enums.SensorType.VEHICLE.getSensor())) {
       voltageLog = openLog(logFolder, "voltageLog.txt");
@@ -451,12 +451,12 @@ public class SensorService extends Service implements SensorEventListener {
           if (infoLog != null) {
             appendLog(infoLog, timestamp + "," + info);
           }
-        } else if (msg.what == MSG_TOTAL_REWARD) {
+        /*} else if (msg.what == MSG_TOTAL_REWARD) {
           String rewardNumber = msg.getData().getString("rewardNumber");
           long timestamp = msg.getData().getLong("timestamp");
           if (totalRewardLog != null) {
             appendLog(totalRewardLog, timestamp + "," + rewardNumber);
-          }
+          }*/
 
         } else if (msg.what == MSG_CONTROL) {
           // msg.arg1 and msg.arg2 contain left and right control signals respectively
@@ -515,7 +515,7 @@ public class SensorService extends Service implements SensorEventListener {
     if (bumperLog != null) closeLog(bumperLog);
     // if (rewardLog != null) closeLog(rewardLog);
     if (infoLog != null) closeLog(infoLog);
-    if (totalRewardLog != null) closeLog(totalRewardLog);
+    //if (totalRewardLog != null) closeLog(totalRewardLog);
   }
 
   public BufferedWriter openLog(String path, String filename) {

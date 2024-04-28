@@ -16,6 +16,8 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         tools:behavior_peekHeight="480dp">
 
+
+
         <View
             android:id="@+id/view"
             android:layout_width="48dp"

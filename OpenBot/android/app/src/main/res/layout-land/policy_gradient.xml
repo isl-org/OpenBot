@@ -18,6 +18,18 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         tools:behavior_peekHeight="480dp">
 
+        <EditText
+            android:id="@+id/epsilon_input"
+            android:layout_width="208dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="90dp"
+            android:hint="Enter Epsilon"
+            android:inputType="numberDecimal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.653"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/view" />
+
         <View
             android:id="@+id/view"
             android:layout_width="48dp"
@@ -102,8 +114,8 @@
 
         <TextView
             android:id="@+id/percentage"
-            android:layout_width="252dp"
-            android:layout_height="19dp"
+            android:layout_width="93dp"
+            android:layout_height="17dp"
             android:layout_marginStart="208dp"
             android:layout_marginTop="5dp"
             android:text="percentage"

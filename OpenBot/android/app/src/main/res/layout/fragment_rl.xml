@@ -66,12 +66,12 @@
             android:id="@+id/percentage"
             android:layout_width="137dp"
             android:layout_height="20dp"
-            android:layout_marginStart="168dp"
+            android:layout_marginStart="152dp"
             android:text="percentage"
             android:textColor="@android:color/black"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteY="35dp" />
+            tools:layout_editor_absoluteY="45dp" />
 
         <TextView
             android:id="@+id/previewText"
@@ -233,7 +233,11 @@
 
         <include
             android:id="@+id/controllerContainer"
-            layout="@layout/control_buttons" />
+            layout="@layout/control_buttons"
+            android:layout_width="338dp"
+            android:layout_height="46dp"
+            tools:layout_editor_absoluteX="37dp"
+            tools:layout_editor_absoluteY="271dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

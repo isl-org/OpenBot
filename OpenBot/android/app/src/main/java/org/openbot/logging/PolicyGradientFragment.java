@@ -32,6 +32,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -95,6 +97,7 @@ public class PolicyGradientFragment extends CameraFragment {
 
     int action;
     private double rewards = 0;
+    private double totalRewards;
     private long done = 0;
 
     private boolean outOfCircuit;
@@ -120,11 +123,11 @@ public class PolicyGradientFragment extends CameraFragment {
 
     private ArrayList<double[][]> xs = new ArrayList<>();
     private ArrayList<double[][]> hs = new ArrayList<>();
-    private ArrayList<Double> dLogPs = new ArrayList<>();
+    private ArrayList<double[]> dLogPs = new ArrayList<>();
     private ArrayList<Double> drs = new ArrayList<>();
     private ArrayList<double[][]> epx = new ArrayList<>();
     private ArrayList<double[][]> eph = new ArrayList<>();
-    private ArrayList<Double> epdLogP = new ArrayList<>();
+    private ArrayList<double[]> epdLogP = new ArrayList<>();
     private ArrayList<Double> epr = new ArrayList<>();
     private double[] discounted_epr;
     private ArrayList<Double> rewardsArray = new ArrayList<>();
@@ -132,6 +135,7 @@ public class PolicyGradientFragment extends CameraFragment {
     private Handler updateHandler = new Handler();
     private final int UPDATE_INTERVAL = 1000;
     private double[][] x;
+    private boolean is_rand;
 
 
     @Override
@@ -199,6 +203,7 @@ public class PolicyGradientFragment extends CameraFragment {
 
         binding.loggerSwitch.setOnCheckedChangeListener(
                 (buttonView, isChecked) -> setLoggingActive(isChecked));
+
 
 
 
@@ -332,6 +337,8 @@ public class PolicyGradientFragment extends CameraFragment {
         }
     }
 
+
+
     protected void sendIndicatorToSensorService() {
         if (sensorMessenger != null) {
             try {
@@ -365,7 +372,7 @@ public class PolicyGradientFragment extends CameraFragment {
         }
     }
 
-    protected void sendRewardsArrayToSensorService() {
+   /* protected void sendRewardsArrayToSensorService() {
         double[] rArray = convertDoubleArrayListToArray(rewardsArray);
         String string_reward = Arrays.toString(rArray);
         if (sensorMessenger != null) {
@@ -379,7 +386,7 @@ public class PolicyGradientFragment extends CameraFragment {
         } else {
             Log.e("TEST", "sensorMessenger is null.");
         }
-    }
+    }*/
 
 
     private void startLogging() {
@@ -436,7 +443,8 @@ public class PolicyGradientFragment extends CameraFragment {
                 int lastIndex = epr.size() - 1; // Get the index of the last element
                 double newReward = -5; // Example new reward value
                 epr.set(lastIndex, newReward);
-                rewards -= 5;
+                rewards = -5;
+                totalRewards += rewards;
             }
         }
         percentage = 0;
@@ -446,8 +454,8 @@ public class PolicyGradientFragment extends CameraFragment {
 
         discounted_epr = discountRewards(epr);
         discounted_epr = standardizeRewards(discounted_epr);
-        double[] epdLogP_array = convertDoubleArrayListToArray(epdLogP);
-        double[] epdLogPDouble = modulateGradient(epdLogP_array, discounted_epr);
+        double[][] epdLogP_array = convertDoubleArrayListToArray(epdLogP);
+        double[][] epdLogPDouble = modulateGradient(epdLogP_array, discounted_epr);
 
         double[][] eph_Array = convertArrayListToArray(eph);
         int numRows = eph_Array.length; // Number of rows
@@ -466,18 +474,19 @@ public class PolicyGradientFragment extends CameraFragment {
         Map<String, double[][]> grad = myModel.policyBackward(eph_Array, epx_Array, epdLogPDouble);
 
         accumulateGradients(grad, gradBuffer);
+
         Map<String, double[][]> updatedModel = myModel.updateModel(gradBuffer, rmsPropCache, decayRate, learningRate);
         myModel.setModel(updatedModel);
         myModel.saveModel("/storage/emulated/0/Documents/OpenBot/" + File.separator + "models_ppo" + "model");
-        rewardsArray.add(rewards);
+        rewardsArray.add(totalRewards);
         saveRewardsArray(rewardsArray);
-        binding.rewards.setText(String.valueOf(rewards));
+        binding.rewards.setText(String.valueOf(totalRewards));
 
 
 
 
 
-
+        Log.d("DONE", "UPDATE DONE");
         if (sensorConnection != null) requireActivity().unbindService(sensorConnection);
         requireActivity().stopService(intentSensorService);
 
@@ -514,7 +523,8 @@ public class PolicyGradientFragment extends CameraFragment {
                 elapsedTime = 0;
                 // Stop logging when the duration is reached
                 if(elapsedTime >= LOGGING_DURATION_MILLIS) {
-                    rewards+=2;
+                    rewards=2;
+                    totalRewards += rewards;
                     outOfCircuit = false;
                 }
                 if(percentage > 75)
@@ -529,8 +539,9 @@ public class PolicyGradientFragment extends CameraFragment {
 
 
             } else{
-                rewards = (elapsedTime * 1e-3);
+                rewards = (elapsedTime * 1e-3) - rewards;
                 timerHandler.postDelayed(this, 200);
+                totalRewards += rewards;
             }
         }
 
@@ -861,11 +872,17 @@ public class PolicyGradientFragment extends CameraFragment {
         return bottomBitmap;
     }
 
-    public int fakeLabel() {
+    public double[] fakeLabel() {
+        double[] label = {0 , 0, 0};
         if (action == 3) {
-            return 1; // Label 1 for action 1
+            label[2] = 1;
+            return label; // Label 1 for action 1
+        } else if (action == 2) {
+            label[1] = 1;
+            return label;
         } else {
-            return 0; // Label 0 for actions 2 and 3
+            label[0] = 1;
+            return label; // Label 0 for actions 2 and 3
         }
     }
     private double[][] convertBitmapToDoubleArray(Bitmap bitmap) {
@@ -882,16 +899,29 @@ public class PolicyGradientFragment extends CameraFragment {
         }
         return result;
     }
-    public int chooseAction(double probability) {
+    public int chooseAction(double[] probability) {
         Random random = new Random();
         double randValue = random.nextDouble(); // Generate a random value between 0 and 1
-        if (randValue < probability / 3) {
-            return 1; // Choose action 1 (left)
-        } else if (randValue < 2 * probability / 3) {
-            return 2; // Choose action 2 (right)
-        } else {
-            return 3; // Choose action 3 (forward)
+        EditText epsilonInput = binding.epsilonInput;
+        String epsilonText = epsilonInput.getText().toString();
+        double epsilon = Double.parseDouble(epsilonText);
+
+        if (randValue < epsilon)
+        {
+            int randomNumber = random.nextInt(3) + 1;
+            is_rand = true;
+            return randomNumber;
         }
+        int maxIndex = 0;
+        double maxValue = probability[0];
+        for (int i = 1; i < probability.length; i++) {
+            if (probability[i] > maxValue) {
+                maxValue = probability[i];
+                maxIndex = i;
+            }
+        }
+
+        return maxIndex;
     }
     /*private Triple<Bitmap, Bitmap, Mat> applyOpenCVProcessing(Bitmap inputImage) {
 
@@ -1018,8 +1048,8 @@ public class PolicyGradientFragment extends CameraFragment {
         // Convert temporary arrays to arrays
         double[][] tempXs = convertArrayListToArray(xs);
         double[][] tempHs = convertArrayListToArray(hs);
-        double[] tempDLogPs = convertDoubleArrayListToArray(dLogPs);
-        double[] tempDrs = convertDoubleArrayListToArray(drs);
+        double[][] tempDLogPs = convertDoubleArrayListToArray(dLogPs);
+        double[] tempDrs = convertDoubleListToArray(drs);
 
         // Accumulate arrays across episodes
         if (!xs.isEmpty()) {
@@ -1051,7 +1081,7 @@ public class PolicyGradientFragment extends CameraFragment {
     }
 
     // Method to convert ArrayList<Double> to double[]
-    private double[] convertDoubleArrayListToArray(ArrayList<Double> arrayList) {
+    private double[] convertDoubleListToArray(ArrayList<Double> arrayList) {
         int size = arrayList.size();
         double[] array = new double[size];
         for (int i = 0; i < size; i++) {
@@ -1060,7 +1090,16 @@ public class PolicyGradientFragment extends CameraFragment {
         return array;
     }
 
-    private void addAndFlatten(double[][] tempXs, double[][] tempHs, ArrayList<Double> dLogPs, ArrayList<Double> drs) {
+    private double[][] convertDoubleArrayListToArray(ArrayList<double[]> arrayList) {
+        int size = arrayList.size();
+        double[][] array = new double[size][];
+        for (int i = 0; i < size; i++) {
+            array[i] = arrayList.get(i);
+        }
+        return array;
+    }
+
+    private void addAndFlatten(double[][] tempXs, double[][] tempHs, ArrayList<double[]> dLogPs, ArrayList<Double> drs) {
         epx.add(tempXs);
         if (epx.size() == 2) {
             flattenArrayList(epx);
@@ -1075,7 +1114,7 @@ public class PolicyGradientFragment extends CameraFragment {
         }
         epr.addAll(drs);
         if (epr.size() == 2) {
-            flattenDoubleArrayList(epr);
+            flattenDoubleList(epr);
         }
     }
 
@@ -1094,7 +1133,7 @@ public class PolicyGradientFragment extends CameraFragment {
     }
 
     // Function to flatten ArrayList<Double>
-    private void flattenDoubleArrayList(ArrayList<Double> arrayList) {
+    private void flattenDoubleList(ArrayList<Double> arrayList) {
         double[] flattenedArray = new double[arrayList.size()];
         for (int i = 0; i < arrayList.size(); i++) {
             flattenedArray[i] = arrayList.get(i);
@@ -1104,6 +1143,23 @@ public class PolicyGradientFragment extends CameraFragment {
         for (double val : flattenedArray) {
             arrayList.add(val);
         }
+    }
+
+    private void flattenDoubleArrayList(ArrayList<double[]> arrayList) {
+        int totalSize = 0;
+        for (double[] arr : arrayList) {
+            totalSize += arr.length;
+        }
+        double[] flattenedArray = new double[totalSize];
+        int index = 0;
+        for (double[] arr : arrayList) {
+            for (double val : arr) {
+                flattenedArray[index++] = val;
+            }
+        }
+        // Clear arrayList and add flattened array
+        arrayList.clear();
+        arrayList.add(flattenedArray);
     }
 
     private static double[][] flattenImage(double[][] array) {
@@ -1164,14 +1220,16 @@ public class PolicyGradientFragment extends CameraFragment {
         return Math.sqrt(sumOfSquaredDifferences / array.length);
     }
 
-    public double[] modulateGradient(double[] epdLog, double[] discountedEpr) {
+    public double[][] modulateGradient(double[][] epdLog, double[] discountedEpr) {
         if (epdLog.length != discountedEpr.length) {
             throw new IllegalArgumentException("Arrays must have the same length.");
         }
 
         // Perform element-wise multiplication
         for (int i = 0; i < epdLog.length; i++) {
-            epdLog[i] *= discountedEpr[i];
+            for(int j=0; j < 3; j++){
+                epdLog[i][j] *= discountedEpr[i];
+            }
         }
         return epdLog;
     }
@@ -1236,7 +1294,7 @@ public class PolicyGradientFragment extends CameraFragment {
         if(x!=null) {
             double[][] flatImage = flattenImage(x);
             Object[] result = myModel.policyForward(flatImage);
-            double aProb = (double) result[0];
+            double[] aProb = (double[]) result[0];
             double[][] h = (double[][]) result[1];
             Log.d("SIZE OF h: ", "size: " + h.length);
             action = chooseAction(aProb);
@@ -1246,8 +1304,13 @@ public class PolicyGradientFragment extends CameraFragment {
             hs.add(h);
             Log.d("SIZE OF hs: ", "size: " + hs.size());
 
-            double y = fakeLabel();
-            dLogPs.add(y - aProb);
+            double[] y = fakeLabel();
+            if (is_rand){
+                dLogPs.add(y);
+            } else {
+                dLogPs.add(subtractArrays(y, aProb));
+            }
+
             Log.d("SIZE OF dLogPs: ", "size: " + dLogPs.size());
             drs.add(rewards);
             Log.d("SIZE OF drs: ", "size: " + drs.size());
@@ -1255,6 +1318,20 @@ public class PolicyGradientFragment extends CameraFragment {
 
     }
 
+    public double[] subtractArrays(double[] array1, double[] array2) {
+        if (array1 == null || array2 == null || array1.length != array2.length) {
+            throw new IllegalArgumentException("Arrays are null or have different lengths");
+        }
+
+        int length = array1.length;
+        double[] result = new double[length];
+
+        for (int i = 0; i < length; i++) {
+            result[i] = array1[i] - array2[i];
+        }
+
+        return result;
+    }
 
 }
 

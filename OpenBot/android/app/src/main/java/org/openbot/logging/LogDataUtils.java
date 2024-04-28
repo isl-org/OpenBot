@@ -62,7 +62,7 @@ public class LogDataUtils {
     return msg;
   }
 
-  public static Message generateRewardsArrayMessage(String rewardArray){
+  /*public static Message generateRewardsArrayMessage(String rewardArray){
     Message msg = Message.obtain();
     Bundle bundle = new Bundle();
     bundle.putString("rewardNumber",  rewardArray);
@@ -71,7 +71,7 @@ public class LogDataUtils {
     msg.what = SensorService.MSG_TOTAL_REWARD;
 
     return msg;
-  }
+  }*/
 
   public static Message generateRLMessage(String info)
   {

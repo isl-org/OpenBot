@@ -26,28 +26,51 @@ public class MyModel implements Serializable {
     }
 
     public void initializeWeights(int H, int D) {
-        model.put("W1", new double[H][D]);
+        model.put("W1", new double[D][H]);
         Random random = new Random();
-        for (int i = 0; i < H; i++) {
-            for (int j = 0; j < D; j++) {
+        for (int i = 0; i < D; i++) {
+            for (int j = 0; j < H; j++) {
                 model.get("W1")[i][j] = random.nextDouble() / Math.sqrt(D);
             }
         }
 
-        model.put("W2", new double[1][H]); // Adjust dimensions to 1 x H
+        model.put("W2", new double[H][3]); // Adjust dimensions to 1 x H
         for (int i = 0; i < H; i++) {
-            model.get("W2")[0][i] = random.nextDouble() / Math.sqrt(H);
+            for(int j =0; j < 3; j++) {
+                model.get("W2")[i][j] = random.nextDouble() / Math.sqrt(H);
+            }
         }
     }
 
-    public double sigmoid(double x) {
+    private double sigmoid(double x) {
         return 1.0 / (1.0 + Math.exp(-x));
+    }
+
+    private double[] softmax(double[] scores) {
+        double[] probabilities = new double[scores.length];
+        double sum = 0.0;
+
+        // Compute exponentials and sum
+        for (double score : scores) {
+            sum += Math.exp(score);
+        }
+
+        // Compute probabilities
+        for (int i = 0; i < scores.length; i++) {
+            probabilities[i] = Math.exp(scores[i]) / sum;
+        }
+
+        return probabilities;
     }
 
     public Object[] policyForward(double[][] x) {
 
+        RealMatrix w1Matrix = MatrixUtils.createRealMatrix(model.get("W1"));
+        RealMatrix xMatrix = MatrixUtils.createRealMatrix(x);
+        RealMatrix xTranspose = xMatrix.transpose();
+        RealMatrix hMatrix = xTranspose.multiply(w1Matrix);
 
-        double[][] h = multiply(model.get("W1"), x); // Calculate the dot product
+        double[][] h = hMatrix.getData(); // Calculate the dot product
         Log.d("SIZE OF: ", "POLICY FORWARD h rows: " + h.length);
         Log.d("SIZE OF: ", "POLICY FORWARD h columns: " + h[0].length);
 
@@ -55,10 +78,13 @@ public class MyModel implements Serializable {
 
         relu(h); // Apply ReLU activation function
 
-        double[][] logProb = multiply(model.get("W2"), h); // Calculate log probability
-
-        double p = sigmoid(logProb[0][0]); // Calculate probability
-
+        hMatrix = MatrixUtils.createRealMatrix(h);
+        RealMatrix w2Matrix = MatrixUtils.createRealMatrix(model.get("W2"));
+        RealMatrix logProbMatrix = hMatrix.multiply(w2Matrix);
+        double[][] logProb = logProbMatrix.getData(); // Calculate log probability
+        Log.d("logProb: ", "logProb: " + logProb[0][0]);
+        double[] p = softmax(logProb[0]); // Calculate probability
+        Log.d("logProb: ", "p: " + p);
         // Return probability and hidden state
         return new Object[]{p, h}; // Assuming p is scalar, h is a 1xH array
     }
@@ -93,7 +119,7 @@ public class MyModel implements Serializable {
         }
     }
 
-    public Map<String, double[][]> policyBackward(double[][] eph, double[][] epx, double[] epdLogProb) {
+    public Map<String, double[][]> policyBackward(double[][] eph, double[][] epx, double[][] epdLogProb) {
         /*  eph : nbObs*hiddenState x 1 -> NH x 1  Number of Observation/Steps times number of Hidden state (200),
             epx : nbObs*128*30 x 1 -> NImage x 1 Number of Observation/Steps times imageInfo,
             epdLogProb : nbObs * proba x 1-> N x 1 Number of Observations times the proba (1),
@@ -112,32 +138,34 @@ public class MyModel implements Serializable {
 
 
 
-         */
+
         Log.d("SIZE OF", "eph POLICY BACKWARDS ROWS: " + eph.length);
         Log.d("SIZE OF", "eph POLICY BACKWARDS Columns: " + eph[0].length);
         Log.d("SIZE OF", "epx POLICY BACKWARDS ROWS: " + epx.length);
         Log.d("SIZE OF", "epx POLICY BACKWARDS Columns: " + epx[0].length);
         Log.d("SIZE OF", "epdLogProb POLICY BACKWARDS ROWS: " + epdLogProb.length);
         Log.d("SIZE OF", "epdLogProb POLICY BACKWARDS VALUE 0: " + epdLogProb[0]);
+        */
+        Log.d("SIZE OF", "eph POLICY BACKWARDS ROWS: " + eph.length);
+        Log.d("SIZE OF", "eph POLICY BACKWARDS Columns: " + eph[0].length);
+        RealMatrix ephMatrix = MatrixUtils.createRealMatrix(eph);
+        RealMatrix ephTranspose = ephMatrix.transpose();
+        RealMatrix epdLogProbMatrix = MatrixUtils.createRealMatrix(epdLogProb);
 
-        RealMatrix ephMatrix = reshape(eph, 200);
-        //RealMatrix ephTranspose = ephMatrix.transpose();
-        RealMatrix epdLogProbMatrix = MatrixUtils.createColumnRealMatrix(epdLogProb);
-        RealMatrix epdLogProbTranspose = epdLogProbMatrix.transpose();
 
 
         // Calculate gradients for W2
-        RealMatrix dW2Matrix = ephMatrix.multiply(epdLogProbMatrix);
+        RealMatrix dW2Matrix = ephTranspose.multiply(epdLogProbMatrix);
         int numRows = dW2Matrix.getRowDimension();
         int numCols = dW2Matrix.getColumnDimension();
         Log.d("SIZE OF", "dW2Matrix POLICY BACKWARDS ROWS: " + numRows);
         Log.d("SIZE OF", "dW2Matrix POLICY BACKWARDS Columns: " + numCols);
 
         // Trying tu manually flatten/ravel() the matrix:
-        double[][] data = dW2Matrix.getData();
+        double[][] dW2 = dW2Matrix.getData();
 
         // Calculate the total number of elements in the data array
-        int totalElements = data.length * data[0].length;
+        /*int totalElements = data.length * data[0].length;
 
         // Create a one-dimensional array to store the flattened data
         double[] dW2 = new double[totalElements];
@@ -148,25 +176,25 @@ public class MyModel implements Serializable {
             for (int j = 0; j < data[0].length; j++) {
                 dW2[index++] = data[i][j];
             }
-        }
+        }*/
         //double[] dW2 = dW2Matrix.getColumn(0);
         Log.d("SIZE OF", "dW2 POLICY BACKWARDS ROWS: " + dW2.length);
         Log.d("SIZE OF", "dW2 POLICY BACKWARDS Value: " + dW2[0]);
 
         // Calculate gradients for dh
-        RealMatrix dhMatrix = epdLogProbMatrix.multiply(MatrixUtils.createRealMatrix(model.get("W2")));
+        RealMatrix dhMatrix = epdLogProbMatrix.multiply(MatrixUtils.createRealMatrix(model.get("W2")).transpose());
         double[][] dh = dhMatrix.getData();
         Log.d("SIZE OF: ", "CALCULATED dh rows: " + dh.length);
         Log.d("SIZE OF: ", "CALCULATED dh columns: " + dh[0].length);
 
         // Apply backpropagation for ReLU activation
-        /*for (int i = 0; i < eph.length; i++) {
+        for (int i = 0; i < eph.length; i++) {
             for (int j = 0; j < eph[i].length; j++) {
                 if (eph[i][j] <= 0) {
                     dh[i][j] = 0; // Apply ReLU function
                 }
             }
-        }*/
+        }
 
         RealMatrix dhOriginal= MatrixUtils.createRealMatrix(dh);
         RealMatrix dhTranspose = dhOriginal.transpose();
@@ -178,13 +206,13 @@ public class MyModel implements Serializable {
         RealMatrix epxTranspose = epxMatrix.transpose();
 
         // Calculate gradients for W1
-        RealMatrix dW1Matrix = dhTranspose.multiply(epxTranspose);
-        double[][] dW1 = dW1Matrix.getData();
+        RealMatrix dW1Matrix = dhTranspose.multiply(epxMatrix.transpose());
+        double[][] dW1 = dW1Matrix.transpose().getData();
 
         // Return gradients
         Map<String, double[][]> gradients = new HashMap<>();
         gradients.put("W1", dW1);
-        gradients.put("W2", new double[][]{dW2});
+        gradients.put("W2", dW2);
 
 
 

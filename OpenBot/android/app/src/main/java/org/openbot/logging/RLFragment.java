@@ -46,12 +46,15 @@ import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentRlBinding;
 import org.openbot.env.BotToControllerEventBus;
 import org.openbot.env.ImageUtils;
+import org.openbot.tflite.Autopilot;
 import org.openbot.tflite.Model;
+import org.openbot.tflite.Network;
 import org.openbot.utils.ConnectionUtils;
 import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.FormatUtils;
 import org.openbot.utils.PermissionUtils;
+import org.openbot.vehicle.Control;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -85,8 +88,8 @@ public class RLFragment extends CameraFragment {
     private RectF cropRect;
     private boolean maintainAspectRatio;
 
-    int[] actions = new int[3];
-    private long rewards = 0;
+    int action;
+    private double rewards = 0;
     private long done = 0;
 
     private boolean outOfCircuit;
@@ -94,8 +97,7 @@ public class RLFragment extends CameraFragment {
     private double percentage;
     private boolean reachedCheckpoint;
 
-
-
+    private double totalRewards;
 
     private static final long LOGGING_DURATION_MILLIS = 10000; // 15 seconds
     private long loggingStartTime;
@@ -103,6 +105,10 @@ public class RLFragment extends CameraFragment {
 
     private Handler randomActionsHandler;
     private static final long RANDOM_ACTIONS_INTERVAL = 500;
+
+    private double[][] x;
+    private Autopilot autopilot;
+    private Model tfModel;
 
 
 
@@ -322,7 +328,7 @@ public class RLFragment extends CameraFragment {
 
     protected void sendInfoToSensorService() { //This is to send the information for the action and reward
 
-        long[] info = {actions[0], actions[1], actions[2], rewards, done};
+        double[] info = {action, rewards, done};
         String string_info = Arrays.toString(info);
         if (sensorMessenger != null) {
             try {
@@ -357,7 +363,6 @@ public class RLFragment extends CameraFragment {
                     try {
                         // Send current vehicle state to log
                         TimeUnit.MILLISECONDS.sleep(500);
-                        RandomActions();
                         sendControlToSensorService();
 
                         sendInfoToSensorService();
@@ -371,8 +376,11 @@ public class RLFragment extends CameraFragment {
                         Timber.e(e, "Got interrupted.");
                     }
                 });
+        startAutonomousDriving();
 
     }
+
+
 
     private void stopLogging(boolean isCancel) {
 
@@ -417,16 +425,17 @@ public class RLFragment extends CameraFragment {
     private Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            long elapsedTime = System.currentTimeMillis() - loggingStartTime;
+            double elapsedTime = System.currentTimeMillis() - loggingStartTime;
             Log.d("Timer", "Elapsed Time: " + elapsedTime + ", Percentage: " + percentage);
-            if (elapsedTime >= LOGGING_DURATION_MILLIS || percentage > 25) {
+            if (elapsedTime >= LOGGING_DURATION_MILLIS || percentage > 75) {
                 elapsedTime = 0;
                 // Stop logging when the duration is reached
                 if(elapsedTime >= LOGGING_DURATION_MILLIS) {
                     rewards=2;
+                    totalRewards += rewards;
                     outOfCircuit = false;
                 }
-                if(percentage > 20)
+                if(percentage > 75)
                 {
                     Log.d("PERCENT", "Percentage: " + percentage);
                     outOfCircuit = true;
@@ -438,15 +447,13 @@ public class RLFragment extends CameraFragment {
 
 
             } else{
-                // Continue checking elapsed time periodically
-                if (elapsedTime >= 5000 && !reachedCheckpoint) // give reward if it runs for more than 5 seconds without stop
-                {
-                    reachedCheckpoint = true;
-                    rewards = 1;
-                }
-                timerHandler.postDelayed(this, 500);
+                rewards = (elapsedTime * 1e-3) - rewards;
+                timerHandler.postDelayed(this, 200);
+                totalRewards += rewards;
             }
         }
+
+
     };
     private File zip(File folder) {
         String zipFileName = folder + ".zip";
@@ -670,6 +677,7 @@ public class RLFragment extends CameraFragment {
     @Override
     protected void processFrame(Bitmap bitmap, ImageProxy image) {
         ++frameNum;
+
         if (binding != null) {
             if (isAdded())
                 requireActivity()
@@ -680,67 +688,67 @@ public class RLFragment extends CameraFragment {
 
             if (!binding.loggerSwitch.isChecked()) return;
 
+            sendFrameNumberToSensorService(frameNum);
+            if (frameToCropTransform == null)
+                frameToCropTransform =
+                        ImageUtils.getTransformationMatrix(
+                                getMaxAnalyseImageSize().getWidth(),
+                                getMaxAnalyseImageSize().getHeight(),
+                                croppedBitmap.getWidth(),
+                                croppedBitmap.getHeight(),
+                                sensorOrientation,
+                                cropRect,
+                                maintainAspectRatio);
 
-            if (binding.previewCheckBox.isChecked() || binding.trainingDataCheckBox.isChecked()) {
-                sendFrameNumberToSensorService(frameNum);
-            }
+            final Canvas canvas = new Canvas(croppedBitmap);
+            canvas.drawBitmap(bitmap, frameToCropTransform, null);
 
-            if (binding.previewCheckBox.isChecked()) {
-                if (bitmap != null)
-                    ImageUtils.saveBitmap(
-                            bitmap, logFolder + File.separator + "images", frameNum + "_preview.jpeg");
-            }
-            if (binding.trainingDataCheckBox.isChecked()) {
-                if (frameToCropTransform == null)
-                    frameToCropTransform =
-                            ImageUtils.getTransformationMatrix(
-                                    getMaxAnalyseImageSize().getWidth(),
-                                    getMaxAnalyseImageSize().getHeight(),
-                                    croppedBitmap.getWidth(),
-                                    croppedBitmap.getHeight(),
-                                    sensorOrientation,
-                                    cropRect,
-                                    maintainAspectRatio);
 
-                final Canvas canvas = new Canvas(croppedBitmap);
-                canvas.drawBitmap(bitmap, frameToCropTransform, null);
+            if (croppedBitmap != null) {
+                Bitmap bottomBitmap = OpenCVProcessing(croppedBitmap);
+                binding.percentage.setText(String.valueOf(percentage));
+
+                int originalWidth = bottomBitmap.getWidth();
+                int originalHeight = bottomBitmap.getHeight();
+
+                // Resize the original image to half its original size
+                int newWidth = originalWidth / 2;
+                int newHeight = originalHeight / 2;
+
+                Bitmap resizedBitmap = Bitmap.createScaledBitmap(bottomBitmap, newWidth, newHeight, true);
+
+                // Crop the resized bitmap to keep only the bottom 35 pixel lines
+                int cropHeight = Math.min(30, newHeight);
+                int startY = Math.max(0, newHeight - cropHeight); // Start from the bottom 35 pixel lines
+                Bitmap croppedBottomBitmap = Bitmap.createBitmap(resizedBitmap, 0, startY, newWidth, cropHeight);
+
+                int finalHeight = croppedBottomBitmap.getHeight();
+                int finalWidth = croppedBottomBitmap.getWidth();
+
+                Log.d("Final Height: ", "Height: " + finalHeight);
+                Log.d("Final Width: ", "Width: " + finalWidth);
+
+                Bitmap finalBitmap = Bitmap.createBitmap(newWidth,cropHeight,Bitmap.Config.ARGB_8888);
+                final Canvas canvas3 = new Canvas(finalBitmap);
+                canvas3.drawBitmap(croppedBottomBitmap,0,0,null);
+                x = convertBitmapToDoubleArray(finalBitmap);
 
 
                 ImageUtils.saveBitmap(
-                        croppedBitmap, logFolder + File.separator + "images_true", frameNum + "_crop.jpeg");
-            }
+                        finalBitmap, logFolder + File.separator + "images", frameNum + "_crop.jpeg");
 
-            if(croppedBitmap != null){
-                Triple<Bitmap, Bitmap, Mat> images = applyOpenCVProcessing(croppedBitmap);
-                Bitmap edgesBitmap = images.component1();
-                Bitmap bottomBitmap = images.component2();
-                Mat bottom = images.component3();
-                binding.percentage.setText(String.valueOf(percentage));
-                if (edgesBitmap != null) {
-                    final Canvas canvas2 = new Canvas(croppedBitmap);
-                    canvas2.drawBitmap(edgesBitmap, frameToCropTransform, null);
-                    ImageUtils.saveBitmap(
-                            edgesBitmap, logFolder + File.separator + "edges_images", frameNum + "_edges.jpeg");
-
-                }
-
-                if (bottomBitmap != null) {
-                    final Canvas canvas2 = new Canvas(croppedBitmap);
-                    canvas2.drawBitmap(bottomBitmap, frameToCropTransform, null);
-                    ImageUtils.saveBitmap(
-                            bottomBitmap, logFolder + File.separator + "images", frameNum + "_crop.jpeg");
-
-                }
             }
         }
     }
 
-    private Triple<Bitmap, Bitmap, Mat> applyOpenCVProcessing(Bitmap inputImage) {
 
+
+    private Bitmap OpenCVProcessing(Bitmap inputImage) {
         Mat inputMat = new Mat(inputImage.getHeight(), inputImage.getWidth(), CvType.CV_8UC4);
         Utils.bitmapToMat(inputImage, inputMat);
 
-        Mat bottom = regionOfInterest(inputMat);
+        // Mat bottom = regionOfInterest(inputMat);
+        Mat bottom = inputMat;
 
         Imgproc.cvtColor(bottom, bottom, Imgproc.COLOR_RGBA2GRAY); // Turn the image Gray
 
@@ -760,33 +768,26 @@ public class RLFragment extends CameraFragment {
         Utils.matToBitmap(bottom, bottomBitmap);
 
 
-        return new Triple<>(edgesBitmap, bottomBitmap, bottom);
+
+        return bottomBitmap;
     }
 
+
+    private double[][] convertBitmapToDoubleArray(Bitmap bitmap) {
+        // Implement logic to convert Bitmap to double[][] array
+        // Example code to demonstrate conversion (replace with your logic):
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        double[][] result = new double[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                // Assuming grayscale image, convert pixel value to double
+                result[i][j] = bitmap.getPixel(j, i) & 0xFF; // Extracting grayscale value
+            }
+        }
+        return result;
+    }
     //This function crops the image to only keep the region of interest
-    public static Mat regionOfInterest(Mat inputMat){
-
-        int width = inputMat.cols();
-        int height = inputMat.rows();
-
-        // Define the ROI as the bottom 30% of the image
-        Point[] roiPoints = new Point[4];
-        roiPoints[0] = new Point(width * 0.0, height * 0.7); // Top-left corner of ROI
-        roiPoints[1] = new Point(width, height * 0.7);        // Top-right corner of ROI
-        roiPoints[2] = new Point(width, height);              // Bottom-right corner of ROI
-        roiPoints[3] = new Point(0, height);
-        MatOfPoint roiContour = new MatOfPoint(roiPoints);
-        Mat mask = Mat.zeros(inputMat.size(), CvType.CV_8U);
-        List<MatOfPoint> roiContours = new ArrayList<>();
-        roiContours.add(roiContour);
-        Imgproc.fillPoly(mask, roiContours, new Scalar(255));
-        Mat resultImage = new Mat();
-        Core.bitwise_and(inputMat, inputMat, resultImage, mask);
-
-
-
-        return resultImage;
-    }
 
     public double calculateWhitePixelPercentage(Mat binaryMat) {
         // Convert the binary bitmap to a Mat object
@@ -817,29 +818,19 @@ public class RLFragment extends CameraFragment {
         requireActivity().runOnUiThread(() -> binding.ipAddress.setText(ipAddress));
     }
 
-    private void RandomActions(){
-        Random random = new Random();
-        int randomIndex = random.nextInt(actions.length);
-        Arrays.fill(actions, 0);
-
-        // Set the randomly chosen index to 1
-        actions[randomIndex] = 1;
-        MoveAction();
-
-    }
 
     private void MoveAction()
     {
         if(loggingEnabled) {
-            if (actions[0] == 1) {
+            if (action == 3) {
                 vehicle.setControl(0.45f, 0.45f);
                 handleDriveCommand();
             }
-            if (actions[1] == 1)  {
+            if (action == 2)  {
                 vehicle.setControl(0.5f, -0.1f);
                 handleDriveCommand();
             }
-            if (actions[2] == 1)  {
+            if (action == 1)  {
                 vehicle.setControl(-0.1f, 0.5f);
                 handleDriveCommand();
             }
@@ -857,9 +848,82 @@ public class RLFragment extends CameraFragment {
     private Runnable randomActionsRunnable = new Runnable() {
         @Override
         public void run() {
-            RandomActions(); // Generate random actions
             randomActionsHandler.postDelayed(this, RANDOM_ACTIONS_INTERVAL); // Schedule next random actions generation
         }
     };
+
+
+    private void stopAutonomousDriving() {
+
+        // Close the autopilot if it was initialized
+        vehicle.setControl((float)0, (float) 0);
+        if (autopilot != null) {
+            Log.e("AUTONOMOUS STOPPING", "AUTONOMOUS STOP SUCCESS !");
+            autopilot.close();
+            autopilot = null;
+        }
+    }
+
+    private void startAutonomousDriving() {
+        try {
+            if (autopilot == null) {
+                String filePath = requireActivity().getFilesDir() + File.separator + "reinforcement_learning.tflite";
+                File file = new File(filePath);
+
+// Check if the file exists
+                if (file.exists()) {
+                    // File exists, create the Model object
+                    tfModel = new Model(
+                            masterList.size() + 1,
+                            Model.CLASS.AUTOPILOT,
+                            Model.TYPE.CMDNAV,
+                            "reinforcement_learning.tflite",
+                            Model.PATH_TYPE.FILE,
+                            filePath,
+                            "256x96");
+
+                    Network.Device device = Network.Device.CPU; // Set your desired device here
+                    int numThreads = 4; // Set the number of threads you want to use
+
+                    autopilot = new Autopilot(getActivity(), tfModel, device, numThreads);
+                    Log.e("AUTONOMOUS INIT", "Autopilot initialization success");
+                    Log.e("AUTONOMOUS INIT", filePath);
+                } else {
+                    // File does not exist, handle accordingly (e.g., show an error message)
+                    Log.e("AUTONOMOUS INIT", "Error: File does not exist - " + filePath);
+                }
+
+            }
+        } catch (Exception e) {
+            Log.e("AUTONOMOUS INIT", "Autopilot initialization failed: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // Start continuous autopilot updates
+
+
+        if (autopilot != null) {
+            Timber.i("Running autopilot on image %s", frameNum);
+            final long startTime = SystemClock.elapsedRealtime();
+            handleDriveCommandAutonomous(autopilot.recognizeImage(croppedBitmap, vehicle.getIndicator()));
+
+        }
+
+    }
+    private void handleDriveCommandAutonomous(Control control) {
+        Log.d("CONTROL", "CONTROL:" + control );
+        vehicle.setControl(control);
+        float left = vehicle.getLeftSpeed();
+        float right = vehicle.getRightSpeed();
+        requireActivity()
+                .runOnUiThread(
+                        () ->
+                                binding.controllerContainer.controlInfo.setText(
+                                        String.format(Locale.US, "%.0f,%.0f", left, right)));
+
+        runInBackground(this::sendControlToSensorService);
+        runInBackground(this::sendInfoToSensorService);
+    }
+
 }
 
