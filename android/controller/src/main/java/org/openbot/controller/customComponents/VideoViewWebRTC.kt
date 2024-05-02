@@ -136,8 +136,15 @@ class VideoViewWebRTC @JvmOverloads constructor(
         val initializationOptions = PeerConnectionFactory.InitializationOptions.builder(context)
             .createInitializationOptions()
         PeerConnectionFactory.initialize(initializationOptions)
+
+        val options = PeerConnectionFactory.Options().apply {
+            networkIgnoreMask = 16
+            disableEncryption = false
+            disableNetworkMonitor = true
+        }
         factory = PeerConnectionFactory.builder().setVideoEncoderFactory(encoderFactory)
-            .setVideoDecoderFactory(decoderFactory).createPeerConnectionFactory()
+            .setVideoDecoderFactory(decoderFactory)
+            .setOptions(options).createPeerConnectionFactory()
     }
 
     private fun initializePeerConnections() {
