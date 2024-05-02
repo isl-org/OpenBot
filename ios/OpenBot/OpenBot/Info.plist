@@ -20,6 +20,18 @@
 	<dict/>
 	<key>CFBundleIcons~ipad</key>
 	<dict/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.955078484078-kq5d4bbjh05qdksr433k1ugakgspk8ee</string>
+			</array>
+		</dict>
+		<dict/>
+	</array>
 	<key>GCSupportedGameControllers</key>
 	<array>
 		<dict>
@@ -29,6 +41,11 @@
 	</array>
 	<key>GCSupportsControllerUserInteraction</key>
 	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>http</string>
+		<string>https</string>
+	</array>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_openbot._tcp.</string>
@@ -82,5 +99,7 @@
 			</dict>
 		</dict>
 	</array>
+	<key>kTCCServiceMediaLibrary</key>
+	<string>Allow Audio Player for sound mode</string>
 </dict>
 </plist>
