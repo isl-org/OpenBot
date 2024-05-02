@@ -407,10 +407,16 @@ public class WebRtcServer implements IVideoServer {
         PeerConnectionFactory.InitializationOptions.builder(context).createInitializationOptions();
     PeerConnectionFactory.initialize(initializationOptions);
 
+    PeerConnectionFactory.Options options = new PeerConnectionFactory.Options();
+    options.networkIgnoreMask = 16;
+    options.disableEncryption = false;
+    options.disableNetworkMonitor = true;
+
     factory =
         PeerConnectionFactory.builder()
             .setVideoEncoderFactory(encoderFactory)
             .setVideoDecoderFactory(decoderFactory)
+            .setOptions(options)
             .createPeerConnectionFactory();
   }
 

@@ -82,7 +82,12 @@ public class DetectorYoloV4 extends Detector {
   @Override
   protected void runInference() {
     Object[] inputArray = {imgData};
-    tflite.runForMultipleInputsOutputs(inputArray, outputMap);
+    try {
+      tflite.runForMultipleInputsOutputs(inputArray, outputMap);
+    }
+    catch(Exception e){
+      System.out.println("Error Occurred: " + e);
+    }
   }
 
   @Override
