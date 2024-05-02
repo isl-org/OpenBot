@@ -16,4 +16,8 @@ public class Control {
   public float getRight() {
     return right;
   }
+
+  public Control mirror() {
+    return new Control(this.right, this.left);
+  }
 }
