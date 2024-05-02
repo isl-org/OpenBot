@@ -18,7 +18,7 @@ object ConnectionSelector {
     }
 
     fun getConnection(): ILocalConnection {
-        val connected = isConnectedViaWifi(context)
+        val connected = isConnectedViaWifi(context) || isWifiApEnabled(context)
         return if (connected) NetworkServiceConnection else NearbyConnection
     }
 
@@ -29,5 +29,15 @@ object ConnectionSelector {
         val networkId = info.networkId
 
         return networkId > 0
+    }
+
+    private fun isWifiApEnabled(context: Context): Boolean {
+        val wifiManager = context.getSystemService(WIFI_SERVICE) as WifiManager
+        return try {
+            val method = wifiManager.javaClass.getDeclaredMethod("isWifiApEnabled")
+            method.invoke(wifiManager) as? Boolean == true
+        } catch (ignored: Throwable) {
+            false
+        }
     }
 }
