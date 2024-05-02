@@ -32,6 +32,8 @@ public class SharedPreferencesManager {
     public var camera_switch : String = "camera_switch";
     
     public var dynamic_speed : String = "dynamic_speed";
+    
+    public var blocklyCode : String = "blocklyCode";
         
     public func setControlMode(value:String){
         userDefaults.set(value, forKey: control_mode)
@@ -42,7 +44,7 @@ public class SharedPreferencesManager {
     }
     
     public func setDriveMode(value:String){
-        userDefaults.set(value, forKey: drive_mode)
+        userDefaults.set(value, forKey: drive_mode);
     }
     
     public func getDriveMode() -> String? {
@@ -127,5 +129,13 @@ public class SharedPreferencesManager {
     
     public func getDynamicSpeed() -> Any?{
         userDefaults.value(forKey: dynamic_speed);
+    }
+    
+    public func setBlocklyCode(value:String){
+        userDefaults.set(value, forKey: blocklyCode);
+    }
+    
+    public func getBlocklyCode() -> String?{
+        userDefaults.string(forKey: blocklyCode);
     }
 }

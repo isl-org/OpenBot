@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -161,29 +161,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="runRobot" translatesAutoresizingMaskIntoConstraints="NO" id="4Ws-oO-4cz">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="runRobot" translatesAutoresizingMaskIntoConstraints="NO" id="4Ws-oO-4cz">
                                 <rect key="frame" x="90" y="319.66666666666669" width="213" height="213.00000000000006"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="213" id="PKZ-Um-yk2"/>
-                                    <constraint firstAttribute="height" constant="213" id="YOj-Hc-aMf"/>
-                                </constraints>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your code is executing.." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HmK-zt-jbD">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Your code is executing.." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HmK-zt-jbD">
                                 <rect key="frame" x="16" y="541.66666666666663" width="361" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="361" id="0YT-re-I9o"/>
-                                    <constraint firstAttribute="height" constant="44" id="Xno-yV-XP8"/>
-                                </constraints>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gz8-dU-Lpa">
-                                <rect key="frame" x="90" y="594.66666666666663" width="213" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="213" id="DgB-la-8JV"/>
-                                    <constraint firstAttribute="height" constant="50" id="kIM-pD-q5o"/>
-                                </constraints>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q0V-TC-pAj">
+                                <rect key="frame" x="90" y="654" width="213" height="45"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gz8-dU-Lpa">
+                                <rect key="frame" x="90" y="593" width="212" height="45"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Button"/>
                             </button>
@@ -191,20 +188,11 @@
                         <viewLayoutGuide key="safeArea" id="BhC-0o-bFy"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <color key="tintColor" name="textColor"/>
-                        <constraints>
-                            <constraint firstItem="gz8-dU-Lpa" firstAttribute="centerX" secondItem="u64-Zg-Hjz" secondAttribute="centerX" id="BYG-nD-Ju9"/>
-                            <constraint firstItem="gz8-dU-Lpa" firstAttribute="centerX" secondItem="u64-Zg-Hjz" secondAttribute="centerX" id="Fk6-iZ-jSi"/>
-                            <constraint firstItem="HmK-zt-jbD" firstAttribute="top" secondItem="4Ws-oO-4cz" secondAttribute="bottom" constant="9" id="I3K-Ek-ujR"/>
-                            <constraint firstItem="gz8-dU-Lpa" firstAttribute="top" secondItem="HmK-zt-jbD" secondAttribute="bottom" constant="9" id="UMm-NH-fnf"/>
-                            <constraint firstItem="4Ws-oO-4cz" firstAttribute="centerY" secondItem="u64-Zg-Hjz" secondAttribute="centerY" id="Vbw-2V-98U"/>
-                            <constraint firstItem="HmK-zt-jbD" firstAttribute="centerX" secondItem="4Ws-oO-4cz" secondAttribute="centerX" id="hQ0-ZU-5kY"/>
-                            <constraint firstItem="gz8-dU-Lpa" firstAttribute="centerX" secondItem="u64-Zg-Hjz" secondAttribute="centerX" id="sfE-bM-KuD"/>
-                            <constraint firstItem="4Ws-oO-4cz" firstAttribute="centerX" secondItem="u64-Zg-Hjz" secondAttribute="centerX" id="vNo-4m-smZ"/>
-                        </constraints>
                     </view>
                     <connections>
                         <outlet property="commandMessage" destination="HmK-zt-jbD" id="T85-PS-Lyv"/>
-                        <outlet property="runRobotConstraints" destination="Vbw-2V-98U" id="Ba7-GN-Jn6"/>
+                        <outlet property="resetRobot" destination="Q0V-TC-pAj" id="ctM-Cc-wE4"/>
+                        <outlet property="robotImage" destination="4Ws-oO-4cz" id="F5O-LH-oIW"/>
                         <outlet property="stopRobot" destination="gz8-dU-Lpa" id="unS-Pd-pt7"/>
                     </connections>
                 </viewController>

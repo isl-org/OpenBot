@@ -48,22 +48,38 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     private var totalFrames: Int = 0;
     var counter: Int = 0;
     var object: String = "";
+    @IBOutlet weak var robotImage: UIImageView!
+    @IBOutlet weak var resetRobot: UIButton!
+    var topAnchorConstraint: NSLayoutConstraint!;
+    var centerXConstraint: NSLayoutConstraint!;
+    var topLabelConstraint: NSLayoutConstraint!;
+    var centerlabelXConstraint: NSLayoutConstraint!;
+    var topStopButtonlConstraint: NSLayoutConstraint!;
+    var centerStopButtonXConstraint: NSLayoutConstraint!;
+    var topResetButtonlConstraint: NSLayoutConstraint!;
+    var centerResetButtonXConstraint: NSLayoutConstraint!;
+    private let sensor = sensorDataRetrieve.shared
 
     /**
       override function calls when view of controller loaded
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpUI();
         stopRobot.backgroundColor = Colors.title;
-        stopRobot.setTitle("Stop Car", for: .normal);
+        stopRobot.setTitle("Stop Robot", for: .normal);
         stopRobot.addTarget(self, action: #selector(cancel), for: .touchUpInside);
         stopRobot.layer.cornerRadius = 10;
+        resetRobot.backgroundColor = Colors.title
+        resetRobot.setTitle("Reset Robot", for: .normal);
+        resetRobot.addTarget(self, action: #selector(resetRobotFunction), for: .touchUpInside);
+        resetRobot.layer.cornerRadius = 10;
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandMsg), name: .commandName, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateCommandObject), name: .commandObject, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(createCamera), name: .createCameraView, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(setPosForPointGoalnavigation), name: .pointGoalNav, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(display), name: .displayItems, object: nil);
         setupNavigationBarItem();
-        updateConstraints();
         let modelItems = Common.loadAllModelItemsFromBundle()
         if (modelItems.count > 0) {
             let detectorModel = modelItems.first(where: { $0.type == TYPE.DETECTOR.rawValue })
@@ -89,6 +105,91 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             self.view.sendSubviewToBack(super.cameraView);
         }
         temp = temp + 1;
+    }
+    
+    /**
+     function to create the UI for the run robot
+     */
+    func setUpUI(){
+        setUpImage();
+        setUpLabel();
+        setUpStopButton();
+        setUpResetButton();
+    }
+    
+    /**
+     function to create stop button
+     */
+    func setUpStopButton(){
+        stopRobot.translatesAutoresizingMaskIntoConstraints = false;
+        stopRobot.widthAnchor.constraint(equalToConstant: 210).isActive = true
+        stopRobot.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        if currentOrientation == .portrait {
+            topStopButtonlConstraint = stopRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 500)
+            centerStopButtonXConstraint = stopRobot.centerXAnchor.constraint(equalTo: view.centerXAnchor);
+        } else {
+            topStopButtonlConstraint?.isActive = false;
+            centerStopButtonXConstraint?.isActive = false
+            topStopButtonlConstraint = stopRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 120)
+            centerStopButtonXConstraint = stopRobot.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 430)
+        }
+        NSLayoutConstraint.activate([topStopButtonlConstraint, centerStopButtonXConstraint])
+    }
+    
+    /**
+     function to create reset button
+     */
+    func setUpResetButton(){
+        resetRobot.translatesAutoresizingMaskIntoConstraints = false;
+        resetRobot.widthAnchor.constraint(equalToConstant: 210).isActive = true
+        resetRobot.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        if currentOrientation == .portrait {
+            topResetButtonlConstraint = resetRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 570)
+            centerResetButtonXConstraint = resetRobot.centerXAnchor.constraint(equalTo: view.centerXAnchor);
+        } else {
+            topResetButtonlConstraint?.isActive = false;
+            centerResetButtonXConstraint?.isActive = false;
+            topResetButtonlConstraint = resetRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 210)
+            centerResetButtonXConstraint = resetRobot.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 430)
+        }
+        NSLayoutConstraint.activate([topResetButtonlConstraint, centerResetButtonXConstraint])
+    }
+    
+    /**
+     function to create label
+     */
+    func setUpLabel(){
+        commandMessage.text = "You code is executing..";
+        commandMessage.translatesAutoresizingMaskIntoConstraints = false;
+        if currentOrientation == .portrait {
+            topLabelConstraint = commandMessage.topAnchor.constraint(equalTo: view.topAnchor, constant: 450)
+            centerlabelXConstraint = commandMessage.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        } else {
+            topLabelConstraint?.isActive = false;
+            centerlabelXConstraint?.isActive = false;
+            topLabelConstraint = commandMessage.topAnchor.constraint(equalTo: view.topAnchor, constant: 320)
+            centerlabelXConstraint = commandMessage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 115)
+        }
+        NSLayoutConstraint.activate([topLabelConstraint, centerlabelXConstraint])
+    }
+    
+    /**
+     function to create openbot image
+     */
+    func setUpImage() {
+        robotImage.translatesAutoresizingMaskIntoConstraints = false;
+        robotImage.widthAnchor.constraint(equalToConstant: 230).isActive = true
+        robotImage.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        if currentOrientation == .portrait {
+            topAnchorConstraint = robotImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 160)
+            centerXConstraint = robotImage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0)
+        } else {
+            topAnchorConstraint?.isActive = false;
+            centerXConstraint?.isActive = false
+            topAnchorConstraint = robotImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 40)
+            centerXConstraint = robotImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 90)
+        }
+        NSLayoutConstraint.activate([centerXConstraint, topAnchorConstraint])
     }
 
     /**
@@ -184,7 +285,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             runRobot.detector?.setMultipleSelectedClass(newClasses: notification.object as! [String])
         }
     }
-
+    
     @objc func createCamera(_ notification: Notification) {
         if notification.object != nil {
             task = notification.object as! String
@@ -200,7 +301,8 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         DispatchQueue.main.async {
             self.sceneView = ARSCNView(frame: self.view.bounds)
             self.sceneView.debugOptions = []
-            self.view.insertSubview(self.sceneView, belowSubview: self.stopRobot)
+            self.view.insertSubview(self.sceneView, belowSubview: self.stopRobot);
+            self.view.insertSubview(self.sceneView, belowSubview: self.resetRobot);
             let scene = SCNScene()
             self.sceneView.scene = scene
             self.sceneView.delegate = self
@@ -242,7 +344,6 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         _ = simd_normalize(endingPoint.simdPosition - startingPoint.simdPosition)
     }
 
-    @IBOutlet weak var runRobotConstraints: NSLayoutConstraint!
     let factor = 0.8;
 
     /**
@@ -269,9 +370,23 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
     @objc func cancel() {
         NotificationCenter.default.post(name: .cancelThread, object: nil);
         NotificationCenter.default.post(name: .commandName, object: "\(Strings.cancel)ed");
-        stopCar()
+        stopCar();
+        self.stopRobot.setTitle("Back", for: .normal);
+        self.stopRobot.removeTarget(nil, action: nil, for: .touchUpInside)
+        self.stopRobot.addTarget(self, action: #selector(self.backItem(sender:)), for: .touchUpInside);
     }
-
+    
+    /**
+     function to reset blockly commands for robot
+     */
+    @objc  func resetRobotFunction() {
+            self.stopCar()
+            _ = jsEvaluator(jsCode: self.preferencesManager.getBlocklyCode()!);
+            self.stopRobot.setTitle("Stop Car", for: .normal);
+            self.stopRobot.removeTarget(nil, action: nil, for: .touchUpInside)
+            self.stopRobot.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
+    }
+    
     /**
      Function to setup the navigation bar
      */
@@ -291,17 +406,50 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         _ = navigationController?.popViewController(animated: true)
         stopCar();
     }
-
+    
+    /**
+     Function to remove current viewController from navigation stack on clicking back
+     */
+    @objc func backItem(sender: UIButton){
+        _ = navigationController?.popViewController(animated: true)
+        stopCar();
+    }
 
     /**
      Function to update the constraints of image
      */
     fileprivate func updateConstraints() {
+        topAnchorConstraint.isActive = false;
+        centerXConstraint.isActive = false
+        topLabelConstraint.isActive = false;
+        centerlabelXConstraint.isActive = false;
+        topStopButtonlConstraint.isActive = false;
+        centerStopButtonXConstraint.isActive = false;
+        topResetButtonlConstraint.isActive = false;
+        centerResetButtonXConstraint.isActive = false;
         if currentOrientation == .portrait {
-            runRobotConstraints.constant = 0;
+            topAnchorConstraint = robotImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 160)
+            centerXConstraint = robotImage.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0)
+            topLabelConstraint = commandMessage.topAnchor.constraint(equalTo: view.topAnchor, constant: 450)
+            centerlabelXConstraint = commandMessage.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            topStopButtonlConstraint = stopRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 500)
+            centerStopButtonXConstraint = stopRobot.centerXAnchor.constraint(equalTo: view.centerXAnchor);
+            topResetButtonlConstraint = resetRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 570)
+            centerResetButtonXConstraint = resetRobot.centerXAnchor.constraint(equalTo: view.centerXAnchor);
         } else {
-            runRobotConstraints.constant = -60;
+            topAnchorConstraint = robotImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 40)
+            centerXConstraint = robotImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 90)
+            topLabelConstraint = commandMessage.topAnchor.constraint(equalTo: view.topAnchor, constant: 320)
+            centerlabelXConstraint = commandMessage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 115)
+            topStopButtonlConstraint = stopRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 120)
+            centerStopButtonXConstraint = stopRobot.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 430)
+            topResetButtonlConstraint = resetRobot.topAnchor.constraint(equalTo: view.topAnchor, constant: 210)
+            centerResetButtonXConstraint = resetRobot.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 430)
         }
+        NSLayoutConstraint.activate([centerXConstraint, topAnchorConstraint])
+        NSLayoutConstraint.activate([topLabelConstraint, centerlabelXConstraint])
+        NSLayoutConstraint.activate([topStopButtonlConstraint, centerStopButtonXConstraint])
+        NSLayoutConstraint.activate([topResetButtonlConstraint, centerResetButtonXConstraint])
     }
 
     /**
@@ -318,7 +466,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
         bluetooth.sendDataFromJs(payloadData: "l" + String(0) + "," + String(0) + "\n");
         let indicatorValues = "i0,0\n";
-        bluetooth.sendDataFromJs(payloadData: indicatorValues)
+        bluetooth.sendDataFromJs(payloadData: indicatorValues);
     }
 
     /**
@@ -499,6 +647,81 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: .CPU, numThreads: 1) as? Detector
         DispatchQueue.main.async {
             runRobot.isDetection = true;
+        }
+    }
+    
+    @objc func display(_ notification: Notification){
+        var message = notification.object as! String;
+        DispatchQueue.main.async {
+            self.sensor.sampleIMU();
+            switch(message.trimmingCharacters(in: .whitespaces)){
+            case "sonarReading()" :
+                self.commandMessage.text = "sonar : \(self.bluetooth.getSonar())";
+                break;
+            case "speedReading()" :
+                self.commandMessage.text = "speed : \(self.bluetooth.getSpeed())";
+                break;
+            case "voltageDividerReading()" :
+                self.commandMessage.text = "voltage : \(self.bluetooth.getVoltage())";
+                break;
+            case "gyroscopeReadingX()" :
+                self.commandMessage.text = "gyroscopeX : \(self.sensor.angularRateX)";
+                break;
+            case "gyroscopeReadingY()" :
+                self.commandMessage.text = "gyroscopeY : \(self.sensor.angularRateY)";
+                break;
+            case "gyroscopeReadingZ()" :
+                self.commandMessage.text = "gyroscopeZ : \(self.sensor.angularRateZ)";
+                break;
+            case "accelerationReadingX()" :
+                self.commandMessage.text = "accelerationX : \(self.sensor.accelerationX)";
+                break;
+            case "accelerationReadingY()" :
+                self.commandMessage.text = "accelerationY : \(self.sensor.accelerationY)";
+                break;
+            case "accelerationReadingZ()" :
+                self.commandMessage.text = "accelerationZ : \(self.sensor.accelerationZ)";
+                break;
+            case "magneticReadingX()" :
+                self.commandMessage.text = "magneticFieldX : \(self.sensor.magneticFieldX)";
+                break;
+            case "magneticReadingY()" :
+                self.commandMessage.text = "magneticFieldY : \(self.sensor.magneticFieldY)";
+                break;
+            case "magneticReadingZ()" :
+                self.commandMessage.text = "magneticFieldZ : \(self.sensor.magneticFieldZ)";
+                break;
+            case "frontWheelReading()" :
+                let speedometer = self.bluetooth.speedometer;
+                if speedometer != "" {
+                    let index_1 = speedometer.index(after: speedometer.startIndex)
+                    let indexOfComma = speedometer.firstIndex(of: ",") ?? index_1
+                    let index_2 = speedometer.index(before: indexOfComma)
+                    if let leftFront = Float(speedometer[index_1...index_2]) {
+                        // 'leftFront' is now a non-optional Float
+                        self.commandMessage.text = "frontWheel : \(String(leftFront))";
+                    } else {
+                        self.commandMessage.text = "";
+                    }
+                }
+                break;
+            case "backWheelReading()" :
+                let speedometer = self.bluetooth.speedometer;
+                if speedometer != "" {
+                    let index_1 = speedometer.index(after: speedometer.startIndex)
+                    let indexOfComma = speedometer.firstIndex(of: ",") ?? index_1
+                    let index_2 = speedometer.index(before: indexOfComma)
+                    if let back = Float(speedometer[speedometer.index(after: indexOfComma)...]) {
+                        // 'leftFront' is now a non-optional Float
+                        self.commandMessage.text = "frontWheel : \(String(back))";
+                    } else {
+                        self.commandMessage.text = "";
+                    }
+                }
+                break;
+            default:
+                break;
+            }
         }
     }
 

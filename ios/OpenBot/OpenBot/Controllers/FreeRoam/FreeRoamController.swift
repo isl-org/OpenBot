@@ -25,6 +25,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var isClientConnected: Bool = false
     var audioPlayer = AudioPlayer.shared
     private let mainView = UIView()
+    let fragmentType = FragmentType.shared
 
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
@@ -108,6 +109,9 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
         gameController.resetControl = false
+        fragmentType.currentFragment = "FreeRoam";
+        let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: self.fragmentType.currentFragment));
+        client.send(message: msg);
     }
 
     /**

@@ -30,6 +30,7 @@ class DataCollectionController: CameraController {
     var saveZipFilesName = [URL]()
     var paths: [String] = [""]
     var selectedSaveAsDropdown: String = "Local";
+    let fragmentType = FragmentType.shared
 
     /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
@@ -85,10 +86,13 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateSaveAs), name: .saveAs, object: nil)
 
         gameController.resetControl = false
+        fragmentType.currentFragment = "DataCollection";
         //Start the server
         var serverListener = ServerListener();
         serverListener.start();
         dataLogger.getDocumentDirectoryInformation()
+        let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: self.fragmentType.currentFragment));
+        client.send(message: msg);
     }
 
     /// Notifies the view controller that its view is about to be added to a view hierarchy.
