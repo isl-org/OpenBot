@@ -242,6 +242,14 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
             commandType = event.getString("command");
           } else if (event.has("driveCmd")) {
             commandType = Constants.CMD_DRIVE;
+          } else if (event.has("server")) {
+            for (int i = 0; i < serverSpinner.getAdapter().getCount(); i++) {
+              if(event.getString("server").equals("noServerFound")){
+                serverSpinner.setSelection(0);
+              } else if(event.getString("server").equals(serverSpinner.getAdapter().getItem(i))){
+                serverSpinner.setSelection(i);
+              }
+            }
           }
 
           switch (commandType) {
@@ -287,7 +295,7 @@ public abstract class ControlsFragment extends Fragment implements ServerListene
         error -> {
           Log.d(null, "Error occurred in ControllerToBotEventBus: " + error);
         },
-        event -> event.has("command") || event.has("driveCmd") // filter out everything else
+        event -> event.has("command") || event.has("driveCmd") || event.has("server") // filter out everything else
         );
   }
 

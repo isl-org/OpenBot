@@ -136,6 +136,7 @@ public class NetworkServiceConnection implements ILocalConnection {
         try {
           if (service.getServiceType().equals(SERVICE_TYPE)
               && service.getServiceName().equals(SERVICE_NAME_CONTROLLER)) {
+            Timber.e("found service");
             mNsdManager.resolveService(service, mResolveListener);
           } else if (service.getServiceName().equals(MY_SERVICE_NAME)) {
             Log.d(TAG, "Same machine: " + MY_SERVICE_NAME);
@@ -289,7 +290,6 @@ public class NetworkServiceConnection implements ILocalConnection {
       try {
         while (true) {
           String msg = reader.nextLine().trim();
-
           if (!stopped) {
             ((Activity) context).runOnUiThread(() -> dataReceivedCallback.dataReceived(msg));
           }
