@@ -24,6 +24,13 @@ import org.openbot.R;
 import org.openbot.common.CameraFragment;
 import org.openbot.databinding.FragmentBarCodeScannerBinding;
 import org.openbot.utils.BotFunctionUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 
 public class BarCodeScannerFragment extends CameraFragment {
 
@@ -210,6 +217,70 @@ public class BarCodeScannerFragment extends CameraFragment {
   }
 
   /**
+   * function to read google-services json file
+   * @return
+   */
+  private String readJsonFile() {
+    String jsonContent = null;
+    try {
+      // Open the file using an InputStream
+      InputStream inputStream = requireContext().getAssets().open("google-services.json");
+
+      System.out.println("is:::"+inputStream);
+
+      // Read the InputStream into a StringBuilder
+      StringBuilder stringBuilder = new StringBuilder();
+      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+      String line;
+      while ((line = bufferedReader.readLine()) != null) {
+        stringBuilder.append(line);
+      }
+
+      // Close the InputStream and BufferedReader
+      inputStream.close();
+      bufferedReader.close();
+
+      // Convert the StringBuilder to a String
+      jsonContent = stringBuilder.toString();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return jsonContent;
+  }
+
+  /**
+   * function to get API key from json
+   * @return
+   */
+  private String getCurrentKeyFromJson() {
+    String jsonData = readJsonFile();
+    String currentKey = "";
+    try {
+      // Parse the JSON data
+      JSONObject jsonObject = new JSONObject(jsonData);
+
+      // Navigate to the "client" array
+      JSONArray clientArray = jsonObject.getJSONArray("client");
+
+      // Get the first element of "client" array
+      JSONObject firstClient = clientArray.getJSONObject(0);
+
+      // Get the "api_key" array from the first client
+      JSONArray apiKeyArray = firstClient.getJSONArray("api_key");
+
+      // Get the first element of "api_key" array
+      JSONObject firstApiKey = apiKeyArray.getJSONObject(0);
+
+      // Get the "current_key" value
+      currentKey = firstApiKey.getString("current_key");
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return currentKey;
+  }
+
+
+  /**
    * To read google drive file contents using file id, Call a new instance of the ReadFileTask with
    * the given file ID and a callback to handle success/failure.
    *
@@ -217,8 +288,9 @@ public class BarCodeScannerFragment extends CameraFragment {
    * @throws IOException
    */
   private void readFileFromDrive(String fileId) throws IOException {
+    String APIkey = getCurrentKeyFromJson();
     URL fileUrl =
-            new URL("https://drive.google.com/uc?export=download&id=" + fileId + "&confirm=200");
+            new URL("https://www.googleapis.com/drive/v3/files/"+fileId+"?alt=media&key="+APIkey);
     new ReadFileTask(
             fileUrl,
             new ReadFileCallback() {
