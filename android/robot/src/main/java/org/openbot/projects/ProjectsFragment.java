@@ -110,7 +110,6 @@ public class ProjectsFragment extends Fragment {
       };
 
   private void showProjectsRv() {
-    System.out.println("AfterRefresh");
     binding.noProjectsLayout.setVisibility(View.GONE);
     binding.refreshLayout.setVisibility(View.VISIBLE);
     googleServices.projectsList = sharedPreferencesManager.getProjectList();

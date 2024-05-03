@@ -252,7 +252,6 @@ public class GoogleServices extends Fragment {
                                 }
                                 // Iterate through the files
                                 for (File file : driveProjectFiles) {
-
                                     if (file.getName().endsWith(".js")) {
                                         driveProjectId.add(file.getId());
                                         String projectName = file.getName();
@@ -260,7 +259,6 @@ public class GoogleServices extends Fragment {
                                         String projectId = file.getId();
                                         DateTime projectDate = file.getModifiedTime();
 
-                                        System.out.println("Msg "+projectName);
                                         // Read the content of the file
                                         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                                         googleDriveService
@@ -269,10 +267,7 @@ public class GoogleServices extends Fragment {
                                                 .executeMediaAndDownloadTo(outputStream);
                                         String projectCommands = outputStream.toString();
 
-                                        System.out.println("ProjectIdlocal----->"+localProjectId);
-                                        System.out.println("ProjectIdfile------>"+file.getId());
                                         if (!localProjectId.contains(file.getId())) {
-
                                             // Create a Project object and add it to the ArrayList
                                             //System.out.printf("UpdatedFileName",projectName);
 
@@ -293,6 +288,8 @@ public class GoogleServices extends Fragment {
                                             projectsList.add(
                                                     new ProjectsDataInObject(
                                                             projectId, projectName, projectDate, projectCommands));
+
+
 //                                          projectsList.add(new ProjectsDataInObject(projectId,projectName,projectDate,projectCommands));
                                         }
                                     }
@@ -304,8 +301,7 @@ public class GoogleServices extends Fragment {
                                 Iterator<ProjectsDataInObject> iterator = projectsList.iterator();
                                 while (iterator.hasNext()) {
                                     ProjectsDataInObject project = iterator.next();
-
-                                    if (!driveProjectId.contains(project.getProjectName())) {
+                                    if (!driveProjectId.contains(project.getProjectId())) {
                                         iterator.remove();
                                     }
                                     sharedPreferencesManager.setProjectLIst(projectsList);
