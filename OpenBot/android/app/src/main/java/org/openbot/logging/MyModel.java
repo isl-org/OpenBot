@@ -4,6 +4,7 @@ package org.openbot.logging;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -82,9 +83,18 @@ public class MyModel implements Serializable {
         RealMatrix w2Matrix = MatrixUtils.createRealMatrix(model.get("W2"));
         RealMatrix logProbMatrix = hMatrix.multiply(w2Matrix);
         double[][] logProb = logProbMatrix.getData(); // Calculate log probability
+        for (int i = 0; i < logProb.length; i++) {
+            for (int j = 0; j < logProb[i].length; j++) {
+                logProb[i][j] /= 1000.0; // Divide each element by 1000
+            }
+        }
         Log.d("logProb: ", "logProb: " + logProb[0][0]);
+        Log.d("logProb: ", "logProb1: " + logProb[0][1]);
+        Log.d("logProb: ", "logProb2: " + logProb[0][2]);
         double[] p = softmax(logProb[0]); // Calculate probability
-        Log.d("logProb: ", "p: " + p);
+        Log.d("logProb: ", "p: " + p[0]);
+        Log.d("logProb: ", "p: " + p[1]);
+        Log.d("logProb: ", "p: " + p[2]);
         // Return probability and hidden state
         return new Object[]{p, h}; // Assuming p is scalar, h is a 1xH array
     }
@@ -278,9 +288,20 @@ public class MyModel implements Serializable {
     }
 
     public void saveModel(String filePath) {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filePath))) {
+        try {
+            // Create parent directories if they don't exist
+            File file = new File(filePath);
+            File parentDir = file.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+
+            // Write the object to file
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
             out.writeObject(model);
-            System.out.println("Model saved successfully.");
+            out.close();
+
+            Log.d("Model", "Model Saved successfully");
         } catch (IOException e) {
             System.err.println("Error saving model: " + e.getMessage());
         }

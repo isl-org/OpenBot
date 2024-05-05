@@ -105,12 +105,12 @@ public class PolicyGradientFragment extends CameraFragment {
     private double percentage;
     private boolean reachedCheckpoint;
 
-    private static final long LOGGING_DURATION_MILLIS = 10000; // 15 seconds
+    private static final long LOGGING_DURATION_MILLIS = 10000; // 10 seconds
     private long loggingStartTime;
     private Handler timerHandler;
 
     private Handler randomActionsHandler;
-    private static final long RANDOM_ACTIONS_INTERVAL = 200;
+    private static final long RANDOM_ACTIONS_INTERVAL = 100;
 
     private MyModel myModel;
     private double learningRate = 1e-3; // learning rate used in RMS prop
@@ -441,9 +441,9 @@ public class PolicyGradientFragment extends CameraFragment {
         if (outOfCircuit){
             if(epr.size() != 0) {
                 int lastIndex = epr.size() - 1; // Get the index of the last element
-                double newReward = -5; // Example new reward value
+                double newReward = -40; // Example new reward value
                 epr.set(lastIndex, newReward);
-                rewards = -5;
+                rewards = -40;
                 totalRewards += rewards;
             }
         }
@@ -481,6 +481,8 @@ public class PolicyGradientFragment extends CameraFragment {
         rewardsArray.add(totalRewards);
         saveRewardsArray(rewardsArray);
         binding.rewards.setText(String.valueOf(totalRewards));
+        rewards = 0;
+        totalRewards = 0;
 
 
 
@@ -518,19 +520,23 @@ public class PolicyGradientFragment extends CameraFragment {
         @Override
         public void run() {
             double elapsedTime = System.currentTimeMillis() - loggingStartTime;
-            Log.d("Timer", "Elapsed Time: " + elapsedTime + ", Percentage: " + percentage);
-            if (elapsedTime >= LOGGING_DURATION_MILLIS || percentage > 75) {
+            if (elapsedTime >= LOGGING_DURATION_MILLIS|| percentage > 98) {
                 elapsedTime = 0;
                 // Stop logging when the duration is reached
-                if(elapsedTime >= LOGGING_DURATION_MILLIS) {
-                    rewards=2;
+                if(elapsedTime >= LOGGING_DURATION_MILLIS ) {
+                    int lastIndex = epr.size() - 1; // Get the index of the last element
+                    double newReward = 100; // Example new reward value
+                    epr.set(lastIndex, newReward);
+                    rewards=100;
                     totalRewards += rewards;
                     outOfCircuit = false;
                 }
-                if(percentage > 75)
+                if(percentage > 95)
                 {
                     Log.d("PERCENT", "Percentage: " + percentage);
                     outOfCircuit = true;
+                    rewards = -40;
+                    totalRewards += rewards;
                 }
 
                 stopLogging(false);
@@ -538,11 +544,12 @@ public class PolicyGradientFragment extends CameraFragment {
                 setLoggingActive(false);
 
 
-            } else{
-                rewards = (elapsedTime * 1e-3) - rewards;
-                timerHandler.postDelayed(this, 200);
+            } else {
+                rewards = 1;
                 totalRewards += rewards;
+                timerHandler.postDelayed(this, 200);
             }
+            Log.d("Reward", "Total Reward: " + totalRewards);
         }
 
 
@@ -647,9 +654,14 @@ public class PolicyGradientFragment extends CameraFragment {
                 toggleLogging();
                 break;
             case Constants.CMD_INDICATOR_LEFT:
+                rewards = 15;
+                totalRewards += rewards;
+                break;
 
             case Constants.CMD_INDICATOR_RIGHT:
-
+                rewards = -15;
+                totalRewards += rewards;
+                break;
             case Constants.CMD_INDICATOR_STOP:
                 sendIndicatorToSensorService();
                 break;
@@ -801,7 +813,7 @@ public class PolicyGradientFragment extends CameraFragment {
             if (croppedBitmap != null) {
                 Bitmap bottomBitmap = OpenCVProcessing(croppedBitmap);
                 binding.percentage.setText(String.valueOf(percentage));
-                binding.rewards.setText(String.valueOf(rewards));
+                binding.rewards.setText(String.valueOf(totalRewards));
 
                 int originalWidth = bottomBitmap.getWidth();
                 int originalHeight = bottomBitmap.getHeight();
@@ -837,6 +849,9 @@ public class PolicyGradientFragment extends CameraFragment {
 
 
 
+
+
+
             }
         }
     }
@@ -852,7 +867,7 @@ public class PolicyGradientFragment extends CameraFragment {
 
         Imgproc.cvtColor(bottom, bottom, Imgproc.COLOR_RGBA2GRAY); // Turn the image Gray
 
-        Imgproc.threshold(bottom, bottom, 128, 255, Imgproc.THRESH_BINARY); // Using threshold to turn it black and white
+        Imgproc.threshold(bottom, bottom, 125, 255, Imgproc.THRESH_BINARY); // Using threshold to turn it black and white
 
 
         Mat edges = new Mat();
@@ -914,7 +929,7 @@ public class PolicyGradientFragment extends CameraFragment {
         }
         int maxIndex = 0;
         double maxValue = probability[0];
-        for (int i = 1; i < probability.length; i++) {
+        for (int i = 0; i < probability.length; i++) {
             if (probability[i] > maxValue) {
                 maxValue = probability[i];
                 maxIndex = i;
@@ -1018,7 +1033,7 @@ public class PolicyGradientFragment extends CameraFragment {
         double totalPixels = binaryMat.rows() * binaryMat.cols();
         double whitePercentage = (whiteCount / totalPixels) * 100.0; // Ensure floating-point division
 
-        return whitePercentage;
+        return 100 - whitePercentage;
     }
 
     @Override
@@ -1029,15 +1044,15 @@ public class PolicyGradientFragment extends CameraFragment {
     private void MoveAction()
     {
         if(loggingEnabled) {
-            if (action == 3) {
+            if (action == 2) {
                 vehicle.setControl(0.45f, 0.45f);
                 handleDriveCommand();
             }
-            if (action == 2)  {
+            if (action == 1)  {
                 vehicle.setControl(0.5f, -0.1f);
                 handleDriveCommand();
             }
-            if (action == 1)  {
+            if (action == 0)  {
                 vehicle.setControl(-0.1f, 0.5f);
                 handleDriveCommand();
             }
@@ -1297,7 +1312,11 @@ public class PolicyGradientFragment extends CameraFragment {
             double[] aProb = (double[]) result[0];
             double[][] h = (double[][]) result[1];
             Log.d("SIZE OF h: ", "size: " + h.length);
+            Log.d("aProb1: ", "size: " + aProb[0]);
+            Log.d("aProb2: ", "size: " + aProb[1]);
+            Log.d("aProb3: ", "size: " + aProb[2]);
             action = chooseAction(aProb);
+            Log.d("aProb: ", "action: " + action);
             MoveAction();
             xs.add(flatImage);
             Log.d("SIZE OF xs: ", "size: " + xs.size());
