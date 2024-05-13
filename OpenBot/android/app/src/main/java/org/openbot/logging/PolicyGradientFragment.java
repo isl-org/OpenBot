@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.math3.linear.AbstractRealMatrix;
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
@@ -77,6 +79,8 @@ import org.zeroturnaround.zip.commons.FileUtils;
 import kotlin.Triple;
 import timber.log.Timber;
 import java.util.Random;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 
 public class PolicyGradientFragment extends CameraFragment {
 
@@ -98,14 +102,13 @@ public class PolicyGradientFragment extends CameraFragment {
     int action;
     private double rewards = 0;
     private double totalRewards;
-    private long done = 0;
+    private boolean done;
 
     private boolean outOfCircuit;
 
     private double percentage;
-    private boolean reachedCheckpoint;
 
-    private static final long LOGGING_DURATION_MILLIS = 10000; // 10 seconds
+    private static final long LOGGING_DURATION_MILLIS = 15000; // 10 seconds
     private long loggingStartTime;
     private Handler timerHandler;
 
@@ -113,7 +116,7 @@ public class PolicyGradientFragment extends CameraFragment {
     private static final long RANDOM_ACTIONS_INTERVAL = 100;
 
     private MyModel myModel;
-    private double learningRate = 1e-3; // learning rate used in RMS prop
+    private double learningRate = 1e-5; // learning rate used in RMS prop
     private double gamma = 0.99; // discount factor for reward
     private double decayRate = 0.99; // decay factor for RMSProp leaky sum of grad^2
     private boolean resume = false;
@@ -121,7 +124,7 @@ public class PolicyGradientFragment extends CameraFragment {
     private Map<String, double[][]> rmsPropCache = new HashMap<>();
 
 
-    private ArrayList<double[][]> xs = new ArrayList<>();
+    /*private ArrayList<double[][]> xs = new ArrayList<>();
     private ArrayList<double[][]> hs = new ArrayList<>();
     private ArrayList<double[]> dLogPs = new ArrayList<>();
     private ArrayList<Double> drs = new ArrayList<>();
@@ -129,13 +132,28 @@ public class PolicyGradientFragment extends CameraFragment {
     private ArrayList<double[][]> eph = new ArrayList<>();
     private ArrayList<double[]> epdLogP = new ArrayList<>();
     private ArrayList<Double> epr = new ArrayList<>();
+    private ArrayList<Double> rewardsArray = new ArrayList<>();*/
+
+    ArrayList<RealMatrix> xs = new ArrayList<>();
+    ArrayList<RealMatrix> hs = new ArrayList<>();
+    ArrayList<RealMatrix> dLogPs = new ArrayList<>();
+    ArrayList<Double> drs = new ArrayList<>();
+
+    private RealMatrix epx;
+    private RealMatrix eph;
+    private RealMatrix epdLogP;
+
+    private RealMatrix rewardsArray;
+    private RealMatrix xMatrix;
+
     private double[] discounted_epr;
-    private ArrayList<Double> rewardsArray = new ArrayList<>();
     private double mean_rewards = 0;
     private Handler updateHandler = new Handler();
     private final int UPDATE_INTERVAL = 1000;
     private double[][] x;
     private boolean is_rand;
+    private int sec = 1000;
+    private double elapsedTime;
 
 
     @Override
@@ -372,33 +390,25 @@ public class PolicyGradientFragment extends CameraFragment {
         }
     }
 
-   /* protected void sendRewardsArrayToSensorService() {
-        double[] rArray = convertDoubleArrayListToArray(rewardsArray);
-        String string_reward = Arrays.toString(rArray);
-        if (sensorMessenger != null) {
-            try {
-                Log.e("TEST", "Sending reward message...");
-                sensorMessenger.send(LogDataUtils.generateRewardsArrayMessage(string_reward));
-            } catch (RemoteException e) {
-                Log.e("TEST", "Failed to send reward message.");
-                e.printStackTrace();
-            }
-        } else {
-            Log.e("TEST", "sensorMessenger is null.");
-        }
-    }*/
-
 
     private void startLogging() {
         if (resume==true){
-            myModel.loadModel("/storage/emulated/0/Documents/OpenBot/" + File.separator + "models_ppo" + "model");
-            rewardsArray = loadRewardsArray();
+            myModel.loadModel("/storage/emulated/0/Documents/OpenBot/" + File.separator + "policyGradient" + "model");
         }
+        else {
+            int H = 200; // Number of hidden units
+            int D = 128*30; // Input dimension
+            myModel.initializeWeights(H, D);
+        }
+
         startUpdateModel();
-        done = 0;
+        epx = null;
+        eph = null;
+        epdLogP = null;
+        sec = 2000;
+        done = false;
         rewards = 0;
         outOfCircuit = false;
-        reachedCheckpoint = false;
         logFolder =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                         .getAbsolutePath()
@@ -436,57 +446,43 @@ public class PolicyGradientFragment extends CameraFragment {
     private void stopLogging(boolean isCancel) {
 
         timerHandler.removeCallbacks(timerRunnable);
-
-        done = 1;
+        elapsedTime = 0;
+        done = true;
         if (outOfCircuit){
-            if(epr.size() != 0) {
-                int lastIndex = epr.size() - 1; // Get the index of the last element
-                double newReward = -40; // Example new reward value
-                epr.set(lastIndex, newReward);
-                rewards = -40;
+            if(drs.size() != 0) {
+                int lastIndex = drs.size() - 1; // Get the index of the last element
+                drs.set(lastIndex, -4d);
+                rewards = -4;
                 totalRewards += rewards;
             }
         }
         percentage = 0;
         vehicle.setControl(0f,0f);
+        discounted_epr = discountRewards(drs);
+        discounted_epr = standardizeRewards(discounted_epr);
+        Log.d("logProb", "discounted reward: " + Arrays.stream(discounted_epr).max());
+        Log.d("logProb", "discounted reward: " + Arrays.stream(discounted_epr).min());
+
+
+
 
         resetArrays();
-
-        discounted_epr = discountRewards(epr);
-        discounted_epr = standardizeRewards(discounted_epr);
-        double[][] epdLogP_array = convertDoubleArrayListToArray(epdLogP);
-        double[][] epdLogPDouble = modulateGradient(epdLogP_array, discounted_epr);
-
-        double[][] eph_Array = convertArrayListToArray(eph);
-        int numRows = eph_Array.length; // Number of rows
-        int numCols = eph_Array[0].length;
-        Log.d("SIZE OF rows: ", "epx after conversion: " + numRows);
-        Log.d("SIZE OF columns: ", "epx after conversion: " + numCols);
-        double[][] epx_Array = convertArrayListToArray(epx);
-        numRows = epx_Array.length; // Number of rows
-        numCols = epx_Array[0].length;
-        Log.d("SIZE OF rows: ", "epx after conversion: " + numRows);
-        Log.d("SIZE OF columns: ", "epx after conversion: " + numCols);
-
-
+        RealMatrix epdLogPDouble = modulateGradient(epdLogP, discounted_epr);
 
         stopUpdateModel();
-        Map<String, double[][]> grad = myModel.policyBackward(eph_Array, epx_Array, epdLogPDouble);
+        Map<String, double[][]> grad = myModel.policyBackward(eph, epx, epdLogPDouble);
 
         accumulateGradients(grad, gradBuffer);
+        Log.d("SIZE OF: ", "eph" + eph.getRowDimension());
+        if(eph.getRowDimension()>5){
+            Map<String, double[][]> updatedModel = myModel.updateModel(gradBuffer, rmsPropCache, decayRate, learningRate);
+            myModel.setModel(updatedModel);
+            myModel.saveModel("/storage/emulated/0/Documents/OpenBot/" + File.separator + "policyGradient" + "model");
+        }
 
-        Map<String, double[][]> updatedModel = myModel.updateModel(gradBuffer, rmsPropCache, decayRate, learningRate);
-        myModel.setModel(updatedModel);
-        myModel.saveModel("/storage/emulated/0/Documents/OpenBot/" + File.separator + "models_ppo" + "model");
-        rewardsArray.add(totalRewards);
-        saveRewardsArray(rewardsArray);
         binding.rewards.setText(String.valueOf(totalRewards));
         rewards = 0;
         totalRewards = 0;
-
-
-
-
 
         Log.d("DONE", "UPDATE DONE");
         if (sensorConnection != null) requireActivity().unbindService(sensorConnection);
@@ -513,43 +509,51 @@ public class PolicyGradientFragment extends CameraFragment {
                         Timber.e(e, "Got interrupted.");
                     }
                 });
+
         loggingEnabled = false;
     }
 
     private Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            double elapsedTime = System.currentTimeMillis() - loggingStartTime;
-            if (elapsedTime >= LOGGING_DURATION_MILLIS|| percentage > 98) {
-                elapsedTime = 0;
+            elapsedTime = System.currentTimeMillis() - loggingStartTime;
+            if (elapsedTime >= LOGGING_DURATION_MILLIS|| percentage > 99 ) {
+
                 // Stop logging when the duration is reached
-                if(elapsedTime >= LOGGING_DURATION_MILLIS ) {
-                    int lastIndex = epr.size() - 1; // Get the index of the last element
-                    double newReward = 100; // Example new reward value
-                    epr.set(lastIndex, newReward);
-                    rewards=100;
+                if(elapsedTime >= LOGGING_DURATION_MILLIS && !done) {
+                    int lastIndex = drs.size() - 1; // Get the index of the last element
+                    double newReward = 10; // Example new reward value
+                    drs.set(lastIndex, newReward);
+                    rewards=10;
                     totalRewards += rewards;
-                    outOfCircuit = false;
+
                 }
-                if(percentage > 95)
+                if(percentage > 97&& !done)
                 {
-                    Log.d("PERCENT", "Percentage: " + percentage);
-                    outOfCircuit = true;
-                    rewards = -40;
+                    int lastIndex = drs.size() - 1; // Get the index of the last element
+                    double newReward = -4; // Example new reward value
+                    drs.set(lastIndex, newReward);
+                    rewards = -4;
                     totalRewards += rewards;
                 }
+                if(!done){
+                    stopLogging(false);
 
-                stopLogging(false);
+                    setLoggingActive(false);
+                }
 
-                setLoggingActive(false);
 
+
+            }
+            else if(elapsedTime >= sec) {
+                rewards = 1;
+                sec += 2000;
+                totalRewards += rewards;
 
             } else {
-                rewards = 1;
-                totalRewards += rewards;
-                timerHandler.postDelayed(this, 200);
+                rewards = 0;
             }
-            Log.d("Reward", "Total Reward: " + totalRewards);
+            timerHandler.postDelayed(this, 200);
         }
 
 
@@ -585,9 +589,12 @@ public class PolicyGradientFragment extends CameraFragment {
             }
         } else if (!enableLogging && loggingEnabled) {
             outOfCircuit = true;
+
             stopLogging(loggingCanceled);
 
             loggingEnabled = false;
+
+
         }
         BotToControllerEventBus.emitEvent(ConnectionUtils.createStatus("LOGS", loggingEnabled));
 
@@ -829,16 +836,14 @@ public class PolicyGradientFragment extends CameraFragment {
                 int startY = Math.max(0, newHeight - cropHeight); // Start from the bottom 35 pixel lines
                 Bitmap croppedBottomBitmap = Bitmap.createBitmap(resizedBitmap, 0, startY, newWidth, cropHeight);
 
-                int finalHeight = croppedBottomBitmap.getHeight();
-                int finalWidth = croppedBottomBitmap.getWidth();
-
-                Log.d("Final Height: ", "Height: " + finalHeight);
-                Log.d("Final Width: ", "Width: " + finalWidth);
 
                 Bitmap finalBitmap = Bitmap.createBitmap(newWidth,cropHeight,Bitmap.Config.ARGB_8888);
                 final Canvas canvas3 = new Canvas(finalBitmap);
                 canvas3.drawBitmap(croppedBottomBitmap,0,0,null);
                 x = convertBitmapToDoubleArray(finalBitmap);
+                x = applyThreshold(x);
+
+
 
 
 
@@ -857,34 +862,43 @@ public class PolicyGradientFragment extends CameraFragment {
     }
 
 
+    private double[][] applyThreshold(double[][] x) {
+
+
+        // Iterate over each element of the array
+        for (int i = 0; i < x.length; i++) {
+            for (int j = 0; j < x[0].length; j++) {
+                // If the value is above the threshold, set it to 1
+                if (x[i][j] > 10) {
+                    x[i][j] = 1.0;
+                } else {
+                    x[i][j] = -1.0;
+                }
+            }
+        }
+
+        return x;
+    }
 
     private Bitmap OpenCVProcessing(Bitmap inputImage) {
-        Mat inputMat = new Mat(inputImage.getHeight(), inputImage.getWidth(), CvType.CV_8UC4);
+
+        // Convert input bitmap to a grayscale Mat
+        Mat inputMat = new Mat();
         Utils.bitmapToMat(inputImage, inputMat);
 
-        // Mat bottom = regionOfInterest(inputMat);
-        Mat bottom = inputMat;
+        // Convert to single channel if necessary
+        if (inputMat.channels() > 1) {
+            Imgproc.cvtColor(inputMat, inputMat, Imgproc.COLOR_RGBA2GRAY);
+        }
 
-        Imgproc.cvtColor(bottom, bottom, Imgproc.COLOR_RGBA2GRAY); // Turn the image Gray
+        Imgproc.threshold(inputMat, inputMat, 115, 255, Imgproc.THRESH_BINARY);
 
-        Imgproc.threshold(bottom, bottom, 125, 255, Imgproc.THRESH_BINARY); // Using threshold to turn it black and white
+        Bitmap resultBitmap = Bitmap.createBitmap(inputMat.cols(), inputMat.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(inputMat, resultBitmap);
 
+        percentage = calculateWhitePixelPercentage(inputMat);
 
-        Mat edges = new Mat();
-        Imgproc.Canny(bottom, edges, 100, 150);
-
-        percentage = calculateWhitePixelPercentage(bottom);
-
-
-
-        Bitmap edgesBitmap = Bitmap.createBitmap(edges.cols(), edges.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(edges, edgesBitmap);
-        Bitmap bottomBitmap = Bitmap.createBitmap(bottom.cols(), bottom.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(bottom, bottomBitmap);
-
-
-
-        return bottomBitmap;
+        return resultBitmap;
     }
 
     public double[] fakeLabel() {
@@ -923,7 +937,7 @@ public class PolicyGradientFragment extends CameraFragment {
 
         if (randValue < epsilon)
         {
-            int randomNumber = random.nextInt(3) + 1;
+            int randomNumber = random.nextInt(3);
             is_rand = true;
             return randomNumber;
         }
@@ -938,79 +952,7 @@ public class PolicyGradientFragment extends CameraFragment {
 
         return maxIndex;
     }
-    /*private Triple<Bitmap, Bitmap, Mat> applyOpenCVProcessing(Bitmap inputImage) {
 
-        Mat inputMat = new Mat(inputImage.getHeight(), inputImage.getWidth(), CvType.CV_8UC4);
-        Utils.bitmapToMat(inputImage, inputMat);
-
-        // Mat bottom = regionOfInterest(inputMat);
-        Mat bottom = inputMat;
-
-        Imgproc.cvtColor(bottom, bottom, Imgproc.COLOR_RGBA2GRAY); // Turn the image Gray
-
-        Imgproc.threshold(bottom, bottom, 128, 255, Imgproc.THRESH_BINARY); // Using threshold to turn it black and white
-
-
-        Mat edges = new Mat();
-        Imgproc.Canny(bottom, edges, 100, 150);
-
-        percentage = calculateWhitePixelPercentage(bottom);
-
-
-
-        Bitmap edgesBitmap = Bitmap.createBitmap(edges.cols(), edges.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(edges, edgesBitmap);
-        Bitmap bottomBitmap = Bitmap.createBitmap(bottom.cols(), bottom.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(bottom, bottomBitmap);
-
-        int originalWidth = bottomBitmap.getWidth();
-        int originalHeight = bottomBitmap.getHeight();
-
-        // Resize the original image to half its original size
-        int newWidth = originalWidth / 2;
-        int newHeight = originalHeight / 2;
-
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bottomBitmap, newWidth, newHeight, true);
-
-        // Crop the resized bitmap to keep only the bottom 35 pixel lines
-        int cropHeight = Math.min(30, newHeight);
-        int startY = Math.max(0, newHeight - cropHeight); // Start from the bottom 35 pixel lines
-        Bitmap croppedBottomBitmap = Bitmap.createBitmap(resizedBitmap, 0, startY, newWidth, cropHeight);
-
-        int finalHeight = croppedBottomBitmap.getHeight();
-        int finalWidth = croppedBottomBitmap.getWidth();
-
-        Log.d("Final Height: ", "Height: " + finalHeight);
-        Log.d("Final Width: ", "Width: " + finalWidth);
-
-
-        return new Triple<>(edgesBitmap, bottomBitmap, bottom);
-    }*/
-
-    //This function crops the image to only keep the region of interest
-    public static Mat regionOfInterest(Mat inputMat){
-
-        int width = inputMat.cols();
-        int height = inputMat.rows();
-
-        // Define the ROI as the bottom 30% of the image
-        Point[] roiPoints = new Point[4];
-        roiPoints[0] = new Point(width * 0.0, height * 0.7); // Top-left corner of ROI
-        roiPoints[1] = new Point(width, height * 0.7);        // Top-right corner of ROI
-        roiPoints[2] = new Point(width, height);              // Bottom-right corner of ROI
-        roiPoints[3] = new Point(0, height);
-        MatOfPoint roiContour = new MatOfPoint(roiPoints);
-        Mat mask = Mat.zeros(inputMat.size(), CvType.CV_8U);
-        List<MatOfPoint> roiContours = new ArrayList<>();
-        roiContours.add(roiContour);
-        Imgproc.fillPoly(mask, roiContours, new Scalar(255));
-        Mat resultImage = new Mat();
-        Core.bitwise_and(inputMat, inputMat, resultImage, mask);
-
-
-
-        return resultImage;
-    }
 
     public double calculateWhitePixelPercentage(Mat binaryMat) {
         // Convert the binary bitmap to a Mat object
@@ -1033,7 +975,7 @@ public class PolicyGradientFragment extends CameraFragment {
         double totalPixels = binaryMat.rows() * binaryMat.cols();
         double whitePercentage = (whiteCount / totalPixels) * 100.0; // Ensure floating-point division
 
-        return 100 - whitePercentage;
+        return 100-whitePercentage;
     }
 
     @Override
@@ -1061,16 +1003,15 @@ public class PolicyGradientFragment extends CameraFragment {
 
     public void resetArrays() {
         // Convert temporary arrays to arrays
-        double[][] tempXs = convertArrayListToArray(xs);
-        double[][] tempHs = convertArrayListToArray(hs);
-        double[][] tempDLogPs = convertDoubleArrayListToArray(dLogPs);
-        double[] tempDrs = convertDoubleListToArray(drs);
 
-        // Accumulate arrays across episodes
-        if (!xs.isEmpty()) {
-            addAndFlatten(tempXs, tempHs, dLogPs, drs);
+        epx = vstack(xs);
 
-        }
+        eph = vstack(hs);
+
+        epdLogP = vstack(dLogPs);
+
+
+
 
         // Clear temporary ArrayLists
         xs.clear();
@@ -1079,112 +1020,48 @@ public class PolicyGradientFragment extends CameraFragment {
         drs.clear();
     }
 
-    // Method to convert ArrayList<double[][]> to double[][]
-    private double[][] convertArrayListToArray(ArrayList<double[][]> arrayList) {
-        int size = arrayList.size();
-        int rows = arrayList.get(0).length;
-        int cols = arrayList.get(0)[0].length;
-        double[][] array = new double[size * rows][cols];
-        int index = 0;
-        for (double[][] matrix : arrayList) {
-            for (double[] row : matrix) {
-                array[index] = row.clone(); // Copy the row into the array
-                index++;
-            }
-        }
-        return array;
-    }
-
-    // Method to convert ArrayList<Double> to double[]
-    private double[] convertDoubleListToArray(ArrayList<Double> arrayList) {
-        int size = arrayList.size();
-        double[] array = new double[size];
-        for (int i = 0; i < size; i++) {
-            array[i] = arrayList.get(i);
-        }
-        return array;
-    }
-
-    private double[][] convertDoubleArrayListToArray(ArrayList<double[]> arrayList) {
-        int size = arrayList.size();
-        double[][] array = new double[size][];
-        for (int i = 0; i < size; i++) {
-            array[i] = arrayList.get(i);
-        }
-        return array;
-    }
-
-    private void addAndFlatten(double[][] tempXs, double[][] tempHs, ArrayList<double[]> dLogPs, ArrayList<Double> drs) {
-        epx.add(tempXs);
-        if (epx.size() == 2) {
-            flattenArrayList(epx);
-        }
-        eph.add(tempHs);
-        if (eph.size() == 2) {
-            flattenArrayList(eph);
-        }
-        epdLogP.addAll(dLogPs);
-        if (epdLogP.size() == 2) {
-            flattenDoubleArrayList(epdLogP);
-        }
-        epr.addAll(drs);
-        if (epr.size() == 2) {
-            flattenDoubleList(epr);
-        }
-    }
-
     // Function to flatten ArrayList<double[][]>
-    private void flattenArrayList(ArrayList<double[][]> arrayList) {
-        double[][] flattenedArray = new double[arrayList.get(0).length + arrayList.get(1).length][arrayList.get(0)[0].length];
-        int index = 0;
-        for (double[][] array : arrayList) {
-            for (double[] row : array) {
-                flattenedArray[index++] = row;
-            }
+    private static RealMatrix appendMatrixVertically(RealMatrix matrix1, RealMatrix matrix2) {
+        // Check if either matrix is null
+        if (matrix1 == null && matrix2 == null) {
+            return null;
+        } else if (matrix1 == null) {
+            return matrix2;
+        } else if (matrix2 == null) {
+            return matrix1;
         }
-        // Clear arrayList and add flattened array
-        arrayList.clear();
-        arrayList.add(flattenedArray);
+
+        // Check if matrices have the same number of columns
+        int numCols1 = matrix1.getColumnDimension();
+        int numCols2 = matrix2.getColumnDimension();
+        if (numCols1 != numCols2) {
+            throw new IllegalArgumentException("Matrices must have the same number of columns.");
+        }
+
+        // Create a new matrix with the combined number of rows
+        int numRows1 = matrix1.getRowDimension();
+        int numRows2 = matrix2.getRowDimension();
+        int numCols = numCols1; // Or numCols2, since they should be equal
+        RealMatrix combinedMatrix = MatrixUtils.createRealMatrix(numRows1 + numRows2, numCols);
+
+        // Copy data from the first matrix
+        combinedMatrix.setSubMatrix(matrix1.getData(), 0, 0);
+
+        // Copy data from the second matrix below the first
+        combinedMatrix.setSubMatrix(matrix2.getData(), numRows1, 0);
+
+        return combinedMatrix;
     }
 
-    // Function to flatten ArrayList<Double>
-    private void flattenDoubleList(ArrayList<Double> arrayList) {
-        double[] flattenedArray = new double[arrayList.size()];
-        for (int i = 0; i < arrayList.size(); i++) {
-            flattenedArray[i] = arrayList.get(i);
-        }
-        // Clear arrayList and add flattened array
-        arrayList.clear();
-        for (double val : flattenedArray) {
-            arrayList.add(val);
-        }
-    }
 
-    private void flattenDoubleArrayList(ArrayList<double[]> arrayList) {
-        int totalSize = 0;
-        for (double[] arr : arrayList) {
-            totalSize += arr.length;
-        }
-        double[] flattenedArray = new double[totalSize];
-        int index = 0;
-        for (double[] arr : arrayList) {
-            for (double val : arr) {
-                flattenedArray[index++] = val;
-            }
-        }
-        // Clear arrayList and add flattened array
-        arrayList.clear();
-        arrayList.add(flattenedArray);
-    }
-
-    private static double[][] flattenImage(double[][] array) {
+    private double[] flattenImage(double[][] array) {
         int numRows = array.length;
         int numCols = array[0].length;
-        double[][] newArray = new double[numRows * numCols][1];
+        double[] newArray = new double[numRows * numCols];
         int index = 0;
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
-                newArray[index++][0] = array[i][j];
+                newArray[index++] = array[i][j];
             }
         }
         return newArray;
@@ -1193,6 +1070,7 @@ public class PolicyGradientFragment extends CameraFragment {
 
     public double[] discountRewards(ArrayList<Double> rewards) {
         int n = rewards.size();
+        Log.d("epr", "n: " + n);
         double[] discountedRewards = new double[n];
         double runningTotal = 0;
 
@@ -1235,15 +1113,15 @@ public class PolicyGradientFragment extends CameraFragment {
         return Math.sqrt(sumOfSquaredDifferences / array.length);
     }
 
-    public double[][] modulateGradient(double[][] epdLog, double[] discountedEpr) {
-        if (epdLog.length != discountedEpr.length) {
+    public RealMatrix modulateGradient(RealMatrix epdLog, double[] discountedEpr) {
+        if (epdLog.getRowDimension() != discountedEpr.length) {
             throw new IllegalArgumentException("Arrays must have the same length.");
         }
 
         // Perform element-wise multiplication
-        for (int i = 0; i < epdLog.length; i++) {
+        for (int i = 0; i < epdLog.getRowDimension(); i++) {
             for(int j=0; j < 3; j++){
-                epdLog[i][j] *= discountedEpr[i];
+                epdLog.setEntry(i, j, epdLog.getEntry(i,j)*  discountedEpr[i]);
             }
         }
         return epdLog;
@@ -1253,15 +1131,10 @@ public class PolicyGradientFragment extends CameraFragment {
             double[][] gradArray = grad.get(key);
             double[][] gradBufferArray = gradBuffer.get(key);
 
-            Log.d("SIZE OF", "Dimensions of " + key + " array:");
-            Log.d("SIZE OF", "gradArray: " + gradArray.length + " x " + gradArray[0].length);
-            Log.d("SIZE OF", "gradBufferArray: " + gradBufferArray.length + " x " + gradBufferArray[0].length);
-
             if (gradArray.length != gradBufferArray.length || gradArray[0].length != gradBufferArray[0].length) {
                 throw new IllegalArgumentException("Dimensions of gradient arrays must match.");
             }
 
-            // Accumulate gradients over batch
             for (int i = 0; i < gradArray.length; i++) {
                 for (int j = 0; j < gradArray[0].length; j++) {
                     gradBufferArray[i][j] += gradArray[i][j];
@@ -1307,50 +1180,55 @@ public class PolicyGradientFragment extends CameraFragment {
     private void stepToUpdateModel()
     {
         if(x!=null) {
-            double[][] flatImage = flattenImage(x);
-            Object[] result = myModel.policyForward(flatImage);
+            double[] flatImage = flattenImage(x);
+            xMatrix = MatrixUtils.createColumnRealMatrix(flatImage);
+            Log.d("SIZE OF xs: ", "size: " + xMatrix.getRowDimension());
+            Log.d("SIZE OF xs: ", "size: " + xMatrix.getColumnDimension());
+            Object[] result = myModel.policyForward(xMatrix);
             double[] aProb = (double[]) result[0];
             double[][] h = (double[][]) result[1];
-            Log.d("SIZE OF h: ", "size: " + h.length);
-            Log.d("aProb1: ", "size: " + aProb[0]);
-            Log.d("aProb2: ", "size: " + aProb[1]);
-            Log.d("aProb3: ", "size: " + aProb[2]);
+            RealMatrix hMatrix = MatrixUtils.createRealMatrix(h);
+
             action = chooseAction(aProb);
-            Log.d("aProb: ", "action: " + action);
             MoveAction();
-            xs.add(flatImage);
+            xs.add(xMatrix.transpose());
             Log.d("SIZE OF xs: ", "size: " + xs.size());
-            hs.add(h);
+            hs.add(hMatrix);
             Log.d("SIZE OF hs: ", "size: " + hs.size());
 
             double[] y = fakeLabel();
+            RealMatrix yMatrix = MatrixUtils.createColumnRealMatrix(y);
             if (is_rand){
-                dLogPs.add(y);
+                dLogPs.add(yMatrix.transpose());
             } else {
-                dLogPs.add(subtractArrays(y, aProb));
+                RealMatrix aProbMatrix = MatrixUtils.createColumnRealMatrix(aProb);
+                RealMatrix newLogMatrix = yMatrix.subtract(aProbMatrix);
+                dLogPs.add(newLogMatrix.transpose());
             }
 
             Log.d("SIZE OF dLogPs: ", "size: " + dLogPs.size());
+
             drs.add(rewards);
             Log.d("SIZE OF drs: ", "size: " + drs.size());
         }
 
     }
 
-    public double[] subtractArrays(double[] array1, double[] array2) {
-        if (array1 == null || array2 == null || array1.length != array2.length) {
-            throw new IllegalArgumentException("Arrays are null or have different lengths");
+    public static RealMatrix vstack(ArrayList<RealMatrix> matrices) {
+        // Check if the ArrayList is empty
+        if (matrices.isEmpty()) {
+            Log.e("vstack", "NOW !");
+            throw new IllegalArgumentException("ArrayList of matrices is empty.");
         }
 
-        int length = array1.length;
-        double[] result = new double[length];
+        RealMatrix combinedMatrix = null;
+        for (RealMatrix matrix : matrices) {
 
-        for (int i = 0; i < length; i++) {
-            result[i] = array1[i] - array2[i];
-        }
-
-        return result;
+            combinedMatrix = appendMatrixVertically(combinedMatrix, matrix);
+            }
+        return combinedMatrix;
     }
+
 
 }
 
