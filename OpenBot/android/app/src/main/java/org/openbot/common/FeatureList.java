@@ -79,8 +79,8 @@ public class FeatureList {
     categories.add(new Category(LEGACY, subCategories));
 
     subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(RL, R.drawable.rtr_tt, "#7268A6"));
-    subCategories.add(new SubCategory(POLICY_GRADIENT, R.drawable.ic_car_steering_wheel, "#7268A6"));
+    // subCategories.add(new SubCategory(RL, R.drawable.rtr_tt, "#7268A6"));
+    subCategories.add(new SubCategory(POLICY_GRADIENT, R.drawable.rtr_tt, "#7268A6"));
     subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
     // subCategories.add(new SubCategory(DATA_COLLECTION_RL, R.drawable.ic_storage, "#7268A6"));
 

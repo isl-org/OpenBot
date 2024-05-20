@@ -891,7 +891,7 @@ public class PolicyGradientFragment extends CameraFragment {
             Imgproc.cvtColor(inputMat, inputMat, Imgproc.COLOR_RGBA2GRAY);
         }
 
-        Imgproc.threshold(inputMat, inputMat, 115, 255, Imgproc.THRESH_BINARY);
+        Imgproc.threshold(inputMat, inputMat, 60, 255, Imgproc.THRESH_BINARY);
 
         Bitmap resultBitmap = Bitmap.createBitmap(inputMat.cols(), inputMat.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(inputMat, resultBitmap);
@@ -947,6 +947,7 @@ public class PolicyGradientFragment extends CameraFragment {
             if (probability[i] > maxValue) {
                 maxValue = probability[i];
                 maxIndex = i;
+                is_rand = false;
             }
         }
 
@@ -975,7 +976,7 @@ public class PolicyGradientFragment extends CameraFragment {
         double totalPixels = binaryMat.rows() * binaryMat.cols();
         double whitePercentage = (whiteCount / totalPixels) * 100.0; // Ensure floating-point division
 
-        return 100-whitePercentage;
+        return whitePercentage;
     }
 
     @Override

@@ -112,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
     localIntentFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
     localIntentFilter.addAction(UsbConnection.ACTION_USB_PERMISSION);
 
+
+
     localBroadcastManager = LocalBroadcastManager.getInstance(this);
     localBroadcastManager.registerReceiver(localBroadcastReceiver, localIntentFilter);
 

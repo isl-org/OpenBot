@@ -6,29 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".logging.PolicyGradientFragment">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/loggerBottomSheet"
         android:layout_width="match_parent"
-        android:layout_height="376dp"
+        android:layout_height="407dp"
         android:background="@drawable/bottom_sheet_bg"
         app:behavior_hideable="false"
         app:behavior_peekHeight="48dp"
-        app:layout_anchor="@+id/loggerBottomSheet"
-        app:layout_anchorGravity="center"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         tools:behavior_peekHeight="480dp">
-
-        <EditText
-            android:id="@+id/epsilon_input"
-            android:layout_width="204dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="12dp"
-            android:hint="Enter Epsilon"
-            android:inputType="numberDecimal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/view" />
 
         <View
             android:id="@+id/view"
@@ -89,6 +76,45 @@
             app:layout_constraintTop_toBottomOf="@+id/view"
             app:layout_constraintVertical_bias="0.927" />
 
+        <EditText
+            android:id="@+id/epsilon_input"
+            android:layout_width="208dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="68dp"
+            android:hint="Enter Epsilon"
+            android:inputType="numberDecimal"
+            app:layout_constraintBottom_toTopOf="@+id/resolution_spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.901"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.8" />
+
+        <TextView
+            android:id="@+id/percentage"
+            android:layout_width="93dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="152dp"
+            android:layout_marginTop="5dp"
+            android:text="percentage"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.161"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/rewards"
+            android:layout_width="137dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="rewards mean: "
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toEndOf="@+id/resume_switch"
+            app:layout_constraintTop_toBottomOf="@+id/percentage"
+            tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/previewText"
@@ -111,31 +137,6 @@
             app:layout_constraintBottom_toBottomOf="@+id/previewText"
             app:layout_constraintStart_toEndOf="@+id/previewText"
             app:layout_constraintTop_toTopOf="@+id/previewText" />
-
-        <TextView
-            android:id="@+id/percentage"
-            android:layout_width="84dp"
-            android:layout_height="18dp"
-            android:layout_marginTop="60dp"
-            android:text="percentage"
-            android:textColor="@android:color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/logger_switch"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
-            android:id="@+id/rewards"
-            android:layout_width="137dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
-            android:text="rewards mean: "
-            android:textColor="@android:color/black"
-            app:layout_constraintStart_toEndOf="@+id/resume_switch"
-            app:layout_constraintTop_toBottomOf="@+id/percentage"
-            tools:ignore="MissingConstraints" />
 
         <Spinner
             android:id="@+id/resolution_spinner"
@@ -225,8 +226,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="402dp"
+            android:layout_height="1dp"
             android:layout_margin="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
@@ -236,6 +237,39 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
+            <Button
+                android:id="@+id/sensorDataButton"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/button_background_border"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingHorizontal="32dp"
+                android:text="Sensor Data"
+                android:textAllCaps="false"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/previewCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Preview Images"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/sensorDataButton"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/trainingDataCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Training Images"
+                app:layout_constraintStart_toStartOf="@id/previewCheckBox"
+                app:layout_constraintTop_toBottomOf="@+id/previewCheckBox" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
