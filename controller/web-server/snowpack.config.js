@@ -1,4 +1,7 @@
 const proxy = import('http2-proxy')
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {

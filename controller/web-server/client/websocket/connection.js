@@ -8,9 +8,6 @@
  */
 
 import {ErrorDisplay} from '../utils/error-display.js'
-import {deleteCookie, getCookie} from '../index'
-import {localStorageKeys} from '../utils/constants'
-import {uploadServerUsage} from '../firebase/APIs'
 
 /**
  * function to connect websocket to remote server
@@ -37,7 +34,6 @@ export function Connection () {
 
     this.start = async (onData) => {
         let ws = await connectToServer()
-        console.log(ws)
         this.send = (data) => {
             if (ws) {
                 console.log(('sending to server' + data))
@@ -61,15 +57,6 @@ export function Connection () {
         ws.onclose = () => {
             errDisplay.set('Disconnected from the server. To reconnect, reload this page.')
             idSent = false
-            if (localStorage.getItem(localStorageKeys.isSignIn) === 'true') {
-                if (getCookie(localStorageKeys.serverStartTime)) {
-                    const time = new Date()
-                    uploadServerUsage(new Date(getCookie(localStorageKeys.serverStartTime)), time).then(() => {
-                        deleteCookie(localStorageKeys.serverStartTime)
-                        deleteCookie(localStorageKeys.serverEndTime)
-                    })
-                }
-            }
         }
 
         ws.onopen = () => {

@@ -1,6 +1,3 @@
-import Cookies from 'js-cookie'
-import {localStorageKeys} from '../utils/constants'
-
 /**
  * function to enable webRTC connection
  * @param connection
@@ -67,10 +64,6 @@ export function WebRTC (connection) {
         peerConnection = new RTCPeerConnection()
         peerConnection.onconnectionstatechange = () => {
             if (peerConnection?.connectionState === 'connected') {
-                console.log("peerConnection?.connectionState")
-                const time = new Date()
-                Cookies.set(localStorageKeys.serverStartTime, time)
-                console.log(`Server Time save ${time}`)
             }
         }
 

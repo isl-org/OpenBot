@@ -12,10 +12,8 @@ import {Keyboard} from './keyboardHandlers/keyboard.js'
 import {BotMessageHandler} from './keyboardHandlers/bot-message-handler'
 import {Commands} from './keyboardHandlers/commands'
 import {RemoteKeyboard} from './keyboardHandlers/remote_keyboard'
-import {uploadServerUsage, getUserPlan} from './firebase/APIs'
 import {WebRTC} from './webRTC/webrtc.js'
 import {signInWithCustomToken} from 'firebase/auth'
-import Cookies from 'js-cookie'
 import {auth, googleSigIn, googleSignOut} from './firebase/authentication'
 import {localStorageKeys} from './utils/constants'
 
@@ -84,7 +82,7 @@ subscribeButton.addEventListener('click', handleSubscription)
 /**
  * function to handle signIn on home page
  */
-function handleSignInButtonClick () {
+function handleSignInButtonClick() {
     if (localStorage.getItem(localStorageKeys.isSignIn) === 'false') {
         googleSigIn()
             .then((user) => {
@@ -125,16 +123,7 @@ function signOut() {
     localStorage.setItem(localStorageKeys.isSignIn, false.toString())
     const signInBtn = document.getElementsByClassName('google-sign-in-button')[0]
     signInBtn.innerText = 'Sign in with Google'
-    if (getCookie(localStorageKeys.serverStartTime)) {
-        const time = new Date()
-        uploadServerUsage(new Date(getCookie(localStorageKeys.serverStartTime)), time).then(() => {
-            deleteCookie(localStorageKeys.serverStartTime)
-            deleteCookie(localStorageKeys.serverEndTime)
-            googleSignOut()
-        })
-    } else {
-        googleSignOut()
-    }
+    googleSignOut()
 }
 
 /**
@@ -221,7 +210,6 @@ export const deleteCookie = (name) => {
 }
 
 
-handleAccessToken()
 handleServerDetailsOnSSO()
 handleAuthChangedOnRefresh()
 
@@ -240,12 +228,6 @@ function handleSingleSignOn() {
             signInBtn.innerText = res.user.displayName
             localStorage.setItem(localStorageKeys.user, JSON.stringify(res.user))
             localStorage.setItem(localStorageKeys.isSignIn, true.toString())
-            getUserPlan().then((res) => {
-                if (res !== undefined) {
-                    Cookies.set(localStorageKeys.subscriptionEndTime, res)
-                }
-                checkPlanExpiration()
-            })
             deleteCookie(localStorageKeys.user)
         })
             .catch((error) => {
@@ -258,16 +240,7 @@ function handleSingleSignOn() {
 function handleServerDetailsOnSSO() {
     const cookie = getCookie(localStorageKeys.user)
     if (cookie) {
-        if (getCookie(localStorageKeys.serverStartTime)) {
-            const time = new Date()
-            uploadServerUsage(new Date(getCookie(localStorageKeys.serverStartTime)), time).then(() => {
-                deleteCookie(localStorageKeys.serverStartTime)
-                deleteCookie(localStorageKeys.serverEndTime)
-                handleSingleSignOn()
-            })
-        } else {
-            handleSingleSignOn()
-        }
+        handleSingleSignOn()
     }
 }
 
@@ -294,32 +267,10 @@ function handleAuthChangedOnRefresh() {
                     signInBtn.innerText = res.displayName
                     localStorage.setItem(localStorageKeys.user, JSON.stringify(res))
                     localStorage.setItem(localStorageKeys.isSignIn, 'true')
-                    if (getCookie(localStorageKeys.serverStartTime)) {
-                        const time = new Date()
-                        uploadServerUsage(new Date(Cookies.get(localStorageKeys.serverStartTime)), new Date(Cookies.get(localStorageKeys.serverEndTime)) ?? time).then(() => {
-                            deleteCookie(localStorageKeys.serverStartTime)
-                            deleteCookie(localStorageKeys.serverEndTime)
-                        })
-                    }
-                    restrictUserOnExpiration()
-                    getUserPlan().then((res) => {
-                        if (res !== undefined) {
-                            Cookies.set(localStorageKeys.subscriptionEndTime, res)
-                        }
-                        checkPlanExpiration()
-                    })
+                    sendId()
                 }
             })
         }, 1000)
-    }
-}
-
-
-// handling user usage for server duration when refreshing or closing page
-window.onunload = function () {
-    if (getCookie(localStorageKeys.serverStartTime)) {
-        const time = new Date()
-        Cookies.set(localStorageKeys.serverEndTime, time)
     }
 }
 
