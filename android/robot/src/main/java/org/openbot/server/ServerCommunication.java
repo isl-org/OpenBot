@@ -39,6 +39,7 @@ public class ServerCommunication {
 
         @Override
         public void onServiceResolved(NsdServiceInfo serviceInfo) {
+          Timber.e("serviceInfo %s", serviceInfo.getServiceName());
           servers.put(serviceInfo.getServiceName(), serviceInfo);
           try {
             serverListener.onServerListChange(servers.keySet());
