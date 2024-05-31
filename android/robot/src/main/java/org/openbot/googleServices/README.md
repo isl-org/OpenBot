@@ -44,7 +44,7 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
   
 <p>
 <img style="width: 47%" src="../../../../../../../../docs/images/firebase_add_android_app.jpg" alt="Add Android Application" width="40%"/>
-<img src="../../../../../../../../docs/images/firebase_package_name.jpg" alt="Package Name" width="35%"/>
+<img src="../../../../../../../../docs/images/firebase_package_name.jpg" alt="Package Name" width="36%"/>
 </p>
 
 - To obtain the `SHA-1` key, you can use the `keytool` (command-line tool) that is included with the `Java SDK`. Here's how to use it on `Mac` and `Windows`:
@@ -101,7 +101,7 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
 
 <p>
 <img style="width: 44%;" src="../../../../../../../../docs/images/firebase_gear_icon.jpg" alt="Gear icon" width="30%"/>
-<img style="width: 52%" src="../../../../../../../../docs/images/firebase_add_sha1.jpg" alt="Add SHA-1" width="43%"/>
+<img style="width: 53%" src="../../../../../../../../docs/images/firebase_add_sha1.jpg" alt="Add SHA-1" width="43%"/>
 </p>
 
 - If you have `already implemented Firebase authentication` before adding the SHA-1 key, you may need to `update` your app's `configuration`. This can be done by `replacing` the `google-services.json` file in project directory with the `updated google-services.json` file from Firebase project setting.
