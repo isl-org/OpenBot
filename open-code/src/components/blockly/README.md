@@ -15,7 +15,7 @@
   OpenBot PlayGround includes customizable blocks that can be used to control the flow of program such as loops, events
   and conditionals. It provides a visual way for users to structure the logic of their programs.
 
-    <img src="../../../../docs/images/playground_blockly_newControl.jpg" height="50%" width="50%"/>
+    <img src="../../../../docs/images/playground_blockly_control.jpg" height="50%" width="50%"/>
 
   A brief overview of some control blocks:
     - Start: Initiates the execution of program and execute the block code single time.
@@ -28,7 +28,7 @@
 
   Loops category provides various blocks that helps to control the flow of your program through repetition.
 
-     <img src="../../../../docs/images/Playground_blockly_newLoops.jpg" height="50%" width="50%"/>
+     <img src="../../../../docs/images/playground_blockly_loops.jpg" height="50%" width="50%"/>
 
   Some loop blocks examples are listed here below:
 
@@ -106,7 +106,7 @@
 
   Sensors are the blocks which are going to return different readings for OpenBot condition and environment status .
 
-  <img src="../../../../docs/images/playground_sensors-block.jpg" height="50%" width="50%"/>
+  <img src="../../../../docs/images/playground_sensors_blocks.jpg" height="50%" width="50%"/>
 
   Overview:
     - Phone Sensors: Help to measure Gyroscope,Acceleration, and Magnetic readings at different axis(3-Dimensional).
