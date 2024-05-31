@@ -43,7 +43,7 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
 - About the `SHA-1` fingerprint/key is a unique identifier for your `app's signing certificate`, and is used by Firebase to verify the authenticity of your app when communicating with Firebase servers. If you plan to use Firebase Authentication in your app, you will need to provide an `SHA-1` key `for the signing certificate` used to sign the `release version` of your app.
   
 <p>
-<img style="width: 46.2%" src="../../../../../../../../docs/images/firebase_add_android_app.jpg" alt="Add Android Application" width="40%"/>
+<img style="width: 50%" src="../../../../../../../../docs/images/firebase_add_android_app.jpg" alt="Add Android Application" width="40%"/>
 <img src="../../../../../../../../docs/images/firebase_package_name.jpg" alt="Package Name" width="35%"/>
 </p>
 
@@ -68,7 +68,7 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
 - Continue to the Firebase Console to configure the Firebase services you want to use in your Android app.
 
 <p>
-<img style="width: 40.1%" src="../../../../../../../../docs/images/firebase_google_service_json_file.jpg" alt="Google services json file" width="41%"/>
+<img style="width: 40%" src="../../../../../../../../docs/images/firebase_google_service_json_file.jpg" alt="Google services json file" width="41%"/>
 <img src="../../../../../../../../docs/images/firebase_continue_to_console.jpg" alt="Continue to console" width="40.2%"/>
 </p>
 
@@ -100,7 +100,7 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
   - Click on `Save` to add the SHA-1 key to your Firebase project.
 
 <p>
-<img style="width: 41.5%;" src="../../../../../../../../docs/images/firebase_gear_icon.jpg" alt="Gear icon" width="30%"/>
+<img style="width: 47%;" src="../../../../../../../../docs/images/firebase_gear_icon.jpg" alt="Gear icon" width="30%"/>
 <img style="width: 50.5%" src="../../../../../../../../docs/images/firebase_add_sha1.jpg" alt="Add SHA-1" width="43%"/>
 </p>
 
