@@ -27,8 +27,8 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
   3. Google Analytics can be disabled if you do not want to use them.
   4. Click on the "Create Project" button.
 <p>
-<img src="../../../../../../../../docs/images/create_project.jpg" alt="Create project" width="25%"/>
-<img src="../../../../../../../../docs/images/enter_project_name.jpg" alt="Enter project name" width="24%"/>
+<img src="../../../../../../../../docs/images/firebase_android_create_project.jpg" alt="Create project" width="25%"/>
+<img src="../../../../../../../../docs/images/firebase_enter_project_name.jpg" alt="Enter project name" width=40%"/>
 <img src="../../../../../../../../docs/images/disable_analytics.jpg" alt="Disable analytics" width="27.5%"/>
 </p>
 
@@ -43,8 +43,8 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
 - About the `SHA-1` fingerprint/key is a unique identifier for your `app's signing certificate`, and is used by Firebase to verify the authenticity of your app when communicating with Firebase servers. If you plan to use Firebase Authentication in your app, you will need to provide an `SHA-1` key `for the signing certificate` used to sign the `release version` of your app.
   
 <p>
-<img src="../../../../../../../../docs/images/add_android_app.jpg" alt="Add Android Application" width="40%"/>
-<img src="../../../../../../../../docs/images/package_name.jpg" alt="Package Name" width="35%"/>
+<img style="width: 46.2%" src="../../../../../../../../docs/images/firebase_add_android_app.jpg" alt="Add Android Application" width="40%"/>
+<img src="../../../../../../../../docs/images/firebase_package_name.jpg" alt="Package Name" width="35%"/>
 </p>
 
 - To obtain the `SHA-1` key, you can use the `keytool` (command-line tool) that is included with the `Java SDK`. Here's how to use it on `Mac` and `Windows`:
@@ -68,8 +68,8 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
 - Continue to the Firebase Console to configure the Firebase services you want to use in your Android app.
 
 <p>
-<img src="../../../../../../../../docs/images/google_service_json_file.jpg" alt="Google services json file" width="41%"/>
-<img src="../../../../../../../../docs/images/continue_to_console.jpg" alt="Continue to console" width="40.2%"/>
+<img style="width: 40.1%" src="../../../../../../../../docs/images/firebase_google_service_json_file.jpg" alt="Google services json file" width="41%"/>
+<img src="../../../../../../../../docs/images/firebase_continue_to_console.jpg" alt="Continue to console" width="40.2%"/>
 </p>
 
 - To `enable Google Sign-In authentication` for your Firebase project, follow these steps:
@@ -81,7 +81,7 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
   6. Click on the `toggle button` to `enable` Google Sign-In authentication.
 
 <p>
-<img src="../../../../../../../../docs/images/firebase_product_services.jpg" alt="Firebase product services" width="47.5%"/>
+<img style="width:36%" src="../../../../../../../../docs/images/firebase_product_services.jpg" alt="Firebase product services" width="47.5%"/>
 <img src="../../../../../../../../docs/images/firebase_authentication.jpg" alt="Firebase authentication" width="42%"/>
 </p>
 <p>
@@ -100,12 +100,12 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
   - Click on `Save` to add the SHA-1 key to your Firebase project.
 
 <p>
-<img src="../../../../../../../../docs/images/gear_icon.jpg" alt="Gear icon" width="30%"/>
-<img src="../../../../../../../../docs/images/add_sha1.jpg" alt="Add SHA-1" width="43%"/>
+<img style="width: 41.5%;" src="../../../../../../../../docs/images/firebase_gear_icon.jpg" alt="Gear icon" width="30%"/>
+<img style="width: 50.5%" src="../../../../../../../../docs/images/firebase_add_sha1.jpg" alt="Add SHA-1" width="43%"/>
 </p>
 
 - If you have `already implemented Firebase authentication` before adding the SHA-1 key, you may need to `update` your app's `configuration`. This can be done by `replacing` the `google-services.json` file in project directory with the `updated google-services.json` file from Firebase project setting.
 
 <p>
-<img src="../../../../../../../../docs/images/updated_google_service_json_file.jpg" alt="Updated Google service json file" width="40%"/>
+<img src="../../../../../../../../docs/images/firebase_updated_google_service_json_file.jpg" alt="Updated Google service json file" width="40%"/>
 </p>
