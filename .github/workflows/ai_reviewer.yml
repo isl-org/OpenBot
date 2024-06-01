@@ -7,34 +7,19 @@ on:
       - synchronize
     branches: [master]
 
-permissions:
-  pull-requests: write
-
 jobs:
-  build:
+  run_code_review:
     runs-on: ubuntu-latest
-    
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      BASE_SHA: ${{ github.event.pull_request.base.sha }}
-      GITHUB_SHA: ${{ github.sha }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - name: Code Review GPT
+        uses: mattzcarey/code-review-gpt@v0.1.8
         with:
-          node-version: 18
-
-      - name: Install code-review-gpt
-        run: npm install code-review-gpt
-
-      - name: Configure code review script
-        run: npx code-review-gpt configure --setupTarget=github
-
-      - name: Run code review script
-        run: npx code-review-gpt review
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MODEL: 'gpt-4-o'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
 
