@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -26,8 +26,12 @@ jobs:
       - name: Install code-review-gpt
         run: npm install code-review-gpt
 
+      - name: Configure code review script
+        run: npx code-review-gpt configure --setupTarget=github
+
       - name: Run code review script
-        run: npx code-review-gpt --ci
+        run: npx code-review-gpt review --model=gpt4-o
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
