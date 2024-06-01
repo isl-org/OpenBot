@@ -6,6 +6,7 @@ on:
  
 jobs:
   gpt_translate:
+    if: github.actor == 'thias15'
     runs-on: ubuntu-latest
  
     steps:
@@ -18,3 +19,15 @@ jobs:
         uses: 3ru/gpt-translate@master
         with:
           apikey: ${{ secrets.OPENAI_API_KEY }}
+          model: gpt-4o
+          prompt: |
+            Please translate the source file to {targetLanguage}. \
+              Make the translation sound as natural as possible. \
+              Make sure that {targetLanguage} is linked to the corresponding README file using its Language Culture Name. \
+              Keep the HTML snippet in the same place as in the source file or add it at the top and keep existing languages. \
+              For example, for English, Chinese and German the top of the README should look like this:
+              <p align="center">
+                <a href="README.md">Englisch</a> |
+                <a href="README.zh-CN.md">简体中文</a> |
+                <a href="README.de-DE.md">Deutsch</a>
+              </p>
