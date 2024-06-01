@@ -13,7 +13,13 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      GITHUB_SHA: ${{ github.sha }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,10 +36,5 @@ jobs:
         run: npx code-review-gpt configure --setupTarget=github
 
       - name: Run code review script
-        run: npx code-review-gpt review --model=gpt4-o
+        run: npx code-review-gpt review
 
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          GITHUB_SHA: ${{ github.sha }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
