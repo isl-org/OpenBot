@@ -1,9 +1,9 @@
-# Schlanker Körper
+# Schlankes Chassis
 
 <p align="center">
-  <span>Deutsch</span> |
   <a href="README.md">English</a> |
-  <a href="README_CN.md">简体中文</a>
+  <a href="README_CN.md">简体中文</a> |
+  <span>Deutsch</span>
 </p>
 
 Einige 3D-Drucker haben ein Bauvolumen, das zu klein ist, um den OpenBot-Körper in voller Größe zu drucken.
