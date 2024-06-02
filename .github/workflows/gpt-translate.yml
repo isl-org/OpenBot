@@ -23,7 +23,7 @@ jobs:
           prompt: |
             Please translate the README source file to {targetLanguage}. \
               Make the translation sound as natural as possible. \
-              Keep the HTML snippet in the same place as in the source file or add it below the first heading (#) and keep existing languages. \
+              Keep the HTML snippet with the language options in the same place as in the source file. \
               ONLY {targetLanguage} should be shown in plaintext (between span tags). \
               All other languages should be shown as links using the Language Culture Name, e.g. "README.de-DE.md" for German. \
               Exception: English is the default language and always points to "README.md". \
