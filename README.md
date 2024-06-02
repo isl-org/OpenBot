@@ -17,7 +17,8 @@
 
 <p align="center">
   <span>English</span> |
-  <a href="README_CN.md">简体中文</a>
+  <a href="README_CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a>
 </p>
 
 OpenBot leverages smartphones as brains for low-cost robots. We have designed a small electric vehicle that costs about $50 and serves as a robot body. Our software stack for Android smartphones supports advanced robotics workloads such as person following and real-time autonomous navigation.
