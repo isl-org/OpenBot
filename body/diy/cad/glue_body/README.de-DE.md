@@ -10,7 +10,7 @@ Einige 3D-Drucker haben ein Bauvolumen, das zu klein ist, um den OpenBot-Körper
 Dieser Ordner enthält den OpenBot-Körper, der in 4 Teile aufgeteilt ist.
 Er kann mit einer Bauplatte gedruckt werden, die nur 150mm x 140mm groß ist, und dann zusammengeklebt werden.
 
-![Klebbarer Körper](../../../../docs/images/glue_body.jpg)
+![Klebbares Chassis](../../../../docs/images/glue_body.jpg)
 
 ## Teile
 
