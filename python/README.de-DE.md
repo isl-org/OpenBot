@@ -1,10 +1,11 @@
+# Python
+
 <p align="center">
     <a href="README.md">English</a> |
     <a href="README.zh-CN.md">简体中文</a> |
     <span>Deutsch</span>
 </p>
 
-## Nutzung
 Dieses Modul ist eine Embedded-Linux-Alternative zur Smartphone-Steuerung eines OpenBot-Fahrzeugs. Geschrieben in Python, kann der OpenBot mit einem Linux-basierten Computer und einer Kamera zur Erkennung gesteuert werden.
 
 Der Roboter kann auf zwei Arten gesteuert werden: durch Inferenz einer Neural Network-Policy oder über einen Joystick.
