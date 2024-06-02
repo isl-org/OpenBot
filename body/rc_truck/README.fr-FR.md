@@ -112,13 +112,6 @@ L'OpenBot RC-Truck repose principalement sur des composants électroniques de lo
 
 **Astuce :** Cliquez sur les images pour les ouvrir en pleine résolution dans un nouvel onglet.
 
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <a href="README.de-DE.md">Deutsch</a> |
-    <span>Français</span>
-</p>
-
 1. Démontez le camion jouet RC. Retirez son couvercle supérieur et dévissez les quatre broches de montage de la base comme indiqué sur les figures ci-dessous. Gardez les quatre broches de montage et leurs vis respectives en sécurité, car vous les utiliserez pour monter le ```main_frame``` sur le corps du camion RC après avoir terminé tout le câblage. Tous les camions jouets RC compatibles sont équipés de deux moteurs : un pour l'accélérateur et l'autre pour la direction, un contrôleur de vitesse (avec un UBEC intégré de 5-7V) pour le moteur d'accélérateur, et une batterie LiPo 2S 7.4V. Démontez et retirez la batterie de la base du camion et rechargez-la avec le chargeur fourni avec le camion. Exposez/desserrez les connecteurs de fils pour les deux moteurs ainsi que la sortie UBEC du contrôleur de vitesse. Dans notre cas, la sortie UBEC était de 6V.
     <p float="left">
       <img src="/docs/images/rc_truck_disassembly_1.JPG" width="32%" />
