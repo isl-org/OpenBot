@@ -227,10 +227,3 @@ Notre corps de robot repose sur de l'électronique de loisir facilement disponib
 ## Ensuite
 
 Flashez le [Firmware Arduino](../../firmware/README.md)
-
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <a href="README.de-DE.md">Deutsch</a> |
-    <span>Français</span>
-</p>
