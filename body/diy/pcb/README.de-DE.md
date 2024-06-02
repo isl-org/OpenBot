@@ -3,7 +3,8 @@
 <p align="center">
   <a href="README.md">English</a> |
   <a href="README.zh-CN.md">简体中文</a> |
-  <span>Deutsch</span>
+  <span>Deutsch</span> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 Die Leiterplatte (PCB) dient als Trägerplatine für den Arduino Nano und integriert moderne Motortreiber, die Spannungsteiler-Schaltung und Widerstände für die LEDs. Der Arduino wird einfach in die Stiftleiste gesteckt und alle Sensoren und LEDs werden über Dupont-Kabel mit den entsprechenden Anschlüssen verbunden.

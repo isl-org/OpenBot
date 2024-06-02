@@ -3,7 +3,8 @@
 <p align="center">
   <a href="README.md">English</a> |
   <span>简体中文</span> |
-  <a href="README.de-DE.md">Deutsch</a>
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 你可以在亚马逊上购买一个[即插即用 (RTR)](rtr) 的 OpenBot：
