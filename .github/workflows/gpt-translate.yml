@@ -6,16 +6,16 @@ on:
  
 jobs:
   gpt_translate:
-    if: github.actor == 'thias15'
+    if: |
+      github.actor == 'thias15' &&
+      contains(github.event.comment.body, '/gpt-translate') || 
+      contains(github.event.comment.body, '/gt')
     runs-on: ubuntu-latest
  
     steps:
       - uses: actions/checkout@v3
  
       - name: Run GPT Translate
-        if: |
-          contains(github.event.comment.body, '/gpt-translate') || 
-          contains(github.event.comment.body, '/gt')
         uses: 3ru/gpt-translate@master
         with:
           apikey: ${{ secrets.OPENAI_API_KEY }}
