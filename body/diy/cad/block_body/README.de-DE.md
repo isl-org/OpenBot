@@ -1,4 +1,4 @@
-# Chassis mit zusätzlichem Raum und Lego-Unterstützung
+# Block Chassis mit zusätzlichem Raum und Lego-Unterstützung
 
 <p align="center">
     <a href="README.md">English</a> |
