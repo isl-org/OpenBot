@@ -6,13 +6,13 @@ on:
 
 jobs:
   gpt_review:
-    if: github.actor == 'thias15'
+    if: |
+      github.actor == 'thias15' &&
+      contains(github.event.comment.body, '/gpt-review') || 
+      contains(github.event.comment.body, '/gr')
     runs-on: ubuntu-latest
     steps:
       - name: Run GPT Code Review
-        if: |
-          contains(github.event.comment.body, '/gpt-review') || 
-          contains(github.event.comment.body, '/gr')
         uses: cirolini/genai-code-review@v2
         with:
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
