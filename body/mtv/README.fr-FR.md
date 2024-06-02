@@ -229,13 +229,6 @@ Vous devrez imprimer les pièces suivantes pour construire votre OpenBot MTV.
     </tbody>
 </table>
 
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <a href="README.de-DE.md">Deutsch</a> |
-    <span>Français</span>
-</p>
-
 Pour les parties ci-dessus, votre plateau d'impression doit mesurer au moins 240mmx150mm.
 
 Sur une Ultimaker S5, nous avons obtenu de bons résultats avec les paramètres suivants :
@@ -252,13 +245,6 @@ Sur une Ultimaker S5, nous avons obtenu de bons résultats avec les paramètres 
 ### II.1. Liste des matériaux
 
 Le corps de notre robot repose sur des composants électroniques de loisir facilement disponibles. Nous fournissons des liens pour l'Allemagne (UE) et les États-Unis (US) avec une livraison rapide. Si vous avez la patience d'attendre un peu plus longtemps, vous pouvez également obtenir les composants beaucoup moins chers sur AliExpress (AE). Vous aurez besoin des composants suivants.
-
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <a href="README.de-DE.md">Deutsch</a> |
-    <span>Français</span>
-</p>
 
 <table>
     <thead>
@@ -678,10 +664,3 @@ Une fois le PCB principal fixé, les interrupteurs et les affichages dans le toi
 ## III: Suivant
 
 Flashez le [Firmware Arduino](../../firmware/README.md)
-
-<p align="center">
-  <a href="README.md">English</a> |
-  <a href="README.zh-CN.md">简体中文</a> |
-  <a href="README.de-DE.md">Deutsch</a> |
-  <span>Français</span>
-</p>
