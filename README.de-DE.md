@@ -16,9 +16,9 @@
 </p>
 
 <p align="center">
-  <span>English</span> |
+  <a href="README.md">English</a>
   <a href="README_CN.md">简体中文</a> |
-  <a href="README.de-DE.md">Deutsch</a>
+  <span>Deutsch</span>
 </p>
 
 OpenBot nutzt Smartphones als Gehirn für kostengünstige Roboter. Wir haben ein kleines Elektrofahrzeug entworfen, das etwa 50 Dollar kostet und als Roboterkörper dient. Unser Software-Stack für Android-Smartphones unterstützt fortgeschrittene Robotikanwendungen wie Personenerkennung und Echtzeit-Autonomes Fahren.
