@@ -1,10 +1,10 @@
+# OpenBot: Multi-Terrain Vehicle (MTV) Karosserie
+
 <p align="center">
     <a href="README.md">English</a> |
     <a href="README.zh-CN.md">简体中文</a> |
     <span>Deutsch</span>
 </p>
-
-# OpenBot: Multi-Terrain Vehicle (MTV) Karosserie
 
 Wir schlagen hier eine Geländefahrzeug-Alternative zum ursprünglichen [OpenBot](https://www.openbot.org/) Fahrzeug vor. Entwickelt in Zusammenarbeit mit **Ivy Tech LTD**, basiert das Multi-Terrain Vehicle (MTV) ebenfalls auf kostengünstigen und leicht druckbaren Komponenten. Das MTV ist inspiriert von mehreren Erkundungsfahrzeugkonzepten, die in den letzten Jahrzehnten für die Mond- und Marsforschung entwickelt wurden. Das MTV ist um einen Satz von 6 angetriebenen Rädern herum konstruiert, die in einer Rocker-Bogie-Konfiguration angeordnet sind. Im Gegensatz zu den meisten Mond- oder Mars-Rovern können die Räder nicht radial rotieren. Das Fahrzeug funktioniert daher wie ein Panzer, was die manuelle Steuerung recht intuitiv macht.
 
