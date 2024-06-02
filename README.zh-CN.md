@@ -2,7 +2,7 @@
   <img align="center" alt="Banner" width="100%" src="docs/images/banner.jpg" />
 </a>
 
-<h1 align="center"><a>Smartphones in Roboter verwandeln</a></h1>
+<h1 align="center"><a>将智能手机变成机器人</a></h1>
 
 <p align="center">
    <img alt="GitHub build" src="https://img.shields.io/github/actions/workflow/status/isl-org/OpenBot/gradle.yml?branch=master"></a>
@@ -17,29 +17,29 @@
 
 <p align="center">
   <a href="README.md">English</a> |
-  <a href="README.zh-CN.md">简体中文</a> |
-  <span>Deutsch</span>
+  <span>简体中文</span> |
+  <a href="README.de-DE.md">Deutsch</a>
 </p>
 
-OpenBot nutzt Smartphones als Gehirn für kostengünstige Roboter. Wir haben ein kleines Elektrofahrzeug entworfen, das etwa 50 Dollar kostet und als Roboterkörper dient. Unser Software-Stack für Android-Smartphones unterstützt fortgeschrittene Robotikanwendungen wie Personenerkennung und Echtzeit-Autonomes Fahren.
+OpenBot 利用智能手机作为低成本机器人的大脑。我们设计了一款小型电动车，成本约为 50 美元，作为机器人的主体。我们的 Android 智能手机软件栈支持高级机器人工作负载，如跟随人和实时自主导航。
 
-## Erste Schritte mit OpenBot
-- Baue deinen eigenen [Roboterkörper](body/README.md)
-- Flashe die [Arduino-Firmware](firmware/README.md)
-- Installiere die [Android-Apps](android/README.md)
-- Steuere den Roboter über einen [Controller](controller/README.md)
-- Trainiere deine eigene [Fahrstrategie](policy/README.md)
+## 开始使用 OpenBot
+- 构建你自己的 [机器人主体](body/README.md)
+- 刷写 [Arduino 固件](firmware/README.md)
+- 安装 [Android 应用](android/README.md)
+- 通过 [控制器](controller/README.md) 驾驶机器人
+- 训练你自己的 [驾驶策略](policy/README.md)
 
-## Quellcode erhalten
+## 获取源代码
 
-- Du kannst das Repository als [Zip-Datei](https://github.com/intel-isl/OpenBot/archive/master.zip) herunterladen und in einen Ordner deiner Wahl extrahieren.
-- Du kannst das OpenBot-Repository von GitHub mit folgendem Befehl klonen:
+- 你可以下载仓库为 [zip 文件](https://github.com/intel-isl/OpenBot/archive/master.zip) 并将其解压到你选择的文件夹中。
+- 你可以使用以下命令从 GitHub 克隆 OpenBot 仓库：
     ```bash
     git clone https://github.com/intel-isl/OpenBot.git
     ```
-- Du kannst das OpenBot-Repository forken und dann deine lokale Kopie klonen. Dies wird empfohlen, insbesondere wenn du [beitragen](CONTRIBUTING.md) möchtest.
+- 你可以 fork OpenBot 仓库，然后克隆你的本地副本。特别是如果你想要 [贡献](CONTRIBUTING.md)，我们推荐这种方式。
 
-## Videos
+## 视频
 
 <a href="https://www.youtube.com/watch?v=RbzPXywJifA" >
   <img align="center" width="300" alt="youtube video" src="https://img.youtube.com/vi/RbzPXywJifA/hqdefault.jpg" />
@@ -49,9 +49,9 @@ OpenBot nutzt Smartphones als Gehirn für kostengünstige Roboter. Wir haben ein
   <img align="center" width="300" alt="youtube video" src="https://img.youtube.com/vi/qc8hFLyWDOM/hqdefault.jpg" />
 </a>
 
-## Coole Projekte mit OpenBot
+## 使用 OpenBot 的酷项目
 
-Es gibt bereits viele coole Projekte, die OpenBot nutzen. Unten ist eine kleine Auswahl. Klicke auf die Bilder, um zu den jeweiligen Projekten weitergeleitet zu werden.
+已经有很多使用 OpenBot 的酷项目。以下是其中的一小部分。点击图片可跳转到相应的项目。
 
 <p float="left">
   <a href="https://www.thingiverse.com/thing:4670884" target="_blank">
@@ -68,23 +68,23 @@ Es gibt bereits viele coole Projekte, die OpenBot nutzen. Unten ist eine kleine 
   </a>
 </p>
 
-## Kontakt
+## 联系
 
-- Trete unserem [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-jl8ygxqt-WNRNi9yzh7Lu60qui6Nh6w) Kanal bei, um dich mit der OpenBot-Community zu verbinden.
-- Kontaktiere uns per [E-Mail](mailto:openbot.team@gmail.com)
+- 加入我们的 [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-jl8ygxqt-WNRNi9yzh7Lu60qui6Nh6w) 频道，与 OpenBot 社区联系。
+- 通过 [电子邮件](mailto:openbot.team@gmail.com) 联系我们。
 
-## Beitrag leisten
+## 贡献
 
-Bitte lies die [Beitragsrichtlinien](CONTRIBUTING.md). Wenn du nicht sicher bist, wo du anfangen sollst, wirf einen Blick auf die [offenen Issues](https://github.com/intel-isl/OpenBot/issues).
+请阅读 [贡献指南](CONTRIBUTING.md)。如果你不确定从哪里开始，可以查看 [开放问题](https://github.com/intel-isl/OpenBot/issues)。
 
-## Zitieren
+## 引用
 
-Bitte zitiere unser [Paper](https://arxiv.org/abs/2008.10631), wenn du OpenBot verwendest.
+如果你使用 OpenBot，请引用我们的 [论文](https://arxiv.org/abs/2008.10631)。
 
 ```bib
 @inproceedings{mueller2021openbot,
     title     = {OpenBot: Turning Smartphones into Robots},
-    author    = {M{\"u}ller, Matthias und Koltun, Vladlen},
+    author    = {M{\"u}ller, Matthias and Koltun, Vladlen},
     booktitle = {Proceedings of the International Conference on Robotics and Automation (ICRA)},
     year = {2021},
 }
