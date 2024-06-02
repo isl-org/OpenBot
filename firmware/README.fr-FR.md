@@ -155,14 +155,7 @@ En fonction de votre configuration, vous pouvez voir différents messages.
 
 #### Procédure de test
 
-Avant de continuer, assurez-vous que les pneus sont retirés. Vous aurez besoin du moniteur série ouvert pour envoyer des commandes et vous verrez les messages reçus de votre OpenBot. Si vous avez installé l'affichage OLED, vous verrez également l'état du véhicule affiché là-bas de manière plus lisible. La procédure de test suivante peut être utilisée pour tester toutes les fonctionnalités de la voiture :
-
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <a href="README.de-DE.md">Deutsch</a> |
-    <span>Français</span>
-</p>
+Avant de continuer, assurez-vous que les pneus sont retirés. Vous aurez besoin du moniteur série ouvert pour envoyer des commandes et vous verrez les messages reçus de votre OpenBot. Si vous avez installé l'affichage OLED, vous verrez également l'état du véhicule affiché là-bas de manière plus lisible. La procédure de test suivante peut être utilisée pour tester toutes les fonctionnalités de la voiture:
 
 1. Allumez la voiture et observez la tension de la batterie (le nombre après le `v`). Vous pouvez vérifier la lecture avec un multimètre et ajuster le `VOLTAGE_DIVIDER_FACTOR` si nécessaire.
 2. Si vous avez un capteur ultrasonique installé :
