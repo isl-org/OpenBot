@@ -1,3 +1,9 @@
+<p align="center">
+    <span>English</span> |
+    <a href="README.zh-CN.md">简体中文</a> |
+    <a href="README.de-DE.md">Deutsch</a>
+</p>
+
 # Launch Screen Assets
 
 You can customize the launch screen with your own desired assets by replacing the image files in this directory.
