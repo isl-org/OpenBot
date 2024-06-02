@@ -27,9 +27,9 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
   3. Google Analytics can be disabled if you do not want to use them.
   4. Click on the "Create Project" button.
 <p>
-<img src="../../../../../../../../docs/images/firebase_android_create_project.jpg" alt="Create project" width="25%"/>
+<img src="../../../../../../../../docs/images/firebase_create_project.jpg" alt="Create project" width="25%"/>
 <img src="../../../../../../../../docs/images/firebase_enter_project_name.jpg" alt="Enter project name" width=40%"/>
-<img src="../../../../../../../../docs/images/disable_analytics.jpg" alt="Disable analytics" width="27.5%"/>
+<img src="../../../../../../../../docs/images/firebase_disable_analytics.jpg" alt="Disable analytics" width="27.5%"/>
 </p>
 
 - To add a new Android app to your Firebase project, do the following:
@@ -85,8 +85,8 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
 <img src="../../../../../../../../docs/images/firebase_authentication.jpg" alt="Firebase authentication" width="42%"/>
 </p>
 <p>
-<img src="../../../../../../../../docs/images/google_signin.jpg" alt="Google Sign-In" width="60%"/>
-<img src="../../../../../../../../docs/images/google_signin_enable.jpg" alt="Google Sign-In enable" width="31.5%"/>
+<img src="../../../../../../../../docs/images/firebase_google_signin.jpg" alt="Google Sign-In" width="60%"/>
+<img src="../../../../../../../../docs/images/firebase_google_signin_enable.jpg" alt="Google Sign-In enable" width="31.5%"/>
 </p>
 
 
