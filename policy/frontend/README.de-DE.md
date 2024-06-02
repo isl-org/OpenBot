@@ -1,9 +1,10 @@
+# OpenBot Policy Frontend
+
 <p align="center">
     <a href="README.md">English</a> |
+    <a href="README.zh-CN.md">简体中文</a> |
     <span>Deutsch</span>
 </p>
-
-# OpenBot Policy Frontend
 
 Dieses Projekt wurde mit [Create React App](https://github.com/facebook/create-react-app) gestartet.
 
