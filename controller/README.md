@@ -1,9 +1,9 @@
 # OpenBot Controllers
 
 <p align="center">
-    <span>English</span> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <a href="README.de-DE.md">Deutsch</a>
+  <span>English</span> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a>
 </p>
 
 There are several ways for controlling the OpenBot robot.

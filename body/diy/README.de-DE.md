@@ -114,12 +114,6 @@ Unser Roboterkörper basiert auf leicht verfügbarer Hobbyelektronik. Wir bieten
 
 **Tipp:** Um die gesamte Verkabelung zu erleichtern, können Sie einen kleinen Stromverteiler für die 5V- und GND-Verbindungen bauen, indem Sie einen 6x2-Männchen-Header auf eine Lochrasterplatine löten. Verbinden Sie dann den Stromverteiler mit den 5V / GND des Motortreibers.
 
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <span>Deutsch</span>
-</p>
-
 1. Löten Sie die Drähte an die Motoren und fügen Sie die Encoder-Scheiben zu den beiden vorderen Motoren hinzu, wenn Sie die Geschwindigkeitssensoren verwenden möchten.
     <p float="left">
       <img src="../../docs/images/add_wires_motor.jpg" width="32%" />

@@ -157,12 +157,6 @@ Je nach Konfiguration können Sie unterschiedliche Nachrichten sehen.
 
 Bevor Sie fortfahren, stellen Sie sicher, dass die Reifen entfernt sind. Sie benötigen den Seriellen Monitor, um Befehle zu senden, und Sie sehen die empfangenen Nachrichten von Ihrem OpenBot. Wenn Sie das OLED-Display installiert haben, sehen Sie den Fahrzeugstatus auch dort in einem benutzerfreundlicheren Format. Das folgende Testverfahren kann verwendet werden, um alle Funktionen des Autos zu testen:
 
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <span>Deutsch</span>
-</p>
-
 1. Schalten Sie das Auto ein und beobachten Sie die Batteriespannung (die Zahl nach dem `v`). Sie können die Messung mit einem Multimeter überprüfen und den `VOLTAGE_DIVIDER_FACTOR` bei Bedarf anpassen.
 2. Wenn Sie einen Ultraschallsensor installiert haben:
     1. Halten Sie Ihre Hand vor den Sensor und bewegen Sie sie hin und her. Sie sollten sehen, dass sich die Messwerte (die Zahl nach dem `s`) entsprechend ändern.

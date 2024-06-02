@@ -156,16 +156,6 @@ MCU的主要任务是处理车辆的低级控制并提供来自低级车载传�
 
 在继续之前，请确保轮胎已移除。你需要打开串行监视器以发送命令，并且你将看到从OpenBot接收到的消息。如果你安装了OLED显示屏，你还将在更易于阅读的格式中看到车辆状态显示。以下测试程序可用于测试汽车的所有功能：
 
-# OpenBot 说明文档
-
-<p align="center">
-  <a href="README.md">English</a> |
-  <span>简体中文</span> |
-  <a href="README.de-DE.md">Deutsch</a> |
-  <a href="README.fr-FR.md">Français</a> |
-  <a href="README.es-ES.md">Español</a>
-</p>
-
 1. 启动车辆并观察电池电压（`v` 后的数字）。你可以用万用表验证读数，并在必要时调整 `VOLTAGE_DIVIDER_FACTOR`。
 2. 如果你安装了超声波传感器：
     1. 将手放在传感器前面并来回移动。你应该会看到读数（`s` 后的数字）相应变化。

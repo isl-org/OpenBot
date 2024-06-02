@@ -1,9 +1,9 @@
 # iOS 应用程序 - 测试版发布
 
 <p align="center">
-    <a href="README.md">English</a> |
-    <span>简体中文</span> |
-    <a href="README.de-DE.md">Deutsch</a>
+  <a href="README.md">English</a> |
+  <span>简体中文</span> |
+  <a href="README.de-DE.md">Deutsch</a>
 </p>
 
 ## 功能
