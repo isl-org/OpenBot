@@ -1,9 +1,10 @@
 # 定制PCB
 
 <p align="center">
-    <a href="README.md">English</a> |
-    <span>简体中文</span> |
-    <a href="README.de-DE.md">Deutsch</a>
+  <a href="README.md">English</a> |
+  <span>简体中文</span> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 定制PCB作为Arduino Nano的载板，集成了现代电机驱动器、电压分压电路和LED电阻。Arduino只需插入针脚头，所有传感器和LED通过杜邦线连接到相应的连接器。

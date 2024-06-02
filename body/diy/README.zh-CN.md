@@ -1,9 +1,10 @@
 # OpenBot DIY
 
 <p align="center">
-    <a href="README.md">English</a> |
-    <span>简体中文</span> |
-    <a href="README.de-DE.md">Deutsch</a>
+  <a href="README.md">English</a> |
+  <span>简体中文</span> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 我们设计了一种轮式机器人的主体，依赖于低成本、易于获取的业余硬件。你可以在下面找到构建你自己的机器人的说明。如果你有任何进一步的问题或疑虑，请随时联系我们。祝你构建机器人愉快！
@@ -115,12 +116,6 @@
 **提示：** 为了使所有布线更容易，你可以通过将一个6x2公头焊接到一个洞洞板上来构建一个小型电源分配器。然后将电源分配器连接到电机驱动器的5V / GND。
 
 # 组装指南
-
-<p align="center">
-  <a href="README.md">English</a> |
-  <span>简体中文</span> |
-  <a href="README.de-DE.md">Deutsch</a>
-</p>
 
 1. 将电线焊接到电机上，如果你打算使用速度传感器，请将编码器盘安装到前面的两个电机上。
     <p float="left">

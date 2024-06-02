@@ -1,9 +1,10 @@
 # Robot App
 
 <p align="center">
-    <a href="README.md">English</a> |
-    <span>简体中文</span> |
-    <a href="README.de-DE.md">Deutsch</a>
+  <a href="README.md">English</a> |
+  <span>简体中文</span> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 ## 免责声明
@@ -245,14 +246,6 @@
 #### YoloV5s-640 - mAP: 34%
 
 [YoloV5](https://github.com/ultralytics/yolov5)输入分辨率为640x640。
-
-# OpenBot
-
-<p align="center">
-  <a href="README.md">English</a> |
-  <span>简体中文</span> |
-  <a href="README.de-DE.md">Deutsch</a>
-</p>
 
 |手机/设备 (fps)| CPU | GPU | NNAPI |
 |--------------|-----|-----|-------|

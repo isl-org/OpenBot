@@ -1,9 +1,10 @@
 # OpenBot DIY
 
 <p align="center">
-    <span>English</span> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <a href="README.de-DE.md">Deutsch</a>
+  <span>English</span> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 We have designed a body for a wheeled robot which relies on low-cost, readily available hobby hardware. You can find instructions for building you own robot below. If you have any further questions or concerns, please feel free to contact us. Happy robot building!

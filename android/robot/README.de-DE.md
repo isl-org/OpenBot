@@ -1,9 +1,10 @@
 # Roboter-App
 
 <p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <span>Deutsch</span>
+  <a href="README.md">English</a> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <span>Deutsch</span> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 ## HAFTUNGSAUSSCHLÜSSE
@@ -235,24 +236,33 @@ Kleine Version von [YoloV4](https://arxiv.org/abs/2004.10934) mit Eingangsauflö
 
 #### YoloV5s-320 - mAP: 28%
 
-[YoloV5](https://github.com/ultralytics/yolov5) mit Eingangsauflösung von 320x320.
+[YoloV5](https://github.com/ultralytics/yolov5) mit einer Eingangsauflösung von 320x320.
 
-|Telefon/Gerät (fps)| CPU | GPU | NNAPI |
-|-------------------|-----|-----|-------|
-| Samsung S22 Ultra |  21 |  10 |   21  |
-|
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra|  21 |  10 |   21  |
+| Xiaomi Mi9       |  13 |  15 |  0.8  |
+| Google Pixel 4XL |  12 |  17 |   18  |
 
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <a href="README.de-DE.md">Deutsch</a>
-</p>
+#### YoloV5s-640 - mAP: 34%
 
-|Telefon/Gerät (fps)| CPU | GPU | NNAPI |
-|-------------------|-----|-----|-------|
-| Samsung S22 Ultra |  13 | 8.2 |   11  |
-| Xiaomi Mi9        | 9.7 | 9.9 |   -   |
-| Google Pixel 4XL  | 7.9 | 9.2 |   15  |
+[YoloV5](https://github.com/ultralytics/yolov5) mit einer Eingangsauflösung von 640x640.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra| 5.5 | 4.9 |  5.0  |
+| Xiaomi Mi9       | 4.1 | 4.6 |   -   |
+| Google Pixel 4XL | 3.7 | 4.6 |  4.6  |
+
+#### YoloV5m-320 - mAP: 35%
+
+[YoloV5](https://github.com/ultralytics/yolov5) mit einer Eingangsauflösung von 320x320.
+
+|phone/device (fps)| CPU | GPU | NNAPI |
+|------------------|-----|-----|-------|
+| Samsung S22 Ultra|  13 | 8.2 |   11  |
+| Xiaomi Mi9       | 9.7 | 9.9 |   -   |
+| Google Pixel 4XL | 7.9 | 9.2 |   15  |
 
 #### YoloV5l-320 - mAP: 38%
 

@@ -3,7 +3,8 @@
 <p align="center">
   <a href="README.md">English</a> |
   <a href="README.zh-CN.md">简体中文</a> |
-  <span>Deutsch</span>
+  <span>Deutsch</span> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 Wir verwenden eine Mikrocontroller-Einheit (MCU) als Brücke zwischen dem Roboterkörper und dem Smartphone. Wir stellen unsere [Firmware](openbot_nano/openbot_nano.ino) für den Arduino Nano mit einem ATmega328P-Mikrocontroller sowie für das ESP32-Entwicklungskit zur Verfügung.
@@ -156,12 +157,6 @@ Je nach Konfiguration können Sie unterschiedliche Nachrichten sehen.
 #### Testverfahren
 
 Bevor Sie fortfahren, stellen Sie sicher, dass die Reifen entfernt sind. Sie benötigen den Seriellen Monitor, um Befehle zu senden, und Sie sehen die empfangenen Nachrichten von Ihrem OpenBot. Wenn Sie das OLED-Display installiert haben, sehen Sie den Fahrzeugstatus auch dort in einem benutzerfreundlicheren Format. Das folgende Testverfahren kann verwendet werden, um alle Funktionen des Autos zu testen:
-
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <span>Deutsch</span>
-</p>
 
 1. Schalten Sie das Auto ein und beobachten Sie die Batteriespannung (die Zahl nach dem `v`). Sie können die Messung mit einem Multimeter überprüfen und den `VOLTAGE_DIVIDER_FACTOR` bei Bedarf anpassen.
 2. Wenn Sie einen Ultraschallsensor installiert haben:

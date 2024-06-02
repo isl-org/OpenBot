@@ -1,9 +1,10 @@
 # OpenBot: RC-Truck 车身
 
 <p align="center">
-    <a href="README.md">English</a> |
-    <span>简体中文</span> |
-    <a href="README.de-DE.md">Deutsch</a>
+  <a href="README.md">English</a> |
+  <span>简体中文</span> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 我们为广泛使用的1:16比例RC玩具卡车/越野车（例如[这个](https://www.amazon.de/dp/B00M3J7DJW)在亚马逊上）设计了一个机器人车身。
@@ -112,12 +113,6 @@ OpenBot RC-Truck主要依赖于易得的业余电子产品。我们提供了德�
 **提示：** 点击图片在新标签页中以全分辨率打开。
 
 # 下一步
-
-<p align="center">
-    <a href="README.md">English</a> |
-    <span>简体中文</span> |
-    <a href="README.de-DE.md">Deutsch</a>
-</p>
 
 1. 拆卸遥控玩具卡车。移除其顶部盖子，并按照下图所示从底座上拧下四个安装销。保管好所有四个安装销及其对应的螺丝，因为在所有布线完成后，你将使用它们将```main_frame```安装到遥控卡车车身上。所有兼容的遥控玩具卡车都配有两个电机：一个用于油门，另一个用于转向，还有一个用于油门电机的速度控制器（内置5-7V UBEC）和一个2S 7.4V LiPo电池组。从卡车底座上卸下并移除电池组，并使用随车附带的充电器为其充电。暴露/松开两个电机的线连接器以及速度控制器的UBEC输出。在我们的案例中，UBEC输出为6V。
     <p float="left">

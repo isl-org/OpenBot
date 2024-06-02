@@ -1,9 +1,10 @@
 # OpenBot Nodejs 控制器
 
 <p align="center">
-    <a href="README.md">English</a> |
-    <span>简体中文</span> |
-    <a href="README.de-DE.md">Deutsch</a>
+  <a href="README.md">English</a> |
+  <span>简体中文</span> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 ## 术语

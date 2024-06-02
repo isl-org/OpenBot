@@ -18,7 +18,8 @@
 <p align="center">
   <a href="README.md">English</a> |
   <span>简体中文</span> |
-  <a href="README.de-DE.md">Deutsch</a>
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 OpenBot 利用智能手机作为低成本机器人的大脑。我们设计了一款小型电动车，成本约为 50 美元，作为机器人的主体。我们的 Android 智能手机软件栈支持高级机器人工作负载，如跟随人和实时自主导航。

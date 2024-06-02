@@ -3,7 +3,8 @@
 <p align="center">
   <a href="README.md">English</a> |
   <span>简体中文</span> |
-  <a href="README.de-DE.md">Deutsch</a>
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 我们使用微控制器单元（MCU）作为机器人主体和智能手机之间的桥梁。我们为使用ATmega328P微控制器的Arduino Nano以及ESP32开发套件提供了[固件](openbot_nano/openbot_nano.ino)。
@@ -155,16 +156,6 @@ MCU的主要任务是处理车辆的低级控制并提供来自低级车载传�
 #### 测试程序
 
 在继续之前，请确保轮胎已移除。你需要打开串行监视器以发送命令，并且你将看到从OpenBot接收到的消息。如果你安装了OLED显示屏，你还将在更易于阅读的格式中看到车辆状态显示。以下测试程序可用于测试汽车的所有功能：
-
-# OpenBot 说明文档
-
-<p align="center">
-  <a href="README.md">English</a> |
-  <span>简体中文</span> |
-  <a href="README.de-DE.md">Deutsch</a> |
-  <a href="README.fr-FR.md">Français</a> |
-  <a href="README.es-ES.md">Español</a>
-</p>
 
 1. 启动车辆并观察电池电压（`v` 后的数字）。你可以用万用表验证读数，并在必要时调整 `VOLTAGE_DIVIDER_FACTOR`。
 2. 如果你安装了超声波传感器：

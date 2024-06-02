@@ -1,9 +1,10 @@
 # Controller App
 
 <p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <span>Deutsch</span>
+  <a href="README.md">English</a> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <span>Deutsch</span> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 Diese Android-App dient als `Fernsteuerung` für das [OpenBot](https://www.openbot.org) Fahrzeug. Im Grunde erfüllt sie eine ähnliche Funktion wie ein PS3/4- oder Xbox-Controller, läuft jedoch auf einem anderen Android-Gerät.

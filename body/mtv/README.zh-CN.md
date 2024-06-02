@@ -1,9 +1,10 @@
 # OpenBot: 多地形车辆 (MTV) 车身
 
 <p align="center">
-    <a href="README.md">English</a> |
-    <span>简体中文</span> |
-    <a href="README.de-DE.md">Deutsch</a>
+  <a href="README.md">English</a> |
+  <span>简体中文</span> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 我们在此提出了一个原始 [OpenBot](https://www.openbot.org/) 车辆的全地形替代方案。由 **Ivy Tech LTD** 合作开发的多地形车辆 (MTV) 也基于廉价且易于打印的组件。MTV 的设计灵感来自过去几十年为月球和火星探索开发的多个探测车概念。MTV 采用 6 个驱动轮，按照摇杆-摇臂配置排列。与大多数月球或火星探测车不同，这些轮子不能径向旋转。因此，该车辆的操作方式类似于坦克，使得手动控制相当直观。
@@ -230,12 +231,6 @@
 
 # II. 机电装配
 
-<p align="center">
-  <a href="README.md">English</a> |
-  <span>简体中文</span> |
-  <a href="README.de-DE.md">Deutsch</a>
-</p>
-
 ### II.1. 材料清单
 
 我们的机器人主体依赖于现成的业余电子产品。我们提供了德国（EU）和美国（US）的链接，快速发货。如果你有耐心等待更长时间，你也可以从AliExpress（AE）以更便宜的价格购买这些组件。你将需要以下组件。
@@ -243,11 +238,6 @@
 
 
 # 物料清单
-
-<p align="center">
-    <a href="README.md">English</a> |
-    <span>简体中文</span>
-</p>
 
 <table>
     <thead>
@@ -377,11 +367,6 @@
             <td>  <a href="https://www.amazon.com/DaierTek-250VAC-Rocker-KCD1-101-Plastic/dp/B07S2QJKTX/ref=sr_1_4?keywords=RUNCCI-YUN+20Pcs+Mini+Rocker+Switch&qid=1650638471&sr=8-4">US</a> | <a href="https://www.amazon.de/-/en/RUNCCI-Rocker-Switches-Household-Appliances/dp/B07MW92CW8/ref=sr_1_2?keywords=RUNCCI-YUN+20+St%C3%BCck+Mini-Wippschalter&qid=1650638352&sr=8-2">EU
 
 # MTV 组装指南
-
-<p align="center">
-  <a href="README.md">English</a> |
-  <span>简体中文</span>
-</p>
 
 外部采购组件的总成本估计约为 **500€**，因此 MTV 的总成本约为 **600€**。
 
@@ -571,11 +556,6 @@ MTV 的右腿由以下部分组成：
 #### II.3.1. 电池与 PCB 的连接
 
 MTV 选用的可充电锂聚合物电池通过一组专用连接器连接到电源分配 PCB。一个开关可以防止电池连接器受到火花损坏。由于此开
-
-<p align="center">
-  <a href="README.md">English</a> |
-  <span>简体中文</span>
-</p>
 
 <p align="center">
   <img src="../../docs/images/MTV/V_disp.jpg" width="500" alt="App GUI"/>

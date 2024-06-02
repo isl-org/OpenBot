@@ -1,9 +1,10 @@
 # OpenBot: Multi-Terrain Vehicle (MTV) Karosserie
 
 <p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <span>Deutsch</span>
+  <a href="README.md">English</a> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <span>Deutsch</span> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 Wir schlagen hier eine Geländefahrzeug-Alternative zum ursprünglichen [OpenBot](https://www.openbot.org/) Fahrzeug vor. Entwickelt in Zusammenarbeit mit **Ivy Tech LTD**, basiert das Multi-Terrain Vehicle (MTV) ebenfalls auf kostengünstigen und leicht druckbaren Komponenten. Das MTV ist inspiriert von mehreren Erkundungsfahrzeugkonzepten, die in den letzten Jahrzehnten für die Mond- und Marsforschung entwickelt wurden. Das MTV ist um einen Satz von 6 angetriebenen Rädern herum konstruiert, die in einer Rocker-Bogie-Konfiguration angeordnet sind. Im Gegensatz zu den meisten Mond- oder Mars-Rovern können die Räder nicht radial rotieren. Das Fahrzeug funktioniert daher wie ein Panzer, was die manuelle Steuerung recht intuitiv macht.
@@ -228,12 +229,6 @@ Sie müssen die folgenden Teile drucken, um Ihr OpenBot MTV zu bauen.
     </tbody>
 </table>
 
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <span>Deutsch</span>
-</p>
-
 Für die oben genannten Teile muss Ihre Bauplatte mindestens 240mm x 150mm groß sein.
 
 Auf einem Ultimaker S5 haben wir mit den folgenden Einstellungen gute Ergebnisse erzielt:
@@ -250,12 +245,6 @@ Auf einem Ultimaker S5 haben wir mit den folgenden Einstellungen gute Ergebnisse
 ### II.1. Stückliste
 
 Unser Roboterkörper basiert auf leicht verfügbaren Hobby-Elektronikkomponenten. Wir bieten Links für Deutschland (EU) und die Vereinigten Staaten (US) mit schneller Lieferung an. Wenn Sie die Geduld haben, etwas länger zu warten, können Sie die Komponenten auch viel günstiger bei AliExpress (AE) bekommen. Sie benötigen die folgenden Komponenten.
-
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <span>Deutsch</span>
-</p>
 
 <table>
     <thead>
@@ -555,12 +544,7 @@ Tauschen Sie die werkseitig eingebauten Federn in den Stoßdämpfern gegen das m
   <img src="../../docs/images/MTV/Phone.jpg" width="800" alt="App GUI"/>
 </p>
 
-Befestigen Sie das Spannungsanzeigegerät (O12), die Leistungsschalter (O13) und das Micro-USB-Panel-Mount-Kabel (O14) in den dafür vorgesehenen Schlitzen des hinteren Dachs. Ziehen Sie die Scheinwerfer und Rücklichter (O8 & O9) durch die Dachauslässe und befestigen Sie das Dach vorne (A19) und das Dach hinten (A20) an der Fachbaugruppe. Setzen Sie die Scheinwerfer (O8) in die Scheinwerferfassung (A23) und die Rücklichter (O9) in die Rücklichtfassung (A24) ein und befestigen Sie sie in den jeweiligen Schlitzen im Dach vorne (A19) und Dach hinten (A20). Verschließen Sie die Lichtfassungen mit den Lichtendkappen (A22) wie in der Ab
-
-<p align="center">
-  <a href="README.md">English</a> |
-  <span>Deutsch</span>
-</p>
+Befestigen Sie das Spannungsanzeigegerät (O12), die Leistungsschalter (O13) und das Micro-USB-Panel-Mount-Kabel (O14) in den dafür vorgesehenen Schlitzen des hinteren Dachs. Ziehen Sie die Scheinwerfer und Rücklichter (O8 & O9) durch die Dachauslässe und befestigen Sie das Dach vorne (A19) und das Dach hinten (A20) an der Fachbaugruppe. Setzen Sie die Scheinwerfer (O8) in die Scheinwerferfassung (A23) und die Rücklichter (O9) in die Rücklichtfassung (A24) ein und befestigen Sie sie in den jeweiligen Schlitzen im Dach vorne (A19) und Dach hinten (A20). Verschließen Sie die Lichtfassungen mit den Lichtendkappen (A22) wie in der Abbildung.
 
 <p align="center">
   <img src="../../docs/images/MTV/V_disp.jpg" width="500" alt="App GUI"/>

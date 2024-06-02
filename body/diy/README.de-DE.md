@@ -3,7 +3,8 @@
 <p align="center">
   <a href="README.md">English</a> |
   <a href="README.zh-CN.md">简体中文</a> |
-  <span>Deutsch</span>
+  <span>Deutsch</span> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 Wir haben ein Chassis für einen fahrenden Roboter entworfen, der auf kostengünstiger, leicht verfügbarer Hobby-Hardware basiert. Unten finden Sie Anweisungen zum Bau Ihres eigenen Roboters. Wenn Sie weitere Fragen oder Bedenken haben, können Sie uns gerne kontaktieren. Viel Spaß beim Roboterbau!
@@ -113,12 +114,6 @@ Unser Roboterkörper basiert auf leicht verfügbarer Hobbyelektronik. Wir bieten
 </p>
 
 **Tipp:** Um die gesamte Verkabelung zu erleichtern, können Sie einen kleinen Stromverteiler für die 5V- und GND-Verbindungen bauen, indem Sie einen 6x2-Männchen-Header auf eine Lochrasterplatine löten. Verbinden Sie dann den Stromverteiler mit den 5V / GND des Motortreibers.
-
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <span>Deutsch</span>
-</p>
 
 1. Löten Sie die Drähte an die Motoren und fügen Sie die Encoder-Scheiben zu den beiden vorderen Motoren hinzu, wenn Sie die Geschwindigkeitssensoren verwenden möchten.
     <p float="left">

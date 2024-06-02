@@ -3,7 +3,8 @@
 <p align="center">
   <a href="README.md">English</a> |
   <a href="README.zh-CN.md">简体中文</a> |
-  <span>Deutsch</span>
+  <span>Deutsch</span> |
+  <a href="README.fr-FR.md">Français</a>
 </p>
 
 Wir haben einen Roboterkörper für weit verbreitete RC-Spielzeug-Trucks/Buggys im Maßstab 1:16 entworfen (wie [diesen](https://www.amazon.de/dp/B00M3J7DJW) auf Amazon).
@@ -110,12 +111,6 @@ Der OpenBot RC-Truck basiert hauptsächlich auf leicht verfügbaren Hobby-Elektr
 ### Bauanleitung
 
 **Tipp:** Klicken Sie auf die Bilder, um sie in voller Auflösung in einem neuen Tab zu öffnen.
-
-<p align="center">
-    <a href="README.md">English</a> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <span>Deutsch</span>
-</p>
 
 1. Zerlegen Sie den RC-Spielzeug-LKW. Entfernen Sie die obere Abdeckung und schrauben Sie die vier Befestigungsstifte von der Basis ab, wie in den Abbildungen unten gezeigt. Bewahren Sie alle vier Befestigungsstifte und deren Schrauben sicher auf, da Sie diese verwenden werden, um den ```main_frame``` nach Abschluss der Verkabelung am RC-LKW-Körper zu befestigen. Alle kompatiblen RC-Spielzeug-LKWs sind mit zwei Motoren ausgestattet: einem für den Antrieb und einem für die Lenkung, einem Geschwindigkeitsregler (mit integriertem 5-7V UBEC) für den Antriebsmotor und einem 2S 7.4V LiPo-Akkupack. Demontieren und entfernen Sie das Akkupack von der Basis des LKWs und laden Sie es mit dem Ladegerät auf, das mit dem LKW geliefert wurde. Legen Sie die Drahtverbinder für beide Motoren sowie den UBEC-Ausgang vom Geschwindigkeitsregler frei/lockern Sie sie. In unserem Fall betrug der UBEC-Ausgang 6V.
     <p float="left">
