@@ -1,12 +1,10 @@
 <p align="center">
-    <a href="README.md">Englisch</a> |
+    <a href="README.md">English</a> |
     <a href="README.zh-CN.md">简体中文</a> |
-    <a href="README.de-DE.md">Deutsch</a>
+    <span>Deutsch</span>
 </p>
 
 # OpenBot Nodejs Controller
-
-Zuletzt aktualisiert: 20. Dezember 2021
 
 ## Nomenklatur
 
