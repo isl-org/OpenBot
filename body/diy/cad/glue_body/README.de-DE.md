@@ -1,29 +1,29 @@
-# Glueable Body
+# Klebbares Chassis
 
 <p align="center">
-    <span>English</span> |
-    <a href="README.zh-CN.md">简体中文</a> |
-    <a href="README.de-DE.md">Deutsch</a>
+  <a href="README.md">English</a> |
+  <a href="README_CN.md">简体中文</a> |
+  <span>Deutsch</span>
 </p>
 
-Some 3D printers have build volumes that are too small to print the full size OpenBot body.
-This folder contains the OpenBot body split into 4 pieces.
-It can be printed with a build plate as small as 150mmx140mm, and then glued together.
+Einige 3D-Drucker haben ein Bauvolumen, das zu klein ist, um den OpenBot-Körper in voller Größe zu drucken.
+Dieser Ordner enthält den OpenBot-Körper, der in 4 Teile aufgeteilt ist.
+Er kann mit einer Bauplatte gedruckt werden, die nur 150mm x 140mm groß ist, und dann zusammengeklebt werden.
 
-![Glueable Body](../../../../docs/images/glue_body.jpg)
+![Klebbares Chassis](../../../../docs/images/glue_body.jpg)
 
-## Parts
+## Teile
 
-Required parts:
+Erforderliche Teile:
 
 1) `glue_body_bottom_A` ([STL](glue_body_bottom_A.stl), [STEP](glue_body_bottom_A.step))
 2) `glue_body_bottom_B` ([STL](glue_body_bottom_B.stl), [STEP](glue_body_bottom_B.step))
 3) `glue_body_top_A` ([STL](glue_body_top_A.stl), [STEP](glue_body_top_A.step))
 4) `glue_body_top_B` ([STL](glue_body_top_B.stl), [STEP](glue_body_top_B.step))
 
-Optional parts:
+Optionale Teile:
 
-These pieces give extra surface area for gluing, which can help if your print experiences warping.
+Diese Teile bieten zusätzliche Klebefläche, was hilfreich sein kann, wenn Ihr Druck Verformungen aufweist.
 
 * `glue_connector_bottom` ([STL](glue_connector_bottom.stl), [STEP](glue_connector_bottom.step))
 * `glue_connector_top_A` ([STL](glue_connector_top_A.stl), [STEP](glue_connector_top_A.step))

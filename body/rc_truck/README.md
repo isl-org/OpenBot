@@ -1,11 +1,10 @@
 # OpenBot: RC-Truck Body
 
-<!---
 <p align="center">
-  <span>English</span> |
-  <a href="README_CN.md">简体中文</a>
+    <span>English</span> |
+    <a href="README.zh-CN.md">简体中文</a> |
+    <a href="README.de-DE.md">Deutsch</a>
 </p>
---->
 
 We have designed a robot body for widely available 1:16 scale RC-toy trucks/buggies (such as [this](https://www.amazon.de/dp/B00M3J7DJW) on Amazon).
 

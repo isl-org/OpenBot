@@ -1,5 +1,11 @@
 # Robot iOS App - Beta Release
 
+<p align="center">
+    <span>English</span> |
+    <a href="README.zh-CN.md">简体中文</a> |
+    <a href="README.de-DE.md">Deutsch</a>
+</p>
+
 ## DISCLAIMERS
 
 1. **Safety:** Always make sure you operate in a safe environment. Keep in mind, that your phone could be damaged in a collision! Special

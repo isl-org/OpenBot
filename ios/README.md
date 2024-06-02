@@ -1,5 +1,11 @@
 # iOS Apps - Beta Release
 
+<p align="center">
+    <span>English</span> |
+    <a href="README.zh-CN.md">简体中文</a> |
+    <a href="README.de-DE.md">Deutsch</a>
+</p>
+
 ## Features
 
 Click on the links below to read about the features of the apps.

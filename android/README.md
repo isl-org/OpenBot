@@ -2,7 +2,8 @@
 
 <p align="center">
   <span>English</span> |
-  <a href="README_CN.md">简体中文</a>
+  <a href="README_CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a>
 </p>
 
 ## Features

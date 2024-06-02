@@ -2,7 +2,7 @@
   <img align="center" alt="Banner" width="100%" src="docs/images/banner.jpg" />
 </a>
 
-<h1 align="center"><a>Turning Smartphones into Robots</a></h1>
+<h1 align="center"><a>Smartphones in Roboter verwandeln</a></h1>
 
 <p align="center">
    <img alt="GitHub build" src="https://img.shields.io/github/actions/workflow/status/isl-org/OpenBot/gradle.yml?branch=master"></a>
@@ -16,28 +16,28 @@
 </p>
 
 <p align="center">
-  <span>English</span> |
+  <a href="README.md">English</a> |
   <a href="README_CN.md">简体中文</a> |
-  <a href="README.de-DE.md">Deutsch</a>
+  <span>Deutsch</span>
 </p>
 
-OpenBot leverages smartphones as brains for low-cost robots. We have designed a small electric vehicle that costs about $50 and serves as a robot body. Our software stack for Android smartphones supports advanced robotics workloads such as person following and real-time autonomous navigation.
+OpenBot nutzt Smartphones als Gehirn für kostengünstige Roboter. Wir haben ein kleines Elektrofahrzeug entworfen, das etwa 50 Dollar kostet und als Roboterkörper dient. Unser Software-Stack für Android-Smartphones unterstützt fortgeschrittene Robotikanwendungen wie Personenerkennung und Echtzeit-Autonomes Fahren.
 
-## Get started with OpenBot
-- Build your own [Robot Body](body/README.md)
-- Flash the [Arduino Firmware](firmware/README.md)
-- Install the [Android Apps](android/README.md)
-- Drive the robot via a [Controller](controller/README.md)
-- Train your own [Driving Policy](policy/README.md)
+## Erste Schritte mit OpenBot
+- Baue deinen eigenen [Roboterkörper](body/README.md)
+- Flashe die [Arduino-Firmware](firmware/README.md)
+- Installiere die [Android-Apps](android/README.md)
+- Steuere den Roboter über einen [Controller](controller/README.md)
+- Trainiere deine eigene [Fahrstrategie](policy/README.md)
 
-## Get the source code
+## Quellcode erhalten
 
-- You can download the repo as a [zip file](https://github.com/intel-isl/OpenBot/archive/master.zip) and extract it into a folder of your choice.
-- You can clone the OpenBot repository from GitHub with the following command:
+- Du kannst das Repository als [Zip-Datei](https://github.com/intel-isl/OpenBot/archive/master.zip) herunterladen und in einen Ordner deiner Wahl extrahieren.
+- Du kannst das OpenBot-Repository von GitHub mit folgendem Befehl klonen:
     ```bash
     git clone https://github.com/intel-isl/OpenBot.git
     ```
-- You can fork the OpenBot repository and then clone your local copy. This is recommended, especially if you want to [contribute](CONTRIBUTING.md).
+- Du kannst das OpenBot-Repository forken und dann deine lokale Kopie klonen. Dies wird empfohlen, insbesondere wenn du [beitragen](CONTRIBUTING.md) möchtest.
 
 ## Videos
 
@@ -49,9 +49,9 @@ OpenBot leverages smartphones as brains for low-cost robots. We have designed a 
   <img align="center" width="300" alt="youtube video" src="https://img.youtube.com/vi/qc8hFLyWDOM/hqdefault.jpg" />
 </a>
 
-## Cool projects using OpenBot
+## Coole Projekte mit OpenBot
 
-There are a lot of cool projects using OpenBot already. Below is a small selection. Click on the images to be redirected to the respective projects.
+Es gibt bereits viele coole Projekte, die OpenBot nutzen. Unten ist eine kleine Auswahl. Klicke auf die Bilder, um zu den jeweiligen Projekten weitergeleitet zu werden.
 
 <p float="left">
   <a href="https://www.thingiverse.com/thing:4670884" target="_blank">
@@ -68,23 +68,23 @@ There are a lot of cool projects using OpenBot already. Below is a small selecti
   </a>
 </p>
 
-## Contact
+## Kontakt
 
-- Join our [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-jl8ygxqt-WNRNi9yzh7Lu60qui6Nh6w) channel to connect with the OpenBot community.
-- Contact us via [Email](mailto:openbot.team@gmail.com)
+- Trete unserem [Slack](https://join.slack.com/t/openbot-community/shared_invite/zt-jl8ygxqt-WNRNi9yzh7Lu60qui6Nh6w) Kanal bei, um dich mit der OpenBot-Community zu verbinden.
+- Kontaktiere uns per [E-Mail](mailto:openbot.team@gmail.com)
 
-## Contribute
+## Beitrag leisten
 
-Please read the [contribution guidelines](CONTRIBUTING.md). If you are not sure where to start have a look at the [open issues](https://github.com/intel-isl/OpenBot/issues).
+Bitte lies die [Beitragsrichtlinien](CONTRIBUTING.md). Wenn du nicht sicher bist, wo du anfangen sollst, wirf einen Blick auf die [offenen Issues](https://github.com/intel-isl/OpenBot/issues).
 
-## Citation
+## Zitieren
 
-Please cite our [paper](https://arxiv.org/abs/2008.10631) if you use OpenBot.
+Bitte zitiere unser [Paper](https://arxiv.org/abs/2008.10631), wenn du OpenBot verwendest.
 
 ```bib
 @inproceedings{mueller2021openbot,
     title     = {OpenBot: Turning Smartphones into Robots},
-    author    = {M{\"u}ller, Matthias and Koltun, Vladlen},
+    author    = {M{\"u}ller, Matthias und Koltun, Vladlen},
     booktitle = {Proceedings of the International Conference on Robotics and Automation (ICRA)},
     year = {2021},
 }
