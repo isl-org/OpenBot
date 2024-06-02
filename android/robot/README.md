@@ -1,5 +1,11 @@
 # Robot App
 
+<p align="center">
+    <span>English</span> |
+    <a href="README.zh-CN.md">简体中文</a> |
+    <a href="README.de-DE.md">Deutsch</a>
+</p>
+
 ## DISCLAIMERS
 
 1. **Safety:** Always make sure you operate in a safe environment. Keep in mind, that your phone could be damaged in a collision! Special care is neccessary when using automated control (e.g. person following or driving policy). Make sure you always have a game controller connected and are familiar with the key mapping so you can stop the vehicle at any time. Use at your own risk!
