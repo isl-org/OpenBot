@@ -1,3 +1,4 @@
+(OUTDATED)
 <a href="https://www.openbot.org/" target="_blank">
   <img align="center" alt="Banner" width="100%" src="docs/images/banner.jpg" />
 </a>
