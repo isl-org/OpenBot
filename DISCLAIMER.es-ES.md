@@ -1,5 +1,13 @@
 ## AVISO LEGAL
 
+<p align="center">
+  <a href="DISCLAIMER.md">English</a> |
+  <a href="DISCLAIMER.zh-CN.md">简体中文</a> |
+  <a href="DISCLAIMER.de-DE.md">Deutsch</a> |
+  <a href="DISCLAIMER.fr-FR.md">Français</a> |
+  <span>Español</span>
+</p>
+
 El proyecto OpenBot es una iniciativa de código abierto que tiene como objetivo proporcionar soluciones robóticas accesibles para fines educativos, experimentales y recreativos. El siguiente aviso legal describe los términos y condiciones de uso del software y los diseños de hardware de OpenBot.
 
 ### Aviso Legal del Software
@@ -22,11 +30,3 @@ El proyecto OpenBot es una iniciativa de código abierto que tiene como objetivo
 - Se anima a los usuarios a utilizar los recursos de OpenBot de manera responsable, ética y en cumplimiento con todas las leyes y regulaciones aplicables.
 
 Al usar el software y los diseños de hardware de OpenBot, usted reconoce que ha leído, entendido y aceptado los términos de este aviso legal.
-
-<p align="center">
-  <a href="README.md">English</a> |
-  <a href="README.zh-CN.md">简体中文</a> |
-  <a href="README.de-DE.md">Deutsch</a> |
-  <a href="README.fr-FR.md">Français</a> |
-  <span>Español</span>
-</p>
