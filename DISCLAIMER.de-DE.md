@@ -12,7 +12,7 @@ Das OpenBot-Projekt ist eine Open-Source-Initiative, die darauf abzielt, zugäng
 
 ### Software-Haftungsausschluss
 
-- Die OpenBot-Software wird "wie besehen" ohne jegliche ausdrückliche oder stillschweigende Gewährleistung bereitgestellt.
+- Die OpenBot-Software wird ohne jegliche ausdrückliche oder stillschweigende Gewährleistung bereitgestellt.
 - Die Mitwirkenden und Betreuer des OpenBot-Projekts sind nicht verantwortlich für Schäden oder Datenverluste, die durch die Nutzung der Software entstehen können.
 - Die Benutzer sind dafür verantwortlich, sicherzustellen, dass ihre Nutzung der OpenBot-Software allen relevanten Gesetzen und Vorschriften entspricht.
 - Der Missbrauch der Software für böswillige oder unethische Zwecke ist strengstens untersagt.
