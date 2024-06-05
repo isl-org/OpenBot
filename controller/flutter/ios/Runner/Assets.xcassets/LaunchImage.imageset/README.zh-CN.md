@@ -2,7 +2,8 @@
   <a href="README.md">English</a> |
   <span>简体中文</span> |
   <a href="README.de-DE.md">Deutsch</a> |
-  <a href="README.fr-FR.md">Français</a>
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
 </p>
 
 # 启动屏幕资源

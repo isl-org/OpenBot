@@ -4,7 +4,8 @@
   <a href="README.md">English</a> |
   <a href="README.zh-CN.md">简体中文</a> |
   <a href="README.de-DE.md">Deutsch</a> |
-  <span>Français</span>
+  <span>Français</span> |
+  <a href="README.es-ES.md">Español</a>
 </p>
 
 Nous utilisons une unité de microcontrôleur (MCU) pour agir comme un pont entre le corps du robot et le smartphone. Nous fournissons notre [firmware](openbot_nano/openbot_nano.ino) pour l'Arduino Nano avec un microcontrôleur ATmega328P ainsi que pour le kit de développement ESP32.

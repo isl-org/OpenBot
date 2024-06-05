@@ -2,7 +2,8 @@
   <a href="README.md">English</a> |
   <a href="README.zh-CN.md">简体中文</a> |
   <a href="README.de-DE.md">Deutsch</a> |
-  <span>Français</span>
+  <span>Français</span> |
+  <a href="README.es-ES.md">Español</a>
 </p>
 
 # Actifs de l'écran de lancement

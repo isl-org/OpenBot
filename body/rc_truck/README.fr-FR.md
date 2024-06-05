@@ -4,7 +4,8 @@
   <a href="README.md">English</a> |
   <a href="README.zh-CN.md">简体中文</a> |
   <a href="README.de-DE.md">Deutsch</a> |
-  <span>Français</span>
+  <span>Français</span> |
+  <a href="README.es-ES.md">Español</a>
 </p>
 
 Nous avons conçu une carrosserie de robot pour des camions/buggies RC à l'échelle 1:16 largement disponibles (comme [celui-ci](https://www.amazon.de/dp/B00M3J7DJW) sur Amazon).

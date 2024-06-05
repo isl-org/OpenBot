@@ -4,7 +4,8 @@
   <a href="README.md">English</a> |
   <a href="README.zh-CN.md">简体中文</a> |
   <span>Deutsch</span> |
-  <a href="README.fr-FR.md">Français</a>
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
 </p>
 
 Dieses Roboterchassis bietet zusätzliche Höhe, um es einfacher zu machen, alle Elektronikteile unterzubringen, und eine lego-kompatible Oberseite. Diese Version bietet die gleiche strukturelle Integrität wie der [normale Körper](../regular_body/), mit zusätzlichen Funktionen wie mehr Platz im OpenBot-Gehäuse, einer lego-kompatiblen Oberseite zum Spielen und Lernen und einer Größe, die für kleinere Druckbettgrößen geeignet ist, während die Stoßfänger beibehalten werden.

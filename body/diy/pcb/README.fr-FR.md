@@ -4,7 +4,8 @@
   <a href="README.md">English</a> |
   <a href="README.zh-CN.md">简体中文</a> |
   <a href="README.de-DE.md">Deutsch</a> |
-  <span>Français</span>
+  <span>Français</span> |
+  <a href="README.es-ES.md">Español</a>
 </p>
 
 Le PCB personnalisé agit comme une carte porteuse pour l'Arduino Nano et intègre des pilotes de moteur modernes, le circuit diviseur de tension et des résistances pour les LED. L'Arduino est simplement branché dans l'en-tête de broche et tous les capteurs et LED sont connectés via des câbles Dupont aux connecteurs appropriés.

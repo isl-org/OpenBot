@@ -4,7 +4,8 @@
   <a href="README.md">English</a> |
   <span>简体中文</span> |
   <a href="README.de-DE.md">Deutsch</a> |
-  <a href="README.fr-FR.md">Français</a>
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
 </p>
 
 我们使用微控制器单元（MCU）作为机器人主体和智能手机之间的桥梁。我们为使用ATmega328P微控制器的Arduino Nano以及ESP32开发套件提供了[固件](openbot_nano/openbot_nano.ino)。
