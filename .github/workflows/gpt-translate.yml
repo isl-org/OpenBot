@@ -34,4 +34,6 @@ jobs:
                 <span>Deutsch</span> |
                 <a href="README.fr-FR.md">Français</a>
               </p>
-              Do NOT add ``` tags to the HTML snippet.
+              Do NOT add ``` tags to the HTML snippet. \
+              Make sure than any links to English README.md files are updated to point to the corresponding {targetLanguage} README file. \
+              For example, when translating to German, any link to <directory>/README.md should be updated to <directory>/README.de-DE.md
