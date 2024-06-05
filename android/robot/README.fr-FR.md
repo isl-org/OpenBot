@@ -4,7 +4,8 @@
   <a href="README.md">English</a> |
   <a href="README.zh-CN.md">简体中文</a> |
   <a href="README.de-DE.md">Deutsch</a> |
-  <span>Français</span>
+  <span>Français</span> |
+  <a href="README.es-ES.md">Español</a>
 </p>
 
 ## AVERTISSEMENTS
@@ -383,10 +384,3 @@ La [démo Android de détection d'objets TensorFlow Lite](https://github.com/ten
 ## Suivant (optionnel)
 
 Entraînez votre propre [Driving Policy](../../policy/README.md)
-
-<p align="center">
-  <a href="README.md">English</a> |
-  <a href="README.zh-CN.md">简体中文</a> |
-  <a href="README.de-DE.md">Deutsch</a> |
-  <span>Français</span>
-</p>

@@ -4,7 +4,8 @@
   <a href="README.md">English</a> |
   <a href="README.zh-CN.md">简体中文</a> |
   <a href="README.de-DE.md">Deutsch</a> |
-  <span>Français</span>
+  <span>Français</span> |
+  <a href="README.es-ES.md">Español</a>
 </p>
 
 Cette application de contrôleur sert de `télécommande` pour le véhicule [OpenBot](https://www.openbot.org), similaire à une manette BT (par exemple, PS3/4 ou Xbox). Elle fonctionne sur un autre appareil Android/iOS et prend en charge la diffusion en direct de vidéo/audio en plus du contrôle.

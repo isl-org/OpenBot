@@ -4,7 +4,8 @@
   <a href="README.md">English</a> |
   <a href="README.zh-CN.md">简体中文</a> |
   <span>Deutsch</span> |
-  <a href="README.fr-FR.md">Français</a>
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
 </p>
 
 Sie können einen [Ready-to-Run (RTR)](rtr) OpenBot auf Amazon kaufen:

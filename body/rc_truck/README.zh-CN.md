@@ -4,7 +4,8 @@
   <a href="README.md">English</a> |
   <span>简体中文</span> |
   <a href="README.de-DE.md">Deutsch</a> |
-  <a href="README.fr-FR.md">Français</a>
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
 </p>
 
 我们为广泛使用的1:16比例RC玩具卡车/越野车（例如[这个](https://www.amazon.de/dp/B00M3J7DJW)在亚马逊上）设计了一个机器人车身。
