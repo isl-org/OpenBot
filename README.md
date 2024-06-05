@@ -25,6 +25,8 @@
 OpenBot leverages smartphones as brains for low-cost robots. We have designed a small electric vehicle that costs about $50 and serves as a robot body. Our software stack for Android smartphones supports advanced robotics workloads such as person following and real-time autonomous navigation.
 
 ## Get started with OpenBot
+
+- Read the [Disclaimer](DISCLAIMER.md)
 - Build your own [Robot Body](body/README.md)
 - Flash the [Arduino Firmware](firmware/README.md)
 - Install the [Android Apps](android/README.md)
