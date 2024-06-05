@@ -27,7 +27,7 @@ OpenBot aprovecha los smartphones como cerebros para robots de bajo costo. Hemos
 
 ## Comienza con OpenBot
 
-- Lee el [Aviso Legal](DISCLAIMER.md)
+- Lee el [Aviso Legal](DISCLAIMER.es-ES.md)
 - Construye tu propio [Cuerpo de Robot](body/README.es-ES.md)
 - Flashea el [Firmware de Arduino](firmware/README.es-ES.md)
 - Instala las [Aplicaciones Android](android/README.es-ES.md)
@@ -41,7 +41,7 @@ OpenBot aprovecha los smartphones como cerebros para robots de bajo costo. Hemos
     ```bash
     git clone https://github.com/intel-isl/OpenBot.git
     ```
-- Puedes hacer un fork del repositorio de OpenBot y luego clonar tu copia local. Esto es recomendable, especialmente si deseas [contribuir](CONTRIBUTING.md).
+- Puedes hacer un fork del repositorio de OpenBot y luego clonar tu copia local. Esto es recomendable, especialmente si deseas [contribuir](CONTRIBUTING.es-ES.md).
 
 ## Videos
 
