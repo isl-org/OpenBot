@@ -1,5 +1,13 @@
 ## Firebase Google Sign-In Authentication
 
+<p align="center">
+  <span>English</span> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
+</p>
+
 - #### Usage
   In web application, we use Firebase for Google sign-in authentication to upload OpenBot Playground projects on Google
   Drive. If you clone this project and run on your device, you must set up your own Firebase project because the
@@ -110,7 +118,7 @@
   Go to the Google Cloud
   Console (https://console.cloud.google.com/) and sign
   in using the same Google account that you
-  use for Firebase. This ensures seamless integration between the services. At the top of the page, you'll see the current project name. Click on it to open the project selector. Under the `ALL` section, select the project you want to switch to.
+  use for Firebase. This ensures seamless integration between the services. At the top of the page, you'll see the current project name. Click on it to open the project selector. Under the `ALL` section, select the project you added to firebase and switch to it.
 
   <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_google_cloud_console.jpg" alt="Google Cloud Console" width="30%"/>
   <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_google_cloud_project.jpg" alt="Google Cloud Console" width="30%"/>

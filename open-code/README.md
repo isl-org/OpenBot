@@ -2,12 +2,20 @@
 
 # OpenBot Playground
 
+<p align="center">
+  <span>English</span> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
+</p>
+
 OpenBot Playground is a drag and drop platform to support OpenBot application, where anyone can build instructions for
 the robot.
 
 ## Getting Started
 
-You can run this application directly from the [Link](http://openbot.itinker.io "Link").
+You can run this application directly from the [Link](https://www.playground.openbot.org/ "Link").
 
 You can also run it locally via creating a local copy of the project. To achieve this, navigate into
 the `openBot/open-code` folder, [set firebase project](src/services/README.md) and run application.
@@ -47,7 +55,7 @@ This project allows users to store their data both locally and on `Google Drive`
 automatically stored in the `local storage` of the user's device. As changes are made to the project, the local storage
 is updated in real-time.
 
-Additionally, users can upload their project to Google Drive by clicking on the [upload icon](#upload-in-drive). This
+Additionally, users can upload their project to Google Drive by clicking on the [upload button](#generate-Code). This
 allows users to access their project from any device with internet access, making it easier to work on the project from
 different locations.
 
