@@ -421,7 +421,7 @@ If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edi
 
 ### OpenBot PlayGround Screen
 
-To access OpenBot Playground services, click on the OpenBot Playground icon located at the top of the screen in the toolbar options. If you want to learn more about OpenBot Playground, [click here](https://github.com/3dwesupport/OpenBot/blob/react-blockly/open-code/README.md).
+To access OpenBot Playground services, click on the OpenBot Playground icon located at the top of the screen in the toolbar options. If you want to learn more about OpenBot Playground, [click here](../../open-code/README.md).
 
 <p align="left">
 <img src="../../docs/images/android_playground_sign-in.gif" alt="openBot playground Sign-in" width="25%"/>

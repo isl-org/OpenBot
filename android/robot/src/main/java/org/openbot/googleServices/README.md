@@ -1,5 +1,13 @@
 ## Google Firebase
 
+<p align="center">
+  <span>English</span> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
+</p>
+
 Google Firebase is a mobile and web application development platform that offers a variety of services and tools to help developers build high-quality apps quickly and efficiently. It includes features such as real-time database, user authentication, hosting, cloud storage and many more, all these are integrated into a single platform. Firebase provides a convenient and scalable solution for developers to manage their backend infrastructure, allowing them to focus on building great user experiences.
 
 - ### Firebase Google Sign-In Authentication
@@ -7,9 +15,9 @@ Google Firebase is a mobile and web application development platform that offers
   Firebase Google Sign-In Authentication is a feature of the Firebase platform that allows users to sign in to mobile or web apps using their Google credentials. This service provides a secure and convenient way for users to access apps without having to remember and manage separate login credentials. Firebase manages the entire authentication process, from verifying the user's identity with Google to providing a unique user ID that can be used to personalize the user's experience within the app. This feature also includes additional security measures, such as two-factor authentication, to help protect user's account from unauthorized access.
 
 - ### Usage
-  In this application, we use Firebase for Google Sign-In authentication to access [OpenBot Playground](https://github.com/3dwesupport/OpenBot/tree/react-blockly/open-code#readme) projects uploaded on Google Drive. If you plan to clone this Android application and build it on your device, it's important to note that you will need to set up your own [Firebase Project](https://github.com/3dwesupport/OpenBot/tree/android-blockly-v2/android/app/src/main/java/org/openbot/googleServices#set-up-your-firebase-project). This is because the SHA-1 key is required for Google Sign-In authentication. 
+  In this application, we use Firebase for Google Sign-In authentication to access [OpenBot Playground](../../../../../../../../open-code/README.md) projects uploaded on Google Drive. If you plan to clone this Android application and build it on your device, it's important to note that you will need to set up your own [Firebase Project](#set-up-your-firebase-project). This is because the SHA-1 key is required for Google Sign-In authentication. 
   
-  And you will need to [set up Firebase](https://github.com/3dwesupport/OpenBot/tree/react-blockly/open-code#readme) for the [OpenBot Playground](https://www.openbot.itinker.io/) web application as well. This is because the Android app retrieves files from the user's Google Drive, which is created by Firebase Google Drive services. It's important to use the same Firebase project for both the Android and web applications for Google Drive services to work properly.
+  And you will need to [set up Firebase](../../../../../../../../open-code/README.md) for the [OpenBot Playground](https://www.playground.openbot.org/) web application as well. This is because the Android app retrieves files from the user's Google Drive, which is created by Firebase Google Drive services. It's important to use the same Firebase project for both the Android and web applications for Google Drive services to work properly.
   
   If you do not want to use OpenBot Playground services, you do not need to set up Firebase authentication or Google Sign-In authentication.
 
