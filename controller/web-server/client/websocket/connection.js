@@ -17,7 +17,6 @@ export function Connection () {
     const connectToServer = async () => {
         const ws = new WebSocket(`ws://${window.location.hostname}:8080/ws`)
         // const ws = new WebSocket(`ws://verdant-imported-peanut.glitch.me`);
-        // const ws = new WebSocket(`ws://cooked-onyx-tamarind.glitch.me`);
         return new Promise((resolve, reject) => {
             const timer = setInterval(() => {
                 if (ws.readyState === 1) {
