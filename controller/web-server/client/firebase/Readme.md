@@ -1,8 +1,15 @@
 ## Firebase Google Sign-In Authentication
 
+<p align="center">
+  <span>English</span> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
+</p>
+
 - #### Usage
-  In web application, we use Firebase for Google sign-in authentication to upload OpenBot Playground projects on Google
-  Drive. If you clone this project and run on your device, you must set up your own Firebase project because the
+  In our web application, we use Firebase for Google sign-in authentication to identify each unique client and prevent cross-connections between the robot app and the web server. If you clone this project and run on your device, you must set up your own Firebase project because the
   firebase configuration is required for sign-in authentication.
 - #### About  Google Sign-In
   Firebase Google Sign-In Authentication is a feature of the Firebase platform that allows users to sign in to mobile or
@@ -12,7 +19,7 @@
   s experience within the app. This feature also includes additional security measures, such as two-factor
   authentication, to help protect user accounts from unauthorized access.
 
-**Note** - Please follow the OpenBot playground [documentation](https://github.com/isl-org/OpenBot/tree/master/open-code/src/services/README.md) to set up your Firebase project and enabling google authentication.
+**Note** - Please follow the OpenBot playground [documentation](../../../../open-code/src/services/README.md) to set up your Firebase project and enabling google authentication. No need to enable Google Drive API for now.
 
 ### Setting up Environment Variables
 
