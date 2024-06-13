@@ -1,0 +1,30 @@
+name: GPT Review
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  gpt_review:
+    if: |
+      github.actor == 'thias15' &&
+      contains(github.event.comment.body, '/gpt-review') || 
+      contains(github.event.comment.body, '/gr')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Run GPT Code Review
+        uses: cirolini/genai-code-review@v2
+        with:
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_pr_id: ${{ github.event.number }}
+          openai_model: "gpt-4o" # optional
+          openai_temperature: 0.5 # optional
+          openai_max_tokens: 2048 # optional
+          mode: files # files or patch
+          language: en # optional, default is 'en'
+          custom_prompt: "" # optional
