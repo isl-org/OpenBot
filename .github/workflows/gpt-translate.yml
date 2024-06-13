@@ -1,0 +1,39 @@
+name: GPT Translate
+ 
+on:
+  issue_comment:
+    types: [created]
+ 
+jobs:
+  gpt_translate:
+    if: |
+      github.actor == 'thias15' &&
+      contains(github.event.comment.body, '/gpt-translate') || 
+      contains(github.event.comment.body, '/gt')
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - uses: actions/checkout@v3
+ 
+      - name: Run GPT Translate
+        uses: 3ru/gpt-translate@master
+        with:
+          apikey: ${{ secrets.OPENAI_API_KEY }}
+          model: gpt-4o
+          prompt: |
+            Please translate the README source file to {targetLanguage}. \
+              Make the translation sound as natural as possible. \
+              Keep the HTML snippet with the language options in the same place as in the source file. \
+              ONLY {targetLanguage} should be shown in plaintext (between span tags). \
+              All other languages should be shown as links using the Language Culture Name, e.g. "README.de-DE.md" for German. \
+              Exception: English is the default language and always points to "README.md". \
+              For example, the HTML snippet of the German README should look something like this:
+              <p align="center">
+                <a href="README.md">English</a> |
+                <a href="README.zh-CN.md">简体中文</a> |
+                <span>Deutsch</span> |
+                <a href="README.fr-FR.md">Français</a>
+              </p>
+              Do NOT add ``` tags to the HTML snippet. \
+              Make sure than any links to English README.md files are updated to point to the corresponding {targetLanguage} README file. \
+              For example, when translating to German, any link to <directory>/README.md should be updated to <directory>/README.de-DE.md
