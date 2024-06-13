@@ -1,6 +1,12 @@
 # OpenBot Nodejs Controller
 
-Last updated: Dec 20, 2021
+<p align="center">
+  <span>English</span> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
+</p>
 
 ## Nomenclature
 
@@ -84,6 +90,5 @@ None.
 
 ## Things to do/try
 
-* This software has not been tested on Windows. It would be useful if somebody can test and update this documentation.
 * We need to investigate if we can connect to the server remotely, and if WebRTC will still work. We should document firewall configuration to make this possible.
 * We need to create a ```production``` configuration, possibly using [pm2 process manager](https://www.npmjs.com/package/pm2) and [nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/).

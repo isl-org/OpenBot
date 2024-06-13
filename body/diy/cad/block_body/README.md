@@ -1,5 +1,13 @@
 # Blocky Body with Additional Space and Lego Support
 
+<p align="center">
+  <span>English</span> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
+</p>
+
 This robot chassis provides some extra height to make it easier to fit in all the electronics and a lego-compatible top. This version offers the same structural integrity capabilities as the [regular body](../regular_body/), with additional features such as extra space inside the OpenBot shell, a lego-compatible top for play and learning and a footprint suitable for smaller print bed sizes while maintaining bumpers. 
 
 ![Block CAD](../../../../docs/images/block_cad.jpg)
