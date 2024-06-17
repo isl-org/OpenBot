@@ -1,0 +1,675 @@
+[
+  {
+    "blockType": "start",
+    "configuration": {
+      "type": "block_type",
+      "message0": "%1 %2",
+      "args0": [
+        {
+          "type": "field_label_serializable",
+          "name": "start",
+          "text": "start"
+        },
+        {
+          "type": "input_statement",
+          "name": "start_blocks"
+        }
+      ],
+      "colour": "#4860b7",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "forever",
+    "configuration": {
+      "type": "block_type",
+      "message0": "%1 %2",
+      "args0": [
+        {
+          "type": "field_label_serializable",
+          "name": "forever",
+          "text": "forever"
+        },
+        {
+          "type": "input_statement",
+          "name": "forever_loop_blocks"
+        }
+      ],
+      "colour": "#4860b7",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "wait",
+    "configuration": {
+      "type": "block_type",
+      "message0": "%1 %2 ms",
+      "args0": [
+        {
+          "type": "field_label_serializable",
+          "name": "wait",
+          "text": "wait for"
+        },
+        {
+          "type": "field_number",
+          "name": "time",
+          "value": 3000,
+          "min": 0
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#4860b7",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "soundType",
+    "configuration": {
+      "type": "block_type",
+      "message0": "play sound %1 speed",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "type",
+          "options": [
+            [
+              "slow",
+              "slow"
+            ],
+            [
+              "medium",
+              "medium"
+            ],
+            [
+              "fast",
+              "fast"
+            ]
+          ]
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#709662",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "soundMode",
+    "configuration": {
+      "type": "block_type",
+      "message0": "play sound %1 mode",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "mode_type",
+          "options": [
+            [
+              "dual drive",
+              "dual drive"
+            ],
+            [
+              "joystick control",
+              "joystick control"
+            ],
+            [
+              "gamepad",
+              "gamepad"
+            ]
+          ]
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#709662",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "forward&BackwardAtSpeed",
+    "configuration": {
+      "type": "block_type",
+      "message0": "move %1 at speed %2",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "direction_type",
+          "options": [
+            [
+              "forward",
+              "moveForward"
+            ],
+            [
+              "backward",
+              "moveBackward"
+            ]
+          ]
+        },
+        {
+          "type": "field_slider",
+          "name": "slider",
+          "value": 192,
+          "min": 0,
+          "max": 255
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#d56235",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "left&RightAtSpeed",
+    "configuration": {
+      "type": "block_type",
+      "message0": "move %1 at speed %2",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "direction_type",
+          "options": [
+            [
+              "left",
+              "moveLeft"
+            ],
+            [
+              "right",
+              "moveRight"
+            ]
+          ]
+        },
+        {
+          "type": "field_slider",
+          "name": "slider",
+          "value": 192,
+          "min": 0,
+          "max": 255
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#d56235",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "moveLeft&Right",
+    "configuration": {
+      "type": "block_type",
+      "message0": "move %1 %2 %3 %4",
+      "args0": [
+        {
+          "type": "field_label_serializable",
+          "name": "left_name",
+          "text": "left at"
+        },
+        {
+          "type": "field_slider",
+          "name": "left_distance",
+          "value": 192,
+          "min": -255,
+          "max": 255
+        },
+        {
+          "type": "field_label_serializable",
+          "name": "right_name",
+          "text": "and right at"
+        },
+        {
+          "type": "field_slider",
+          "name": "right_distance",
+          "value": 192,
+          "min": -255,
+          "max": 255
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#d56235",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "movementStop",
+    "configuration": {
+      "type": "block_type",
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_label_serializable",
+          "name": "movement_stop",
+          "text": "stop car immediately"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#ca3143",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "sonarReading",
+    "configuration": {
+      "type": "ellipse_block",
+      "message0": "sonar reading",
+      "output": "Number",
+      "colour": "#49a2a5",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "speedReading",
+    "configuration": {
+      "type": "ellipse_block",
+      "message0": "speed reading",
+      "output": "Number",
+      "colour": "#49a2a5",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "voltageDividerReading",
+    "configuration": {
+      "type": "ellipse_block",
+      "message0": "voltage divider reading",
+      "output": "Number",
+      "colour": "#49a2a5",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "wheelOdometerSensors",
+    "configuration": {
+      "type": "ellipse_block",
+      "message0": " wheel odometry %1 ",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "wheel_sensors",
+          "options": [
+            [
+              "Front",
+              "frontWheelReading"
+            ],
+            [
+              "Back",
+              "backWheelReading"
+            ]
+          ]
+        }
+      ],
+      "output": "Number",
+      "colour": "#49a2a5",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "gyroscope_reading",
+    "configuration": {
+      "type": "ellipse_block",
+      "message0": "gyroscope reading %1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "axis",
+          "options": [
+            [
+              "x axis",
+              "x"
+            ],
+            [
+              "y axis",
+              "y"
+            ],
+            [
+              "z axis",
+              "z"
+            ]
+          ]
+        }
+      ],
+      "output": "Number",
+      "colour": "#49a2a5",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "acceleration_reading",
+    "configuration": {
+      "type": "ellipse_block",
+      "message0": "acceleration reading %1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "axis",
+          "options": [
+            [
+              "x axis",
+              "x"
+            ],
+            [
+              "y axis",
+              "y"
+            ],
+            [
+              "z axis",
+              "z"
+            ]
+          ]
+        }
+      ],
+      "output": "Number",
+      "colour": "#49a2a5",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "magnetic_reading",
+    "configuration": {
+      "type": "ellipse_block",
+      "message0": "magnetic reading %1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "axis",
+          "options": [
+            [
+              "x axis",
+              "x"
+            ],
+            [
+              "y axis",
+              "y"
+            ],
+            [
+              "z axis",
+              "z"
+            ]
+          ]
+        }
+      ],
+      "output": "Number",
+      "colour": "#49a2a5",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "speedControl",
+    "configuration": {
+      "type": "block_type",
+      "message0": "set speed limit to %1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "type",
+          "options": [
+            [
+              "slow",
+              "'slow'"
+            ],
+            [
+              "medium",
+              "'medium'"
+            ],
+            [
+              "fast",
+              "'fast'"
+            ]
+          ]
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#bf778b",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "controllerMode",
+    "configuration": {
+      "type": "block_type",
+      "message0": "switch controller to %1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "controller",
+          "options": [
+            [
+              {
+                "src": "",
+                "width": 25,
+                "height": 25,
+                "alt": "phone"
+              },
+              "'phone'"
+            ],
+            [
+              {
+                "src": "",
+                "width": 25,
+                "height": 25,
+                "alt": "gamepad"
+              },
+              "'gamepad'"
+            ]
+          ]
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#bf778b",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "driveModeControls",
+    "configuration": {
+      "type": "block_type",
+      "message0": "switch drive mode to %1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "controller",
+          "options": [
+            [
+              {
+                "src": "",
+                "width": 25,
+                "height": 25,
+                "alt": "dualDrive"
+              },
+              "'dualDrive'"
+            ],
+            [
+              {
+                "src": "",
+                "width": 25,
+                "height": 25,
+                "alt": "joystick"
+              },
+              "'joystick'"
+            ],
+            [
+              {
+                "src": "",
+                "width": 25,
+                "height": 25,
+                "alt": "game"
+              },
+              "'game'"
+            ]
+          ]
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#bf778b",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "brightness",
+    "configuration": {
+      "type": "block_type",
+      "message0": "set brightness of tail and head LEDs %1",
+      "args0": [
+        {
+          "type": "field_slider",
+          "name": "slider",
+          "value": 50,
+          "min": 0,
+          "max": 100
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#687c9e",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "indicators",
+    "configuration": {
+      "type": "block_type",
+      "message0": "turn %1 indicator %2",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "side",
+          "options": [
+            [
+              "left",
+              "left"
+            ],
+            [
+              "right",
+              "right"
+            ]
+          ]
+        },
+        {
+          "type": "field_toggle",
+          "name": "TOGGLE_STATE",
+          "state": true,
+          "onText": "ON",
+          "offText": "OFF"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#687c9e",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "brightnessHighOrLow",
+    "configuration": {
+      "type": "block_type",
+      "message0": "turn LED brightness %1",
+      "args0": [
+        {
+          "type": "field_toggle",
+          "name": "TOGGLE_STATE",
+          "state": true,
+          "onText": "ON",
+          "offText": "OFF"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#687c9e",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "disableAI",
+    "configuration": {
+      "type": "block_type",
+      "message0": "disable AI",
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#ca3143",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "inputSound",
+    "configuration": {
+      "type": "block_type",
+      "message0": "play sound %1",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "text",
+          "text": "move straight"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#709662",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "display_sensors",
+    "configuration": {
+      "type": "block_type",
+      "message0": "display sensor data %1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "value"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#4860b7",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  },
+  {
+    "blockType": "display_string",
+    "configuration": {
+      "type": "block_type",
+      "message0": "display string %1",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "text",
+          "text": "Hello"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#4860b7",
+      "tooltip": "",
+      "helpUrl": ""
+    }
+  }
+]
