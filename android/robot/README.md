@@ -17,7 +17,7 @@
 
 ### Main Menu
 
-The app starts with a menu screen that shows all available screens. The settings screen can be opened with a click on the icon at the top of right corner. By clicking on the other icons the user can access various screens whose functionalities are explained in the following.
+The app starts with a menu screen that shows all available screens. The settings screen can be opened with a click on the icon at the top right corner. By clicking on the other icons the user can access various screens whose functionalities are explained in the following.
 
 <p align="left">
 <img src="../../docs/images/screen_main.jpg" alt="Main Menu" width="21.6%"/>
