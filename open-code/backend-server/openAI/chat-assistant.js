@@ -1,14 +1,18 @@
 // routes.js
 const express = require('express');
-const { OpenAI } = require('openai');
+const {OpenAI} = require('openai');
+const {Constants} = require("../utils/constants");
 const fs = require('fs').promises;
-
 const router = express.Router();
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
-let blocks;
+
+/**
+ * function to read blockly json from static file
+ * @returns {Promise<any|null>}
+ */
 async function readBlocksJson() {
     try {
         const data = await fs.readFile('utils/blocks.json', 'utf8');
@@ -18,43 +22,38 @@ async function readBlocksJson() {
         return null;
     }
 }
-readBlocksJson().then(data => {
-    if (data) {
-        blocks = data;
-        console.log('Successfully loaded blocks.json.');
-    } else {
-        console.error('Failed to load blocks.json.');
-    }
-}).catch(err => {
-    console.error('Error loading blocks.json:', err);
-});
+
+/**
+ * API to fetch response as per the user prompt
+ */
 router.post('/chat', async (req, res) => {
-    const { userPrompt } = req.body;
+    const {userPrompt} = req.body;
     console.log("userPrompt::", userPrompt)
     if (!userPrompt) {
-        return res.status(400).json({ error: 'Missing required data (user prompt).' });
-    }
-    if (!blocks) {
-        return res.status(500).json({ error: 'Failed to load Blockly blocks.' });
+        return res.status(400).json({error: 'Missing required data (user prompt).'});
     }
 
-    const systemMessage = `Based on the following Blockly block JSON:\n\n${JSON.stringify(blocks)}\n\nWhat does the code do when you ${userPrompt}?`;
+    // const playgroundInfo = Constants.playgroundInfo
+
+    let blocklyJSON = await readBlocksJson();
+    const systemMessage = `Based on the following Blockly block JSON:\n\n${JSON.stringify(blocklyJSON)}\n\nWhat does the code do when you ${userPrompt}? provide the pseudocode for what the user want and  Do not include the JSON in the response.`;
+
 
     try {
         const response = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo',
+            model: 'gpt-4o',
             messages: [
-                { role: 'system', content: systemMessage },
-                { role: 'user', content: userPrompt }
+                {role: 'system', content: systemMessage},
+                {role: 'user', content: userPrompt}
             ],
-            max_tokens: 150,
+            max_tokens: 1500,
         });
 
         const aiResponse = response.choices[0].message.content.trim();
-        res.json({ aiResponse });
+        res.json({aiResponse});
     } catch (error) {
         console.error('Error with OpenAI API request:', error.response ? error.response.data : error.message);
-        res.status(500).json({ error: 'An error occurred while processing your request.' });
+        res.status(500).json({error: 'An error occurred while processing your request.'});
     }
 });
 
