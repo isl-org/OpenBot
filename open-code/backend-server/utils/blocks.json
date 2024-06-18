@@ -1,5 +1,6 @@
 [
   {
+    "category": "Control",
     "blockType": "start",
     "configuration": {
       "type": "block_type",
@@ -21,6 +22,7 @@
     }
   },
   {
+    "category": "Control",
     "blockType": "forever",
     "configuration": {
       "type": "block_type",
@@ -42,6 +44,7 @@
     }
   },
   {
+    "category": "Control",
     "blockType": "wait",
     "configuration": {
       "type": "block_type",
@@ -67,6 +70,7 @@
     }
   },
   {
+    "category": "Sound",
     "blockType": "soundType",
     "configuration": {
       "type": "block_type",
@@ -99,6 +103,7 @@
     }
   },
   {
+    "category": "Sound",
     "blockType": "soundMode",
     "configuration": {
       "type": "block_type",
@@ -131,6 +136,7 @@
     }
   },
   {
+    "category": "Movement",
     "blockType": "forward&BackwardAtSpeed",
     "configuration": {
       "type": "block_type",
@@ -166,6 +172,7 @@
     }
   },
   {
+    "category": "Movement",
     "blockType": "left&RightAtSpeed",
     "configuration": {
       "type": "block_type",
@@ -201,6 +208,7 @@
     }
   },
   {
+    "category": "Movement",
     "blockType": "moveLeft&Right",
     "configuration": {
       "type": "block_type",
@@ -239,6 +247,7 @@
     }
   },
   {
+    "category": "Movement",
     "blockType": "movementStop",
     "configuration": {
       "type": "block_type",
@@ -258,6 +267,7 @@
     }
   },
   {
+    "category": "Sensors",
     "blockType": "sonarReading",
     "configuration": {
       "type": "ellipse_block",
@@ -269,6 +279,7 @@
     }
   },
   {
+    "category": "Sensors",
     "blockType": "speedReading",
     "configuration": {
       "type": "ellipse_block",
@@ -280,6 +291,7 @@
     }
   },
   {
+    "category": "Sensors",
     "blockType": "voltageDividerReading",
     "configuration": {
       "type": "ellipse_block",
@@ -291,6 +303,7 @@
     }
   },
   {
+    "category": "Sensors",
     "blockType": "wheelOdometerSensors",
     "configuration": {
       "type": "ellipse_block",
@@ -318,6 +331,7 @@
     }
   },
   {
+    "category": "Sensors",
     "blockType": "gyroscope_reading",
     "configuration": {
       "type": "ellipse_block",
@@ -349,6 +363,7 @@
     }
   },
   {
+    "category": "Sensors",
     "blockType": "acceleration_reading",
     "configuration": {
       "type": "ellipse_block",
@@ -380,6 +395,7 @@
     }
   },
   {
+    "category": "Sensors",
     "blockType": "magnetic_reading",
     "configuration": {
       "type": "ellipse_block",
@@ -411,6 +427,7 @@
     }
   },
   {
+    "category": "Controller",
     "blockType": "speedControl",
     "configuration": {
       "type": "block_type",
@@ -443,6 +460,7 @@
     }
   },
   {
+    "category": "Controller",
     "blockType": "controllerMode",
     "configuration": {
       "type": "block_type",
@@ -481,6 +499,7 @@
     }
   },
   {
+    "category": "Controller",
     "blockType": "driveModeControls",
     "configuration": {
       "type": "block_type",
@@ -528,6 +547,7 @@
     }
   },
   {
+    "category": "Lights",
     "blockType": "brightness",
     "configuration": {
       "type": "block_type",
@@ -549,6 +569,7 @@
     }
   },
   {
+    "category": "Lights",
     "blockType": "indicators",
     "configuration": {
       "type": "block_type",
@@ -584,6 +605,7 @@
     }
   },
   {
+    "category": "Lights",
     "blockType": "brightnessHighOrLow",
     "configuration": {
       "type": "block_type",
@@ -605,6 +627,7 @@
     }
   },
   {
+    "category": "AI",
     "blockType": "disableAI",
     "configuration": {
       "type": "block_type",
@@ -617,6 +640,7 @@
     }
   },
   {
+    "category": "Sound",
     "blockType": "inputSound",
     "configuration": {
       "type": "block_type",
@@ -636,6 +660,7 @@
     }
   },
   {
+    "category": "Control",
     "blockType": "display_sensors",
     "configuration": {
       "type": "block_type",
@@ -654,6 +679,7 @@
     }
   },
   {
+    "category": "Control",
     "blockType": "display_string",
     "configuration": {
       "type": "block_type",
@@ -674,6 +700,7 @@
   },
 
   {
+    "category": "AI",
     "blockType": "objectTracking",
     "configuration": {
       "type": "block_type",
@@ -704,6 +731,7 @@
     }
   },
   {
+    "category": "AI",
     "blockType": "autopilot",
     "configuration":
   {
@@ -726,6 +754,7 @@
   }
   },
   {
+    "category": "AI",
     "blockType": "navigateForwardAndLeft",
     "configuration": {
       "type": "block_type",
@@ -760,55 +789,7 @@
     }
   },
   {
-    "blockType": "multipleAIDetection",
-    "configuration":
-  {
-    "type": "block_type",
-    "message0": "enable autopilot using %1 , %2 on detecting %3 using %4 %5 Do %6",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "autopilot_models",
-        "options": [
-          ["CIL-Mobile-Cmd", "CIL-Mobile-Cmd"]
-        ]
-      },
-      {
-        "type": "input_dummy"
-      },
-      {
-        "type": "field_dropdown",
-        "name": "labels",
-        "options": [
-          ["person", "person"],
-          ["bus", "bus"],
-          ["birds", "birds"]
-        ]
-      },
-      {
-        "type": "field_dropdown",
-        "name": "objectTracking_models",
-        "options": [
-          ["MobileNetV1-300", "MobileNetV1-300"]
-        ]
-      },
-      {
-        "type": "input_dummy"
-      },
-      {
-        "type": "input_statement",
-        "name": "tasks"
-      }
-    ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": "#458ff7",
-    "tooltip": "",
-    "helpUrl": ""
-
-  }
-  },
-  {
+    "category": "AI",
     "blockType": "variableDetection",
     "configuration":
   {
@@ -859,6 +840,7 @@
   }
   },
   {
+    "category": "AI",
     "blockType": "multipleAIDetection",
     "configuration":
   {
@@ -908,6 +890,7 @@
 
   },
   {
+    "category": "AI",
     "blockType": "multipleObjectTracking",
     "configuration":
   {
@@ -956,8 +939,104 @@
     "tooltip": "",
     "helpUrl": ""
   }
-
+  },
+  {
+    "category": "Control",
+    "blockType": "controls_if"
+  },
+  {
+    "category": "Control",
+    "blockType": "controls_ifelse"
+  },
+  {
+    "category": "Control",
+    "blockType": "controls_ifelse"
+  },
+  {
+    "category": "Control",
+    "blockType":"logic_compare"
+  },
+  {
+    "category": "Control",
+    "blockType": "logic_operation"
+  },
+  {
+    "category": "Control",
+    "blockType": "logic_negate"
+  },
+  {
+    "category": "Control",
+    "blockType": "logic_boolean"
   }
+  ,
+
+  {
+    "category": "Loops",
+    "blockType":"controls_whileUntil"
+  },
+  {
+    "category": "Loops",
+    "blockType": "controls_repeat"
+  },
+  {
+    "category": "Loops",
+    "blockType":"controls_flow_statements"
+  },
+  {
+    "category": "Loops",
+   "blockType": "controls_for"
+  },
+  {
+    "category": "Operators",
+    "blockType": "math_arithmetic"
+  },
+  {
+    "category": "Operators",
+    "blockType": "math_number"
+  },
+  {
+    "category": "Operators",
+    "blockType": "math_modulo"
+  },
+  {
+    "category": "Operators",
+    "blockType": "math_single"
+  },
+  {
+    "category": "Operators",
+    "blockType": "math_constant"
+  },
+  {
+    "category": "Operators",
+    "blockType": "math_number_property"
+  },
+  {
+    "category": "Operators",
+    "blockType": "math_round"
+  },
+  {
+    "category": "Operators",
+    "blockType": "math_random_int"
+  },
+  [
+    {
+      "category": "Variables",
+      "blockType": "variables_set"
+    },
+    {
+      "category": "Variables",
+      "blockType": "variables_get"
+    },
+    {
+      "category": "Variables",
+      "blockType": "math_change"
+    },
+    {
+      "category": "Variables",
+      "blockType": "math_number"
+    }
+  ]
+
 
 
 

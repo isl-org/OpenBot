@@ -36,7 +36,8 @@ router.post('/chat', async (req, res) => {
     // const playgroundInfo = Constants.playgroundInfo
 
     let blocklyJSON = await readBlocksJson();
-    const systemMessage = `Based on the following Blockly block JSON:\n\n${JSON.stringify(blocklyJSON)}\n\nWhat does the code do when you ${userPrompt}? provide the pseudocode for what the user want and  Do not include the JSON in the response.`;
+   const systemMessage = `Based on the following Blockly block JSON:\n\n${JSON.stringify(blocklyJSON)}\n\nProvide a step-by-step implementation to achieve the following: ${userPrompt}. Do not include the JSON in the response. `;
+
 
 
     try {
