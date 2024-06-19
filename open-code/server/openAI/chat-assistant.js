@@ -5,10 +5,6 @@ const {Constants} = require("../utils/constants");
 const fs = require('fs').promises;
 const router = express.Router();
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
 /**
  * function to read blockly json from static file
  * @returns {Promise<any|null>}
@@ -26,19 +22,20 @@ async function readBlocksJson() {
 /**
  * API to fetch response as per the user prompt
  */
-router.post('/chat', async (req, res) => {
+router.post('/generate-code-assistance', async (req, res) => {
+
     const {userPrompt} = req.body;
     console.log("userPrompt::", userPrompt)
-    if (!userPrompt) {
-        return res.status(400).json({error: 'Missing required data (user prompt).'});
-    }
 
-    // const playgroundInfo = Constants.playgroundInfo
+    if (!userPrompt) {
+        return res.status(400).json({error: 'Missing required data userPrompt.'});
+    }
+    const openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+    });
 
     let blocklyJSON = await readBlocksJson();
    const systemMessage = `Based on the following Blockly block JSON:\n\n${JSON.stringify(blocklyJSON)}\n\nProvide a step-by-step implementation to achieve the following: ${userPrompt}. Do not include the JSON in the response. `;
-
-
 
     try {
         const response = await openai.chat.completions.create({
