@@ -5,7 +5,6 @@ require('dotenv').config();
 const apiRoutes = require('./openAI/chat-assistant'); // Import the router
 
 const app = express();
-const port = 3000;
 
 app.use(bodyParser.json());
 
@@ -13,6 +12,6 @@ app.use(bodyParser.json());
 app.use('/api', apiRoutes);
 
 // Start the server
-app.listen(port, () => {
+app.listen(process.env.PORT || 8080, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
