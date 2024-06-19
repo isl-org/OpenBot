@@ -1,12 +1,12 @@
 {
-  "name": "backend-server",
+  "name": "playground-server",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon index.js"
   },
-  "author": "",
+  "author": "Hardik Garg",
   "license": "ISC",
   "description": "",
   "dependencies": {
