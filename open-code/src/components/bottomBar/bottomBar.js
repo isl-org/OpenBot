@@ -20,7 +20,6 @@ import navbarStyle from "../navBar/navbar.module.css";
 import BlueText from "../fonts/blueText";
 import {ModelUploadingComponent} from "./modelUploadingComponent";
 import SubscriptionModel from "../subscription/subscriptionModel";
-import {setProjectDetails} from "../../apis/projects";
 
 /**
  * Bottom Bar contains generate code, upload on drive icon , zoom in-out and undo redo functionality.
@@ -344,6 +343,7 @@ export const BottomBar = () => {
                     }
 
                     <div className={styles.operationsDiv}>
+                        <ChatBot setDrawer={setDrawer} setCategory={setCategory}/>
                         {/*undo redo*/}
                         <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
                                   buttonActive={buttonActive}/>
@@ -351,7 +351,6 @@ export const BottomBar = () => {
                         {isMobile || isLandscape || isDesktopSmallerScreen ? "" :
                             <ZoomInOut clickedButton={clickedButton} buttonSelected={buttonSelected}
                                        buttonActive={buttonActive}/>}
-
                     </div>
                 </div>
             </div>
@@ -490,7 +489,9 @@ function UploadCodeButton(params) {
                                accept=".tflite"
                                onChange={handleChange}/>
 
+
                     </div>
+
                 </div>
             </Popper>
         </div>
@@ -544,4 +545,22 @@ function ZoomInOut(params) {
             </button>
         </div>
     );
+}
+
+/**
+ * function for chatbot window
+ * @param params
+ * @returns {Element}
+ * @constructor
+ */
+function ChatBot(params) {
+    const {setDrawer, setCategory} = params;
+    return <>
+        <div onClick={() => {
+            setCategory(Constants.chat);
+            setDrawer(true)
+        }}
+             className={` ${styles.chatButton}`}>AI Assistant
+        </div>
+    </>
 }

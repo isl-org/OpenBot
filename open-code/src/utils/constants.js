@@ -148,6 +148,7 @@ export const Constants = {
     js: "js",
     py: "py",
     qr: "qr",
+    chat: "chat",
     xml: "xml",
     json: "json",
     tflite: "tflite",
@@ -156,10 +157,10 @@ export const Constants = {
     projects: "projects",
     models: "models",
     theme: "theme",
-    subscriptionEnded:"Your trial has just ended!",
-    subscriptionContinueService:"To continue using OpenBot Playground, you",
-    subscriptionContinueInfo:"will need to upgrade your plan.",
-    subscribeButton:"Subscribe Now"
+    subscriptionEnded: "Your trial has just ended!",
+    subscriptionContinueService: "To continue using OpenBot Playground, you",
+    subscriptionContinueInfo: "will need to upgrade your plan.",
+    subscribeButton: "Subscribe Now"
 }
 
 export const Month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -353,11 +354,11 @@ export const errorToast = (message) => {
 export const aiBlocks = ["objectTracking", "autopilot", "multipleObjectTracking", "navigateForwardAndLeft", "multipleAIDetection"];
 
 /**
-user usage tables
+ user usage tables
  */
 export const tables = {
-    users : "users",
+    users: "users",
     projects: "projects",
-    models:"models",
-    userUsage:"userUsage"
+    models: "models",
+    userUsage: "userUsage"
 }

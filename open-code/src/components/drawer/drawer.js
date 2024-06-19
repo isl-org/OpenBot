@@ -13,6 +13,7 @@ import QrCode from "../qrcode/qrcode";
 import {Constants} from "../../utils/constants";
 import CodeEditor from "../editor/codeEditor";
 import {Themes} from "../../utils/constants"
+import Chat from "../codeAssistant/chat";
 
 /**
  * QrDrawer component renders a drawer with a QR code and some instructions on how to use it.
@@ -34,6 +35,7 @@ export function RightDrawer() {
         window.addEventListener("resize", handleOrientationChange);
     }, []);
 
+
     return (
         <>
             {(code || category !== Constants.qr) &&
@@ -49,7 +51,8 @@ export function RightDrawer() {
                                 backgroundColor: theme === Themes.dark ? colors.blackBackground : colors.whiteBackground,
                                 color: theme === Themes.dark ? colors.whiteFont : colors.blackFont,
                                 top: isLandscape ? "4rem" : isTabletQuery ? "6rem" : "5rem",
-                                bottom: isMobile ? "9%" : isLandscape ? "18%" : isTabletQuery ? "4.4rem" : "4.4rem",
+                                 bottom : category !== Constants.chat ? (isMobile ? "9%" : isLandscape ? "18%" : "4.4rem") : undefined,
+                                 height : category === Constants.chat ? (isMobile ? "calc(100% - 10rem)" : isTabletQuery ? "calc(100% - 10.4rem)" : "calc(100% - 9.4rem)") : undefined
                             },
                         }}
                         // Drawer is always visible and can only be closed programmatically
@@ -67,14 +70,16 @@ export function RightDrawer() {
                                     </div>
                                 </div>
                             </> :
-                            <div style={{
-                                display: "flex",
-                                height: isLandscape ? "65.5%" : isMobile ? "80%" : "79%",
-                                position: "relative",
-                                overflow: "scroll"
-                            }}>
-                                <CodeEditor/>
-                            </div>
+                            category === Constants.chat ?
+                                <Chat/> :
+                                <div style={{
+                                    display: "flex",
+                                    height: isLandscape ? "65.5%" : isMobile ? "80%" : "79%",
+                                    position: "relative",
+                                    overflow: "scroll"
+                                }}>
+                                    <CodeEditor/>
+                                </div>
 
                         }
                     </Drawer>
