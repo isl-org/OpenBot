@@ -79,7 +79,7 @@
 
   <img style="padding-right: 2%; padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_google_option.jpg" alt="Create New Project" width="30%"/>
 
-  <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_google_signin.jpg" alt="Create New Project" width="30%"/>
+  <img style="padding-right: 2%;padding-top: 2%; padding-bottom: 2%;" src="../../../docs/images/firebase_google_signin_enable.jpg" alt="Create New Project" width="22.6%"/>
 
   </p>
 

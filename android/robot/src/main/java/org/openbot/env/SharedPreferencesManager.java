@@ -2,6 +2,12 @@ package org.openbot.env;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import org.openbot.projects.ProjectsDataInObject;
 import org.openbot.tflite.Network;
 import org.openbot.utils.Enums;
 
@@ -35,6 +41,7 @@ public class SharedPreferencesManager {
   private static final String CAMERA_SWITCH = "CAMERA_SWITCH";
   private static final String SHEET_EXPANDED = "SHEET_EXPANDED";
   private static final String DELAY = "DELAY";
+  private static final String PROJECTS_LIST = "PROJECTS_LIST";
 
   private final SharedPreferences preferences;
 
@@ -184,5 +191,28 @@ public class SharedPreferencesManager {
 
   public int getDelay() {
     return preferences.getInt(DELAY, 200);
+  }
+
+  public void setProjectLIst(List<ProjectsDataInObject> allProjects) {
+    Gson gson = new Gson();
+    // Convert the List of ProjectsDataInObject to JSON string
+    String json = gson.toJson(allProjects);
+    // Store the JSON string in SharedPreferences
+    preferences.edit().putString(PROJECTS_LIST, json).apply();
+  }
+
+  public ArrayList<ProjectsDataInObject> getProjectList() {
+    Gson gson = new Gson();
+    // Retrieve the JSON string from SharedPreferences
+    String json = preferences.getString(PROJECTS_LIST, null);
+    // Define the type of the object to be deserialized
+    Type type = new TypeToken<ArrayList<ProjectsDataInObject>>() {}.getType();
+    if (gson.fromJson(json, type) != null) {
+      // Deserialize the JSON string to an ArrayList<ProjectsDataInObject>
+      return gson.fromJson(json, type);
+    } else {
+      // If the JSON string is null or cannot be deserialized, return an empty ArrayList
+      return new ArrayList<>();
+    }
   }
 }

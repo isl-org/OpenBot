@@ -1,34 +1,65 @@
 {
   "project_info": {
-    "project_number": "1062508888733",
-    "project_id": "openbot-public",
-    "storage_bucket": "openbot-public.appspot.com"
+    "project_number": "955078484078",
+    "project_id": "opencode-openbot",
+    "storage_bucket": "opencode-openbot.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1062508888733:android:0fc8c6a8842e1ff5510a74",
+        "mobilesdk_app_id": "1:955078484078:android:0ed69dbcaad0793a65867f",
         "android_client_info": {
           "package_name": "org.openbot"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1062508888733-jlrr946jdlv59vgpt7h1oa91n9gs0hd2.apps.googleusercontent.com",
+          "client_id": "955078484078-385d4dqq0l8rr1ksge8gbe4q8794b96b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.openbot",
+            "certificate_hash": "b7e97790753c13482e22d0c1ea899ae17b1b4f88"
+          }
+        },
+        {
+          "client_id": "955078484078-610055je567ae4i8p7q75et34e7ssvkm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.openbot",
+            "certificate_hash": "3ee1786f8f6f7fb3a93e593d0c1ccdb6a334cb0d"
+          }
+        },
+        {
+          "client_id": "955078484078-jaoouon63eq00dqkc8l1rdl1qphpfmv2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.openbot",
+            "certificate_hash": "f397f5f4db44bef0e43eb61f529a7532dbf62483"
+          }
+        },
+        {
+          "client_id": "955078484078-kbadvp54dljcpk0g0j5bnf5c17q63ir2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCD59-IMWo1ZKzp-gMoTG6eKIkza_8XVYg"
+          "current_key": "AIzaSyA7AhVQcAsZJtYIrJqcvmlxNlcPgmt5bGw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1062508888733-jlrr946jdlv59vgpt7h1oa91n9gs0hd2.apps.googleusercontent.com",
+              "client_id": "955078484078-kbadvp54dljcpk0g0j5bnf5c17q63ir2.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "955078484078-40uecrlb9cdan3fkckisjlv8uthaj9dd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.emboidedai.openbot"
+              }
             }
           ]
         }
