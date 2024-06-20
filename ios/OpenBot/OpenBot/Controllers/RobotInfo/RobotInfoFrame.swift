@@ -6,6 +6,7 @@ import Foundation
 import UIKit
 
 class RobotInfoFrame: UIViewController {
+
     var topPadding: CGFloat = 0
     var robotType = UILabel()
     var robotName = UILabel()
@@ -684,6 +685,11 @@ class RobotInfoFrame: UIViewController {
     /// on tap back button.
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
+//        MyNavigationController.shared.popViewController(animated: false);
+//        let homepageController = (storyboard?.instantiateViewController(withIdentifier: "homePage"))!
+//        let profileController = (storyboard?.instantiateViewController(withIdentifier: "profileController"))!
+//        let projectController = (storyboard?.instantiateViewController(withIdentifier: "projectsController"))!
+//        tabBarController?.viewControllers = [homepageController,profileController,projectController]
     }
 }
 

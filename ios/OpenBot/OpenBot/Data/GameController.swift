@@ -66,6 +66,7 @@ class GameController: GCPhysicalInputProfile {
         switch (mode) {
         case .DUAL:
             return convertDualToControl(leftStick: gamepad.leftThumbstick.yAxis.value, rightStick: gamepad.rightThumbstick.yAxis.value)
+
         case .GAME:
             let rightTrigger = gamepad.rightTrigger.value
             let leftTrigger = gamepad.leftTrigger.value
@@ -78,6 +79,7 @@ class GameController: GCPhysicalInputProfile {
             }
             return convertGameToControl(leftTrigger: leftTrigger, rightTrigger: rightTrigger, steeringOffset: steeringOffset)
         case .JOYSTICK:
+
             var yAxis: Float = gamepad.leftThumbstick.yAxis.value
             if (yAxis == 0) {
                 yAxis = gamepad.dpad.yAxis.value
@@ -246,8 +248,8 @@ class GameController: GCPhysicalInputProfile {
             return
         }
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-            let left = (control.getLeft() * selectedSpeedMode.rawValue).rounded()
-            let right = (control.getRight() * selectedSpeedMode.rawValue).rounded()
+            let left = Int((control.getLeft() * selectedSpeedMode.rawValue).rounded())
+            let right = Int((control.getRight() * selectedSpeedMode.rawValue).rounded())
             vehicleControl = control
             dataLogger.setControlLogs(left: (String(left)), right: String(right))
             controlData = String(left) + " " + String(right)
@@ -262,8 +264,8 @@ class GameController: GCPhysicalInputProfile {
     ///     - control: the control input to be sent to the robot
     func sendControlFromPhoneController(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-            let left = (control.getLeft() * selectedSpeedMode.rawValue).rounded()
-            let right = (control.getRight() * selectedSpeedMode.rawValue).rounded()
+            let left = Int((control.getLeft() * selectedSpeedMode.rawValue).rounded())
+            let right = Int((control.getRight() * selectedSpeedMode.rawValue).rounded())
             vehicleControl = control
             dataLogger.setControlLogs(left: (String(left)), right: String(right))
             controlData = String(left) + " " + String(right)
