@@ -8,18 +8,19 @@
 .chatBottomBar {
     display: flex;
     align-items: center;
-    padding: 10px;
+    gap: 10px;
     background-color: #f0f0f0;
     border-top: 1px solid #ccc;
-    /*margin-top: 450px;*/
+
 }
 
 .inputField {
     flex: 1;
-    padding: 10px;
     border: none;
     border-radius: 10px;
     font-size: 16px;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 .sendButton {
@@ -30,6 +31,7 @@
     background-color: #4CAF50;
     color: #fff;
     cursor: pointer;
+    display:flex;
 }
 
 .sendButton:hover {
@@ -39,4 +41,7 @@
     text-align: center;
     text-decoration-color: white;
     background-color: #2e8fd6;
+    font-family: Gilroy-Medium, sans-serif;
+    color: #f2f2f2;
 }
+

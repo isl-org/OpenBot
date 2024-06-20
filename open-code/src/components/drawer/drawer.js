@@ -51,8 +51,8 @@ export function RightDrawer() {
                                 backgroundColor: theme === Themes.dark ? colors.blackBackground : colors.whiteBackground,
                                 color: theme === Themes.dark ? colors.whiteFont : colors.blackFont,
                                 top: isLandscape ? "4rem" : isTabletQuery ? "6rem" : "5rem",
-                                 bottom : category !== Constants.chat ? (isMobile ? "9%" : isLandscape ? "18%" : "4.4rem") : undefined,
-                                 height : category === Constants.chat ? (isMobile ? "calc(100% - 10rem)" : isTabletQuery ? "calc(100% - 10.4rem)" : "calc(100% - 9.4rem)") : undefined
+                                bottom: category !== Constants.chat ? (isMobile ? "9%" : isLandscape ? "18%" : "4.4rem") : 'none',
+                                height: category === Constants.chat ? (isMobile ? "calc(100% - 10rem)" : isTabletQuery ? "calc(100% - 10.4rem)" : "calc(100% - 9.4rem)") : 'none'
                             },
                         }}
                         // Drawer is always visible and can only be closed programmatically
@@ -71,7 +71,16 @@ export function RightDrawer() {
                                 </div>
                             </> :
                             category === Constants.chat ?
-                                <Chat/> :
+                                <div style={{height: "100%"}}>
+                                    <div style={{
+                                        position: "absolute",
+                                        height: "100%",
+                                        display: "flex",
+                                        alignItems: "center"
+                                    }}><RightSlider/></div>
+                                    <Chat/>
+                                </div>
+                                :
                                 <div style={{
                                     display: "flex",
                                     height: isLandscape ? "65.5%" : isMobile ? "80%" : "79%",
