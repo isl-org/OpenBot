@@ -44,7 +44,7 @@ public class SharedPreferencesManager {
     }
     
     public func setDriveMode(value:String){
-        userDefaults.set(value, forKey: drive_mode)
+        userDefaults.set(value, forKey: drive_mode);
     }
     
     public func getDriveMode() -> String? {
