@@ -1,14 +1,39 @@
 
 .chatBubble {
-
     display: flex;
     flex-direction: column;
-
-    /*background-color: #f0f0f0;*/
-    border-radius: 10px;
     padding: 10px;
 }
 
+.userMessage {
+    align-self: flex-start;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    width: calc(50% - 20px);
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.assistantResponse {
+    align-self: flex-end;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    padding: 10px;
+    width: calc(50% - 20px);
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.userName {
+    color: blue;
+    font-weight: bold;
+}
+
+.assistantName {
+    color: green;
+    font-weight: bold;
+}
 .chatBubble span:nth-child(2) {
     color: #007bff;
     font-weight: bold;
@@ -19,22 +44,6 @@
 }
 
 
-.userMessage {
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    width: calc(50% - 20px);
-    border: 1px solid #ccc;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.assistantResponse {
-    justify-content: left;
-    background-color: #fff;
-    border-radius: 10px;
-    width: calc(50% - 20px);
-    border: 1px solid #ccc;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 
 
 .userMessage span:nth-child(2) {

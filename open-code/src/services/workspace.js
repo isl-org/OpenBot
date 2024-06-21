@@ -354,7 +354,6 @@ function filterModels(modelType, assetType) {
     filterLabels()
     let modelsArray = []
     let updatedData = localStorage.getItem(localStorageKeys.configData)
-    console.log(updatedData);
     if (updatedData !== " " || null) {
         let data = JSON.parse(updatedData)?.filter(obj => (modelType.includes(obj.type) && obj.pathType === "FILE") || (obj.pathType === "ASSET" && obj.type === assetType))
         if (data?.length === 0) {
