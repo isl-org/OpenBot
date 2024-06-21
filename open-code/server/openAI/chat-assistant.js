@@ -48,6 +48,7 @@ router.post('/generate-code-assistance', async (req, res) => {
         });
 
         const aiResponse = response.choices[0].message.content.trim();
+        console.log(aiResponse)
         res.json({aiResponse});
     } catch (error) {
         console.error('Error with OpenAI API request:', error.response ? error.response.data : error.message);

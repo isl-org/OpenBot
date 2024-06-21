@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styles from "./chat.module.css";
 import ChatBox from '../chatBox/messagebox';
+import {getAIMessage} from "../../services/chatAssistant";
 
 const responses = {
     "hello": "Hello! How can I assist you today?",
@@ -13,25 +14,61 @@ const Chat = () => {
     const [allChatMessages, setAllChatMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState({
         userMessage: "",
-        AIMessage: "...",
+        AIMessage: "",
         id: 1,
-        userTimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
         AITimestamp: "",
     });
 
-    const handleSendClick = () => {
+    const handleSendClick = async () => {
         const userInput = inputValue.toLowerCase();
         setCurrentMessage((prevState) => ({
             ...prevState,
             userMessage: userInput,
-            AIMessage: "...",
+            AIMessage: "",
             id: allChatMessages.length + 1,
-            AITimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            AITimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
         }));
+
+        getAIMessage(userInput).then((res) => {
+            setCurrentMessage((prevState) => ({
+                ...prevState,
+                AIMessage: res,
+                AITimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+            }));
+        }).catch((e)=>{
+            console.log(e);
+            setCurrentMessage((prevState) => ({
+                ...prevState,
+                AIMessage: "Error occuted",
+                AITimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+            }));
+        })
+
+        // Clear the input field
+        setInputValue('');
+    };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSendClick();
+        }
     };
 
     useEffect(() => {
-        if (currentMessage.userMessage)
+
+        if (currentMessage.AIMessage) {
+            setAllChatMessages((prevMessages) => {
+                const updatedMessages = [...prevMessages];
+
+                if (updatedMessages.length > 0) {
+                    updatedMessages[updatedMessages.length - 1] = currentMessage;
+                }
+
+                // Return the new state
+                return updatedMessages;
+            });
+        } else if (currentMessage.userMessage)
             setAllChatMessages((prevMessages) => [...prevMessages, currentMessage])
     }, [currentMessage])
 
@@ -53,6 +90,7 @@ const Chat = () => {
                     className={styles.inputField}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
+                    onKeyPress={handleKeyPress}
                 />
                 <button className={styles.sendButton} onClick={handleSendClick}>
                     <i className="fas fa-paper-plane" aria-hidden="true"></i>
