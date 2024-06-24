@@ -8,7 +8,7 @@
   <a href="README.es-ES.md">Español</a>
 </p>
 
-We use a microcontroller unit (MCU) to act as a bridge between the robot body and the smartphone.  We provide our [firmware](openbot_nano/openbot_nano.ino) for the Arduino Nano with an ATmega328P microcontroller as well as for the ESP32 development kit.
+We use a microcontroller unit (MCU) to act as a bridge between the robot body and the smartphone.  We provide our [firmware](openbot/openbot.ino) for the Arduino Nano with an ATmega328P microcontroller as well as for the ESP32 development kit.
 
 ## Features
 
