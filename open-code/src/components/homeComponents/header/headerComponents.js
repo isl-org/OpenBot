@@ -159,7 +159,7 @@ export function ProjectNamePopUp(params) {
                      className={`${styles.mainTitle} ${styles.arrowMargin}`}>{projectName?.slice(0, isMobile ? 8 : 15) + " " + ((projectName?.length > (isMobile ? 8 : 15)) ? "..." : "")}</span>
 
             }
-            <img src={Images.UpArrowIcon}
+            <img src={Images.upArrowIcon}
                  className={`${styles.infoIcon} ${styles.arrowMargin}`}
                  alt={"arrow"}/>
             {openPopUp &&

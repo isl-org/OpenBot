@@ -3,7 +3,6 @@ import logoutIcon from "../assets/images/icon/log-out.png"
 import userIcon from "../assets/images/icon/user.png"
 import editProfileIcon from "../assets/images/icon/edit-profile-icon.png"
 import crossIcon from "../assets/images/icon/cross-icon.png"
-import profileImage from "../assets/images/icon/profile-image.png"
 import line from "../assets/images/line.png"
 import laptop from "../assets/images/laptop.png"
 import darkUserIcon from "../../src/assets/images/icon/darkUser-icon.png"
@@ -36,7 +35,7 @@ import redoIcon from "../assets/images/icon/redo.png";
 import uploadIcon from "../assets/images/icon/upload-cloud.png";
 import rightSlider from "../assets/images/icon/right-slider.png";
 import rightSliderDark from "../assets/images/icon/right-slider-dark.png";
-import UpArrowIcon from "../assets/images/icon/up-arrow.png";
+import upArrowIcon from "../assets/images/icon/up-arrow.png";
 import downArrowIcon from "../assets/images/icon/down-arrow.png";
 import jsIconDarkTheme from "../assets/images/icon/js-icon-dark-theme.png";
 import jsIconLightTheme from "../assets/images/icon/js-con-light-theme.png";
@@ -61,7 +60,6 @@ export const Images = {
     userIcon: userIcon,
     editProfileIcon: editProfileIcon,
     crossIcon: crossIcon,
-    profileImage: profileImage,
     line: line,
     laptop: laptop,
     darkUserIcon: darkUserIcon,
@@ -92,7 +90,7 @@ export const Images = {
     undoIcon: undoIcon,
     redoIcon: redoIcon,
     uploadIcon: uploadIcon,
-    UpArrowIcon: UpArrowIcon,
+    upArrowIcon: upArrowIcon,
     downArrowIcon: downArrowIcon,
     jsIconDarkTheme: jsIconDarkTheme,
     jsIconLightTheme: jsIconLightTheme,
