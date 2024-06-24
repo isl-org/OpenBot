@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>955078484078-kq5d4bbjh05qdksr433k1ugakgspk8ee.apps.googleusercontent.com</string>
+	<string>955078484078-4m63lascf45ranfmedahhcgo10ainnfa.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.955078484078-kq5d4bbjh05qdksr433k1ugakgspk8ee</string>
+	<string>com.googleusercontent.apps.955078484078-4m63lascf45ranfmedahhcgo10ainnfa</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>955078484078-234hcdks9b2fv94n77d6guek1sfsk30r.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCMmaGPZ7rWxQXPIFU0zf9EKM82jH9kn2M</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.emboidedai.openbot</string>
+	<string>org.openbot</string>
 	<key>PROJECT_ID</key>
 	<string>opencode-openbot</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:955078484078:ios:13f2678949d5395a65867f</string>
+	<string>1:955078484078:ios:dd1d0a2f4d0a7f9a65867f</string>
+	<key>DATABASE_URL</key>
+	<string>https://opencode-openbot-default-rtdb.asia-southeast1.firebasedatabase.app</string>
 </dict>
 </plist>
