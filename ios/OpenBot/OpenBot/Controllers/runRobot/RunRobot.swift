@@ -106,7 +106,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
         temp = temp + 1;
     }
-    
+
     /**
      function to create the UI for the run robot
      */
@@ -116,7 +116,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         setUpStopButton();
         setUpResetButton();
     }
-    
+
     /**
      function to create stop button
      */
@@ -135,7 +135,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
         NSLayoutConstraint.activate([topStopButtonlConstraint, centerStopButtonXConstraint])
     }
-    
+
     /**
      function to create reset button
      */
@@ -154,7 +154,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
         NSLayoutConstraint.activate([topResetButtonlConstraint, centerResetButtonXConstraint])
     }
-    
+
     /**
      function to create label
      */
@@ -172,7 +172,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
         NSLayoutConstraint.activate([topLabelConstraint, centerlabelXConstraint])
     }
-    
+
     /**
      function to create openbot image
      */
@@ -226,7 +226,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         sceneView.session.pause()
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
     }
-    
+
     // Restart session when interrupted in between threads - prevents bug from crashing app
     func sessionWasInterrupted(_ session: ARSession) {
         self.sceneView.session.pause();
@@ -285,7 +285,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             runRobot.detector?.setMultipleSelectedClass(newClasses: notification.object as! [String])
         }
     }
-    
+
     @objc func createCamera(_ notification: Notification) {
         if notification.object != nil {
             task = notification.object as! String
@@ -313,7 +313,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             completion()
         }
     }
-    
+
     /**
     function handles point goal navigation in an AR scene, placing a marker at a specified location.
      */
@@ -375,7 +375,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         self.stopRobot.removeTarget(nil, action: nil, for: .touchUpInside)
         self.stopRobot.addTarget(self, action: #selector(self.backItem(sender:)), for: .touchUpInside);
     }
-    
+
     /**
      function to reset blockly commands for robot
      */
@@ -386,7 +386,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             self.stopRobot.removeTarget(nil, action: nil, for: .touchUpInside)
             self.stopRobot.addTarget(self, action: #selector(self.cancel), for: .touchUpInside);
     }
-    
+
     /**
      Function to setup the navigation bar
      */
@@ -406,7 +406,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         _ = navigationController?.popViewController(animated: true)
         stopCar();
     }
-    
+
     /**
      Function to remove current viewController from navigation stack on clicking back
      */
@@ -649,7 +649,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
             runRobot.isDetection = true;
         }
     }
-    
+
     @objc func display(_ notification: Notification){
         var message = notification.object as! String;
         DispatchQueue.main.async {
@@ -957,7 +957,7 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         }
         return resultYaw
     }
-    
+
     /**
      A static method used to initialize the object tracking and autopilot
      - Parameters:
@@ -1055,4 +1055,3 @@ class runRobot: CameraController, ARSCNViewDelegate, UITextFieldDelegate {
         isDetection = false
     }
 }
-
