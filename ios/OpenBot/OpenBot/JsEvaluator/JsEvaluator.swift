@@ -258,7 +258,7 @@ class jsEvaluator {
                 let enableMultipleDetection: @convention(block) (String, String, String, String) -> Void = { (object1, model, object2, task) in
                     self.runOpenBotThreadClass?.enableMultipleDetection(object1: object1, model: model, object2: object2, task: task);
                 }
-            
+
                 let enableMultipleAI: @convention(block) (String, String, String, String) -> Void = { (autoPilotModelName, task, object, detectorModel) in
                     print(autoPilotModelName, task, object, detectorModel);
 //                    enableAutopilot(autoPilotModelName);
@@ -616,7 +616,7 @@ class jsEvaluator {
                 break
             }
         }
-        
+
         func setSpeed(speedMode: String){
             if isCancelled {
                 return

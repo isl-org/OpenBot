@@ -51,7 +51,7 @@ building great user experiences.
     4. Click on the "Create Project" button.
 
     <p>
-    <img src="../../../../docs/images/firebase_create_project.jpg" alt="Create project" width="25%"/>
+    <img src="../../../../docs/images/firebase_create_app_project.jpg" alt="Create project" width="25%"/>
     <img src="../../../../docs/images/firebase_enter_project_name.jpg" alt="Enter project name" width="40%"/>
     <img src="../../../../docs/images/firebase_disable_analytics.jpg" alt="Disable analytics" width="27.5%"/>
     </p>
@@ -87,11 +87,11 @@ building great user experiences.
     6. Click on the `toggle button` to `enable` Google Sign-In authentication.
 
     <p>
-    <img src="../../../../docs/images/firebase_product_services.jpg" alt="Firebase product services" width="38%"/>
-    <img src="../../../../docs/images/firebase_authentication.jpg" alt="Firebase authentication" width="44%"/>
+    <img src="../../../../docs/images/firebase_product_services.jpg" alt="Firebase product services" width="44.5%"/>
+    <img src="../../../../docs/images/firebase_app_authentication.jpg" alt="Firebase authentication" width="48%"/>
     </p>
     <p>
-    <img src="../../../../docs/images/firebase_google_signin.jpg" alt="Google Sign-In" width="60%"/>
+    <img src="../../../../docs/images/firebase_app_google_signin.jpg" alt="Google Sign-In" width="60%"/>
     <img src="../../../../docs/images/firebase_google_signin_enable.jpg" alt="Google Sign-In enable" width="31.5%"/>
     </p>
 
