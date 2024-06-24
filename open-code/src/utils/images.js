@@ -18,7 +18,7 @@ import dragDropWhite from "../../src/assets/images/drag_drop_white.gif";
 import dragDropDark from "../../src/assets/images/drag_drop_dark.gif";
 import cloud from "../assets/images/icon/cloud.png"
 import lightThemeIcon from "../assets/images/icon/light-theme-icon.png"
-import darkThemeIcon from "../assets/images/icon/whiteMode/white-mode-icon.png"
+import darkThemeIcon from "../assets/images/icon/white-mode-icon.png"
 import dots from "../assets/images/threedots.png";
 import darkDots from "../assets/images/darkdoticon.png";
 import avatar from "../assets/images/icon/Avatars.png";
