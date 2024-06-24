@@ -40,7 +40,7 @@ const Chat = () => {
             console.log(e);
             setCurrentMessage((prevState) => ({
                 ...prevState,
-                AIMessage: "Error occuted",
+                AIMessage: "Error occurred",
                 AITimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
             }));
         })
@@ -65,7 +65,6 @@ const Chat = () => {
                     updatedMessages[updatedMessages.length - 1] = currentMessage;
                 }
 
-                // Return the new state
                 return updatedMessages;
             });
         } else if (currentMessage.userMessage)

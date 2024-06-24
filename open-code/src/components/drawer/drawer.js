@@ -50,9 +50,9 @@ export function RightDrawer() {
                                 borderLeft: drawer ? theme === Themes.dark ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
                                 backgroundColor: theme === Themes.dark ? colors.blackBackground : colors.whiteBackground,
                                 color: theme === Themes.dark ? colors.whiteFont : colors.blackFont,
-                                top: isLandscape ? "4rem" : isTabletQuery ? "6rem" : "5rem",
+                                top: isTabletQuery ? "6rem" : "5rem",
                                 bottom: category !== Constants.chat ? (isMobile ? "9%" : isLandscape ? "18%" : "4.4rem") : 'none',
-                                height: category === Constants.chat ? (isMobile ? "calc(100% - 10rem)" : isTabletQuery ? "calc(100% - 10.4rem)" : "calc(100% - 9.4rem)") : 'none'
+                                height: category === Constants.chat ? isMobile ? "calc(100% - (9% + 5rem))" : isTabletQuery ? "calc(100% - (10.4rem))" : "calc(100% - 9.4rem)" : 'none'
                             },
                         }}
                         // Drawer is always visible and can only be closed programmatically

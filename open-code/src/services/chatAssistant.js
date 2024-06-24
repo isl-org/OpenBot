@@ -7,7 +7,7 @@ export const getAIMessage = (userPrompt) => {
         body: JSON.stringify({ userPrompt: userPrompt })
     }).then(res => res.json())
         .then((res) => {
-            return res.aiResponse; // Assuming the API response is a string
+            return res.aiResponse;
         })
         .catch((error) => {
             console.error(error);
