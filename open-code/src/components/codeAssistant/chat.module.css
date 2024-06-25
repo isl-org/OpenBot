@@ -1,4 +1,4 @@
-.chatMainContainer{
+.chatMainContainer {
     display: flex;
     justify-content: space-between;
     height: 100%;
@@ -9,15 +9,15 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    background-color: #f0f0f0;
+    /*background-color: #f0f0f0;*/
     border-top: 1px solid #ccc;
-
+    padding: 10px;
 }
 
 .inputField {
     flex: 1;
     border: none;
-    border-radius: 10px;
+    border-radius: 20px;
     font-size: 16px;
     padding: 10px;
     box-sizing: border-box;
@@ -31,17 +31,25 @@
     background-color: #4CAF50;
     color: #fff;
     cursor: pointer;
-    display:flex;
+    display: flex;
+    align-items: center;  /* Center align icon vertically */
 }
 
 .sendButton:hover {
     background-color: #3e8e41;
 }
-.chatHeader{
-    text-align: center;
-    text-decoration-color: white;
-    background-color: #2e8fd6;
-    font-family: Gilroy-Medium, sans-serif;
-    color: #f2f2f2;
+
+.sendIcon {
+    width: 40px;
+    height: 30px;
+    gap: 5px;
 }
 
+.chatHeader {
+    text-align: center;
+    text-decoration-color: white;
+    background-color:#4CAF50;
+    font-family: Gilroy-Medium, sans-serif;
+    color: #f2f2f2;
+    padding: 10px;
+}

@@ -1,8 +1,11 @@
 import React from 'react';
-import styles from './box.module.css';
+import styles from './messageBox.module.css';
 
-/*
-Main ChatBox component that displays user and assistant messages
+/**
+ * Main ChatBox component that displays user and assistant messages
+ * @param conversation
+ * @returns {React.JSX.Element}
+ * @constructor
  */
 const ChatBox = ({conversation}) => (
     <div className={styles.chatBubble}>
@@ -10,9 +13,12 @@ const ChatBox = ({conversation}) => (
         <AssistantResponse timestamp={conversation.AITimestamp} message={conversation.AIMessage}/>
     </div>
 );
-
-/*
-Main ChatBox component that displays user and assistant messages
+/**
+ * UserMessage component renders a user's message with a timestamp.
+ * @param timestamp
+ * @param message
+ * @returns {React.JSX.Element}
+ * @constructor
  */
 const UserMessage = ({timestamp, message}) => (
     <div className={styles.userMessage}>
@@ -22,10 +28,14 @@ const UserMessage = ({timestamp, message}) => (
         </p>
     </div>
 );
-/*
-Component to display assistant's response with timestamp
+/**
+ *
+ * Component to display assistant's response with timestamp
+ * @param timestamp
+ * @param message
+ * @returns {Element}
+ * @constructor
  */
-
 const AssistantResponse = ({timestamp, message}) => {
     const parsedMessage = parseResponseMessage(message);
 
@@ -41,6 +51,13 @@ const AssistantResponse = ({timestamp, message}) => {
         </div>
     );
 };
+/**
+ *
+ * Parses a response message string and converts it into an array of JSX elements.
+ * Handles different formatting rules such as headers, list items, code blocks, and bold text.
+ * @param message
+ * @returns {*[]}
+ */
 const parseResponseMessage = (message) => {
     const lines = message.split('\n');
     const parsedLines = [];
@@ -57,7 +74,6 @@ const parseResponseMessage = (message) => {
             parsedLines.push(<p style={{fontWeight: "bold"}}
                                 key={parsedLines.length}>{line.replace(/(?:\*\*|\*)/g, '')}</p>);
         } else {
-            // Regular text
             parsedLines.push(<p key={parsedLines.length}>{line}</p>);
         }
     });

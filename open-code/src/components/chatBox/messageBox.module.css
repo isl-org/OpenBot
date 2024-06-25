@@ -18,8 +18,8 @@
 .chatBubble {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    padding: 28px;
+    gap: 28px;
+    padding: 28px 28px 0 28px;
 }
 
 .userMessage {
