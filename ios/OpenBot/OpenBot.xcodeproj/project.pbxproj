@@ -146,7 +146,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0619EEC92C24208B0050EB6A /* Modes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Modes.swift; path = OpenBot/Modes.swift; sourceTree = SOURCE_ROOT; };
+		0619EEC92C24208B0050EB6A /* Modes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Modes.swift; path = OpenBot/Models/Modes.swift; sourceTree = SOURCE_ROOT; };
 		06B219AC2ABD4D6100E65CEF /* SharedPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPreferences.swift; sourceTree = "<group>"; };
 		06C87ABA2B3568E700454299 /* FragmentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FragmentType.swift; sourceTree = "<group>"; };
 		113A10896533873FE2926AF5 /* BlockyTasksStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockyTasksStorage.swift; sourceTree = "<group>"; };
@@ -306,6 +306,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0666F18B2C295BCB006D88C7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0619EEC92C24208B0050EB6A /* Modes.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		06C87AB92B3568AF00454299 /* Fragment */ = {
 			isa = PBXGroup;
 			children = (
@@ -370,14 +378,6 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		4FEF44F0837469F66D5A7156 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				0619EEC92C24208B0050EB6A /* Modes.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		4FEF4549B0D1FC8F591E63FE /* OpenBotUITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -390,10 +390,10 @@
 		4FEF489C07FD5C967FFDCDE8 /* OpenBot */ = {
 			isa = PBXGroup;
 			children = (
+				0666F18B2C295BCB006D88C7 /* Models */,
 				3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */,
 				66AC71E129B885410022108A /* Controllers */,
 				BF9BAED628AF94A800EF3E48 /* Frameworks */,
-				4FEF44F0837469F66D5A7156 /* Models */,
 				4FEF42AB3B7AC14D55B7DBA3 /* Utils */,
 				4FEF4A209F128B8F5AC06E17 /* Products */,
 				4FEF4BBD0A2E51DD7BAD32C5 /* Assets.xcassets */,
@@ -1331,7 +1331,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.7.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.robot.openbo;
+				PRODUCT_BUNDLE_IDENTIFIER = org.openbot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1374,7 +1374,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.7.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.robot.openbo;
+				PRODUCT_BUNDLE_IDENTIFIER = org.openbot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
