@@ -227,7 +227,8 @@ class Common {
         }
     }
 
-    static func modifyModels(modelItem: ModelItem) -> [ModelItem] {
+    /// function to let user modify the model, and store them into documents directory.
+    static func modifyModels(modelAddress: String, model: ModelItem, widthOfModel: String, heightOfModel: String) -> [ModelItem] {
         var allModels: [ModelItem] = [];
         let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
         var isFoundConfigFile: Bool = false;
@@ -244,20 +245,58 @@ class Common {
             allModels = Common.loadAllModelItemsFromBundle();
         }
 
-        let newModel = ModelItem.init(id: modelItem.id, class: modelItem.class, type: modelItem.type, name: modelItem.name, pathType: modelItem.pathType, path: modelItem.path, inputSize: modelItem.inputSize)
-        var remainingModels: [ModelItem] = [];
-        var updatedIndex = 0
+        let newModel = modelAddress == "" ? ModelItem.init(id: model.id, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: model.path, inputSize: widthOfModel + "x" + heightOfModel) :
+                ModelItem.init(id: allModels.count + 1, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: modelAddress, inputSize: widthOfModel + "x" + heightOfModel);
+        var index = 0;
         for model in allModels {
-            if (model.name == newModel.name) {
-                let index = newModel.id;
+            if model.id == newModel.id {
                 allModels[index] = newModel;
-                remainingModels = allModels.filter {
-                    $0.name != newModel.name
-                }
+                return allModels;
             }
+            index = index + 1;
         }
-        return remainingModels
+        allModels.append(newModel);
+        return allModels
     }
 
+    /**
+     Function overloaded to modify model if it is downloaded to the drive or being deleted
+     - Parameters:
+       - model:
+       - isDelete:
+     - Returns:
+     */
+    static func modifyModel(model: ModelItem, isDelete: Bool) -> [ModelItem] {
+        var allModels: [ModelItem] = [];
+        let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
+        var isFoundConfigFile: Bool = false;
+        for url in documentDirectoryURls {
+            if url.absoluteString.contains("config.json") {
+                isFoundConfigFile = true
+                break;
+            }
+        }
+        switch isFoundConfigFile {
+        case true:
+            allModels = Common.loadAllModelFromDocumentDirectory()
+        case false:
+            allModels = Common.loadAllModelItemsFromBundle();
+        }
+        var newModel: ModelItem!
+        if isDelete {
+            newModel = ModelItem(id: model.id, class: model.class, type: model.type, name: model.name, pathType: "URL", path: model.path, inputSize: model.inputSize);
+        } else {
+            newModel = ModelItem(id: model.id, class: model.class, type: model.type, name: model.name, pathType: "FILE", path: model.path, inputSize: model.inputSize);
+        }
+        var index = 0;
+        for model in allModels {
+            if model.id == newModel.id {
+                allModels[index] = newModel;
+                return allModels;
+            }
+            index = index + 1;
+        }
+        allModels.append(newModel);
+        return allModels
+    }
 }
-

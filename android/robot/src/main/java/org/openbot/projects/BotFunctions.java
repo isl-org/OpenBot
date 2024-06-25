@@ -1,5 +1,7 @@
 package org.openbot.projects;
 
+import static org.webrtc.ContextUtils.getApplicationContext;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -7,6 +9,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.speech.tts.TextToSpeech;
 import android.webkit.JavascriptInterface;
 
 import com.google.ar.core.Pose;
@@ -19,6 +22,7 @@ import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -49,6 +53,7 @@ public class BotFunctions implements SensorEventListener {
   private final float[] gyroscopeValues = new float[3]; // Array to store gyroscope values
   private final float[] accelerometerValues = new float[3]; // Array to store accelerometer values
   private final float[] magneticFieldValues = new float[3]; // Array to store magnetic values
+  TextToSpeech tts;
 
   /**
    * get vehicle and audioPlayer in parameters to control openBot commands.
@@ -322,11 +327,11 @@ public class BotFunctions implements SensorEventListener {
     vehicle.setIndicator(-1);
   }
 
-  @JavascriptInterface
-  public void ledBrightness(int value) {
-    mActivity.runOnUiThread(() -> binding.jsCommand.setText("Led Brightness " + value));
-    vehicle.sendLightIntensity(value, value);
-  }
+@JavascriptInterface
+public void ledBrightness(float value) {
+  mActivity.runOnUiThread(() -> binding.jsCommand.setText("Led Brightness " + value));
+  vehicle.sendLightIntensity(value / 100, value / 100);
+}
 
   @JavascriptInterface
   public void toggleLed(String value) {
@@ -364,18 +369,20 @@ public class BotFunctions implements SensorEventListener {
       sharedPreferencesManager.setDriveMode(2);
     }
   }
-
   @JavascriptInterface
   public void setSpeed(String speed) {
     if (Objects.equals(speed, "slow")) {
       mActivity.runOnUiThread(() -> binding.jsCommand.setText("Set speed to " + speed));
       sharedPreferencesManager.setSpeedMode(128);
+      vehicle.setSpeedMultiplier(Enums.SpeedMode.SLOW.getValue());
     } else if (Objects.equals(speed, "medium")) {
       mActivity.runOnUiThread(() -> binding.jsCommand.setText("Set speed to " + speed));
       sharedPreferencesManager.setDriveMode(192);
+      vehicle.setSpeedMultiplier(Enums.SpeedMode.NORMAL.getValue());
     } else if (Objects.equals(speed, "fast")) {
       mActivity.runOnUiThread(() -> binding.jsCommand.setText("Set speed to " + speed));
       sharedPreferencesManager.setDriveMode(255);
+      vehicle.setSpeedMultiplier(Enums.SpeedMode.FAST.getValue());
     }
   }
 
@@ -385,10 +392,11 @@ public class BotFunctions implements SensorEventListener {
   }
 
   @JavascriptInterface
-  public void reachGoal(float forward, float left) {
+  public void reachGoal(float forward, float left, String model) {
     Timber.tag("Ai Blocks").i(forward + ", " + left);
     mActivity.runOnUiThread(() -> binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT));
     startPointGoal(-forward, -left);
+    BlocklyExecutingFragment.navigationModelName = model;
   }
 
   @JavascriptInterface
@@ -420,6 +428,7 @@ public class BotFunctions implements SensorEventListener {
     mActivity.runOnUiThread(() -> {
       binding.blocklyLayout.setBackgroundColor(Color.TRANSPARENT);
       binding.jsCommand.setText("Start Autopilot using " + modelName);
+
     });
     BlocklyExecutingFragment.autoPilotModelName = modelName;
     BlocklyExecutingFragment.isAutopilot = true;
@@ -463,6 +472,110 @@ public class BotFunctions implements SensorEventListener {
   }
 
   @JavascriptInterface
+  public void playSound(String classType) {
+    mActivity.runOnUiThread(() -> {
+      binding.jsCommand.setText("Playing input sound.");
+    });
+    tts = new TextToSpeech(mContext, new TextToSpeech.OnInitListener() {
+      @Override
+      public void onInit(int i) {
+        if(i == TextToSpeech.SUCCESS){
+          tts.setLanguage(Locale.US);
+          tts.setSpeechRate(1.0f);
+          tts.speak(classType,TextToSpeech.QUEUE_ADD,null);
+        }
+      }
+    });
+  }
+
+  @JavascriptInterface
+  public void displayString(String text) {
+    mActivity.runOnUiThread(() -> {
+      binding.jsCommand.setText(text);
+    });
+  }
+
+  @JavascriptInterface
+  public void displaySensorData(String sensorType) {
+      String type = "";
+      String finalText = "";
+      String prefix = "Android.";
+      if (sensorType.startsWith(prefix)) {
+        finalText = sensorType.substring(prefix.length());
+      }
+    switch (finalText.trim()){
+        case "sonarReading()" :
+            System.out.println("in sonar");
+            type = "sonar : " + vehicle.getSonarReading();
+            break;
+        case "speedReading()" :
+            type = "speed : " + (vehicle.getLeftWheelRpm() + vehicle.getRightWheelRpm()) / 2;
+            break;
+        case "voltageDividerReading()" :
+            type = "voltage : " + vehicle.getBatteryVoltage();
+            break;
+        case "frontWheelReading()" :
+            type = "frontWheel : " + vehicle.isHasWheelOdometryFront();
+            break;
+        case "backWheelReading()" :
+            type = "backWheel : " + vehicle.isHasWheelOdometryBack();
+            break;
+        case "gyroscopeReadingX()" :
+            sensorManager.registerListener(
+                    this, gyroscopeSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "gyroscopeX : " + gyroscopeValues[0];
+            break;
+        case "gyroscopeReadingY()" :
+            sensorManager.registerListener(
+                    this, gyroscopeSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "gyroscopeY : " + gyroscopeValues[1];
+            break;
+        case "gyroscopeReadingZ()" :
+            sensorManager.registerListener(
+                    this, gyroscopeSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "gyroscopeZ : " + gyroscopeValues[2];
+            break;
+        case "accelerationReadingX" :
+            sensorManager.registerListener(
+                    this, accelerometerSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "accelerationX : " + accelerometerValues[0];
+            break;
+        case "accelerationReadingY" :
+            sensorManager.registerListener(
+                    this, accelerometerSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "accelerationY : " + accelerometerValues[1];
+            break;
+        case "accelerationReadingZ" :
+            sensorManager.registerListener(
+                    this, accelerometerSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "accelerationZ : " + accelerometerValues[2];
+            break;
+        case "magneticReadingX" :
+            sensorManager.registerListener(
+                    this, magneticSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "magneticX : " + magneticFieldValues[0];
+            break;
+        case "magneticReadingY" :
+            sensorManager.registerListener(
+                    this, magneticSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "magneticY : " + magneticFieldValues[1];
+            break;
+        case "magneticReadingZ" :
+            sensorManager.registerListener(
+                    this, magneticSensor, sharedPreferencesManager.getDelay() * 1000);
+            type = "magneticZ : " + magneticFieldValues[2];
+            break;
+        default:
+            break;
+      }
+    String finalType = type;
+    mActivity.runOnUiThread(() -> {
+      binding.jsCommand.setText(finalType);
+    });
+  }
+
+
+    @JavascriptInterface
   public void reachPosition(int x, int y) {
     Timber.tag("Ai Blocks").i(x + ", " + y);
   }
@@ -511,6 +624,7 @@ public class BotFunctions implements SensorEventListener {
    */
   private void startPointGoal(float goalX, float goalZ) {
     setupArCore();
+
     while (arCore.getStartPose() == null) startDriving(goalX, goalZ);
   }
 

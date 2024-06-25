@@ -1,5 +1,6 @@
 package org.openbot.modelManagement;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,9 +96,9 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ViewHolder> 
         });
 
     holder.imgDownload.setVisibility(
-        (holder.mItem.pathType == Model.PATH_TYPE.URL) ? View.VISIBLE : View.GONE);
+        (holder.mItem.pathType == Model.PATH_TYPE.URL) ? View.VISIBLE : View.GONE );
     holder.imgDelete.setVisibility(
-        (holder.mItem.pathType == Model.PATH_TYPE.FILE) ? View.VISIBLE : View.GONE);
+        (holder.mItem.pathType == Model.PATH_TYPE.FILE )  ? View.VISIBLE : View.GONE);
     holder.imgDelete.setOnClickListener(v -> itemClickListener.onModelDelete(holder.mItem));
     holder.title.setAlpha((holder.mItem.pathType == Model.PATH_TYPE.URL) ? 0.7f : 1f);
   }

@@ -26,10 +26,10 @@
         android:id="@+id/js_command"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:textColor="@color/black_text"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/blockly_bot_image" />
@@ -47,6 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/js_command">
 
         <TextView
+            android:id="@+id/stop_btn_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Stop Car"
@@ -54,4 +55,26 @@
             android:textSize="18sp" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/reset_btn"
+        android:layout_width="140dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/border_radius_qr_buttons"
+        android:backgroundTint="@color/blue_buttons"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stop_car_btn">
+        <TextView
+            android:id="@+id/reset_btn_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset"
+            android:textColor="@color/white_text"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ class Detector: Network {
     var labels: [String] = []; // Labels corresponding to the output of the vision model.
     var NUM_DETECTIONS: Int = 0; // Number of output detections
     var selectedClass: String?;
+    var selectedMultipleClass: [String] = [];
     let ciContext = CIContext()
     let imageSizeX: Int = -1;
     let imageSizeY: Int = -1;
@@ -135,6 +136,7 @@ class Detector: Network {
         selectedClass = labels.first {
             $0.capitalized == "person".capitalized
         };
+        selectedMultipleClass = ["person"]
         parseTFlite();
     }
 
@@ -166,7 +168,7 @@ class Detector: Network {
     ///
     /// - Parameters: The buffer containing the image.
     /// - Returns: A list of the recognized objects for a given label
-    func recognizeImage(pixelBuffer: CVPixelBuffer) -> [Recognition] {
+    func recognizeImage(pixelBuffer: CVPixelBuffer, detectionType: String) -> [Recognition] {
 
         let imageWidth = CVPixelBufferGetWidth(pixelBuffer)
         let imageHeight = CVPixelBufferGetHeight(pixelBuffer)
@@ -196,14 +198,24 @@ class Detector: Network {
             // Run the inference call.
             try tflite?.invoke();
 
+            if (detectionType == "multiple") {
+                return getMultipleRecognitions(classA: selectedMultipleClass[0], classB: selectedMultipleClass[1], width: imageWidth, height: imageHeight)
+            } else if (detectionType == "all") {
+                return getAllRecognitions(width: imageWidth, height: imageHeight)
+            } else {
+                return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
+            }
             // Post-Processing.
-            return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
 
         } catch {
-
             print("error:\(error)")
-            return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
-
+            if (detectionType == "multiple") {
+                return getMultipleRecognitions(classA: selectedMultipleClass[0], classB: selectedMultipleClass[1], width: imageWidth, height: imageHeight)
+            } else if (detectionType == "all") {
+                return getAllRecognitions(width: imageWidth, height: imageHeight)
+            } else {
+                return getRecognitions(className: selectedClass!, width: imageWidth, height: imageHeight);
+            }
         };
     }
 
@@ -339,6 +351,15 @@ class Detector: Network {
         [];
     }
 
+    /// Get the multiple recognitions
+    func getMultipleRecognitions(classA: String, classB: String, width: Int, height: Int) -> [Recognition] {
+        [];
+    }
+
+    func getAllRecognitions(width: Int, height: Int) -> [Recognition] {
+        [];
+    }
+
     ///
     @objc func updateObject(_ notification: Notification) {
         selectedClass = notification.object as? String
@@ -347,6 +368,14 @@ class Detector: Network {
     /// Setter function
     public func setSelectedClass(newClass: String) {
         selectedClass = newClass;
+    }
+
+    public func setMultipleSelectedClass(newClasses: [String]) {
+        selectedMultipleClass = newClasses;
+    }
+
+    public func returnMultipleSelectedClass() -> [String] {
+        selectedMultipleClass
     }
 }
 

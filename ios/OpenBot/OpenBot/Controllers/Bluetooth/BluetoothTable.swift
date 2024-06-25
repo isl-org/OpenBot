@@ -30,6 +30,12 @@ class BluetoothTable: UITableViewController {
         bluetooth.sendData(payload: "f\n");
     }
 
+    /**
+     Function to connect with selected bluetooth
+     - Parameters:
+       - Btn:
+       - index:
+     */
     func connectToBle(Btn: UIButton, index: Int) {
         bluetooth.peri = bluetooth.peripherals[index]
         bluetooth.connect()
@@ -37,6 +43,9 @@ class BluetoothTable: UITableViewController {
         isBluetoothConnected = true
     }
 
+    /**
+     Function to disconnect from bluetooth
+     */
     func disconnectToBle() {
         bluetooth.disconnect()
         tableView.reloadData()

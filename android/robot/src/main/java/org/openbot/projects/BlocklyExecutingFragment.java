@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +77,8 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
   public static String classType = "person";
   public static String detectorModelName = "";
   public static String autoPilotModelName = "";
+
+  public static String navigationModelName="";
   public static String startObject = "person";
   public static String stopObject = "person";
   public static String getTask = "";
@@ -118,7 +121,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
       int orientation = getResources().getConfiguration().orientation;
       if (orientation == Configuration.ORIENTATION_LANDSCAPE
           || orientation == Configuration.ORIENTATION_PORTRAIT) {
-        myWebView.destroy();
+           myWebView.destroy();
         showAlertDialog();
       }
     }
@@ -127,6 +130,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     return inflateFragment(binding, inflater, container);
   }
 
+  @SuppressLint("SetJavaScriptEnabled")
   @Override
   public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
@@ -134,14 +138,24 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     arCore = new ArCore(requireContext(), binding.GLSurfaceView, mainHandler);
     arCore.setArCoreListener(this);
     binding.stopCarBtn.setOnClickListener(
-        v -> {
-          myWebView.destroy();
-          binding.jsCommand.setText(getString(android.R.string.cancel));
-          vehicle.stopBot();
-          vehicle.setIndicator(0);
-          isFollow = false;
-          isAutopilot = false;
-        });
+            v -> {
+              myWebView.destroy();
+              stop();
+              binding.jsCommand.setText(getString(android.R.string.cancel));
+              handleStopCarButtonClick();
+            });
+             binding.resetBtn.setOnClickListener(
+            v -> {
+              stop();
+              binding.jsCommand.setText(getString(android.R.string.cancel));
+              myWebView.destroy();
+              myWebView = new WebView(requireContext());
+              // enable JavaScript in the web-view.
+              myWebView.getSettings().setJavaScriptEnabled(true);
+              runJSCommand(BarCodeScannerFragment.finalCode);
+              handelResetCarButtonClick();
+            }
+    );
     // Execute the JavaScript code if the js code variable is not null and isRunJSCommand is true
     if (BarCodeScannerFragment.finalCode != null && isRunJSCommand) {
       runJSCommand(BarCodeScannerFragment.finalCode);
@@ -163,6 +177,48 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     }
   }
 
+  /**
+   * Stops the robot and performs cleanup actions.
+   * - Destroys the WebView.
+   * - Stops the robot's movement.
+   */
+  private void stop()
+  {
+    myWebView.destroy();
+    vehicle.stopBot();
+    vehicle.setIndicator(0);
+    isAutopilot=false;
+    isFollow=false;
+    isFollowMultipleObject=false;
+    isStartDetectorAutoPilot=false;
+    isOnDetection=false;
+  }
+
+  /**
+   * Transitions "Stop Car" button to "Back" text
+   * and sets a listener to navigate back.
+   */
+  private void handleStopCarButtonClick(){
+    binding.stopBtnName.setText("Back");
+    binding.stopCarBtn.setOnClickListener(null);
+    binding.stopCarBtn.setOnClickListener(v1 -> requireActivity().onBackPressed());
+  }
+
+  /**
+   * Handles the click event of the "Reset Car" button.
+   * Updates the "Stop Car" button text to its initial state.
+   * Sets a listener to handle "Stop Car" button click, invoking
+   * actions to navigate back and stop the robot.
+   */
+  private void handelResetCarButtonClick()
+  {
+    binding.stopBtnName.setText("Stop Car");
+    binding.stopCarBtn.setOnClickListener(v -> {
+      handleStopCarButtonClick();
+      stop();
+    });
+
+  }
   @Override
   protected void processFrame(Bitmap bitmap, ImageProxy imageProxy) {
     // Check and execute modes based on blockly block code commands.
@@ -217,6 +273,8 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
 
       computingNetwork = true;
       Timber.i("Putting image " + frameNum + " for detection in bg thread.");
+      //System.out.println("frame number-------------"+ frameNum);
+
 
     if (handler != null) {
       handler.post(()->{
@@ -280,6 +338,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
               cropToFrameTransform.mapRect(location);
               result.setLocation(location);
               mappedRecognitions.add(result);
+            //  System.out.println("confidence----->"+result.getConfidence());
             }
           }
           tracker.trackResults(mappedRecognitions, frameNum);
@@ -598,12 +657,6 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
     vehicle.setIndicator(0);
     vehicle.stopBot();
     arCore.pause();
-    // if previous speed multiplier value is not 0, set the speed multiplier back to its previous
-    // value when you go back from this screen.
-    Enums.SpeedMode speedMode = Enums.SpeedMode.getByID(preferencesManager.getSpeedMode());
-    assert speedMode != null;
-    preferencesManager.setSpeedMode(speedMode.getValue());
-    vehicle.setSpeedMultiplier(speedMode.getValue());
     isFollow = false;
     isAutopilot = false;
     isFollowMultipleObject = false;
@@ -614,6 +667,7 @@ public class BlocklyExecutingFragment extends CameraFragment implements ArCoreLi
    */
   @Override
   public void onArCoreUpdate(NavigationPoses navigationPoses, ImageFrame rgb, CameraIntrinsics cameraIntrinsics, long timestamp) {
+    System.out.println("isRunning::::::;"+isRunning);
     if (isRunning) {
       float goalDistance =
               computeDistance(navigationPoses.getTargetPose(), navigationPoses.getCurrentPose());

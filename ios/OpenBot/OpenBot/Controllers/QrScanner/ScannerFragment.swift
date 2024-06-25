@@ -9,7 +9,7 @@ import AVFoundation
 /**
  class for qrScanner
  */
-class scannerFragment: CameraController {
+class scannerFragment: CameraController,autopilotDelegate {
     var previewLayer = AVCaptureVideoPreviewLayer();
     var whiteSheet = openCodeRunBottomSheet(frame: UIScreen.main.bounds)
     @IBOutlet weak var cancelBtn: UIView!
@@ -23,6 +23,7 @@ class scannerFragment: CameraController {
     var border = UIImageView();
     let firstHalfView = UIView();
     var projectName: String = "";
+    weak var jsEval : jsEvaluator?
 
 /**
     Method calls after view will load and initialize the UI and camera
@@ -254,7 +255,8 @@ class scannerFragment: CameraController {
         let viewController = (storyboard.instantiateViewController(withIdentifier: "runOpenBot"));
         navigationController?.pushViewController(viewController, animated: true);
         whiteSheet.removeFromSuperview();
-        _ = jsEvaluator(jsCode: commands);
+        jsEval = jsEvaluator(jsCode: commands);
+        preferencesManager.setBlocklyCode(value: commands);
     }
 
     /**
@@ -348,6 +350,10 @@ class scannerFragment: CameraController {
 
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
+    }
+
+    func didPerformAction() {
+        NotificationCenter.default.post(name: .createCameraView, object: nil);
     }
 
 

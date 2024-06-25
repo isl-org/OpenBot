@@ -65,7 +65,12 @@ class Authentication {
                     accessToken: user?.accessToken.tokenString ?? "")
             Auth.auth().signIn(with: credential) { result, error in
             }
-            NotificationCenter.default.post(name: .googleSignIn, object: nil);
+            NotificationCenter.default.post(name: .googleSignIn, object: nil)
+            do {
+                try self.saveConfigJsonToDrive()
+            } catch {
+                print("Error in saving file to drive");
+            }
             let userIdToken = user?.accessToken
             self.userToken = userIdToken?.tokenString ?? ""
             let userFirstName = user?.profile?.givenName ?? ""
@@ -73,7 +78,7 @@ class Authentication {
             let userEmail = user?.profile?.email ?? ""
             let googleProfilePicURL = user?.profile?.imageURL(withDimension: 150)?.absoluteString ?? ""
             let imgUrl = Auth.auth().currentUser?.photoURL;
-            let driveScope = "https://www.googleapis.com/auth/drive.readonly"
+            let driveScope = "https://www.googleapis.com/auth/drive.file"
             let grantedScopes = user?.grantedScopes
             if grantedScopes == nil || !grantedScopes!.contains(driveScope) {
             }
@@ -125,6 +130,18 @@ class Authentication {
             // Show the sign-out button and hide the GIDSignInButton
         }
     }
+    
+    /**
+     static method to get api key from google-service
+     */
+    static func getGoogleAPIKey() -> String {
+        if let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
+           let dict = NSDictionary(contentsOfFile: path),
+           let apiKey = dict["API_KEY"] as? String {
+            return apiKey
+        }
+        return ""
+    }
 
     /**
      static method to download a file
@@ -133,9 +150,10 @@ class Authentication {
        - completion:
      */
     static func download(file: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
+        let APIkey = getGoogleAPIKey();
         let fileId = returnFileId(fileLink: file);
-        let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
-        let service: GTLRDriveService = GTLRDriveService()
+        let url = "https://www.googleapis.com/drive/v3/files/\(fileId)?alt=media&key=\(APIkey)";
+        let service: GTLRDriveService = GTLRDriveService();
         let fetcher = service.fetcherService.fetcher(withURLString: url)
         fetcher.beginFetch(completionHandler: { data, error in
             if let error = error {
@@ -157,7 +175,8 @@ class Authentication {
      */
 
     static func download(fileId: String, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
-        let url = "https://drive.google.com/uc?export=download&id=\(fileId)&confirm=200"
+        let APIkey = getGoogleAPIKey();
+        let url = "https://www.googleapis.com/drive/v3/files/\(fileId)?alt=media&key=\(APIkey)";
         let service: GTLRDriveService = GTLRDriveService()
         let fetcher = service.fetcherService.fetcher(withURLString: url)
         fetcher.beginFetch(completionHandler: { data, error in
@@ -325,7 +344,7 @@ class Authentication {
        - name:
        - completion:
      */
-    func getIdOfXmlFile(name: String, completion: @escaping (String?, Error?) -> Void) {
+    func getIdOfDriveFile(name: String, fileType: String, completion: @escaping (String?, Error?) -> Void) {
         Authentication.googleAuthentication.getAllFolders { files, error in
             if let files = files {
                 Authentication.googleAuthentication.getFilesInFolder(folderId: self.getOPenBotFolderId(files: files)) { files, error in
@@ -335,9 +354,16 @@ class Authentication {
                     }
                     if let files = files {
                         for file in files {
-                            if file.mimeType == "text/xml" && file.name == "\(name).xml" {
-                                completion(file.identifier, nil)
-                                return
+                            if (fileType == "Xml") {
+                                if file.mimeType == "text/xml" && file.name == "\(name).xml" {
+                                    completion(file.identifier, nil)
+                                    return
+                                }
+                            } else if (fileType == "JSON") {
+                                if file.mimeType == "application/json" && file.name == "\(name).json" {
+                                    completion(file.identifier, nil)
+                                    return
+                                }
                             }
                         }
                     }
@@ -417,4 +443,120 @@ class Authentication {
         }
     }
 
+    /**
+     Function to upload JSON file to drive
+     - Parameters:
+       - fileData:
+       - folderId:
+     */
+    func uploadFileToDrive(fileData: Data, folderId: String) {
+        let service: GTLRDriveService = GTLRDriveService()
+        let signIn = googleSignIn.currentUser
+        service.authorizer = signIn?.fetcherAuthorizer
+        let metadata = GTLRDrive_File.init()
+        metadata.name = "config.json"
+        metadata.mimeType = "application/json"
+        metadata.parents = [folderId]
+        let uploadParameters = GTLRUploadParameters(data: fileData, mimeType: "application/json")
+        let query = GTLRDriveQuery_FilesCreate.query(withObject: metadata, uploadParameters: uploadParameters)
+        service.uploadProgressBlock = { _, totalBytesUploaded, totalBytesExpectedToUpload in
+        }
+        service.executeQuery(query) { _, result, error in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
+        }
+    }
+
+    /**
+     Function to update or create JSON file
+     - Parameter fileData:
+     */
+    func updateModelListFile(fileData: Data) {
+        let service: GTLRDriveService = GTLRDriveService()
+        let signIn = googleSignIn.currentUser
+        service.authorizer = signIn?.fetcherAuthorizer
+        checkFolderExistsInDrive { folderID in
+            if folderID != "" {
+                self.getIdOfDriveFile(name: "config", fileType: "JSON") { fileId, error in
+                    if let fileId = fileId {
+                        self.deleteFile(fileId: fileId) { error in
+                            if let error = error {
+                                print(error)
+                            }
+                            self.uploadFileToDrive(fileData: fileData, folderId: folderID)
+                        }
+                    } else {
+                        if let error = error {
+                            print("error while getting json file::", error)
+                        } else {
+                            self.uploadFileToDrive(fileData: fileData, folderId: folderID)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     function to save config file to the drive
+     - Throws:
+     */
+     func saveConfigJsonToDrive() throws {
+        var allModels: [ModelItem] = Common.loadAllModelItems()
+        if GIDSignIn.sharedInstance.currentUser != nil {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.withoutEscapingSlashes]
+            do {
+                let jsonData = try encoder.encode(allModels)
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print(jsonString)
+                    if let data = jsonString.data(using: .utf8) {
+                        Authentication().updateModelListFile(fileData: data);
+                    }
+                }
+            }
+        } else {
+        }
+    }
+    /**
+     function to download the config.json from the drive
+     */
+    func downloadConfigFile() {
+        let configFileId = getIdOfDriveFile(name: "config", fileType: "JSON") { id, error in
+            if let error = error {
+                print(error.localizedDescription);
+            }
+            if let id =  id {
+                self.downloadFile(withId: id, accessToken: self.googleSignIn.currentUser?.accessToken.tokenString ?? "") { data, error in
+                    if let error = error {
+                        print(error);
+                    }
+                    if let data = data {
+                        guard let documentDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                            // Failed to get the document directory URL
+                            return
+                        }
+
+                        let fileURL = documentDirectoryURL.appendingPathComponent("config.json")
+
+                        do {
+                            try data.write(to: fileURL)
+                            print("File saved at path: \(fileURL.path)")
+
+                        } catch {
+                            // Error occurred while saving the file
+                            print("Error saving file: \(error.localizedDescription)")
+                        }
+
+                        defer {
+                            NotificationCenter.default.post(name: .autoSynced, object: nil);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+

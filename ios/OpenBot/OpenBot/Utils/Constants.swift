@@ -114,12 +114,12 @@ enum SpeedMode: Float {
 }
 
 /// The different control interfaces of an OpenBot (either by gamepad or using another phone/computer)
-enum ControlMode {
+enum ControlMode : String {
     case PHONE, GAMEPAD, WEB
 }
 
 /// The different speed modes of an OpenBot
-enum DriveMode {
+enum DriveMode : String {
     case JOYSTICK, GAME, DUAL
 }
 

@@ -389,6 +389,7 @@ public class Vehicle {
   }
 
   private void sendStringToDevice(String message) {
+    System.out.println("sanjeev == " + message);
     if (getConnectionType().equals("USB") && usbConnection != null) {
       usbConnection.send(message);
     } else if (getConnectionType().equals("Bluetooth")

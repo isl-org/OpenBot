@@ -94,35 +94,32 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JlZ-sr-XGp">
-                                            <rect key="frame" x="324" y="5.5" width="82" height="32.5"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GL1-sa-Hc1">
+                                            <rect key="frame" x="344" y="-6.5" width="50" height="50"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MJ5-Jm-ZQP">
-                                                    <rect key="frame" x="26" y="0.0" width="30" height="33"/>
-                                                    <color key="tintColor" name="borderColor"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="30" id="8bU-Sf-vIE"/>
-                                                        <constraint firstAttribute="height" constant="33" id="Dau-Mo-naw"/>
-                                                    </constraints>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nSv-L9-SDv">
+                                                    <rect key="frame" x="8.5" y="10" width="29.5" height="28"/>
                                                 </imageView>
                                             </subviews>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>
-                                                <constraint firstItem="MJ5-Jm-ZQP" firstAttribute="centerY" secondItem="JlZ-sr-XGp" secondAttribute="centerY" id="FiZ-av-V6j"/>
-                                                <constraint firstItem="MJ5-Jm-ZQP" firstAttribute="top" secondItem="JlZ-sr-XGp" secondAttribute="top" constant="-0.33333333333333215" id="ZCc-jl-ELI"/>
-                                                <constraint firstItem="MJ5-Jm-ZQP" firstAttribute="centerX" secondItem="JlZ-sr-XGp" secondAttribute="centerX" id="dkv-cZ-T0e"/>
+                                                <constraint firstItem="nSv-L9-SDv" firstAttribute="leading" secondItem="GL1-sa-Hc1" secondAttribute="leading" constant="8.5" id="E76-Ww-fHW"/>
+                                                <constraint firstAttribute="trailing" secondItem="nSv-L9-SDv" secondAttribute="trailing" constant="12" id="OMe-Gj-RWh"/>
+                                                <constraint firstAttribute="bottom" secondItem="nSv-L9-SDv" secondAttribute="bottom" constant="12" id="VQo-NS-4ak"/>
+                                                <constraint firstAttribute="width" constant="50" id="bbp-Pw-4ct"/>
+                                                <constraint firstItem="nSv-L9-SDv" firstAttribute="top" secondItem="GL1-sa-Hc1" secondAttribute="top" constant="10" id="eDB-cb-zz8"/>
+                                                <constraint firstAttribute="height" constant="50" id="ham-P2-NPj"/>
                                             </constraints>
                                         </view>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="JlZ-sr-XGp" firstAttribute="leading" secondItem="AHb-Ms-y93" secondAttribute="leading" constant="324" id="V68-aR-6Iz"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="JlZ-sr-XGp" secondAttribute="trailing" constant="-12" id="ato-Bl-yTk"/>
-                                        <constraint firstItem="JlZ-sr-XGp" firstAttribute="centerY" secondItem="AHb-Ms-y93" secondAttribute="centerY" id="rSU-7l-G37"/>
+                                        <constraint firstAttribute="bottom" secondItem="GL1-sa-Hc1" secondAttribute="bottom" id="emm-vI-0HP"/>
+                                        <constraint firstAttribute="trailing" secondItem="GL1-sa-Hc1" secondAttribute="trailing" constant="20" id="xZw-Dm-VJV"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="downloadIcon" destination="MJ5-Jm-ZQP" id="Q2K-Qh-TyY"/>
-                                    <outlet property="downloadIconView" destination="JlZ-sr-XGp" id="dhw-QF-OxC"/>
+                                    <outlet property="downloadIcon" destination="nSv-L9-SDv" id="JXj-XR-RTF"/>
+                                    <outlet property="downloadIconView" destination="GL1-sa-Hc1" id="GNe-VJ-yXT"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -304,6 +301,12 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HHR-1M-DEf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="9DT-pd-Ep0">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <viewLayoutGuide key="safeArea" id="7T5-Cx-rXS"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </view>
             </objects>
             <point key="canvasLocation" x="-1643.4782608695652" y="-552.45535714285711"/>
         </scene>
@@ -527,14 +530,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7MC-BA-4bk" customClass="BluetoothTableViewCell" customModule="OpenBot" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="49" width="414" height="34.5"/>
+                                <rect key="frame" x="0.0" y="49" width="414" height="34"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7MC-BA-4bk" id="BJK-9F-9vf">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXM-H5-QVt">
-                                            <rect key="frame" x="321" y="0.0" width="88" height="34.5"/>
+                                            <rect key="frame" x="321" y="0.0" width="88" height="34"/>
                                             <color key="tintColor" name="gamepad"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Connect">
@@ -652,36 +655,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eyf-mM-Ifq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2746" y="-552"/>
-        </scene>
-        <!--Open Code Fragment-->
-        <scene sceneID="hGm-iD-S8b">
-            <objects>
-                <viewController storyboardIdentifier="OpenCodeFragment" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Zc1-0G-fnW" customClass="OpenCodeFragment" customModule="OpenBot" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="nBw-nb-zkx">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="On7-u1-lB5"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="QEb-LB-O91" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-2865.217391304348" y="1906.4732142857142"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="mKI-D2-Y7C">
-            <objects>
-                <viewController id="Q6q-7V-dLY" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="jI3-nq-Eah">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="Iqo-SF-BgN"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ml9-kg-nvP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1036" y="1610"/>
         </scene>
     </scenes>
     <resources>

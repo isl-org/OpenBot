@@ -24,6 +24,7 @@ class AutopilotFragment: CameraController {
     private var result: Control?
     var autopilotEnabled = false
     let webSocketMsgHandler = WebSocketMessageHandler();
+    let fragmentType = FragmentType.shared
 
     /// Called after the view fragment has loaded.
     override func viewDidLoad() {
@@ -38,6 +39,22 @@ class AutopilotFragment: CameraController {
             models = Model.fromModelItems(list: modelItems);
             currentModel = modelItems[0]
             autopilot = Autopilot(model: models[0], device: RuntimeDevice.CPU, numThreads: numberOfThreads);
+        }
+        if let threads = preferencesManager.getThreads(){
+            numberOfThreads = Int(threads) ?? 1
+            autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
+        }
+        if let device = preferencesManager.getDevice(){
+            currentDevice = RuntimeDevice(rawValue: device) ?? RuntimeDevice.CPU
+            autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
+            autopilot?.tfliteOptions.threadCount = numberOfThreads
+        }
+        if let models = preferencesManager.getAutopilotModel(){
+            if Common.isModelItemAvailableInDocument(modelName: models) == true {
+                let selectedModelName = models;
+                currentModel = Common.returnModelItem(modelName: selectedModelName)
+                autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
+            }
         }
         view.addSubview(expandedAutoPilotView!)
         expandedAutoPilotView!.translatesAutoresizingMaskIntoConstraints = false
@@ -57,7 +74,10 @@ class AutopilotFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateLightsCommandFromControllerApp), name: .updateLightsCommandFromControllerApp, object: nil)
         gameController.resetControl = false
+        fragmentType.currentFragment = "Autopilot";
         calculateFrame()
+        let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: self.fragmentType.currentFragment));
+        client.send(message: msg);
         //start the server
         var serverListener = ServerListener();
         serverListener.start();
@@ -109,6 +129,7 @@ class AutopilotFragment: CameraController {
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
         currentDevice.rawValue == "GPU" ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
         autopilot?.tfliteOptions.threadCount = numberOfThreads
+        preferencesManager.setDevice(value: notification.object as! String);
     }
 
     ///function to change the autopilot models, called after model from models dropdown is selected.
@@ -116,6 +137,7 @@ class AutopilotFragment: CameraController {
         let selectedModelName = notification.object as! String
         currentModel = Common.returnModelItem(modelName: selectedModelName)
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads)
+        preferencesManager.setAutopilotModel(value: notification.object as! String);
     }
 
     /// function to turn on and off autopilot
@@ -128,6 +150,7 @@ class AutopilotFragment: CameraController {
         let threadCount = notification.object as! String
         numberOfThreads = Int(threadCount) ?? 1
         autopilot = Autopilot(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads);
+        preferencesManager.setThreads(value: notification.object as! String);
     }
 
     ///function to send output controls to openBot
@@ -253,3 +276,11 @@ class AutopilotFragment: CameraController {
     }
 
 }
+
+/**
+ Protocol to create autopilot delegate
+ */
+protocol autopilotDelegate: AnyObject {
+    func didPerformAction()
+}
+

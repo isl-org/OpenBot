@@ -1,5 +1,13 @@
 ## Google Firebase
 
+<p align="center">
+  <span>English</span> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
+</p>
+
 Google Firebase is a mobile and web application development platform that offers a variety of services and tools to help developers build high-quality apps quickly and efficiently. It includes features such as real-time database, user authentication, hosting, cloud storage and many more, all these are integrated into a single platform. Firebase provides a convenient and scalable solution for developers to manage their backend infrastructure, allowing them to focus on building great user experiences.
 
 - ### Firebase Google Sign-In Authentication
@@ -7,9 +15,9 @@ Google Firebase is a mobile and web application development platform that offers
   Firebase Google Sign-In Authentication is a feature of the Firebase platform that allows users to sign in to mobile or web apps using their Google credentials. This service provides a secure and convenient way for users to access apps without having to remember and manage separate login credentials. Firebase manages the entire authentication process, from verifying the user's identity with Google to providing a unique user ID that can be used to personalize the user's experience within the app. This feature also includes additional security measures, such as two-factor authentication, to help protect user's account from unauthorized access.
 
 - ### Usage
-  In this application, we use Firebase for Google Sign-In authentication to access [OpenBot Playground](https://github.com/3dwesupport/OpenBot/tree/react-blockly/open-code#readme) projects uploaded on Google Drive. If you plan to clone this Android application and build it on your device, it's important to note that you will need to set up your own [Firebase Project](https://github.com/3dwesupport/OpenBot/tree/android-blockly-v2/android/app/src/main/java/org/openbot/googleServices#set-up-your-firebase-project). This is because the SHA-1 key is required for Google Sign-In authentication. 
+  In this application, we use Firebase for Google Sign-In authentication to access [OpenBot Playground](../../../../../../../../open-code/README.md) projects uploaded on Google Drive. If you plan to clone this Android application and build it on your device, it's important to note that you will need to set up your own [Firebase Project](#set-up-your-firebase-project). This is because the SHA-1 key is required for Google Sign-In authentication. 
   
-  And you will need to [set up Firebase](https://github.com/3dwesupport/OpenBot/tree/react-blockly/open-code#readme) for the [OpenBot Playground](https://www.openbot.itinker.io/) web application as well. This is because the Android app retrieves files from the user's Google Drive, which is created by Firebase Google Drive services. It's important to use the same Firebase project for both the Android and web applications for Google Drive services to work properly.
+  And you will need to [set up Firebase](../../../../../../../../open-code/README.md) for the [OpenBot Playground](https://www.playground.openbot.org/) web application as well. This is because the Android app retrieves files from the user's Google Drive, which is created by Firebase Google Drive services. It's important to use the same Firebase project for both the Android and web applications for Google Drive services to work properly.
   
   If you do not want to use OpenBot Playground services, you do not need to set up Firebase authentication or Google Sign-In authentication.
 
@@ -27,9 +35,9 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
   3. Google Analytics can be disabled if you do not want to use them.
   4. Click on the "Create Project" button.
 <p>
-<img src="../../../../../../../../docs/images/create_project.jpg" alt="Create project" width="25%"/>
-<img src="../../../../../../../../docs/images/enter_project_name.jpg" alt="Enter project name" width="24%"/>
-<img src="../../../../../../../../docs/images/disable_analytics.jpg" alt="Disable analytics" width="27.5%"/>
+<img src="../../../../../../../../docs/images/firebase_create_project.jpg" alt="Create project" width="25%"/>
+<img src="../../../../../../../../docs/images/firebase_enter_project_name.jpg" alt="Enter project name" width=40%"/>
+<img src="../../../../../../../../docs/images/firebase_disable_analytics.jpg" alt="Disable analytics" width="27.5%"/>
 </p>
 
 - To add a new Android app to your Firebase project, do the following:
@@ -43,8 +51,8 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
 - About the `SHA-1` fingerprint/key is a unique identifier for your `app's signing certificate`, and is used by Firebase to verify the authenticity of your app when communicating with Firebase servers. If you plan to use Firebase Authentication in your app, you will need to provide an `SHA-1` key `for the signing certificate` used to sign the `release version` of your app.
   
 <p>
-<img src="../../../../../../../../docs/images/add_android_app.jpg" alt="Add Android Application" width="40%"/>
-<img src="../../../../../../../../docs/images/package_name.jpg" alt="Package Name" width="35%"/>
+<img style="width: 47%" src="../../../../../../../../docs/images/firebase_add_android_app.jpg" alt="Add Android Application" width="40%"/>
+<img src="../../../../../../../../docs/images/firebase_package_name.jpg" alt="Package Name" width="36%"/>
 </p>
 
 - To obtain the `SHA-1` key, you can use the `keytool` (command-line tool) that is included with the `Java SDK`. Here's how to use it on `Mac` and `Windows`:
@@ -63,13 +71,13 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
     ```
     This command is similar to the Mac command, but uses a `different path` to locate the debug.keystore file. `%USERPROFILE%` is a system environment variable that points to the current user's profile directory, which contains the `.android` directory where the `debug.keystore` file is located.
 
-- Download the `google-services.json` file and `add` it to your Application's `app directory`.
+- Download the `google-services.json` file and `add` it to your Application's `app directory` and also `assets directory`.
 - Click on the next button, And you have to skip the third step because we already **add firebase SDK** in gradle file for this project.
 - Continue to the Firebase Console to configure the Firebase services you want to use in your Android app.
 
 <p>
-<img src="../../../../../../../../docs/images/google_service_json_file.jpg" alt="Google services json file" width="41%"/>
-<img src="../../../../../../../../docs/images/continue_to_console.jpg" alt="Continue to console" width="40.2%"/>
+<img style="width: 40%" src="../../../../../../../../docs/images/firebase_google_service_json_file.jpg" alt="Google services json file" width="41%"/>
+<img src="../../../../../../../../docs/images/firebase_continue_to_console.jpg" alt="Continue to console" width="40.2%"/>
 </p>
 
 - To `enable Google Sign-In authentication` for your Firebase project, follow these steps:
@@ -81,12 +89,12 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
   6. Click on the `toggle button` to `enable` Google Sign-In authentication.
 
 <p>
-<img src="../../../../../../../../docs/images/firebase_product_services.jpg" alt="Firebase product services" width="47.5%"/>
+<img style="width:36%" src="../../../../../../../../docs/images/firebase_product_services.jpg" alt="Firebase product services" width="47.5%"/>
 <img src="../../../../../../../../docs/images/firebase_authentication.jpg" alt="Firebase authentication" width="42%"/>
 </p>
 <p>
-<img src="../../../../../../../../docs/images/google_signin.jpg" alt="Google Sign-In" width="60%"/>
-<img src="../../../../../../../../docs/images/google_signin_enable.jpg" alt="Google Sign-In enable" width="31.5%"/>
+<img src="../../../../../../../../docs/images/firebase_google_signin.jpg" alt="Google Sign-In" width="60%"/>
+<img src="../../../../../../../../docs/images/firebase_google_signin_enable.jpg" alt="Google Sign-In enable" width="31.5%"/>
 </p>
 
 
@@ -100,12 +108,12 @@ To integrate Firebase into an Android OpenBot application for Google Sign-In, we
   - Click on `Save` to add the SHA-1 key to your Firebase project.
 
 <p>
-<img src="../../../../../../../../docs/images/gear_icon.jpg" alt="Gear icon" width="30%"/>
-<img src="../../../../../../../../docs/images/add_sha1.jpg" alt="Add SHA-1" width="43%"/>
+<img style="width: 44%;" src="../../../../../../../../docs/images/firebase_gear_icon.jpg" alt="Gear icon" width="30%"/>
+<img style="width: 53%" src="../../../../../../../../docs/images/firebase_add_sha1.jpg" alt="Add SHA-1" width="43%"/>
 </p>
 
 - If you have `already implemented Firebase authentication` before adding the SHA-1 key, you may need to `update` your app's `configuration`. This can be done by `replacing` the `google-services.json` file in project directory with the `updated google-services.json` file from Firebase project setting.
 
 <p>
-<img src="../../../../../../../../docs/images/updated_google_service_json_file.jpg" alt="Updated Google service json file" width="40%"/>
+<img src="../../../../../../../../docs/images/firebase_updated_google_service_json_file.jpg" alt="Updated Google service json file" width="40%"/>
 </p>

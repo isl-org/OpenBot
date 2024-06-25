@@ -4,6 +4,8 @@
 
 import Foundation
 import JavaScriptCore
+import AVFoundation
+import UIKit
 
 /**
  Class to evaluate the JS code inside openBot
@@ -16,18 +18,21 @@ class jsEvaluator {
     var jsContext: JSContext!;
     var runOpenBotThreadClass: runOpenBotThread?
     var cancelLoop: Bool = false;
+    private let inferenceQueue = DispatchQueue(label: "openbot.jsEvaluator.inferencequeue")
+    weak var delegate: autopilotDelegate?
+    // Define your functions as closures
 
     /**
      initializer of jsEvaluator class
      - Parameter jsCode:
      */
-
     init(jsCode: String) {
         command = jsCode;
-        setupCommand()
+        setupCommand();
         initializeJS();
-        evaluateJavaScript()
+        evaluateJavaScript();
         NotificationCenter.default.addObserver(self, selector: #selector(cancelThread), name: .cancelThread, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(startTask), name: .startTask, object: nil);
         print("Js code is ", jsCode);
     }
 
@@ -35,7 +40,11 @@ class jsEvaluator {
         if command.contains("forever()") {
             command = command.replacingOccurrences(of: "function forever (){ while(true){ ", with: "function forever (){ while(!" + String(self.cancelLoop) + "){ pause(0.03); ")
         }
+    }
 
+    deinit {
+        print("called in deinit");
+        runOpenBotThreadClass = nil
     }
 
     /**
@@ -47,20 +56,22 @@ class jsEvaluator {
 
 
     @objc func cancelThread() {
+        print("cancle thread");
         cancelLoop = true;
+        jsContext = nil;
         runOpenBotThreadClass?.cancel()
+        runOpenBotThreadClass = nil
         bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
     }
-
+    
     /**
      function defined for all the methods of openBot blockly
      */
     func evaluateJavaScript() {
         self.runOpenBotThreadClass = runOpenBotThread();
         runOpenBotThreadClass?.start();
-        DispatchQueue.global(qos: .background).async {
+        inferenceQueue.async {
             if let context = JSContext() {
-
                 let moveForward: @convention(block) (Float) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.moveForward(speed: speed);
 
@@ -85,7 +96,7 @@ class jsEvaluator {
                 }
                 let pause: @convention(block) (Double) -> Void = { (time) in
                     self.wait(forTime: time)
-                    self.semaphore.wait()
+                    jsEvaluator.runOpenBotThread.sleep(forTimeInterval: time / 1000);
                 }
                 let moveBackward: @convention(block) (Float) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.moveBackward(speed: speed);
@@ -96,14 +107,14 @@ class jsEvaluator {
                 let moveRight: @convention(block) (Float) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.moveRight(speed: speed)
                 }
-                let playSound: @convention(block) (Bool) -> Void = { (isPlaySound) in
-                    self.runOpenBotThreadClass?.playSound(isPlaySound: isPlaySound);
+                let playSound: @convention(block) (String) -> Void = { (inputString) in
+                    self.runOpenBotThreadClass?.playSound(inputString: inputString);
                 }
                 let playSoundSpeed: @convention(block) (String) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.playSoundSpeed(speedMode: speed);
                 }
-                let setSpeed : @convention(block) (String) -> Void = { (speed) in
-                    self.runOpenBotThreadClass?.playSoundSpeed(speedMode: speed);
+                let setSpeed: @convention(block) (String) -> Void = { (speed) in
+                    self.runOpenBotThreadClass?.setSpeed(speedMode: speed);
                 }
                 let motorBackward: @convention(block) () -> Void = { () in
                     self.runOpenBotThreadClass?.motorBackward();
@@ -115,7 +126,7 @@ class jsEvaluator {
                     self.runOpenBotThreadClass?.motorStop()
                 }
                 let playSoundMode: @convention(block) (String) -> Void = { (mode) in
-                    self.runOpenBotThreadClass?.playSoundMode(driveMode : mode);
+                    self.runOpenBotThreadClass?.playSoundMode(driveMode: mode);
                 }
                 let ledBrightness: @convention(block) (Int) -> Void = { brightnessFactor in
                     self.runOpenBotThreadClass?.setLedBrightness(factor: brightnessFactor);
@@ -124,7 +135,6 @@ class jsEvaluator {
 
                     self.runOpenBotThreadClass?.setLeftIndicatorOn();
                 }
-
                 let rightIndicatorOn: @convention(block) () -> Void = { () in
                     self.runOpenBotThreadClass?.setRightIndicatorOn();
                 }
@@ -177,64 +187,98 @@ class jsEvaluator {
 
                 }
                 let accelerationReadingX: @convention(block) () -> Double = { () -> Double in
-                   let temp =  self.runOpenBotThreadClass?.accelerationReading(axis: "x") ?? 0.0;
+                    let temp = self.runOpenBotThreadClass?.accelerationReading(axis: "x") ?? 0.0;
                     print(temp);
                     return temp;
                 }
                 let accelerationReadingY: @convention(block) () -> Double = { () -> Double in
-                    let temp =  self.runOpenBotThreadClass?.accelerationReading(axis: "y") ?? 0.0;
+                    let temp = self.runOpenBotThreadClass?.accelerationReading(axis: "y") ?? 0.0;
                     print(temp);
                     return temp;
                 }
                 let accelerationReadingZ: @convention(block) () -> Double = { () -> Double in
-                    let temp =  self.runOpenBotThreadClass?.accelerationReading(axis: "z") ?? 0.0;
+                    let temp = self.runOpenBotThreadClass?.accelerationReading(axis: "z") ?? 0.0;
                     print(temp);
                     return temp;
                 }
                 let magneticReadingX: @convention(block) () -> Double = { () -> Double in
-                   let temp =  self.runOpenBotThreadClass?.magneticReading(axis: "x") ?? 0.0;
-                    print("magnetic reading x",temp)
+                    let temp = self.runOpenBotThreadClass?.magneticReading(axis: "x") ?? 0.0;
+                    print("magnetic reading x", temp)
                     return temp;
                 }
                 let magneticReadingY: @convention(block) () -> Double = { () -> Double in
-                    let temp =  self.runOpenBotThreadClass?.magneticReading(axis: "y") ?? 0.0;
+                    let temp = self.runOpenBotThreadClass?.magneticReading(axis: "y") ?? 0.0;
                     print(temp)
                     return temp;
                 }
                 let magneticReadingZ: @convention(block) () -> Double = { () -> Double in
-                    let temp =  self.runOpenBotThreadClass?.magneticReading(axis: "z") ?? 0.0;
+                    let temp = self.runOpenBotThreadClass?.magneticReading(axis: "z") ?? 0.0;
                     print(temp)
                     return temp;
                 }
 
-                let navigationModel: @convention(block) (String) -> Void = {(model) in
-                    self.runOpenBotThreadClass?.navigationModel(model : model);
+                let navigationModel: @convention(block) (String) -> Void = { (model) in
+                    self.runOpenBotThreadClass?.navigationModel(model: model);
                 }
 
-                let reachGoal: @convention(block) (Double,Double) -> Void = {(forward,left) in
-                    self.runOpenBotThreadClass?.reachGoal(forward : forward, left : left);
+                let reachGoal: @convention(block) (Double, Double) -> Void = { (forward, left) in
+                    self.runOpenBotThreadClass?.reachGoal(forward: forward, left: left);
                 }
 
-                let reachPosition: @convention(block) (Double,Double) -> Void = {(x,y) in
-                    self.runOpenBotThreadClass?.reachPosition(x : x, y : y);
+                let reachPosition: @convention(block) (Double, Double) -> Void = { (x, y) in
+                    self.runOpenBotThreadClass?.reachPosition(x: x, y: y);
                 }
 
-                let follow: @convention(block) (String)-> Void = { (object) in
-                    self.runOpenBotThreadClass?.follow(object:object);
+                let follow: @convention(block) (String, String) -> Void = { (object, model) in
+                    self.runOpenBotThreadClass?.follow(object: object, model: model);
                 }
 
-                let toggleLed : @convention(block) (String) -> Void = {(status) in
+                let onDetect: @convention(block) (String, String, String) -> Void = { (object, model, task) in
+                    self.runOpenBotThreadClass?.onDetect(object: object, model: model, task: task);
+                }
+
+                let toggleLed: @convention(block) (String) -> Void = { (status) in
                     switch status {
-                    case "ON" :
+                    case "ON":
                         self.runOpenBotThreadClass?.setLedBrightness(factor: 100);
                         break;
-                    case "OFF" :
+                    case "OFF":
                         self.runOpenBotThreadClass?.setLedBrightness(factor: 0);
                         break;
-                    default :
+                    default:
                         self.runOpenBotThreadClass?.setLedBrightness(factor: 100);
                     }
+                }
 
+                let enableAutopilot: @convention(block) (String) -> Void = { (modelName) in
+                    self.runOpenBotThreadClass?.enableAutopilot(model: modelName);
+                    self.delegate?.didPerformAction();
+                }
+
+                let enableMultipleDetection: @convention(block) (String, String, String, String) -> Void = { (object1, model, object2, task) in
+                    self.runOpenBotThreadClass?.enableMultipleDetection(object1: object1, model: model, object2: object2, task: task);
+                }
+            
+                let enableMultipleAI: @convention(block) (String, String, String, String) -> Void = { (autoPilotModelName, task, object, detectorModel) in
+                    print(autoPilotModelName, task, object, detectorModel);
+//                    enableAutopilot(autoPilotModelName);
+                    self.runOpenBotThreadClass?.startMultipleAI(autoPilotModelName: autoPilotModelName, task: task, object: object, detectorModel: detectorModel);
+                }
+
+                let disableAI: @convention(block) () -> Void = { () in
+                    self.runOpenBotThreadClass?.disableAI()
+                }
+
+                let onLostFrames: @convention(block) (String, Int, String) -> Void = { (object, frames, task) in
+                    self.runOpenBotThreadClass?.onLostFrames(object: object, frames: frames, task: task);
+                }
+                
+                let displaySensorData: @convention(block) (String) -> Void = { (inputString) in
+                    self.runOpenBotThreadClass?.displaySensorData(inputString: inputString);
+                }
+                
+                let displayString: @convention(block) (String) -> Void = { (inputString) in
+                    self.runOpenBotThreadClass?.displayString(inputString: inputString);
                 }
 
                 context.setObject(moveForward,
@@ -329,6 +373,22 @@ class jsEvaluator {
                         forKeyedSubscript: "reachPosition" as NSString);
                 context.setObject(setSpeed,
                         forKeyedSubscript: "setSpeed" as NSString)
+                context.setObject(enableAutopilot,
+                        forKeyedSubscript: "enableAutopilot" as NSString);
+                context.setObject(enableMultipleDetection,
+                        forKeyedSubscript: "enableMultipleDetection" as NSString);
+                context.setObject(enableMultipleAI,
+                        forKeyedSubscript: "enableMultipleAI" as NSString);
+                context.setObject(disableAI,
+                        forKeyedSubscript: "disableAI" as NSString);
+                context.setObject(onDetect,
+                        forKeyedSubscript: "onDetect" as NSString);
+                context.setObject(onLostFrames,
+                        forKeyedSubscript: "onLostFrames" as NSString);
+                context.setObject(displaySensorData,
+                        forKeyedSubscript: "displaySensorData" as NSString);
+                context.setObject(displayString,
+                        forKeyedSubscript: "displayString" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -353,12 +413,6 @@ class jsEvaluator {
         if forTime != 0.03 {
             NotificationCenter.default.post(name: .commandName, object: "wait for \(forTime)");
         }
-        DispatchQueue.global(qos: .background).async {
-            let command = Control(left: 0, right: 0);
-            self.sendControl(control: command);
-            Thread.sleep(forTimeInterval: forTime / 1000);
-            self.semaphore.signal()
-        }
     }
 
     /**
@@ -382,11 +436,12 @@ class jsEvaluator {
         private var vehicleControl: Control = Control();
         private let sensor = sensorDataRetrieve.shared
         private let audioPlayer = AudioPlayer.shared
-
+        var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
         /**
          function to send controls to openBot
          - Parameter control:
          */
+
         func sendControl(control: Control) {
             if isCancelled {
                 bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n")
@@ -405,13 +460,12 @@ class jsEvaluator {
         }
 
         /**
-         Strat of block
+         Start of block
          */
         func startBlock() {
             if isCancelled {
                 return
             }
-
         }
 
         /**
@@ -478,6 +532,9 @@ class jsEvaluator {
             }
             print("inside stop robot")
             NotificationCenter.default.post(name: .commandName, object: "Stop");
+            runRobot.isObjectTracking = false;
+            runRobot.isMultipleObjectTracking = false;
+            runRobot.isPointGoalNavigation = false;
             let control = Control(left: 0, right: 0);
             sendControl(control: control);
             while (bluetooth.peri != nil && bluetooth.speedometer != "w0.00,0.00") {
@@ -532,11 +589,12 @@ class jsEvaluator {
             sendControl(control: carControl);
         }
 
-        func playSound(isPlaySound: Bool) {
+        func playSound(inputString: String) {
             if isCancelled {
                 return
             }
-            print("inside playsound");
+            NotificationCenter.default.post(name: .commandName, object: "Play input sound");
+            audioPlayer.playInputString(input: inputString);
         }
 
         func playSoundSpeed(speedMode: String) {
@@ -544,22 +602,45 @@ class jsEvaluator {
                 return
             }
             NotificationCenter.default.post(name: .commandName, object: "Play Sound \(speedMode)");
-           switch speedMode {
-           case "slow":
-               audioPlayer.playSpeedMode(speedMode: .SLOW);
-               break
-           case "medium":
-               audioPlayer.playSpeedMode(speedMode: .NORMAL);
-               break
-           case "fast":
-               audioPlayer.playSpeedMode(speedMode: .FAST);
-               break
-           default:
-               break
-           }
+            switch speedMode {
+            case "slow":
+                audioPlayer.playSpeedMode(speedMode: .SLOW);
+                break
+            case "medium":
+                audioPlayer.playSpeedMode(speedMode: .NORMAL);
+                break
+            case "fast":
+                audioPlayer.playSpeedMode(speedMode: .FAST);
+                break
+            default:
+                break
+            }
+        }
+        
+        func setSpeed(speedMode: String){
+            if isCancelled {
+                return
+            }
+            NotificationCenter.default.post(name: .commandName, object: "Set speed to \(speedMode)");
+            switch speedMode {
+            case "slow":
+                gameController.selectedSpeedMode = .SLOW;
+                preferencesManager.setSpeedMode(value: SpeedMode.FAST.rawValue);
+                break
+            case "medium":
+                gameController.selectedSpeedMode = .NORMAL;
+                preferencesManager.setSpeedMode(value: SpeedMode.SLOW.rawValue);
+                break
+            case "fast":
+                gameController.selectedSpeedMode = .FAST;
+                preferencesManager.setSpeedMode(value: SpeedMode.NORMAL.rawValue);
+                break
+            default:
+                break
+            }
         }
 
-        func playSoundMode(driveMode : String){
+        func playSoundMode(driveMode: String) {
             if isCancelled {
                 return
             }
@@ -632,7 +713,7 @@ class jsEvaluator {
             NotificationCenter.default.post(name: .commandName, object: "Set Led BrightNess \(factor) ");
             let front = (factor * 255) / 100
             let back = ((factor * 255)) / 100
-            bluetooth.sendDataFromJs(payloadData:"l" + String(front) + "," + String(back) + "\n")
+            bluetooth.sendDataFromJs(payloadData: "l" + String(front) + "," + String(back) + "\n");
         }
 
         /**
@@ -640,7 +721,7 @@ class jsEvaluator {
          */
         func setLeftIndicatorOn() {
             if isCancelled {
-                bluetooth.sendDataFromJs(payloadData: "i0,0\n")
+                bluetooth.sendDataFromJs(payloadData: "i0,0\n");
                 return
             }
             NotificationCenter.default.post(name: .commandName, object: "Left Indicator On");
@@ -699,12 +780,15 @@ class jsEvaluator {
             switch driveMode {
             case "dual":
                 gameController.selectedDriveMode = .DUAL;
+                preferencesManager.setDriveMode(value: DriveMode.GAME.rawValue);
                 break;
             case "joystick":
                 gameController.selectedDriveMode = .JOYSTICK;
+                preferencesManager.setDriveMode(value: DriveMode.DUAL.rawValue);
                 break;
             case "game":
                 gameController.selectedDriveMode = .GAME;
+                preferencesManager.setDriveMode(value: DriveMode.JOYSTICK.rawValue);
                 break;
             default:
                 break;
@@ -716,7 +800,6 @@ class jsEvaluator {
          - Parameter controller:
          */
         func switchController(controller: String) {
-
             if isCancelled {
                 return
             }
@@ -724,9 +807,11 @@ class jsEvaluator {
             switch controller {
             case "phone":
                 gameController.selectedControlMode = .PHONE;
+                preferencesManager.setControlMode(value: ControlMode.GAMEPAD.rawValue);
                 break;
             case "gamepad":
                 gameController.selectedControlMode = .GAMEPAD;
+                preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
                 break;
             default:
                 break;
@@ -857,33 +942,153 @@ class jsEvaluator {
             }
         }
 
-        func navigationModel(model : String){
+        func navigationModel(model: String) {
             if isCancelled {
                 return
             }
             print(model);
         }
 
-        func reachGoal(forward : Double, left : Double){
+        /**
+         Function for starting point goal navigation via blockly
+         - Parameters:
+           - forward:
+           - left:
+         */
+
+        func reachGoal(forward: Double, left: Double) {
             if isCancelled {
                 return
             }
-            print(forward,left);
+            runRobot.enablePointGoalNavigation(forward: forward, left: left);
+            NotificationCenter.default.post(name: .pointGoalNav, object: true);
+            NotificationCenter.default.post(name: .commandName, object: "reach goal");
+            print(forward, left);
         }
 
-        func reachPosition(x : Double, y : Double){
+        /**
+         Function for starting point goal navigation via blockly
+         - Parameters:
+           - x:
+           - y:
+         */
+        func reachPosition(x: Double, y: Double) {
             if isCancelled {
                 return
             }
-            print(x , y);
+            print(x, y);
         }
 
-        func follow(object : String){
-
+        /**
+         Function for staring object detection via blockly
+         - Parameters:
+           - object:
+           - model:
+         */
+        func follow(object: String, model: String) {
             if isCancelled {
                 return
             }
-            print(object);
+            runRobot.detector?.setSelectedClass(newClass: object)
+            NotificationCenter.default.post(name: .commandName, object: "follow");
+            print(object, model);
+            runRobot.enableObjectTracking(object: object, model: model);
+        }
+
+        /**
+     A method that call static method enableAutopilot to initialize autopilot
+     - Parameter model:
+     */
+        func enableAutopilot(model: String) {
+            if isCancelled {
+                return
+            }
+            runRobot.enableAutopilot(model: model);
+        }
+
+        /**
+            Function to start multiple detection
+         - Parameters:
+           - object1:
+           - model:
+           - object2:
+         */
+        func enableMultipleDetection(object1: String, model: String, object2: String, task: String) {
+            if isCancelled {
+                return
+            }
+            NotificationCenter.default.post(name: .commandObject, object: [object1, object2]);
+            NotificationCenter.default.post(name: .commandName, object: "multiple detection");
+            runRobot.enableMultipleObjectTracking(object1: object1, model: model, object2: object2);
+            NotificationCenter.default.post(name: .createCameraView, object: task);
+        }
+
+        /**
+         Function to start multiple AI
+         - Parameters:
+           - autoPilotModelName: name of autopilot model
+           - task: task to perform after detecting object
+           - object: target object for detector
+           - detectorModel: name of object tracking model
+         */
+        func startMultipleAI(autoPilotModelName: String, task: String, object: String, detectorModel: String) {
+            if isCancelled {
+                return
+            }
+            runRobot.detector?.setSelectedClass(newClass: object)
+            runRobot.enableMultipleAI(autoPilotModel: autoPilotModelName, task: task, object: object, detectorModel: detectorModel);
+            NotificationCenter.default.post(name: .createCameraView, object: task);
+        }
+
+        /**
+         Function to call static method of runRobot class to stop AI block
+         */
+        func disableAI() {
+            runRobot.disableAI();
+        }
+
+        /**
+         Function to call static method of runRobot class to enable detection
+         - Parameters:
+           - object:
+           - model:
+           - task:
+         */
+        func onDetect(object: String, model: String, task: String) {
+            if isCancelled {
+                return
+            }
+            runRobot.onDetection(object: object, model: model, task: task);
+            taskStorage.addAttribute(classType: object, task: task, frames: 0, type: "detect");
+            NotificationCenter.default.post(name: .createCameraView, object: "");
+        }
+
+        /**
+
+         - Parameters:
+           - object:
+           - frames:
+           - task:
+         */
+        func onLostFrames(object: String, frames: Int, task: String) {
+            if isCancelled {
+                return
+            }
+            taskStorage.addAttribute(classType: object, task: task, frames: frames, type: "unDetect");
+        }
+        
+        func displaySensorData(inputString: String){
+            if isCancelled {
+                return
+            }
+            NotificationCenter.default.post(name: .displayItems, object: inputString);
+        }
+        
+        func displayString(inputString: String){
+            if isCancelled {
+                return
+            }
+            NotificationCenter.default.post(name: .displayItems, object: inputString);
         }
     }
 }

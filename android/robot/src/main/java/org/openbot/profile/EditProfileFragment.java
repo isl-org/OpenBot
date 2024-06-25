@@ -90,8 +90,11 @@ public class EditProfileFragment extends Fragment {
     if (user != null) {
       setProfileDetails();
     }
+
+
     binding.dateOfBirth.setOnClickListener(
         v -> {
+          // current year,date and months
           int year = calender.get(Calendar.YEAR);
           int month = calender.get(Calendar.MONTH);
           int day = calender.get(Calendar.DAY_OF_MONTH);
@@ -101,6 +104,7 @@ public class EditProfileFragment extends Fragment {
                   // on below line we are passing context.
                   requireContext(),
                   (view1, getYear, monthOfYear, dayOfMonth) -> {
+
                     binding.dateOfBirth.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + getYear);
 
                       Calendar calendar = Calendar.getInstance();
@@ -110,8 +114,13 @@ public class EditProfileFragment extends Fragment {
                       Timestamp dobTimestamp = new Timestamp(calendar.getTime());
                       userDOB.put("dob", dobTimestamp);
                   }, year, month, day);
+
+          // Set the maximum date to today's date
+          datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
           datePickerDialog.show();
         });
+
+
     // Attach the firstNameTextWatcher to the firstName EditText to listen for text changes.
     binding.firstName.addTextChangedListener(firstNameTextWatcher);
     // Set a click listener on the "Save Changes" button to perform actions when clicked.
@@ -318,7 +327,7 @@ public class EditProfileFragment extends Fragment {
         if (dobTimestamp != null) {
           // Format the Timestamp as a string
           SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-          dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+5:30"));
+          dateFormat.setTimeZone(TimeZone.getDefault());
           binding.dateOfBirth.setText(dateFormat.format(dobTimestamp.toDate()));
           // Update the TextView with the formatted date of birth
 //            dobTextView.setText(formattedDOB);

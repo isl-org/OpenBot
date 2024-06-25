@@ -445,7 +445,9 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         }
     }
 
-
+    /**
+     Function to show date picker
+     */
     func showDatePicker() {
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(dateChange), for:
@@ -456,16 +458,29 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
         datePicker.maximumDate = Date()
     }
 
+    /**
+
+     - Parameter datePicker:
+     */
     @objc func dateChange(datePicker: UIDatePicker){
         dobField.text = formatDate(date: datePicker.date);
     }
 
+    /**
+    function to format date of birth of user in dd/MM/yyyy
+     - Parameter date:
+     - Returns:
+     */
     private func formatDate(date : Date) -> String{
         let formatter = DateFormatter();
         formatter.dateFormat = "dd/MM/yyyy";
         return formatter.string(from: date);
     }
 
+    /**
+     Function to get Date of Birth of user
+     - Parameter completion:
+     */
     private func getDOB(completion: @escaping (String?) -> Void) {
         if let uid = Auth.auth().currentUser?.uid {
             let userRef = Firestore.firestore().collection("users").document(uid)
@@ -491,10 +506,6 @@ class editProfileFragment: UIViewController, UIImagePickerControllerDelegate, UI
             completion(nil)
         }
     }
-
-
-
-
 }
 
 

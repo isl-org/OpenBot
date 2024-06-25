@@ -5,9 +5,10 @@
 import Foundation
 import UIKit
 import DropDown
+import GoogleSignIn
+
 
 class popupWindowView: UIView {
-    var textFieldLeadingConstraints: NSLayoutConstraint!
     var typeDropdown = DropDown()
     var typeDropdownView = UIView()
     var modelName: String = ""
@@ -19,12 +20,11 @@ class popupWindowView: UIView {
     var classDropdownLeadingAnchor: NSLayoutConstraint!
     var firstBox = UIView()
     var secondBox = UIView()
-    var firstBoxLeadingAnchor: NSLayoutConstraint!
-    var secondBoxLeadingAnchor: NSLayoutConstraint!
     var model: ModelItem!
     var widthOfModel: String!
     var heightOfModel: String!
     var modelAddress: String = ""
+
 
     /// Initializing function
     init(frame: CGRect, _ modelName: String, _ modelAddress: String, _ pathType: String) {
@@ -37,7 +37,7 @@ class popupWindowView: UIView {
         addGestureRecognizer(tap)
         createHeading();
         _ = createLabel(text: Strings.name, leadingAnchor: 20, topAnchor: 60);
-        _ = createTextField(text: modelName, trailingAnchor: -width / 2 - 50, topAnchor: 50);
+        _ = createTextField(text: modelName, trailingAnchor: 300, topAnchor: 50);
         createtfliteLabel()
         createEditIcon()
         _ = createLabel(text: Strings.type, leadingAnchor: 20, topAnchor: 130);
@@ -60,26 +60,6 @@ class popupWindowView: UIView {
         super.init(coder: aDecoder)
     }
 
-
-    /// creating portrait and landscape views.
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if currentOrientation == .portrait {
-            textFieldLeadingConstraints.constant = -width / 2 - 50
-            headingLeadingAnchor.constant = width / 2 - CGFloat(Strings.modelDetails.count * 5)
-            typeDropdownLeadingAnchor.constant = -width / 2 - 50
-            classDropdownLeadingAnchor.constant = -width / 2 - 50
-            firstBox.frame.origin = CGPoint(x: width / 2 - 50, y: 250)
-            secondBox.frame.origin = CGPoint(x: width / 2 + 50, y: 250);
-        } else {
-            textFieldLeadingConstraints.constant = -height / 2 - 50
-            headingLeadingAnchor.constant = height / 2 - CGFloat(Strings.modelDetails.count * 5)
-            typeDropdownLeadingAnchor.constant = -height / 2 - 50
-            classDropdownLeadingAnchor.constant = -height / 2 - 50
-            firstBox.frame.origin = CGPoint(x: height / 2 - 50, y: 250)
-            secondBox.frame.origin = CGPoint(x: height / 2 + 50, y: 250);
-        }
-    }
 
     /// function to setup models list.
     func setupModelItem() {
@@ -123,16 +103,11 @@ class popupWindowView: UIView {
 
     /// function to create text fields.
     func createTextField(text: String, trailingAnchor: CGFloat, topAnchor: CGFloat) -> UITextField {
-        let textField = UITextField();
+        let textField = UITextField(frame: CGRect(x: 120, y: 50, width: 170, height: 60));
+        textField.layer.borderWidth = 1;
         textField.text = text
         addSubview(textField);
         textField.addTarget(self, action: #selector(nameDidChange(_:)), for: .editingChanged);
-        textField.translatesAutoresizingMaskIntoConstraints = false;
-        textField.widthAnchor.constraint(equalToConstant: 170).isActive = true;
-        textField.heightAnchor.constraint(equalToConstant: 60).isActive = true;
-        textFieldLeadingConstraints = textField.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: trailingAnchor)
-        textFieldLeadingConstraints.isActive = true;
-        textField.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topAnchor).isActive = true;
         return textField;
     }
 
@@ -240,10 +215,10 @@ class popupWindowView: UIView {
 
     /// function to create box
     func createBox(isFirst: Bool) -> UIView {
-        let box = UIView();
+        let box = isFirst ? UIView(frame: CGRect(x: 120, y:  250, width: 50, height: 40)) :
+                UIView(frame: CGRect(x: 250, y: 250, width: 50, height: 40))
         box.layer.borderColor = Colors.border?.cgColor;
         box.layer.borderWidth = 1;
-        box.frame.size = CGSize(width: 50, height: 40);
         return box
     }
 
@@ -262,6 +237,7 @@ class popupWindowView: UIView {
         input.leadingAnchor.constraint(equalTo: firstBox.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true;
         input.topAnchor.constraint(equalTo: firstBox.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
     }
+
     /// function to create second input text field for number.
     func createSecondInputField() {
         let input = UITextField();
@@ -333,9 +309,21 @@ class popupWindowView: UIView {
 
     /// handler when tapped on the save/done button.
     @objc func onDoneBtnTap(_ sender: UIButton) throws {
-
-        try Common.saveConfigFileToDocument(modelItems: modifyModels());
+        try Common.saveConfigFileToDocument(modelItems: Common.modifyModels(modelAddress: modelAddress, model: model, widthOfModel: widthOfModel, heightOfModel: heightOfModel));
         if let index = model.name.firstIndex(of: ".") {
+            if GIDSignIn.sharedInstance.currentUser != nil {
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.withoutEscapingSlashes]
+                do {
+                    let jsonData = try encoder.encode(Common.modifyModels(modelAddress: modelAddress, model: model, widthOfModel: widthOfModel, heightOfModel: heightOfModel));
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        if let data = jsonString.data(using: .utf8) {
+                            Authentication().updateModelListFile(fileData: data);
+                        }
+                    }
+                }
+            } else {
+            }
             NotificationCenter.default.post(name: .removeBlankScreen, object: model.name.prefix(upTo: index));
         }
         removeFromSuperview();
@@ -347,35 +335,4 @@ class popupWindowView: UIView {
     }
 
 
-    /// function to let user modify the model, and store them into documents directory.
-    func modifyModels() -> [ModelItem] {
-        var allModels: [ModelItem] = [];
-        let documentDirectoryURls = DataLogger.shared.getDocumentDirectoryInformation();
-        var isFoundConfigFile: Bool = false;
-        for url in documentDirectoryURls {
-            if url.absoluteString.contains("config.json") {
-                isFoundConfigFile = true
-                break;
-            }
-        }
-        switch isFoundConfigFile {
-        case true:
-            allModels = Common.loadAllModelFromDocumentDirectory()
-        case false:
-            allModels = Common.loadAllModelItemsFromBundle();
-        }
-
-        let newModel = modelAddress == "" ? ModelItem.init(id: model.id, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: model.path, inputSize: widthOfModel + "x" + heightOfModel) :
-                ModelItem.init(id: allModels.count + 1, class: model.class, type: model.type, name: model.name, pathType: model.pathType, path: modelAddress, inputSize: widthOfModel + "x" + heightOfModel);
-        var index = 0;
-        for model in allModels {
-            if model.id == newModel.id {
-                allModels[index] = newModel;
-                return allModels;
-            }
-            index = index + 1;
-        }
-        allModels.append(newModel);
-        return allModels
-    }
 }

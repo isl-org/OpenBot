@@ -7,15 +7,18 @@ import GoogleSignIn
 import FirebaseCore
 import GoogleAPIClientForREST
 import GTMSessionFetcher
+
 class GoogleServices {
     private let service: GTLRDriveService = GTLRDriveService()
     private var googleSignIn = GIDSignIn.sharedInstance
     private var userToken: String = ""
-    static var googleAuthentication : GoogleServices = GoogleServices()
-    init(){
+    static var googleAuthentication: GoogleServices = GoogleServices()
+
+    init() {
         googleAuthLogin();
     }
-    func googleAuthLogin(){
+
+    func googleAuthLogin() {
         guard let clientID = FirebaseApp.app()?.options.clientID else {
             return
         }
@@ -35,10 +38,10 @@ class GoogleServices {
     func googleSignInFunc(clientId: String) {
 
 // Create Google Sign In configuration object.
-    if GIDSignIn.sharedInstance.hasPreviousSignIn(){
-        let user = GIDSignIn.sharedInstance.currentUser;
-        print("privious sign-in ",user);
-    }
+        if GIDSignIn.sharedInstance.hasPreviousSignIn() {
+            let user = GIDSignIn.sharedInstance.currentUser;
+            print("privious sign-in ", user);
+        }
         let config = GIDConfiguration(clientID: clientId)
         GIDSignIn.sharedInstance.configuration = config
 
@@ -70,7 +73,7 @@ class GoogleServices {
 
             let googleProfilePicURL = user?.profile?.imageURL(withDimension: 150)?.absoluteString ?? ""
             print("Google Profile Avatar URL: \(googleProfilePicURL)")
-            let driveScope = "https://www.googleapis.com/auth/drive.readonly"
+            let driveScope = "https://www.googleapis.com/auth/drive.file"
             let grantedScopes = user?.grantedScopes
             if grantedScopes == nil || !grantedScopes!.contains(driveScope) {
                 // Request additional Drive scope.

@@ -62,6 +62,7 @@ struct Strings {
     static let threads: String = "Threads"
     static let object: String = "Object"
     static let confidence: String = "Confidence"
+    static let dynamicSpeed: String = "Dynamic Speed"
 
     // Settings
     static let camera: String = "Camera"

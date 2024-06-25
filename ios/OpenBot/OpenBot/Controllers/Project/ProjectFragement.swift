@@ -8,7 +8,7 @@ import GoogleSignIn
 import GoogleAPIClientForREST
 import GTMSessionFetcher
 
-class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class projectFragment: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,autopilotDelegate {
     @IBOutlet weak var baseView = UIView()
     var animationView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4));
     @IBOutlet weak var qrScannerIcon: UIView!
@@ -31,6 +31,8 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
     var fileName: String = String()
     var projectId: String = String()
     var isLoading: Bool = false
+    weak var jsEval : jsEvaluator?
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /**
        Function calls after view will loaded.
@@ -77,6 +79,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated);
+        jsEval = nil
     }
 
     /**
@@ -460,7 +463,9 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         let viewController = (storyboard.instantiateViewController(withIdentifier: "runOpenBot"));
         navigationController?.pushViewController(viewController, animated: true);
         bottomSheet.removeFromSuperview();
-        _ = jsEvaluator(jsCode: command);
+        jsEval = jsEvaluator(jsCode: command);
+        preferencesManager.setBlocklyCode(value: command);
+        jsEval?.delegate = self
     }
 
     /**
@@ -670,7 +675,7 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         let dispatchGroup = DispatchGroup()
         var deleteCount: Int = 0;
         dispatchGroup.enter()
-        authentication.getIdOfXmlFile(name: projectName) { fileId, error in
+        authentication.getIdOfDriveFile(name: projectName, fileType: "Xml") { fileId, error in
             if let error = error {
                 print("Error while deleting file", error)
             }
@@ -729,6 +734,10 @@ class projectFragment: UIViewController, UICollectionViewDataSource, UICollectio
         if let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
             rootViewController.present(alertController, animated: true, completion: nil)
         }
+    }
+
+    func didPerformAction() {
+        NotificationCenter.default.post(name: .createCameraView, object: nil);
     }
 }
 
@@ -807,6 +816,8 @@ extension UserDefaults {
         defaults.synchronize()
     }
 }
+
+
 
 
 

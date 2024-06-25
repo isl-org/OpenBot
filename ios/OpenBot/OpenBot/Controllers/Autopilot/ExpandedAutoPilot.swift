@@ -25,6 +25,7 @@ class expandedAutoPilot: UIView {
     var serverDropDownLabel = UILabel()
     var serverDropDownView = UIView()
     var bluetoothIcon = UIImageView()
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// Overriding the init function of UIView
     ///
@@ -57,6 +58,31 @@ class expandedAutoPilot: UIView {
         setupThreads();
         setupVehicleControls()
         createLeftSpeed()
+        if let device = preferencesManager.getDevice(){
+            deviceDropDownLabel.text = device;
+        }
+        if let threads = preferencesManager.getThreads(){
+            threadLabel.text = threads;
+        }
+        if let autopilotModel = preferencesManager.getAutopilotModel(){
+            if Common.isModelItemAvailableInDocument(modelName: autopilotModel) == true {
+                let selectedModel = autopilotModel;
+                modelDropdownLabel.text = selectedModel
+                let models = loadAllAutoPilotModels()
+                for model in models {
+                    guard let index = model.name.firstIndex(of: ".") else {
+                        return
+                    }
+                    if model.name.prefix(upTo: index) == selectedModel {
+                        imageInputLabel.text = model.inputSize
+                        break
+                    }
+                }
+            }
+            else{
+                preferencesManager.setAutopilotModel(value: "");
+            }
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDevice), name: .updateDevice, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThreadLabel), name: .updateThreadLabel, object: nil)
