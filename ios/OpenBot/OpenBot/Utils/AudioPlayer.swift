@@ -140,7 +140,7 @@ class AudioPlayer : AVPlayer, AVSpeechSynthesizerDelegate  {
             play(name: "logging_stopped");
         }
     }
-    
+
     private func playString(input:String){
         if !speechSynthesizer.isSpeaking {
             let utterance = AVSpeechUtterance(string: input)

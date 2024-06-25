@@ -109,7 +109,6 @@ class VehicleControl: UIView {
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
                 client.send(message: msg);
                 _ = WebRTCDelegates();
-
             }
             else if(controlMode == ControlMode.PHONE) {
                 controlMode = ControlMode.WEB;

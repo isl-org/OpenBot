@@ -95,98 +95,57 @@
     <string name="tracking_lost">Tracking lost.</string>
     <string name="no_initial_ar_core_pose">No initial AR Core pose.</string>
     <string name="ar_core_session_paused">AR Core session paused.</string>
-  <string name="bumpers">Bumpers</string>
-  <string name="n_a">N/A</string>
-  <string name="robot_type">Robot Type:</string>
-  <string name="indicators">Indicators</string>
-  <string name="back">Back</string>
-  <string name="voltage_divider">Voltage Divider</string>
-  <string name="status">Status</string>
-  <string name="front">Front</string>
-  <string name="robot_icon">Robot Icon</string>
-  <string name="wheel_odometry_front">Wheel Odometry Front</string>
-  <string name="wheel_odometry_back">Wheel Odometry Back</string>
-  <string name="backward">Backward</string>
-  <string name="forward">Forward</string>
-  <string name="stop">Stop</string>
-  <string name="motors">Motors</string>
-  <string name="leds">LEDs</string>
-  <string name="lights">Lights</string>
-  <string name="sensors">Sensors</string>
-  <string name="send_commands">Send Commands</string>
-  <string name="wheel_odometry">Wheel Odometry</string>
-  <string name="readings">Readings</string>
-  <string name="lights_slider">lights slider</string>
-  <string name="tips_connect_timeout">connect timeout</string>
-  <string name="tips_connect_fail">connect fail</string>
-  <string name="tips_connection_disconnected">connection has disconnected</string>
-  <string name="tips_write_operation">please enter a hex string</string>
-  <string name="indicator_leds">Indicator LEDs</string>
-  <string name="back_leds">Back LEDs</string>
-  <string name="status_leds">Status LEDs</string>
-  <string name="front_leds">Front LEDs</string>
-  <string name="usb">USB</string>
-  <string-array name="servers">
-    <item>No server</item>
-  </string-array>
-  <string-array name="models">
-    <item>CmdNav</item>
-    <item>GoalNav</item>
-    <item>MobileNet</item>
-    <item>EfficientDet</item>
-    <item>YoloV4</item>
-    <item>YoloV5</item>
-  </string-array>
-  <string-array name="devices">
-    <item>CPU</item>
-    <item>GPU</item>
-    <item>NNAPI</item>
-  </string-array>
-  <string-array name="baud_rates">
-    <item>9600</item>
-    <item>14400</item>
-    <item>19200</item>
-    <item>38400</item>
-    <item>57600</item>
-    <item>115200</item>
-    <item>230400</item>
-    <item>460800</item>
-    <item>921600</item>
-  </string-array>
-  <string-array name="log_settings">
-    <item>all_imgs</item>
-    <item>crop_img</item>
-    <item>preview_img</item>
-    <item>only_sensors</item>
-  </string-array>
-  <string-array name="control_modes">
-    <item>Gamepad</item>
-    <item>Phone</item>
-    <item>Webserver</item>
-  </string-array>
-  <string-array name="drive_modes">
-    <item>Dual</item>
-    <item>Game</item>
-    <item>Joystick</item>
-  </string-array>
-  <string-array name="preview_resolutions">
-    <item>Low</item>
-    <item>Medium</item>
-    <item>High</item>
-  </string-array>
-  <string-array name="stream_server">
-    <item>WebRTC</item>
-    <item>RTSP</item>
-  </string-array>
-  <string-array name="speed_modes">
-    <item>Slow</item>
-    <item>Normal</item>
-    <item>Fast</item>
-  </string-array>
-  <string-array name="connection_type">
-    <item>Bluetooth</item>
-    <item>USB</item>
-  </string-array>
+    <string name="tips_connect_timeout">connect timeout</string>
+    <string name="tips_connect_fail">connect fail</string>
+    <string name="tips_connection_disconnected">connection has disconnected</string>
+    <string name="tips_write_operation">please enter a hex string</string>
+    <string-array name="servers">
+        <item>No server</item>
+    </string-array>
+    <string-array name="models">
+        <item>Autopilot_F</item>
+        <item>MobileNetV1_1_0_Q</item>
+        <item>MobileNetV3_S_Q</item>
+        <item>YoloV4</item>
+    </string-array>
+    <string-array name="devices">
+        <item>CPU</item>
+        <item>GPU</item>
+        <item>NNAPI</item>
+    </string-array>
+    <string-array name="baud_rates">
+        <item>9600</item>
+        <item>14400</item>
+        <item>19200</item>
+        <item>38400</item>
+        <item>57600</item>
+        <item>115200</item>
+        <item>230400</item>
+        <item>460800</item>
+        <item>921600</item>
+    </string-array>
+    <string-array name="log_settings">
+        <item>all_imgs</item>
+        <item>crop_img</item>
+        <item>preview_img</item>
+        <item>only_sensors</item>
+    </string-array>
+    <string-array name="control_modes">
+        <item>Gamepad</item>
+        <item>Phone</item>
+        <!--        <item>WebRTC</item>-->
+    </string-array>
+    <string-array name="drive_modes">
+        <item>Dual</item>
+        <item>Game</item>
+        <item>Joystick</item>
+    </string-array>
+
+    <string-array name="preview_resolutions">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
 
     <string-array name="save_data">
         <item>Local Storage</item>
@@ -195,6 +154,20 @@
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="stream_server">
+        <item>WebRTC</item>
+        <item>RTSP</item>
+    </string-array>
+    <string-array name="connection_type">
+        <item>Bluetooth</item>
+        <item>USB</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="speed_modes">
+        <item>Slow</item>
+        <item>Normal</item>
+        <item>Fast</item>
+    </string-array>
     <string name="profile">Profile</string>
     <string name="projects">Projects</string>
     <string name="scanner">Scanner</string>
@@ -206,5 +179,32 @@
     <string name="logout">Logout</string>
     <string name="auto_mode">Auto Mode</string>
     <string name="dynamic_speed">Dynamic Speed</string>
-
+    <string name="bumpers">Bumpers</string>
+    <string name="n_a">N/A</string>
+    <string name="robot_type">Robot Type:</string>
+    <string name="indicators">Indicators</string>
+    <string name="back">Back</string>
+    <string name="voltage_divider">Voltage Divider</string>
+    <string name="status">Status</string>
+    <string name="front">Front</string>
+    <string name="robot_icon">Robot Icon</string>
+    <string name="wheel_odometry_front">Wheel Odometry Front</string>
+    <string name="wheel_odometry_back">Wheel Odometry Back</string>
+    <string name="backward">Backward</string>
+    <string name="forward">Forward</string>
+    <string name="stop">Stop</string>
+    <string name="motors">Motors</string>
+    <string name="leds">LEDs</string>
+    <string name="lights">Lights</string>
+    <string name="sensors">Sensors</string>
+    <string name="send_commands">Send Commands</string>
+    <string name="wheel_odometry">Wheel Odometry</string>
+    <string name="readings">Readings</string>
+    <string name="lights_slider">lights slider</string>
+    <string name="indicator_leds">Indicator LEDs</string>
+    <string name="back_leds">Back LEDs</string>
+    <string name="status_leds">Status LEDs</string>
+    <string name="front_leds">Front LEDs</string>
+    <string name="usb">USB</string>
+    <string name="cancel">Cancel</string>
 </resources>

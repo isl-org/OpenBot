@@ -31,6 +31,7 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         tcpOptions.keepaliveIdle = 2
         let parameters = NWParameters(tls: nil, tcp: tcpOptions)
         parameters.includePeerToPeer = true
+        parameters.allowLocalEndpointReuse = true
         connection = NWConnection(to: endpoint, using: parameters)
         start()
         msgDelegate = self
