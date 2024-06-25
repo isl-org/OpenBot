@@ -386,6 +386,14 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		4FEF44F0837469F66D5A7156 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0619EEC92C24208B0050EB6A /* Modes.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		4FEF4549B0D1FC8F591E63FE /* OpenBotUITests */ = {
 			isa = PBXGroup;
 			children = (
