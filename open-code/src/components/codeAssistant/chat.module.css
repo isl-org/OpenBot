@@ -3,6 +3,7 @@
     justify-content: space-between;
     height: 100%;
     flex-direction: column;
+    background-color:#d0e4f2
 }
 
 .chatBottomBar {
@@ -48,8 +49,10 @@
 .chatHeader {
     text-align: center;
     text-decoration-color: white;
-    background-color:#4CAF50;
+    background-color:#FFFFFF;
     font-family: Gilroy-Medium, sans-serif;
-    color: #f2f2f2;
+    color: black;
     padding: 10px;
+    display:flex;
+    justify-content: flex-start;
 }

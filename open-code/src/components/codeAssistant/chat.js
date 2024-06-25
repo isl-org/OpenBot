@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from "./chat.module.css";
 import ChatBox from '../chatBox/messagebox';
-import { getAIMessage } from "../../services/chatAssistant";
-import { Images } from "../../utils/images.js";
+import {getAIMessage} from "../../services/chatAssistant";
+import {Images} from "../../utils/images.js";
+import {Constants} from '../../utils/constants.js';
+
 
 const Chat = () => {
     const [inputValue, setInputValue] = useState('');
@@ -11,33 +13,34 @@ const Chat = () => {
         userMessage: "",
         AIMessage: "",
         id: 1,
-        userTimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
         AITimestamp: "",
     });
+    const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 
     const handleSendClick = async () => {
-        const userInput = inputValue.trim().toLowerCase();
-        if (userInput === '') return;
+        const userInput = inputValue.toLowerCase();
         setCurrentMessage((prevState) => ({
             ...prevState,
             userMessage: userInput,
+            userTimestamp: timestamp,
             AIMessage: "",
             id: allChatMessages.length + 1,
-            AITimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            AITimestamp: "",
         }));
 
         getAIMessage(userInput).then((res) => {
             setCurrentMessage((prevState) => ({
                 ...prevState,
                 AIMessage: res,
-                AITimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                AITimestamp: timestamp
             }));
         }).catch((e) => {
             console.log(e);
             setCurrentMessage((prevState) => ({
                 ...prevState,
                 AIMessage: "Error occurred",
-                AITimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                AITimestamp: timestamp
             }));
         });
         setInputValue('');
@@ -53,28 +56,30 @@ const Chat = () => {
         if (currentMessage.AIMessage) {
             setAllChatMessages((prevMessages) => {
                 const updatedMessages = [...prevMessages];
-
                 if (updatedMessages.length > 0) {
                     updatedMessages[updatedMessages.length - 1] = currentMessage;
                 }
-
+                console.log("updatedMessages:::", updatedMessages);
                 return updatedMessages;
             });
-        } else if (currentMessage.userMessage)
+        } else if (currentMessage.userMessage) {
+            console.log("current message::", currentMessage);
             setAllChatMessages((prevMessages) => [...prevMessages, currentMessage]);
+        }
     }, [currentMessage]);
 
     return (
         <div className={styles.chatMainContainer}>
-            <div title="chat-header" className={styles.chatHeader}>
-                <h1>Chat Assistant</h1>
+            <div className={styles.chatHeader}>
+                <img src={Images.AISupport} alt="Chat Assistant Logo" style={{width: 40, height: 40}}/>
+                <h1>{Constants.Playground}</h1>
             </div>
-            <div style={{height: "100%", overflow: "auto"}} title="chat-box">
+            <div style={{height: "100%", overflow: "auto"}}>
                 {allChatMessages.map((conversation, index) => (
                     <ChatBox key={index} conversation={conversation}/>
                 ))}
             </div>
-            <div title="chat-bottom-bar" className={styles.chatBottomBar}>
+            <div className={styles.chatBottomBar}>
                 <input
                     type="text"
                     placeholder="Enter a prompt here..."

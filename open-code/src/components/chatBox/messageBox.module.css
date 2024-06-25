@@ -2,56 +2,45 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 10px;
-    background-color: #f9f9f9;
+    background-color: white;
     color: black;
 
 }
-
 .responseContent {
     display: flex;
     flex-direction: column;
     padding-left: 20px;
     color: black;
-
 }
 
 .chatBubble {
     display: flex;
     flex-direction: column;
     gap: 28px;
+    color: #FFFFFF;
+    font-family: Gilroy-Medium, sans-serif;
+    font-size: 18px;
     padding: 28px 28px 0 28px;
 }
 
 .userMessage {
     align-self: flex-end;
-    background-color: #f7f7f7;
-    border-radius: 10px;
-    padding: 10px;
+    background-color: #0071C5;
+    border-radius: 12px;
+    padding: 20px;
     width: 70%;
     border: 1px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     gap: 13px;
+
 }
 
 
 
-.chatBubble span:nth-child(2) {
-    color: black;
-    font-family: Gilroy-Medium, sans-serif;
-}
 
-.chatBubble span:nth-child(4) {
-    color: lime; /* green */
-    font-weight: bold;
-}
 
-.userMessage span:nth-child(2) {
-    color: black;
-    font-weight: bold;
-}
 
-.assistantResponse span:nth-child(2) {
-    color: #28a745;
-    font-weight: bold;
-}
+
+
+
