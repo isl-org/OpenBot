@@ -63,6 +63,9 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
                 if(mode == ControlMode.GAMEPAD){
                     selectedControlMode = ControlMode.PHONE
                 }
+                else if(mode == ControlMode.PHONE){
+                    selectedControlMode = ControlMode.WEB
+                }
                 else{
                     selectedControlMode = ControlMode.GAMEPAD
                 }
@@ -523,14 +526,14 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     @objc func gamepadMode(_ sender: UIView) {
         selectedControlMode = ControlMode.GAMEPAD;
         updateControlMode()
-        preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
+        preferencesManager.setControlMode(value: ControlMode.WEB.rawValue);
     }
     
     @objc func webMode(_ sender: UIView){
         selectedControlMode = ControlMode.WEB;
         updateControlMode()
         selectedDriveMode = DriveMode.GAME;
-        print("in web mode");
+        preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
     }
 
     @objc func slow(_ sender: UIView) {

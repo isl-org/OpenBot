@@ -897,7 +897,7 @@
 			mainGroup = 4FEF4FDE69B20F82CA2C0196;
 			packageReferences = (
 				3A8EF46A2A6FD0FD00F60B3D /* XCRemoteSwiftPackageReference "Starscream" */,
-				3A8EF46D2A6FE22F00F60B3D /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
+				3A8EF46D2A6FE22F00F60B3D /* XCRemoteSwiftPackageReference "socket" */,
 			);
 			productRefGroup = 4FEF4A209F128B8F5AC06E17 /* Products */;
 			projectDirPath = "";
@@ -1709,7 +1709,7 @@
 				minimumVersion = 4.0.0;
 			};
 		};
-		3A8EF46D2A6FE22F00F60B3D /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
+		3A8EF46D2A6FE22F00F60B3D /* XCRemoteSwiftPackageReference "socket" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
 			requirement = {
@@ -1727,7 +1727,7 @@
 		};
 		3A8EF46E2A6FE22F00F60B3D /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3A8EF46D2A6FE22F00F60B3D /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			package = 3A8EF46D2A6FE22F00F60B3D /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */

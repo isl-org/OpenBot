@@ -114,7 +114,7 @@ class VehicleControl: UIView {
                 controlMode = ControlMode.WEB;
                 driveMode = DriveMode.GAME;
                 createAndUpdateButton(iconName: Images.webIcon!.withTintColor(.white), leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
-                createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
+                createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: false);
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
                 client.send(message: msg);
                 if(webRTCClient != nil){
@@ -135,10 +135,13 @@ class VehicleControl: UIView {
             }
             gameController.selectedControlMode = controlMode
             if(controlMode == ControlMode.GAMEPAD){
-                preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
+                preferencesManager.setControlMode(value: ControlMode.WEB.rawValue);
+            }
+            else if(controlMode == ControlMode.PHONE){
+                preferencesManager.setControlMode(value: ControlMode.GAMEPAD.rawValue);
             }
             else{
-                preferencesManager.setControlMode(value: ControlMode.GAMEPAD.rawValue);
+                preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
             }
         }
     }
