@@ -84,7 +84,8 @@ class VehicleControl: UIView {
             btn.backgroundColor = Colors.titleDeactivated
         }
         let modeIcon = UIImageView(frame: CGRect(x: 15, y: 15, width: 30, height: 30))
-        modeIcon.image = iconName;
+        modeIcon.image = iconName.withRenderingMode(.alwaysTemplate)
+        modeIcon.tintColor = .white
         if let action = action {
             btn.addTarget(self, action: action, for: .touchUpInside)
         }
