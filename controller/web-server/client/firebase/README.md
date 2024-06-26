@@ -29,7 +29,7 @@ Using Environment Variables When using Firebase Authentication, you may need to 
 
    <img src="../../images/firebase_web_server_env_variable.png" width="30%"/>
 
-2. Add following environment variables to the .env file that will be used in firebase.js file.
+2. Add following environment variables to the .env file that will be used in authentication.js file.
       ```bash REACT_APP_FIREBASE_API_KEY=<REACT_APP_FIREBASE_API_KEY>
        SNOWPACK_PUBLIC_FIREBASE_API_KEY=<SNOWPACK_PUBLIC_FIREBASE_API_KEY>
        SNOWPACK_PUBLIC_AUTH_DOMAIN=<SNOWPACK_PUBLIC_AUTH_DOMAIN>
