@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import styles from './messageBox.module.css';
 
 /**
@@ -7,14 +7,26 @@ import styles from './messageBox.module.css';
  * @returns {React.JSX.Element}
  * @constructor
  */
-const ChatBox = ({conversation}) => (
-    <div className={styles.chatBubble}>
-        <UserMessage timestamp={conversation.userTimestamp} message={conversation.userMessage}
-        />
-        <AssistantResponse timestamp={conversation.AITimestamp} message={conversation.AIMessage}
-        />
-    </div>
-);
+const ChatBox = ({ conversation }) => {
+    const chatBoxRef = useRef(null);
+
+    useEffect(() => {
+        if (chatBoxRef.current) {
+            chatBoxRef.current.scrollIntoView(false);
+        }
+    }, [conversation]);
+
+    return (
+        <div
+            ref={(ref) => (chatBoxRef.current = ref)}
+            className={styles.chatBubble}
+            style={{ overflowY: 'auto' }}
+        >
+            <UserMessage timestamp={conversation.userTimestamp} message={conversation.userMessage} />
+            <AssistantResponse timestamp={conversation.AITimestamp} message={conversation.AIMessage} />
+        </div>
+    );
+};
 /**
  * UserMessage component renders a user's message with a timestamp.
  * @param timestamp
@@ -107,6 +119,5 @@ const parseResponseMessage = (message) => {
 
     return parsedLines;
 };
-
 
 export default ChatBox;
