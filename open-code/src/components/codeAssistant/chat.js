@@ -1,12 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import styles from "./chat.module.css";
 import ChatBox from '../chatBox/messagebox';
 import {getAIMessage} from "../../services/chatAssistant";
 import {Images} from "../../utils/images.js";
-import {Constants} from '../../utils/constants.js';
-
+import {Constants, Themes} from '../../utils/constants.js';
+import {ThemeContext} from "../../App";
+import {colors as Colors} from "../../utils/color";
 
 const Chat = () => {
+    const theme = useContext(ThemeContext)
     const [inputValue, setInputValue] = useState('');
     const [allChatMessages, setAllChatMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState({
@@ -16,8 +18,8 @@ const Chat = () => {
         userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
         AITimestamp: "",
     });
-    const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 
+    const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
     const handleSendClick = async () => {
         const userInput = inputValue.toLowerCase();
         setCurrentMessage((prevState) => ({
@@ -69,9 +71,14 @@ const Chat = () => {
     }, [currentMessage]);
 
     return (
-        <div className={styles.chatMainContainer}>
+        <div className={styles.chatMainContainer}
+             style={{
+                 backgroundColor: theme.theme === Themes.dark ? Colors.blackBackground : "#d0e4f2",
+                 color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
+             }}
+            >
             <div className={styles.chatHeader}>
-                <img src={Images.AISupport} alt="Chat Assistant Logo" style={{width: 40, height: 40}}/>
+                <img src={Images.aiSupport} alt="Chat Assistant Logo" style={{width: 40, height: 40}}/>
                 <h1>{Constants.Playground}</h1>
             </div>
             <div style={{height: "100%", overflow: "auto"}}>
@@ -79,8 +86,12 @@ const Chat = () => {
                     <ChatBox key={index} conversation={conversation}/>
                 ))}
             </div>
-            <div className={styles.chatBottomBar}>
+            <div className={styles.chatBottomBar} >
                 <input
+                    style={{
+                        backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                        color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
+                    }}
                     type="text"
                     placeholder="Enter a prompt here..."
                     className={styles.inputField}
@@ -91,13 +102,17 @@ const Chat = () => {
                 <div
                     onClick={handleSendClick}
                     className={`sendButton ${inputValue.trim() === '' ? 'disabled' : ''}`}
+
                     style={inputValue.trim() === '' ? {cursor: 'not-allowed', opacity: 0.5} : {}}
                 >
                     <img alt="Send Icon" src={Images.sendIcon} className={styles.sendIcon}/>
                     <i className="fas fa-paper-plane" aria-hidden="true"></i>
                 </div>
             </div>
+
         </div>
+
+
     );
 };
 

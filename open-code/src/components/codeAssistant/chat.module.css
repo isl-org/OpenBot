@@ -3,16 +3,14 @@
     justify-content: space-between;
     height: 100%;
     flex-direction: column;
-    background-color:#d0e4f2
 }
 
 .chatBottomBar {
     display: flex;
     align-items: center;
     gap: 10px;
-    /*background-color: #f0f0f0;*/
-    border-top: 1px solid #ccc;
     padding: 10px;
+
 }
 
 .inputField {
@@ -20,8 +18,10 @@
     border: none;
     border-radius: 20px;
     font-size: 16px;
-    padding: 10px;
+    padding: 16px;
     box-sizing: border-box;
+    outline: none;
+    background-color:#FFFFFF;
 }
 
 .sendButton {
@@ -41,7 +41,7 @@
 }
 
 .sendIcon {
-    width: 40px;
+    width: 30px;
     height: 30px;
     gap: 5px;
 }

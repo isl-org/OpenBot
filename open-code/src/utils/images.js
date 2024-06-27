@@ -50,7 +50,7 @@ import darkPlusIcon from "../assets/images/icon/darkPlus.png"
 import lightPlusIcon from "../assets/images/icon/lightPlus.png"
 import subscriptionExpire from "../assets/images/subscription-expire.png"
 import sendIcon from "../assets/images/sendIcon.png"
-import AISupport from "../assets/images/AISupport.png"
+import aiSupport from "../assets/images/aiSupport.png"
 /**
  * Images used in opeBot-Playgorund is listed here
  * @type {{lightThemeIcon: *, darkPencilIcon: *, line: *, undoIcon: *, pencilIcon: *, profileImage: *, laptop: *, lightCrossIcon: *, login: *, gameIcon: *, joystickIcon: *, gamepadIcon: *, cloud: *, infoLight: *, logo: *, blueTheme: *, crossIcon: *, darkDots: *, phoneIcon: *, logoutIcon: *, Carousal2Dark: *, dots: *, uploadIcon: *, redoIcon: *, Carousal3Dark: *, avatar: *, darkThemeIcon: *, errorEmojiIcon: *, editProfileIcon: *, darkUserIcon: *, darkLogoutIcon: *, dualDriveIcon: *, dragDropWhite: *, dragDropDark: *, userIcon: *, darkCrossIcon: *, successfulEmojiIcon: *, helpIcon: *, Carousal3: *, Carousal2: *}}
@@ -108,5 +108,5 @@ export const Images = {
     lightPlusIcon: lightPlusIcon,
     subscriptionExpire:subscriptionExpire,
     sendIcon: sendIcon,
-    AISupport: AISupport,
+    aiSupport: aiSupport,
 }

@@ -1,5 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, {useRef, useEffect, useState, useContext} from 'react';
 import styles from './messageBox.module.css';
+import {ThemeContext} from "../../App";
+import {Themes} from "../../utils/constants";
+import {colors as Colors} from "../../utils/color";
+
+
 
 /**
  * Main ChatBox component that displays user and assistant messages
@@ -8,25 +13,20 @@ import styles from './messageBox.module.css';
  * @constructor
  */
 const ChatBox = ({ conversation }) => {
-    const chatBoxRef = useRef(null);
-
-    useEffect(() => {
-        if (chatBoxRef.current) {
-            chatBoxRef.current.scrollIntoView(false);
-        }
-    }, [conversation]);
-
+    const theme = useContext(ThemeContext);
     return (
-        <div
-            ref={(ref) => (chatBoxRef.current = ref)}
-            className={styles.chatBubble}
-            style={{ overflowY: 'auto' }}
-        >
+
+        <div className={styles.chatBubble}  style={{
+            backgroundColor: theme.theme === Themes.dark? Colors.blackBackground : "#d0e4f2",
+            color: theme.theme === Themes.dark? Colors.whiteFont : "#FFFFFF"
+        }}>
             <UserMessage timestamp={conversation.userTimestamp} message={conversation.userMessage} />
             <AssistantResponse timestamp={conversation.AITimestamp} message={conversation.AIMessage} />
         </div>
+
     );
 };
+
 /**
  * UserMessage component renders a user's message with a timestamp.
  * @param timestamp
@@ -34,14 +34,12 @@ const ChatBox = ({ conversation }) => {
  * @returns {React.JSX.Element}
  * @constructor
  */
-const UserMessage = ({timestamp, message}) => (
+const UserMessage = ({ timestamp, message }) => (
     <div className={styles.userMessage} title={timestamp}>
-        <p>
-            <span className={styles.userName}></span>
-            {message}
-        </p>
+        <div>{message}</div>
     </div>
 );
+
 /**
  *
  * Component to display assistant's response with timestamp
@@ -49,18 +47,40 @@ const UserMessage = ({timestamp, message}) => (
  * @constructor
  * @param props
  */
-const AssistantResponse = (props) => {
-    const {timestamp, message, conversation} = props;
+const AssistantResponse = ({ timestamp, message }) => {
+    const [loader, setLoader] = useState(false);
     const parsedMessage = parseResponseMessage(message);
+    const theme = useContext(ThemeContext)
+    useEffect(() => {
+        if (message === "") {
+            setLoader(true);
+        } else {
+            setLoader(false);
+        }
+    }, [message]);
 
     return (
-        <div className={styles.responseBox} title={timestamp}>
-            <div className={styles.responseContent}>
-                {parsedMessage}
-            </div>
+
+        <div className={styles.responseBox} title={timestamp} style={{
+            backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground :"#FFFFFF",
+            color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000" // Change to black for light theme
+        }}
+
+        >
+            {loader ? (
+                <div
+                    className={`${styles.loader} ${theme.theme === Themes.dark ? styles.whiteLoader : styles.loader }`}
+                ></div>
+            ) : (
+                <div className={styles.responseContent} style={{
+                    backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                    color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
+                }}>{parsedMessage}</div>
+            )}
         </div>
     );
 };
+
 /**
  *
  * Parses a response message string and converts it into an array of JSX elements.
@@ -78,20 +98,20 @@ const parseResponseMessage = (message) => {
 
         if (line.startsWith('###')) {
             parsedLines.push(
-                <h3 key={index} style={{paddingLeft: `${indent * 16}px`}}>
+                <h3 key={index} style={{ paddingLeft: `${indent * 16}px` }}>
                     {line.replace('###', '')}
                 </h3>
             );
         } else if (line.startsWith('-')) {
             parsedLines.push(
-                <li key={index} style={{paddingLeft: `${indent * 16}px`}}>
+                <li key={index} style={{ paddingLeft: `${indent * 16}px` }}>
                     {line.replace('-', '')}
                 </li>
             );
         } else if (line.includes('```')) {
             const code = line.replace('```', '');
             parsedLines.push(
-                <code key={index} style={{paddingLeft: `${indent * 16}px`}}>
+                <code key={index} style={{ paddingLeft: `${indent * 16}px` }}>
                     {code}
                 </code>
             );
@@ -110,7 +130,7 @@ const parseResponseMessage = (message) => {
             );
         } else {
             parsedLines.push(
-                <p key={index} style={{paddingLeft: `${indent * 16}px`}}>
+                <p key={index} style={{ paddingLeft: `${indent * 16}px` }}>
                     {line}
                 </p>
             );

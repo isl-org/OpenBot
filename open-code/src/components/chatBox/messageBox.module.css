@@ -2,25 +2,23 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 10px;
-    background-color: white;
-    color: black;
+
 
 }
 .responseContent {
     display: flex;
     flex-direction: column;
     padding-left: 20px;
-    color: black;
 }
 
 .chatBubble {
     display: flex;
     flex-direction: column;
     gap: 28px;
-    color: #FFFFFF;
     font-family: Gilroy-Medium, sans-serif;
-    font-size: 18px;
+    font-size: 15px;
     padding: 28px 28px 0 28px;
+
 }
 
 .userMessage {
@@ -28,14 +26,47 @@
     background-color: #0071C5;
     border-radius: 12px;
     padding: 20px;
-    width: 70%;
+    max-width: 70%;
     border: 1px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     gap: 13px;
 
 }
-
+.loader {
+    width: 50px;
+    aspect-ratio: 2;
+    --_g: no-repeat radial-gradient(circle closest-side,#000 90%,#0000);
+    background:
+            var(--_g) 0%   50%,
+            var(--_g) 50%  50%,
+            var(--_g) 100% 50%;
+    background-size: calc(100%/3) 50%;
+    animation: l3 1s infinite linear;
+}
+@keyframes l3 {
+    20%{background-position:0%   0%, 50%  50%,100%  50%}
+    40%{background-position:0% 100%, 50%   0%,100%  50%}
+    60%{background-position:0%  50%, 50% 100%,100%   0%}
+    80%{background-position:0%  50%, 50%  50%,100% 100%}
+}
+.whiteLoader {
+    width: 50px;
+    aspect-ratio: 2;
+    --_g: no-repeat radial-gradient(circle closest-side, #FFFFFF 90%, #FFFFFF00);
+    background:
+            var(--_g) 0%   50%,
+            var(--_g) 50%  50%,
+            var(--_g) 100% 50%;
+    background-size: calc(100%/3) 50%;
+    animation: l3 1s infinite linear;
+}
+.loaderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
 
 
 
