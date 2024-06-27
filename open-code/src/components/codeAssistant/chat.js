@@ -3,7 +3,7 @@ import styles from "./chat.module.css";
 import ChatBox from '../chatBox/messagebox';
 import {getAIMessage} from "../../services/chatAssistant";
 import {Images} from "../../utils/images.js";
-import {Constants, Themes,Errors} from '../../utils/constants.js';
+import {Constants, Themes, Errors} from '../../utils/constants.js';
 import {ThemeContext} from "../../App";
 import {colors as Colors} from "../../utils/color";
 
@@ -58,7 +58,7 @@ const Chat = () => {
     };
 
     const handleKeyPress = (event) => {
-        if (event.key === 'Enter' && inputValue.trim()!== '') {
+        if (event.key === 'Enter' && inputValue.trim() !== '') {
             handleSendClick();
         }
     };
@@ -82,8 +82,8 @@ const Chat = () => {
     return (
         <div className={styles.chatMainContainer}
              style={{
-                 backgroundColor: theme.theme === Themes.dark? Colors.blackBackground : "#d0e4f2",
-                 color: theme.theme === Themes.dark? Colors.whiteFont : "#000000"
+                 backgroundColor: theme.theme === Themes.dark ? Colors.blackBackground : "#d0e4f2",
+                 color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
              }}
         >
             <div className={styles.chatHeader}>
@@ -95,33 +95,47 @@ const Chat = () => {
                     <ChatBox key={index} conversation={conversation}/>
                 ))}
             </div>
-            <div className={styles.chatBottomBar} >
-                <input
-                    style={{
-                        backgroundColor: theme.theme === Themes.dark? Colors.blackPopupBackground : "#FFFFFF",
-                        color: theme.theme === Themes.dark? Colors.whiteFont : "#000000"
-                    }}
-                    type="text"
-                    placeholder="Enter a prompt here..."
-                    className={styles.inputField}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                />
-                <div
-                    onClick={handleSendClick}
-                    className={`sendButton ${inputValue.trim() === ''? 'disabled' : ''}`}
-
-                    style={inputValue.trim() === ''? {cursor: 'not-allowed', opacity: 0.5} : {}}
-                >
-                    <img alt="Send Icon" src={Images.sendIcon} className={styles.sendIcon}/>
-                    <i className="fas fa-paper-plane" aria-hidden="true"></i>
-                </div>
-            </div>
-
+            <ChatBottomBar
+                inputValue={inputValue}
+                handleSendClick={handleSendClick}
+                handleKeyPress={handleKeyPress}
+                setInputValue={setInputValue}
+            />
         </div>
-
-
+    );
+};
+/**
+ * Component for the user input box
+ * @param props
+ * @returns {Element}
+ * @constructor
+ */
+const ChatBottomBar = (props) => {
+    const theme = useContext(ThemeContext);
+   const {inputValue, handleSendClick, handleKeyPress, setInputValue}=props;
+    return (
+        <div className={styles.chatBottomBar}>
+            <input
+                style={{
+                    backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                    color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
+                }}
+                type="text"
+                placeholder="Enter a prompt here..."
+                className={styles.inputField}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={handleKeyPress}
+            />
+            <div
+                onClick={handleSendClick}
+                className={`sendButton ${inputValue.trim() === '' ? 'disabled' : ''}`}
+                style={inputValue.trim() === '' ? { cursor: 'not-allowed', opacity: 0.5 } : {}}
+            >
+                <img alt="Send Icon" src={Images.sendIcon} className={styles.sendIcon} />
+                <i className="fas fa-paper-plane" aria-hidden="true"></i>
+            </div>
+        </div>
     );
 };
 
