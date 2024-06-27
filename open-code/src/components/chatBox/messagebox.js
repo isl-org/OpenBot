@@ -4,8 +4,6 @@ import {ThemeContext} from "../../App";
 import {Themes} from "../../utils/constants";
 import {colors as Colors} from "../../utils/color";
 
-
-
 /**
  * Main ChatBox component that displays user and assistant messages
  * @param conversation
@@ -15,15 +13,15 @@ import {colors as Colors} from "../../utils/color";
 const ChatBox = ({ conversation }) => {
     const theme = useContext(ThemeContext);
     return (
-
-        <div className={styles.chatBubble}  style={{
+        <div className={styles.chatBubble} style={{
             backgroundColor: theme.theme === Themes.dark? Colors.blackBackground : "#d0e4f2",
             color: theme.theme === Themes.dark? Colors.whiteFont : "#FFFFFF"
         }}>
-            <UserMessage timestamp={conversation.userTimestamp} message={conversation.userMessage} />
+            {conversation.userMessage && (
+                <UserMessage timestamp={conversation.userTimestamp} message={conversation.userMessage} />
+            )}
             <AssistantResponse timestamp={conversation.AITimestamp} message={conversation.AIMessage} />
         </div>
-
     );
 };
 
@@ -37,6 +35,7 @@ const ChatBox = ({ conversation }) => {
 const UserMessage = ({ timestamp, message }) => (
     <div className={styles.userMessage} title={timestamp}>
         <div>{message}</div>
+        <div className={styles.userTimestamp}>{timestamp}</div>
     </div>
 );
 
@@ -60,13 +59,10 @@ const AssistantResponse = ({ timestamp, message }) => {
     }, [message]);
 
     return (
-
         <div className={styles.responseBox} title={timestamp} style={{
             backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground :"#FFFFFF",
-            color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000" // Change to black for light theme
-        }}
-
-        >
+            color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
+        }}>
             {loader ? (
                 <div
                     className={`${styles.loader} ${theme.theme === Themes.dark ? styles.whiteLoader : styles.loader }`}
@@ -75,7 +71,9 @@ const AssistantResponse = ({ timestamp, message }) => {
                 <div className={styles.responseContent} style={{
                     backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
                     color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
-                }}>{parsedMessage}</div>
+                }}>{parsedMessage}
+                    <div className={styles.timestamp}>{timestamp}</div>
+                </div>
             )}
         </div>
     );

@@ -3,18 +3,27 @@ import styles from "./chat.module.css";
 import ChatBox from '../chatBox/messagebox';
 import {getAIMessage} from "../../services/chatAssistant";
 import {Images} from "../../utils/images.js";
-import {Constants, Themes} from '../../utils/constants.js';
+import {Constants, Themes,Errors} from '../../utils/constants.js';
 import {ThemeContext} from "../../App";
 import {colors as Colors} from "../../utils/color";
 
 const Chat = () => {
     const theme = useContext(ThemeContext)
     const [inputValue, setInputValue] = useState('');
-    const [allChatMessages, setAllChatMessages] = useState([]);
+    const [allChatMessages, setAllChatMessages] = useState([
+        {
+            userMessage: "",
+            AIMessage: Constants.Message,
+            id: 1,
+            userTimestamp: "",
+            AITimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+        },
+    ]);
+
     const [currentMessage, setCurrentMessage] = useState({
         userMessage: "",
         AIMessage: "",
-        id: 1,
+        id: 2,
         userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
         AITimestamp: "",
     });
@@ -41,7 +50,7 @@ const Chat = () => {
             console.log(e);
             setCurrentMessage((prevState) => ({
                 ...prevState,
-                AIMessage: "Error occurred",
+                AIMessage: Errors.error6,
                 AITimestamp: timestamp
             }));
         });
@@ -49,7 +58,7 @@ const Chat = () => {
     };
 
     const handleKeyPress = (event) => {
-        if (event.key === 'Enter' && inputValue.trim() !== '') {
+        if (event.key === 'Enter' && inputValue.trim()!== '') {
             handleSendClick();
         }
     };
@@ -73,10 +82,10 @@ const Chat = () => {
     return (
         <div className={styles.chatMainContainer}
              style={{
-                 backgroundColor: theme.theme === Themes.dark ? Colors.blackBackground : "#d0e4f2",
-                 color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
+                 backgroundColor: theme.theme === Themes.dark? Colors.blackBackground : "#d0e4f2",
+                 color: theme.theme === Themes.dark? Colors.whiteFont : "#000000"
              }}
-            >
+        >
             <div className={styles.chatHeader}>
                 <img src={Images.aiSupport} alt="Chat Assistant Logo" style={{width: 40, height: 40}}/>
                 <h1>{Constants.Playground}</h1>
@@ -89,8 +98,8 @@ const Chat = () => {
             <div className={styles.chatBottomBar} >
                 <input
                     style={{
-                        backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
-                        color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
+                        backgroundColor: theme.theme === Themes.dark? Colors.blackPopupBackground : "#FFFFFF",
+                        color: theme.theme === Themes.dark? Colors.whiteFont : "#000000"
                     }}
                     type="text"
                     placeholder="Enter a prompt here..."
@@ -101,9 +110,9 @@ const Chat = () => {
                 />
                 <div
                     onClick={handleSendClick}
-                    className={`sendButton ${inputValue.trim() === '' ? 'disabled' : ''}`}
+                    className={`sendButton ${inputValue.trim() === ''? 'disabled' : ''}`}
 
-                    style={inputValue.trim() === '' ? {cursor: 'not-allowed', opacity: 0.5} : {}}
+                    style={inputValue.trim() === ''? {cursor: 'not-allowed', opacity: 0.5} : {}}
                 >
                     <img alt="Send Icon" src={Images.sendIcon} className={styles.sendIcon}/>
                     <i className="fas fa-paper-plane" aria-hidden="true"></i>
