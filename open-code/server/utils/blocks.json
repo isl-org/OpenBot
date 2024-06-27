@@ -67,7 +67,8 @@
       "colour": "#4860b7",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "wait for chosen time"
   },
   {
     "category": "Sound",
@@ -100,7 +101,8 @@
       "colour": "#709662",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "play chosen sound speed in robot phone"
   },
   {
     "category": "Sound",
@@ -133,7 +135,8 @@
       "colour": "#709662",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "play chosen sound mode in robot phone"
   },
   {
     "category": "Movement",
@@ -169,7 +172,8 @@
       "colour": "#d56235",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "move robot in forward or backward direction at chosen speed"
   },
   {
     "category": "Movement",
@@ -205,7 +209,8 @@
       "colour": "#d56235",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "move robot in left or right direction at chosen speed"
   },
   {
     "category": "Movement",
@@ -244,7 +249,8 @@
       "colour": "#d56235",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "move robot in left, right, forward, backward or circular direction at chosen speed"
   },
   {
     "category": "Movement",
@@ -264,7 +270,8 @@
       "colour": "#ca3143",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "stop robot immediately"
   },
   {
     "category": "Sensors",
@@ -276,7 +283,8 @@
       "colour": "#49a2a5",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "return sonar sensor readings"
   },
   {
     "category": "Sensors",
@@ -288,7 +296,8 @@
       "colour": "#49a2a5",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "return speed sensor readings"
   },
   {
     "category": "Sensors",
@@ -300,7 +309,8 @@
       "colour": "#49a2a5",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "return voltage divider sensor readings"
   },
   {
     "category": "Sensors",
@@ -328,7 +338,8 @@
       "colour": "#49a2a5",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "return wheel odometer sensor readings"
   },
   {
     "category": "Sensors",
@@ -360,7 +371,8 @@
       "colour": "#49a2a5",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "return gyroscope sensor readings"
   },
   {
     "category": "Sensors",
@@ -392,7 +404,8 @@
       "colour": "#49a2a5",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "return acceleration readings"
   },
   {
     "category": "Sensors",
@@ -424,7 +437,8 @@
       "colour": "#49a2a5",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "return magnetic sensor readings"
   },
   {
     "category": "Controller",
@@ -457,7 +471,8 @@
       "colour": "#bf778b",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "set speed to chosen speed in robot app"
   },
   {
     "category": "Controller",
@@ -496,7 +511,8 @@
       "colour": "#bf778b",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "set controller mode to chosen mode in robot app"
   },
   {
     "category": "Controller",
@@ -544,7 +560,8 @@
       "colour": "#bf778b",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "set drive mode to chosen mode in robot app"
   },
   {
     "category": "Lights",
@@ -566,7 +583,8 @@
       "colour": "#687c9e",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "set brightness for tail and head led lights"
   },
   {
     "category": "Lights",
@@ -602,7 +620,8 @@
       "colour": "#687c9e",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "to ON/OFF left or right indicators of the openbot"
   },
   {
     "category": "Lights",
@@ -624,7 +643,8 @@
       "colour": "#687c9e",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "to ON/OFF tail and head led lights"
   },
   {
     "category": "AI",
@@ -637,7 +657,8 @@
       "colour": "#ca3143",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "disable the ongoing artificial intelligence"
   },
   {
     "category": "Sound",
@@ -657,7 +678,8 @@
       "colour": "#709662",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "Play a custom sound from robot phone that is input in the text field"
   },
   {
     "category": "Control",
@@ -676,7 +698,8 @@
       "colour": "#4860b7",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "display input sensor data on the robot phone"
   },
   {
     "category": "Control",
@@ -696,9 +719,9 @@
       "colour": "#4860b7",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "display input text on robot phone"
   },
-
   {
     "category": "AI",
     "blockType": "objectTracking",
@@ -710,16 +733,28 @@
           "type": "field_dropdown",
           "name": "class",
           "options": [
-            ["person", "person"],
-            ["bus", "bus"],
-            ["birds", "birds"]
+            [
+              "person",
+              "person"
+            ],
+            [
+              "bus",
+              "bus"
+            ],
+            [
+              "birds",
+              "birds"
+            ]
           ]
         },
         {
           "type": "field_dropdown",
           "name": "models",
           "options": [
-            ["MobileNetV1-300", "MobileNetV1-300"]
+            [
+              "MobileNetV1-300",
+              "MobileNetV1-300"
+            ]
           ]
         }
       ],
@@ -728,30 +763,34 @@
       "colour": "#458ff7",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "enabling object tracking to follow a chosen object at chosen model"
   },
   {
     "category": "AI",
     "blockType": "autopilot",
-    "configuration":
-  {
-    "type": "block_type",
-    "message0": "enable autopilot using %1",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "autopilot models",
-        "options": [
-          ["CIL-Mobile-Cmd", "CIL-Mobile-Cmd"]
-        ]
-      }
-    ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": "#458ff7",
-    "tooltip": "",
-    "helpUrl": ""
-  }
+    "configuration": {
+      "type": "block_type",
+      "message0": "enable autopilot using %1",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "autopilot models",
+          "options": [
+            [
+              "CIL-Mobile-Cmd",
+              "CIL-Mobile-Cmd"
+            ]
+          ]
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#458ff7",
+      "tooltip": "",
+      "helpUrl": ""
+    },
+    "working": "enabling autopilot to run at chosen model"
   },
   {
     "category": "AI",
@@ -786,159 +825,206 @@
       "colour": "#458ff7",
       "tooltip": "",
       "helpUrl": ""
-    }
+    },
+    "working": "enabling point goal navigation to run at chosen model"
   },
   {
     "category": "AI",
     "blockType": "variableDetection",
-    "configuration":
-  {
-    "type": "block_type",
-    "message0": "on %1 detected using %2 %3 do %4 on lost %5 frames %6 do %7",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "labels",
-        "options": [
-          ["person", "person"],
-          ["bus", "bus"],
-          ["birds", "birds"]
-        ]
-      },
-      {
-        "type": "field_dropdown",
-        "name": "models",
-        "options": [
-          ["MobileNetV1-300", "MobileNetV1-300"]
-        ]
-      },
-      {
-        "type": "input_dummy"
-      },
-      {
-        "type": "input_statement",
-        "name": "detect_tasks"
-      },
-      {
-        "type": "field_slider",
-        "name": "frames",
-        "value": 192,
-        "min": 1,
-        "max": 90
-      },
-      {
-        "type": "input_dummy"
-      },
-      {
-        "type": "input_statement",
-        "name": "framesLost_tasks"
-      }
-    ],
-    "colour": "#458ff7",
-    "tooltip": "",
-    "helpUrl": ""
-  }
+    "configuration": {
+      "type": "block_type",
+      "message0": "on %1 detected using %2 %3 do %4 on lost %5 frames %6 do %7",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "labels",
+          "options": [
+            [
+              "person",
+              "person"
+            ],
+            [
+              "bus",
+              "bus"
+            ],
+            [
+              "birds",
+              "birds"
+            ]
+          ]
+        },
+        {
+          "type": "field_dropdown",
+          "name": "models",
+          "options": [
+            [
+              "MobileNetV1-300",
+              "MobileNetV1-300"
+            ]
+          ]
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "detect_tasks"
+        },
+        {
+          "type": "field_slider",
+          "name": "frames",
+          "value": 192,
+          "min": 1,
+          "max": 90
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "framesLost_tasks"
+        }
+      ],
+      "colour": "#458ff7",
+      "tooltip": "",
+      "helpUrl": ""
+    },
+    "working": "Enable multiple object tracking to perform tasks upon detecting a chosen object and also execute different tasks when losing the chosen frames."
   },
   {
     "category": "AI",
     "blockType": "multipleAIDetection",
-    "configuration":
-  {
-    "type": "block_type",
-    "message0": "enable autopilot using %1 , %2 on detecting %3 using %4 %5  Do %6",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "autopilot_models",
-        "options": [
-          ["CIL-Mobile-Cmd", "CIL-Mobile-Cmd"]
-        ]
-      },
-      {
-        "type": "input_dummy"
-      },
-      {
-        "type": "field_dropdown",
-        "name": "labels",
-        "options": [
-          ["person", "person"],
-          ["bus", "bus"],
-          ["birds", "birds"]
-        ]
-      },
-      {
-        "type": "field_dropdown",
-        "name": "objectTracking_models",
-        "options": [
-          ["MobileNetV1-300", "MobileNetV1-300"]
-        ]
-      },
-      {
-        "type": "input_dummy"
-      },
-      {
-        "type": "input_statement",
-        "name": "tasks"
-      }
-    ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": "#458ff7",
-    "tooltip": "",
-    "helpUrl": ""
-  }
-
+    "configuration": {
+      "type": "block_type",
+      "message0": "enable autopilot using %1 , %2 on detecting %3 using %4 %5  Do %6",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "autopilot_models",
+          "options": [
+            [
+              "CIL-Mobile-Cmd",
+              "CIL-Mobile-Cmd"
+            ]
+          ]
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "labels",
+          "options": [
+            [
+              "person",
+              "person"
+            ],
+            [
+              "bus",
+              "bus"
+            ],
+            [
+              "birds",
+              "birds"
+            ]
+          ]
+        },
+        {
+          "type": "field_dropdown",
+          "name": "objectTracking_models",
+          "options": [
+            [
+              "MobileNetV1-300",
+              "MobileNetV1-300"
+            ]
+          ]
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "tasks"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#458ff7",
+      "tooltip": "",
+      "helpUrl": ""
+    },
+    "working": "Enable object tracking and autopilot simultaneously to perform specified tasks upon detecting the chosen object. "
   },
   {
     "category": "AI",
     "blockType": "multipleObjectTracking",
-    "configuration":
-  {
-    "type": "block_type",
-    "message0": "follow a  %1 using %2 , %3 on detecting %4 %5 Do %6",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "labels1",
-        "options": [
-          ["person", "person"],
-          ["bus", "bus"],
-          ["birds", "birds"]
-        ]
-      },
-      {
-        "type": "field_dropdown",
-        "name": "models",
-        "options": [
-          ["MobileNetV1-300", "MobileNetV1-300"]
-        ]
-      },
-      {
-        "type": "input_dummy"
-      },
-      {
-        "type": "field_dropdown",
-        "name": "labels2",
-        "options": [
-          ["person", "person"],
-          ["bus", "bus"],
-          ["birds", "birds"]
-        ]
-      },
-      {
-        "type": "input_dummy"
-      },
-      {
-        "type": "input_statement",
-        "name": "tasks"
-      }
-    ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": "#458ff7",
-    "tooltip": "",
-    "helpUrl": ""
-  }
+    "configuration": {
+      "type": "block_type",
+      "message0": "follow a  %1 using %2 , %3 on detecting %4 %5 Do %6",
+      "args0": [
+        {
+          "type": "field_dropdown",
+          "name": "labels1",
+          "options": [
+            [
+              "person",
+              "person"
+            ],
+            [
+              "bus",
+              "bus"
+            ],
+            [
+              "birds",
+              "birds"
+            ]
+          ]
+        },
+        {
+          "type": "field_dropdown",
+          "name": "models",
+          "options": [
+            [
+              "MobileNetV1-300",
+              "MobileNetV1-300"
+            ]
+          ]
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "labels2",
+          "options": [
+            [
+              "person",
+              "person"
+            ],
+            [
+              "bus",
+              "bus"
+            ],
+            [
+              "birds",
+              "birds"
+            ]
+          ]
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "tasks"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#458ff7",
+      "tooltip": "",
+      "helpUrl": ""
+    }
   },
   {
     "category": "Control",
@@ -950,11 +1036,7 @@
   },
   {
     "category": "Control",
-    "blockType": "controls_ifelse"
-  },
-  {
-    "category": "Control",
-    "blockType":"logic_compare"
+    "blockType": "logic_compare"
   },
   {
     "category": "Control",
@@ -967,12 +1049,10 @@
   {
     "category": "Control",
     "blockType": "logic_boolean"
-  }
-  ,
-
+  },
   {
     "category": "Loops",
-    "blockType":"controls_whileUntil"
+    "blockType": "controls_whileUntil"
   },
   {
     "category": "Loops",
@@ -980,11 +1060,11 @@
   },
   {
     "category": "Loops",
-    "blockType":"controls_flow_statements"
+    "blockType": "controls_flow_statements"
   },
   {
     "category": "Loops",
-   "blockType": "controls_for"
+    "blockType": "controls_for"
   },
   {
     "category": "Operators",
@@ -1018,26 +1098,20 @@
     "category": "Operators",
     "blockType": "math_random_int"
   },
-  [
-    {
-      "category": "Variables",
-      "blockType": "variables_set"
-    },
-    {
-      "category": "Variables",
-      "blockType": "variables_get"
-    },
-    {
-      "category": "Variables",
-      "blockType": "math_change"
-    },
-    {
-      "category": "Variables",
-      "blockType": "math_number"
-    }
-  ]
-
-
-
-
+  {
+    "category": "Variables",
+    "blockType": "variables_set"
+  },
+  {
+    "category": "Variables",
+    "blockType": "variables_get"
+  },
+  {
+    "category": "Variables",
+    "blockType": "math_change"
+  },
+  {
+    "category": "Variables",
+    "blockType": "math_number"
+  }
 ]
