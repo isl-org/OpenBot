@@ -3,7 +3,6 @@
 //
 
 import Foundation
-import Foundation
 
 protocol WebSocketProvider: AnyObject {
     var delegate: WebSocketProviderDelegate? { get set }
