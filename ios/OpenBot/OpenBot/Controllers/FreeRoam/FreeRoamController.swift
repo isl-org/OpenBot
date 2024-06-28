@@ -121,13 +121,6 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         NotificationCenter.default.removeObserver(self)
     }
 
-    /**
-     Removing all notifications
-     */
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
     /// Called after the view was dismissed, covered or otherwise hidden.
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated);
