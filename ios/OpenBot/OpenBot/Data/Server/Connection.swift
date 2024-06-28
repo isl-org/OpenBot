@@ -96,6 +96,9 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
                     if command.contains("driveCmd") {
                         NotificationCenter.default.post(name: .updateStringFromControllerApp, object: message);
                     }
+                    if command.contains("command"){
+                        NotificationCenter.default.post(name: .updateLightsCommandFromControllerApp, object: message);
+                    }
                     print(command);
                 }
             }

@@ -20,6 +20,7 @@ struct Strings {
     static let driveMode: String = "Drive Mode"
     static let gamepad: String = "Gamepad"
     static let phone: String = "Phone"
+    static let web: String = "Web"
     static let joystick: String = "Joystick"
     static let game: String = "Game"
     static let dual: String = "Dual"

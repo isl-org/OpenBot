@@ -1,0 +1,38 @@
+{
+  "name": "web-server",
+  "version": "1.0.0",
+  "description": "web server with ios and android app connection",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "cd server && npm install",
+    "start": "run-p dev:server dev:start-server",
+    "start-nohup": "nohup npm run start",
+    "dev:server": "npm run start --prefix server",
+    "dev:start-server-headless": "NODE_ENV=development snowpack build --watch",
+    "dev:start-server": "npx snowpack dev --port 8081",
+    "build": "snowpack build"
+  },
+  "keywords": [
+    "webrtc",
+    "websocket"
+  ],
+  "author": "Nitish Pratap",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "http2-proxy": "^5.0.53",
+    "npm-run-all": "^4.1.5",
+    "snowpack": "^3.8.8"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@firebase/firestore": "^4.4.0",
+    "dotenv": "^16.4.5",
+    "firebase": "^10.1.0",
+    "js-cookie": "^3.0.5",
+    "ws": "^8.13.0"
+  }
+}

@@ -30,6 +30,7 @@ class DataCollectionController: CameraController {
     var saveZipFilesName = [URL]()
     var paths: [String] = [""]
     var selectedSaveAsDropdown: String = "Local";
+    let webSocketMsgHandler = WebSocketMessageHandler();
     let fragmentType = FragmentType.shared
 
     /// Initialization routine
@@ -82,6 +83,7 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updatePreview), name: .updatePreview, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateLightsCommandFromControllerApp), name: .updateLightsCommandFromControllerApp, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateLogData), name: .logData, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateSaveAs), name: .saveAs, object: nil)
 
@@ -378,6 +380,38 @@ class DataCollectionController: CameraController {
             let rightSpeed = command.slice(from: "r:", to: ", ");
             let leftSpeed = command.slice(from: "l:", to: "}}")
             gameController.sendControlFromPhoneController(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
+        }
+    }
+    
+    /// update screen command data coming from application
+    @objc func updateLightsCommandFromControllerApp(_ notification: Notification) {
+        if gameController.selectedControlMode == ControlMode.GAMEPAD {
+            return
+        }
+        if notification.object != nil {
+            let command = notification.object as! String
+            let controllerCommand = command.slice(from: "command: ", to: " }")
+            switch controllerCommand {
+            case "INDICATOR_LEFT":
+                self.webSocketMsgHandler.indicatorLeft()
+                break;
+            case "INDICATOR_RIGHT":
+                self.webSocketMsgHandler.indicatorRight();
+                break
+            case "INDICATOR_STOP":
+                self.webSocketMsgHandler.cancelIndicator();
+            case "SPEED_DOWN":
+                self.webSocketMsgHandler.speedDown();
+                break;
+            case "SPEED_UP":
+                self.webSocketMsgHandler.speedUp();
+                break;
+            case "DRIVE_MODE":
+                self.webSocketMsgHandler.driveMode()
+                break;
+            default:
+                break;
+            }
         }
     }
 

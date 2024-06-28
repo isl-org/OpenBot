@@ -811,8 +811,11 @@ class jsEvaluator {
                 break;
             case "gamepad":
                 gameController.selectedControlMode = .GAMEPAD;
-                preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
+                preferencesManager.setControlMode(value: ControlMode.WEB.rawValue);
                 break;
+            case "web":
+                gameController.selectedControlMode = .WEB;
+                preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
             default:
                 break;
             }

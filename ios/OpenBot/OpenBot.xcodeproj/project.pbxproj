@@ -11,8 +11,11 @@
 		06B219AD2ABD4D6100E65CEF /* SharedPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B219AC2ABD4D6100E65CEF /* SharedPreferences.swift */; };
 		06C87ABB2B3568E700454299 /* FragmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C87ABA2B3568E700454299 /* FragmentType.swift */; };
 		113A1E4E0F1483D107D53843 /* BlockyTasksStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113A10896533873FE2926AF5 /* BlockyTasksStorage.swift */; };
+		202ADFEAAAEDF465B47E680C /* Pods_OpenBot_OpenBotUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33E6B08B2CB917BF3DADC757 /* Pods_OpenBot_OpenBotUITests.framework */; };
 		3A3C9E0D29E803AC008758C9 /* projectCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A3C9E0C29E803AC008758C9 /* projectCollectionViewCell.xib */; };
 		3A70CA1229C98E5800E4192B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */; };
+		3A8EF46C2A6FD0FD00F60B3D /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 3A8EF46B2A6FD0FD00F60B3D /* Starscream */; };
+		3A8EF46F2A6FE22F00F60B3D /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 3A8EF46E2A6FE22F00F60B3D /* SocketIO */; };
 		3AA7193929DD42CF00DE8336 /* openCode.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AA7193829DD42CF00DE8336 /* openCode.storyboard */; };
 		4FEF40039118AB286DD8CB0C /* DetectorDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47209A4C03D66945462E /* DetectorDefault.swift */; };
 		4FEF403935216C3C68714E27 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF47C56474B6324A408225 /* UIViewExtension.swift */; };
@@ -46,7 +49,6 @@
 		4FEF4DC031698B6DEEB01AEB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4620693FBFF8ABFC0350 /* AppDelegate.swift */; };
 		4FEF4E9F41A93B4F6CD1AEEC /* DetectorFloatYoloV4.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4633FC7402D71728D03F /* DetectorFloatYoloV4.swift */; };
 		4FEF4F78919CCCC28C418C5B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEF4D63E4FA9FB585EF1733 /* SceneDelegate.swift */; };
-		525632FAD7D5CA948A20F6B9 /* Pods_OpenBot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADB8D624A9E1D1494E9F87D /* Pods_OpenBot.framework */; };
 		660FACB729BFEDE000223373 /* MTLDevice+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660FACAF29BFEDE000223373 /* MTLDevice+.swift */; };
 		660FACB829BFEDE000223373 /* CVReturnError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660FACB029BFEDE000223373 /* CVReturnError.swift */; };
 		660FACB929BFEDE000223373 /* CVPixelBuffer+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660FACB129BFEDE000223373 /* CVPixelBuffer+.swift */; };
@@ -78,6 +80,8 @@
 		66AC721929B885C70022108A /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC721829B885C70022108A /* Navigation.swift */; };
 		66B3C59C2A1D673D0079BC16 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B3C59B2A1D673D0079BC16 /* UIButton.swift */; };
 		66E7A02C297697BE00283ED6 /* DetectorFloatYoloV5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */; };
+		67165015F4D1203C2A1A0A89 /* Pods_OpenBotTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D8F8740E0AB9219D371A47C /* Pods_OpenBotTests.framework */; };
+		727D30039B9108BC587A820E /* ServerWebrtcDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D37C7F3414E19F505AB0C /* ServerWebrtcDelegates.swift */; };
 		727D301B0DA9C7F9CC3203D6 /* BluetoothDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A55B16EF3CEDA3901BF /* BluetoothDataController.swift */; };
 		727D303C061B9CA823E99905 /* Projects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D33AFAD7EDEC111578DE8 /* Projects.swift */; };
 		727D30A012E8F58F2DD21369 /* ServerCommunication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D384E16A0157F2B8C7084 /* ServerCommunication.swift */; };
@@ -92,6 +96,7 @@
 		727D34C317885120CF1DBC27 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D36143ED88C8E210BCEB1 /* AudioPlayer.swift */; };
 		727D34E3CC491BD7758C572F /* WebRTCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */; };
 		727D354EAA4CA78176DD1064 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D383824EABABFDE0806CE /* Toast.swift */; };
+		727D3595B21D2EC9BDAEDF5C /* ServerSignalingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D38A3775D7B740BFEAE65 /* ServerSignalingMessage.swift */; };
 		727D35D8CB673649BF1AD948 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3AB3E741A78099D79575 /* Endpoint.swift */; };
 		727D36856575D19091290CFF /* WebViewFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35EAA13908B142BC4773 /* WebViewFragment.swift */; };
 		727D36915DB88577316D9C46 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A8D7ACD08EF11740FC2 /* Connection.swift */; };
@@ -105,10 +110,12 @@
 		727D397E28A6A94840B702D4 /* AlertFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30892A4485EAE638E24F /* AlertFragment.swift */; };
 		727D39E11C9EAFDC77200946 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3CF1C0FE6DE0D04C762A /* UIImageView.swift */; };
 		727D3A13757F3F2493E61977 /* ProjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30F6A969E2122927A95D /* ProjectCollectionViewCell.swift */; };
+		727D3A6C79B27AE7C7AF4FB3 /* WebSocketConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3B926BD1220C4BD68EEA /* WebSocketConnection.swift */; };
 		727D3A8537018C4279532AAC /* RTCCustomFrameCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */; };
 		727D3AC020F4956E20B53A9A /* UITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D5655D02C86CD08281C /* UITextField.swift */; };
 		727D3B42755B3A6BF1C5202F /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3189735FC4F7A4E4A6C1 /* Browser.swift */; };
 		727D3B9525E721AC05B0AD3B /* AdaptedConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */; };
+		727D3C40C6A407C68234FEE8 /* WebSocketProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D00B90949673E13A46F /* WebSocketProvider.swift */; };
 		727D3CCBA2ED9D056786AAC1 /* ProjectFragement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D326C57B2AFC7F2AEEDB1 /* ProjectFragement.swift */; };
 		727D3D05C58FC97350145FFD /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D388488E1FFD98E542061 /* Authentication.swift */; };
 		727D3D2A7DD7B128C9CC969A /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D39B02AB471D9F31B0747 /* Font.swift */; };
@@ -118,14 +125,16 @@
 		727D3E26C05E5911CC9BF342 /* Readme.md in Sources */ = {isa = PBXBuildFile; fileRef = 727D300DE421E6957CB4CD67 /* Readme.md */; };
 		727D3E359F26636BBDC6E3A4 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3C4EBE89B9B6E537BE8B /* Device.swift */; };
 		727D3E6881E8758C94FF74F4 /* GifLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A51A7A6155C22E62412 /* GifLoader.swift */; };
+		727D3E6B3D9FD6E167F939B0 /* NativeWebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D372D5B218FDC793841D6 /* NativeWebSocket.swift */; };
 		727D3E780CA6260A927019BD /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D368915F3602E605FEA51 /* Client.swift */; };
 		727D3EB96F3F1D250E9D32E7 /* ServerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3D5C91B30251F62FA65B /* ServerItem.swift */; };
 		727D3ED3273EC19C2C900543 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */; };
 		727D3EFB9016C8224990ACE8 /* ProfileFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A89E5445B66EEB3177C /* ProfileFragment.swift */; };
+		727D3F551E6CB92280B819E2 /* WebSocketMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3504130197C59EB15178 /* WebSocketMessageHandler.swift */; };
+		727D3F785C662A5A6C00D835 /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3A67A02F3F30135DFA43 /* SocketManager.swift */; };
 		727D3FA70675D0042BFBB89A /* ScannerFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727D3E372C09E1BADA2A03FA /* ScannerFragment.swift */; };
+		7AAD390ED6FC7AE7006497C2 /* Pods_OpenBot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7061589D8480D4960FF75E85 /* Pods_OpenBot.framework */; };
 		BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9BAED728AF94A800EF3E48 /* GameController.framework */; };
-		DB5B604C1844E78F9C021354 /* Pods_OpenBot_OpenBotUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */; };
-		FEC71CD19514A3FE19FEE5D1 /* Pods_OpenBotTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -147,13 +156,16 @@
 
 /* Begin PBXFileReference section */
 		0619EEC92C24208B0050EB6A /* Modes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Modes.swift; path = OpenBot/Models/Modes.swift; sourceTree = SOURCE_ROOT; };
+		06318656CBC7BD5A24BCD958 /* Pods-OpenBotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.release.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.release.xcconfig"; sourceTree = "<group>"; };
 		06B219AC2ABD4D6100E65CEF /* SharedPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPreferences.swift; sourceTree = "<group>"; };
 		06C87ABA2B3568E700454299 /* FragmentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FragmentType.swift; sourceTree = "<group>"; };
+		098B4AF0C5ADA51553414CE8 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		113A10896533873FE2926AF5 /* BlockyTasksStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockyTasksStorage.swift; sourceTree = "<group>"; };
-		17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot_OpenBotUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		33E6B08B2CB917BF3DADC757 /* Pods_OpenBot_OpenBotUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot_OpenBotUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A3C9E0C29E803AC008758C9 /* projectCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = projectCollectionViewCell.xib; sourceTree = "<group>"; };
 		3A70CA1129C98E5800E4192B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3AA7193829DD42CF00DE8336 /* openCode.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = openCode.storyboard; sourceTree = "<group>"; };
+		3FDBC2A41BB7D226A4447AD8 /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
 		4FEF4178D0A2805591A6A3A6 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		4FEF41FCA3B501192D417D73 /* CVPixelBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CVPixelBuffer.swift; path = extensions/CVPixelBuffer.swift; sourceTree = "<group>"; };
 		4FEF421BF49FEE835C6DC5CB /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
@@ -221,7 +233,8 @@
 		66AC721829B885C70022108A /* Navigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		66B3C59B2A1D673D0079BC16 /* UIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
 		66E7A02B297697BE00283ED6 /* DetectorFloatYoloV5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectorFloatYoloV5.swift; sourceTree = "<group>"; };
-		6F048E6F75C27D1520723C37 /* Pods-OpenBot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.release.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.release.xcconfig"; sourceTree = "<group>"; };
+		6D8F8740E0AB9219D371A47C /* Pods_OpenBotTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBotTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7061589D8480D4960FF75E85 /* Pods_OpenBot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		727D300DE421E6957CB4CD67 /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		727D30493151AEA8D4DA58C9 /* AdaptedConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptedConstraint.swift; path = Adaptive/AdaptedConstraint.swift; sourceTree = "<group>"; };
 		727D30892A4485EAE638E24F /* AlertFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertFragment.swift; sourceTree = "<group>"; };
@@ -235,15 +248,19 @@
 		727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebRTCDelegates.swift; path = WebRTC/WebRTCDelegates.swift; sourceTree = "<group>"; };
 		727D33A5A0ABFBC52D7FC371 /* sensorDataRetrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sensorDataRetrieve.swift; sourceTree = "<group>"; };
 		727D33AFAD7EDEC111578DE8 /* Projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Projects.swift; sourceTree = "<group>"; };
+		727D3504130197C59EB15178 /* WebSocketMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketMessageHandler.swift; sourceTree = "<group>"; };
 		727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTCCustomFrameCapture.swift; path = WebRTC/RTCCustomFrameCapture.swift; sourceTree = "<group>"; };
 		727D35EAA13908B142BC4773 /* WebViewFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewFragment.swift; sourceTree = "<group>"; };
 		727D36143ED88C8E210BCEB1 /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		727D368915F3602E605FEA51 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		727D372D5B218FDC793841D6 /* NativeWebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeWebSocket.swift; sourceTree = "<group>"; };
 		727D37586F16DE497CEA62CE /* SignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalingMessage.swift; sourceTree = "<group>"; };
+		727D37C7F3414E19F505AB0C /* ServerWebrtcDelegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerWebrtcDelegates.swift; sourceTree = "<group>"; };
 		727D383824EABABFDE0806CE /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		727D384384E67F20294222AC /* EditProfileFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileFragment.swift; sourceTree = "<group>"; };
 		727D384E16A0157F2B8C7084 /* ServerCommunication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCommunication.swift; sourceTree = "<group>"; };
 		727D388488E1FFD98E542061 /* Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
+		727D38A3775D7B740BFEAE65 /* ServerSignalingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSignalingMessage.swift; sourceTree = "<group>"; };
 		727D38DAC31CD27C5DE891F4 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		727D3937D1457F50C712CDD9 /* ServerListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerListener.swift; sourceTree = "<group>"; };
 		727D3946DB74E63117B32AF4 /* Dimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dimension.swift; sourceTree = "<group>"; };
@@ -251,11 +268,14 @@
 		727D39B76F53D6B069FF2A5C /* UiLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UiLabel.swift; sourceTree = "<group>"; };
 		727D3A51A7A6155C22E62412 /* GifLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GifLoader.swift; sourceTree = "<group>"; };
 		727D3A55B16EF3CEDA3901BF /* BluetoothDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothDataController.swift; sourceTree = "<group>"; };
+		727D3A67A02F3F30135DFA43 /* SocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketManager.swift; sourceTree = "<group>"; };
 		727D3A89E5445B66EEB3177C /* ProfileFragment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileFragment.swift; sourceTree = "<group>"; };
 		727D3A8D7ACD08EF11740FC2 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		727D3AB3E741A78099D79575 /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
+		727D3B926BD1220C4BD68EEA /* WebSocketConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketConnection.swift; sourceTree = "<group>"; };
 		727D3C4EBE89B9B6E537BE8B /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		727D3CF1C0FE6DE0D04C762A /* UIImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
+		727D3D00B90949673E13A46F /* WebSocketProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketProvider.swift; sourceTree = "<group>"; };
 		727D3D2F7F5D7109583A8A39 /* DeviceCurrentOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCurrentOrientation.swift; sourceTree = "<group>"; };
 		727D3D5655D02C86CD08281C /* UITextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextField.swift; sourceTree = "<group>"; };
 		727D3D5C91B30251F62FA65B /* ServerItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerItem.swift; sourceTree = "<group>"; };
@@ -267,14 +287,10 @@
 		727D3F45A25D4C4A8A309FFC /* AdaptiveLayoutHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AdaptiveLayoutHelper.swift; path = Adaptive/AdaptiveLayoutHelper.swift; sourceTree = "<group>"; };
 		727D3F48BB4398A5788D746E /* UIDeviceExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIDeviceExtension.swift; path = extensions/UIDeviceExtension.swift; sourceTree = "<group>"; };
 		727D3F5FE3F054BE4FA52191 /* timestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = timestamp.swift; sourceTree = "<group>"; };
-		808FD0EDC2699A60CAFB77BF /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
-		85028858BF84C30C93BF2CF7 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBotTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0C497FCA3C570745DDC0A3D /* Pods-OpenBot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.release.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.release.xcconfig"; sourceTree = "<group>"; };
+		BB8946D47143268197073454 /* Pods-OpenBotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.debug.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.debug.xcconfig"; sourceTree = "<group>"; };
 		BF9BAED728AF94A800EF3E48 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
-		CADB8D624A9E1D1494E9F87D /* Pods_OpenBot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenBot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D8CE9F77688B7B3F870BEA75 /* Pods-OpenBot-OpenBotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot-OpenBotUITests.release.xcconfig"; path = "Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests.release.xcconfig"; sourceTree = "<group>"; };
-		DB93BBCA8A2B2872FB0CF679 /* Pods-OpenBotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBotTests.release.xcconfig"; path = "Target Support Files/Pods-OpenBotTests/Pods-OpenBotTests.release.xcconfig"; sourceTree = "<group>"; };
-		F0AA8AF1DB97EAA31FE62D4A /* Pods-OpenBot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.debug.xcconfig"; sourceTree = "<group>"; };
+		FA864C211FDA0FFF7C141891 /* Pods-OpenBot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenBot.debug.xcconfig"; path = "Target Support Files/Pods-OpenBot/Pods-OpenBot.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -282,7 +298,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FEC71CD19514A3FE19FEE5D1 /* Pods_OpenBotTests.framework in Frameworks */,
+				67165015F4D1203C2A1A0A89 /* Pods_OpenBotTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,7 +306,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB5B604C1844E78F9C021354 /* Pods_OpenBot_OpenBotUITests.framework in Frameworks */,
+				202ADFEAAAEDF465B47E680C /* Pods_OpenBot_OpenBotUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,7 +315,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF9BAED828AF94A800EF3E48 /* GameController.framework in Frameworks */,
-				525632FAD7D5CA948A20F6B9 /* Pods_OpenBot.framework in Frameworks */,
+				3A8EF46F2A6FE22F00F60B3D /* SocketIO in Frameworks */,
+				3A8EF46C2A6FD0FD00F60B3D /* Starscream in Frameworks */,
+				7AAD390ED6FC7AE7006497C2 /* Pods_OpenBot.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,16 +338,6 @@
 				06C87ABA2B3568E700454299 /* FragmentType.swift */,
 			);
 			path = Fragment;
-			sourceTree = "<group>";
-		};
-		158970C63E9775BD41F614A3 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				CADB8D624A9E1D1494E9F87D /* Pods_OpenBot.framework */,
-				17B6546E3D327621CBEAFCB9 /* Pods_OpenBot_OpenBotUITests.framework */,
-				9D5D36169AE20C6ED7C351A5 /* Pods_OpenBotTests.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		4FEF4191C08EC7053A46679C /* OpenBotTests */ = {
@@ -427,6 +435,7 @@
 				727D35A4DFA72830811B2D07 /* RTCCustomFrameCapture.swift */,
 				727D3E0255E9EFCEBD190510 /* WebRTCClient.swift */,
 				727D32E3FF7FA5BADAAEDBE6 /* WebRTCDelegates.swift */,
+				727D3ED563CA0B036B196BB0 /* WebSocketProvider */,
 				06B219AC2ABD4D6100E65CEF /* SharedPreferences.swift */,
 			);
 			path = Data;
@@ -494,8 +503,8 @@
 				4FEF4191C08EC7053A46679C /* OpenBotTests */,
 				4FEF4549B0D1FC8F591E63FE /* OpenBotUITests */,
 				4FEF4BD00A645A3985233A37 /* README.md */,
-				158970C63E9775BD41F614A3 /* Frameworks */,
 				ED732554C69FE0395DA9AB35 /* Pods */,
+				71072DA32E10FE6C9E621160 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -544,6 +553,7 @@
 				727D356FCD75B6B73D8C5A7C /* runRobot */,
 				727D3AD9225580EC94775651 /* WebView */,
 				727D3DEDE1506A0363E8D959 /* Alert */,
+				727D395E131B59268FC75AF3 /* WebServer */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -652,6 +662,16 @@
 			path = FreeRoam;
 			sourceTree = "<group>";
 		};
+		71072DA32E10FE6C9E621160 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7061589D8480D4960FF75E85 /* Pods_OpenBot.framework */,
+				33E6B08B2CB917BF3DADC757 /* Pods_OpenBot_OpenBotUITests.framework */,
+				6D8F8740E0AB9219D371A47C /* Pods_OpenBotTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		727D3004C935D2676EA98064 /* Projects */ = {
 			isa = PBXGroup;
 			children = (
@@ -697,6 +717,17 @@
 			path = QrScanner;
 			sourceTree = "<group>";
 		};
+		727D395E131B59268FC75AF3 /* WebServer */ = {
+			isa = PBXGroup;
+			children = (
+				727D3A67A02F3F30135DFA43 /* SocketManager.swift */,
+				727D37C7F3414E19F505AB0C /* ServerWebrtcDelegates.swift */,
+				727D3504130197C59EB15178 /* WebSocketMessageHandler.swift */,
+				727D38A3775D7B740BFEAE65 /* ServerSignalingMessage.swift */,
+			);
+			path = WebServer;
+			sourceTree = "<group>";
+		};
 		727D3AD9225580EC94775651 /* WebView */ = {
 			isa = PBXGroup;
 			children = (
@@ -732,6 +763,16 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		727D3ED563CA0B036B196BB0 /* WebSocketProvider */ = {
+			isa = PBXGroup;
+			children = (
+				727D372D5B218FDC793841D6 /* NativeWebSocket.swift */,
+				727D3B926BD1220C4BD68EEA /* WebSocketConnection.swift */,
+				727D3D00B90949673E13A46F /* WebSocketProvider.swift */,
+			);
+			path = WebSocketProvider;
+			sourceTree = "<group>";
+		};
 		727D3F1F46201738BE703091 /* Project */ = {
 			isa = PBXGroup;
 			children = (
@@ -753,12 +794,12 @@
 		ED732554C69FE0395DA9AB35 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F0AA8AF1DB97EAA31FE62D4A /* Pods-OpenBot.debug.xcconfig */,
-				6F048E6F75C27D1520723C37 /* Pods-OpenBot.release.xcconfig */,
-				85028858BF84C30C93BF2CF7 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */,
-				D8CE9F77688B7B3F870BEA75 /* Pods-OpenBot-OpenBotUITests.release.xcconfig */,
-				808FD0EDC2699A60CAFB77BF /* Pods-OpenBotTests.debug.xcconfig */,
-				DB93BBCA8A2B2872FB0CF679 /* Pods-OpenBotTests.release.xcconfig */,
+				FA864C211FDA0FFF7C141891 /* Pods-OpenBot.debug.xcconfig */,
+				B0C497FCA3C570745DDC0A3D /* Pods-OpenBot.release.xcconfig */,
+				098B4AF0C5ADA51553414CE8 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */,
+				3FDBC2A41BB7D226A4447AD8 /* Pods-OpenBot-OpenBotUITests.release.xcconfig */,
+				BB8946D47143268197073454 /* Pods-OpenBotTests.debug.xcconfig */,
+				06318656CBC7BD5A24BCD958 /* Pods-OpenBotTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -770,11 +811,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4FEF43208B4A03F247235CFE /* Build configuration list for PBXNativeTarget "OpenBotUITests" */;
 			buildPhases = (
-				514C9003EC9BA199C8A5A0A8 /* [CP] Check Pods Manifest.lock */,
+				7B9C9E98D595768C4BAE5FE8 /* [CP] Check Pods Manifest.lock */,
 				4FEF4059C0F787F734441610 /* Sources */,
 				4FEF48BBF965FC91224D548A /* Frameworks */,
 				4FEF4634A90081D52CF345B5 /* Resources */,
-				46C5372FAEC40AC707B42775 /* [CP] Embed Pods Frameworks */,
+				4560F441321D2CDD42E5378D /* [CP] Embed Pods Frameworks */,
+				08F3C78C832B43DCA5F29646 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -790,18 +832,23 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4FEF486AE63CA90F3F6FAC59 /* Build configuration list for PBXNativeTarget "OpenBot" */;
 			buildPhases = (
-				918F153342639A81A6F53345 /* [CP] Check Pods Manifest.lock */,
+				FF0C6B915EFE727A82A879A2 /* [CP] Check Pods Manifest.lock */,
 				BFEDAF5428F947AF000231F8 /* ShellScript */,
 				4FEF4889F89E40050DA7F889 /* Sources */,
 				4FEF48F817C72DA7F5BE6A7E /* Frameworks */,
 				4FEF4CE476446EE3B8BFA52C /* Resources */,
-				D2AEDA40E92036205C2665E9 /* [CP] Embed Pods Frameworks */,
+				0488F2C8BED3B19D9255CA6B /* [CP] Embed Pods Frameworks */,
+				81E9FE2B60904B325D751316 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = OpenBot;
+			packageProductDependencies = (
+				3A8EF46B2A6FD0FD00F60B3D /* Starscream */,
+				3A8EF46E2A6FE22F00F60B3D /* SocketIO */,
+			);
 			productName = OpenBot;
 			productReference = 4FEF46775439F2AC3ED4FE35 /* OpenBot.app */;
 			productType = "com.apple.product-type.application";
@@ -810,7 +857,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4FEF43DAF9CB0AD7A444AC7D /* Build configuration list for PBXNativeTarget "OpenBotTests" */;
 			buildPhases = (
-				FA31E8759135C74428F9DB2A /* [CP] Check Pods Manifest.lock */,
+				F5767F140696CA9A98AFE1CD /* [CP] Check Pods Manifest.lock */,
 				4FEF49E6E9BC95AEC0B778B9 /* Sources */,
 				4FEF42E5B0C74BDE71C91279 /* Frameworks */,
 				4FEF4ABE055F854E0CA57AC7 /* Resources */,
@@ -848,6 +895,10 @@
 				Base,
 			);
 			mainGroup = 4FEF4FDE69B20F82CA2C0196;
+			packageReferences = (
+				3A8EF46A2A6FD0FD00F60B3D /* XCRemoteSwiftPackageReference "Starscream" */,
+				3A8EF46D2A6FE22F00F60B3D /* XCRemoteSwiftPackageReference "socket" */,
+			);
 			productRefGroup = 4FEF4A209F128B8F5AC06E17 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -891,150 +942,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		46C5372FAEC40AC707B42775 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
-				"${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework",
-				"${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseAppCheckInterop/FirebaseAppCheckInterop.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseAuth/FirebaseAuth.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseAuthInterop/FirebaseAuthInterop.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseFirestore/FirebaseFirestore.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseFirestoreInternal/FirebaseFirestoreInternal.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseSharedSwift/FirebaseSharedSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseStorage/FirebaseStorage.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleAPIClientForREST/GoogleAPIClientForREST.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleSignIn/GoogleSignIn.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleSignInSwiftSupport/GoogleSignInSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
-				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
-				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
-				"${BUILT_PRODUCTS_DIR}/RecaptchaInterop/RecaptchaInterop.framework",
-				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
-				"${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework",
-				"${BUILT_PRODUCTS_DIR}/abseil/absl.framework",
-				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
-				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
-				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AppAuth.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl_grpc.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DropDown.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAppCheckInterop.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuth.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuthInterop.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreExtension.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreInternal.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseFirestore.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseFirestoreInternal.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseSharedSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseStorage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMAppAuth.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleAPIClientForREST.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleSignIn.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleSignInSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RecaptchaInterop.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIPFoundation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/absl.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		514C9003EC9BA199C8A5A0A8 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OpenBot-OpenBotUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		918F153342639A81A6F53345 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OpenBot-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BFEDAF5428F947AF000231F8 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite",
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite",
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt",
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt",
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt",
-				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite exists.\"\nelse\ncurl -o ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite https://storage.googleapis.com/openbot_models/autopilot_float.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/mobile_ssd_v1_1.0_quant_coco.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/mobile_ssd_v1_1.0_quant_coco.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/navigation.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/navigation.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/box_priors.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/box_priors.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/coco.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/coco.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/labelmap.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/labelmap.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt\nfi\n";
-		};
-		D2AEDA40E92036205C2665E9 /* [CP] Embed Pods Frameworks */ = {
+		0488F2C8BED3B19D9255CA6B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1110,7 +1018,176 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenBot/Pods-OpenBot-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		FA31E8759135C74428F9DB2A /* [CP] Check Pods Manifest.lock */ = {
+		08F3C78C832B43DCA5F29646 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TensorFlowLiteC/TensorFlowLiteC.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TensorFlowLiteC/TensorFlowLiteCCoreML.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TensorFlowLiteC/TensorFlowLiteCMetal.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TensorFlowLiteSwift/TensorFlowLite.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TensorFlowLiteC.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TensorFlowLiteCCoreML.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TensorFlowLiteCMetal.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TensorFlowLite.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4560F441321D2CDD42E5378D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAppCheckInterop/FirebaseAppCheckInterop.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAuth/FirebaseAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseAuthInterop/FirebaseAuthInterop.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseFirestore/FirebaseFirestore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseFirestoreInternal/FirebaseFirestoreInternal.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseSharedSwift/FirebaseSharedSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseStorage/FirebaseStorage.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleAPIClientForREST/GoogleAPIClientForREST.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleSignIn/GoogleSignIn.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleSignInSwiftSupport/GoogleSignInSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${PODS_ROOT}/GoogleWebRTC/Frameworks/frameworks/WebRTC.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
+				"${BUILT_PRODUCTS_DIR}/RecaptchaInterop/RecaptchaInterop.framework",
+				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
+				"${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework",
+				"${BUILT_PRODUCTS_DIR}/abseil/absl.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AppAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl_grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DropDown.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAppCheckInterop.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseAuthInterop.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreExtension.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreInternal.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseFirestore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseFirestoreInternal.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseSharedSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseStorage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMAppAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleAPIClientForREST.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleSignIn.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleSignInSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebRTC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RecaptchaInterop.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIPFoundation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/absl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenBot-OpenBotUITests/Pods-OpenBot-OpenBotUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7B9C9E98D595768C4BAE5FE8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OpenBot-OpenBotUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		81E9FE2B60904B325D751316 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OpenBot/Pods-OpenBot-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TensorFlowLiteC/TensorFlowLiteC.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TensorFlowLiteC/TensorFlowLiteCCoreML.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TensorFlowLiteC/TensorFlowLiteCMetal.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TensorFlowLiteSwift/TensorFlowLite.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TensorFlowLiteC.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TensorFlowLiteCCoreML.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TensorFlowLiteCMetal.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TensorFlowLite.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OpenBot/Pods-OpenBot-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BFEDAF5428F947AF000231F8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite",
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite",
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt",
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt",
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt",
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite exists.\"\nelse\ncurl -o ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/autopilot_float.tflite https://storage.googleapis.com/openbot_models/autopilot_float.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/mobile_ssd_v1_1.0_quant_coco.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/mobile_ssd_v1_1.0_quant_coco.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/mobile_ssd_v1_1.0_quant_coco.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite exists.\"\nelse\nMYFILE=${TEMP_DIR}/navigation.tflite\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/navigation.tflite\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/navigation.tflite\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/box_priors.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/box_priors.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/box_priors.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/coco.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/coco.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/coco.txt\nfi\n\nif [ -f ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt ]\nthen\necho \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt exists.\"\nelse\nMYFILE=${TEMP_DIR}/labelmap.txt\ncurl -o $MYFILE https://storage.googleapis.com/openbot_models/labelmap.txt\ncp -f $MYFILE ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/labelmap.txt\nfi\n";
+		};
+		F5767F140696CA9A98AFE1CD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1126,6 +1203,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-OpenBotTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FF0C6B915EFE727A82A879A2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OpenBot-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1253,6 +1352,13 @@
 				113A1E4E0F1483D107D53843 /* BlockyTasksStorage.swift in Sources */,
 				727D35D8CB673649BF1AD948 /* Endpoint.swift in Sources */,
 				727D3EB96F3F1D250E9D32E7 /* ServerItem.swift in Sources */,
+				727D3F785C662A5A6C00D835 /* SocketManager.swift in Sources */,
+				727D30039B9108BC587A820E /* ServerWebrtcDelegates.swift in Sources */,
+				727D3F551E6CB92280B819E2 /* WebSocketMessageHandler.swift in Sources */,
+				727D3E6B3D9FD6E167F939B0 /* NativeWebSocket.swift in Sources */,
+				727D3A6C79B27AE7C7AF4FB3 /* WebSocketConnection.swift in Sources */,
+				727D3C40C6A407C68234FEE8 /* WebSocketProvider.swift in Sources */,
+				727D3595B21D2EC9BDAEDF5C /* ServerSignalingMessage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1282,7 +1388,7 @@
 /* Begin XCBuildConfiguration section */
 		4FEF43D6410B560C20FD769C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 85028858BF84C30C93BF2CF7 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */;
+			baseConfigurationReference = 098B4AF0C5ADA51553414CE8 /* Pods-OpenBot-OpenBotUITests.debug.xcconfig */;
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -1299,7 +1405,7 @@
 		};
 		4FEF442167610372B5B63F94 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6F048E6F75C27D1520723C37 /* Pods-OpenBot.release.xcconfig */;
+			baseConfigurationReference = B0C497FCA3C570745DDC0A3D /* Pods-OpenBot.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1342,7 +1448,7 @@
 		};
 		4FEF44CECB7978AC34B0EE6A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F0AA8AF1DB97EAA31FE62D4A /* Pods-OpenBot.debug.xcconfig */;
+			baseConfigurationReference = FA864C211FDA0FFF7C141891 /* Pods-OpenBot.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1446,11 +1552,11 @@
 		};
 		4FEF4A7750256B55C807D1AF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DB93BBCA8A2B2872FB0CF679 /* Pods-OpenBotTests.release.xcconfig */;
+			baseConfigurationReference = 06318656CBC7BD5A24BCD958 /* Pods-OpenBotTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OpenBot.app/OpenBot";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 743KKCATL4;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.robot.openbot.tests;
@@ -1520,7 +1626,7 @@
 		};
 		4FEF4BD51157BE3E8D2839B5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D8CE9F77688B7B3F870BEA75 /* Pods-OpenBot-OpenBotUITests.release.xcconfig */;
+			baseConfigurationReference = 3FDBC2A41BB7D226A4447AD8 /* Pods-OpenBot-OpenBotUITests.release.xcconfig */;
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -1537,11 +1643,11 @@
 		};
 		4FEF4D381CB9363B3F2093A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 808FD0EDC2699A60CAFB77BF /* Pods-OpenBotTests.debug.xcconfig */;
+			baseConfigurationReference = BB8946D47143268197073454 /* Pods-OpenBotTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OpenBot.app/OpenBot";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 743KKCATL4;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.robot.openbot.tests;
@@ -1593,6 +1699,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3A8EF46A2A6FD0FD00F60B3D /* XCRemoteSwiftPackageReference "Starscream" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daltoniam/Starscream.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		3A8EF46D2A6FE22F00F60B3D /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3A8EF46B2A6FD0FD00F60B3D /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A8EF46A2A6FD0FD00F60B3D /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
+		3A8EF46E2A6FE22F00F60B3D /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A8EF46D2A6FE22F00F60B3D /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4FEF44CF03B950ABA7A3C2A8 /* Project object */;
 }

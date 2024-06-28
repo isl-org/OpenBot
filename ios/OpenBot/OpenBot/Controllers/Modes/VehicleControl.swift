@@ -4,6 +4,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAuth
 
 class VehicleControl: UIView {
     var controlMode: ControlMode = ControlMode.PHONE;
@@ -15,6 +16,8 @@ class VehicleControl: UIView {
     let gameController = GameController.shared
     var downSwipe: Bool = false
     let audioPlayer = AudioPlayer.shared;
+    let mSocket = NativeWebSocket.shared;
+    let roomId: String = Auth.auth().currentUser?.email ?? ""
     var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// initializing function
@@ -81,7 +84,8 @@ class VehicleControl: UIView {
             btn.backgroundColor = Colors.titleDeactivated
         }
         let modeIcon = UIImageView(frame: CGRect(x: 15, y: 15, width: 30, height: 30))
-        modeIcon.image = iconName;
+        modeIcon.image = iconName.withRenderingMode(.alwaysTemplate)
+        modeIcon.tintColor = .white
         if let action = action {
             btn.addTarget(self, action: action, for: .touchUpInside)
         }
@@ -102,25 +106,43 @@ class VehicleControl: UIView {
                 driveMode = DriveMode.DUAL;
                 createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
                 createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: false);
-
                 client.start();
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
                 client.send(message: msg);
-
-            } else {
+                _ = WebRTCDelegates();
+            }
+            else if(controlMode == ControlMode.PHONE) {
+                controlMode = ControlMode.WEB;
+                driveMode = DriveMode.GAME;
+                createAndUpdateButton(iconName: Images.webIcon!.withTintColor(.white), leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
+                createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: false);
+                let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
+                client.send(message: msg);
+                if(webRTCClient != nil){
+                    webRTCClient.disconnect();
+                }
+                sendMessage();
+                _ = ServerWebrtcDelegate();
+            }
+            else{
                 controlMode = ControlMode.GAMEPAD;
                 createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
                 createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
                 client.send(message: msg);
-
+                if(webRTCClient != nil){
+                    webRTCClient.disconnect();
+                }
             }
             gameController.selectedControlMode = controlMode
             if(controlMode == ControlMode.GAMEPAD){
-                preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
+                preferencesManager.setControlMode(value: ControlMode.WEB.rawValue);
+            }
+            else if(controlMode == ControlMode.PHONE){
+                preferencesManager.setControlMode(value: ControlMode.GAMEPAD.rawValue);
             }
             else{
-                preferencesManager.setControlMode(value: ControlMode.GAMEPAD.rawValue);
+                preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
             }
         }
     }
@@ -259,5 +281,25 @@ class VehicleControl: UIView {
     @objc func updateDrive(_ notification: Notification) {
         updateDriveMode(self)
         audioPlayer.playDriveMode(driveMode: driveMode);
+    }
+
+    /// function to parse the message for the connection and send it.
+    func sendMessage() {
+        var msg = JSON.toString(ServerConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true"), roomId: roomId));
+        print(msg);
+        var data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoProtocolEvent(status: .init(VIDEO_PROTOCOL: "WEBRTC"), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoServerUrlEvent(status: .init(VIDEO_SERVER_URL: ""), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoCommandEvent(status: .init(VIDEO_COMMAND: "START"), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
     }
 }

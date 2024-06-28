@@ -153,6 +153,7 @@
         <item>Local Server</item>
     </string-array>
 
+    <!-- TODO: Remove or change this placeholder text -->
     <string-array name="stream_server">
         <item>WebRTC</item>
         <item>RTSP</item>
@@ -178,7 +179,6 @@
     <string name="logout">Logout</string>
     <string name="auto_mode">Auto Mode</string>
     <string name="dynamic_speed">Dynamic Speed</string>
-
     <string name="bumpers">Bumpers</string>
     <string name="n_a">N/A</string>
     <string name="robot_type">Robot Type:</string>
