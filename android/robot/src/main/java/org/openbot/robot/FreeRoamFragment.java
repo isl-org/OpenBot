@@ -231,7 +231,6 @@ public class FreeRoamFragment extends ControlsFragment {
           if (!PermissionUtils.hasControllerPermissions(requireActivity()))
             requestPermissionLauncher.launch(Constants.PERMISSIONS_CONTROLLER);
           else {
-            System.out.println("sanjeev node server connectPhoneController");
             connectWebController();
           }
           break;
