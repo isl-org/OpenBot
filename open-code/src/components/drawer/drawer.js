@@ -22,7 +22,7 @@ import Chat from "../codeAssistant/chat";
  */
 export function RightDrawer() {
     const {theme} = useContext(ThemeContext) // Retrieve the current theme from the ThemeContext
-    const {drawer, code, category} = useContext(StoreContext)  // Retrieve the drawer state from the StoreContext
+    const {drawer, code, category, currentAssistantXml, setCurrentAssistantXml} = useContext(StoreContext)  // Retrieve the drawer state from the StoreContext
     const themes = useTheme();// Get the current theme breakpoints using useTheme hook
     const isMobile = useMediaQuery(themes.breakpoints.down("sm"));// Determine if the screen is a mobile device using useMediaQuery hook
     const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 450px) and (max-width: 1000px) and (orientation: landscape)").matches);
@@ -87,7 +87,8 @@ export function RightDrawer() {
                                     position: "relative",
                                     overflow: "scroll"
                                 }}>
-                                    <CodeEditor/>
+                                    <CodeEditor currentAssistantXml={currentAssistantXml}
+                                                setCurrentAssistantXml={setCurrentAssistantXml}/>
                                 </div>
 
                         }

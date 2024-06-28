@@ -41,6 +41,7 @@ export default ({
     const [isSignIn, setIsSignIn] = useState(false);
     const [isDob, setIsDob] = useState(undefined);
     const [isAutoSyncEnabled, setIsAutoSyncEnabled] = useState(false)
+    const [currentAssistantXml,setCurrentAssistantXml] = useState('');
     const store = {
         projectName, setProjectName,
         drawer, setDrawer,
@@ -58,7 +59,7 @@ export default ({
         isDob, setIsDob,
         isAutoSyncEnabled, setIsAutoSyncEnabled,
         isSessionExpireModal, setIsSessionExpireModal,
-        setIsSessionExpire, isTimeoutId, setTimeoutId
+        setIsSessionExpire, isTimeoutId, setTimeoutId,
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }

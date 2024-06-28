@@ -4,6 +4,8 @@ import {ThemeContext} from "../../App";
 import {Themes} from "../../utils/constants";
 import {colors as Colors} from "../../utils/color";
 import {Images} from "../../utils/images";
+import Chat from "../codeAssistant/chat";
+
 
 /**
  * Main ChatBox component that displays user and assistant messages
@@ -15,13 +17,14 @@ const ChatBox = ({conversation}) => {
     const theme = useContext(ThemeContext);
     return (
         <div className={styles.chatBubble} style={{
-            backgroundColor: theme.theme === Themes.dark ? Colors.blackBackground : "#d0e4f2",
             color: theme.theme === Themes.dark ? Colors.whiteFont : "#FFFFFF"
         }}>
-            {!conversation.userMessage && <img src={Images.openBotLogo} width={"20%"} alt={"openbot"}/>}
+            {!conversation.userMessage && <img src={Images.openBotLogo} width={"20%"} alt={"openBot"}/>}
             {conversation.userMessage &&
                 <UserMessage timestamp={conversation.userTimestamp} message={conversation.userMessage}/>}
-            <AssistantResponse timestamp={conversation.AITimestamp} message={conversation.AIMessage}/>
+            <AssistantResponse timestamp={conversation.AITimestamp} message={conversation.AIMessage}
+                               image={conversation.blockImage} />
+
         </div>
     );
 };
@@ -47,10 +50,10 @@ const UserMessage = ({timestamp, message}) => (
  * @constructor
  * @param props
  */
-const AssistantResponse = ({timestamp, message}) => {
+const AssistantResponse = ({timestamp, message,image}) => {
     const [loader, setLoader] = useState(false);
     const parsedMessage = parseResponseMessage(message);
-    const theme = useContext(ThemeContext)
+    const theme = useContext(ThemeContext);
     useEffect(() => {
         if (message === "") {
             setLoader(true);
@@ -59,21 +62,43 @@ const AssistantResponse = ({timestamp, message}) => {
         }
     }, [message]);
 
+    const handleButtonClick = () => {
+    };
+
     return (
-        <div className={styles.responseBox} title={timestamp} style={{
-            backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
-            color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
-        }}>
+        <div
+            className={styles.responseBox}
+            title={timestamp}
+            style={{
+                backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
+            }}
+        >
             {loader ? (
                 <div
                     className={`${styles.loader} ${theme.theme === Themes.dark ? styles.whiteLoader : styles.loader}`}
                 ></div>
             ) : (
-                <div className={styles.responseContent} style={{
-                    backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
-                    color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
-                }}>{parsedMessage}
+                <div
+                    className={styles.responseContent}
+                    style={{
+                        backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                        color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
+                    }}
+                >
+                    {parsedMessage}
                     <div className={styles.timestamp}>{timestamp}</div>
+                    <button
+                        className={styles.responseButton}
+                        style={{
+                            backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                            color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
+                        }}
+                        onClick={handleButtonClick}
+                    >
+                        Click me!
+                    </button>
+                    {image}
                 </div>
             )}
         </div>

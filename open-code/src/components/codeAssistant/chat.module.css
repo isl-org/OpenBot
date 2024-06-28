@@ -43,6 +43,7 @@
     width: 30px;
     height: 30px;
     gap: 5px;
+    cursor: pointer;
 }
 
 .chatHeader {
@@ -56,4 +57,9 @@
     justify-content: flex-start;
     align-items: center;
     gap:10px;
+}
+.sendButton.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
 }

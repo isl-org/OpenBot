@@ -6,9 +6,12 @@ import {Images} from "../../utils/images.js";
 import {Constants, Themes, Errors} from '../../utils/constants.js';
 import {ThemeContext} from "../../App";
 import {colors as Colors} from "../../utils/color";
+import {StoreContext} from "../../context/context";
+import {extractXmlFromResponse} from "../blockly/imageConverter";
 
-const Chat = () => {
-    const theme = useContext(ThemeContext)
+const Chat = (props) => {
+    const theme = useContext(ThemeContext);
+    const {workspace, setWorkspace} = useContext(StoreContext);
     const [inputValue, setInputValue] = useState('');
     const [allChatMessages, setAllChatMessages] = useState([
         {
@@ -17,20 +20,24 @@ const Chat = () => {
             id: 1,
             userTimestamp: "",
             AITimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+            blockImage: undefined
         },
     ]);
-
     const [currentMessage, setCurrentMessage] = useState({
         userMessage: "",
         AIMessage: "",
         id: 2,
         userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
         AITimestamp: "",
+        blockImage: undefined
     });
 
     const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
     const handleSendClick = async () => {
-        const userInput = inputValue.toLowerCase();
+        const userInput = inputValue.trim().toLowerCase(); // trim and convert to lowercase
+        if (userInput === '') {
+            return;
+        }
         setCurrentMessage((prevState) => ({
             ...prevState,
             userMessage: userInput,
@@ -41,11 +48,22 @@ const Chat = () => {
         }));
 
         getAIMessage(userInput).then((res) => {
-            setCurrentMessage((prevState) => ({
-                ...prevState,
-                AIMessage: res,
-                AITimestamp: timestamp
-            }));
+            extractXmlFromResponse(res, workspace).then((image) => {
+                setCurrentMessage((prevState) => ({
+                    ...prevState,
+                    AIMessage: res,
+                    AITimestamp: timestamp,
+                    blockImage: image
+                }));
+            })
+                .catch((e) => {
+                    console.log("Error in creating block png-->", e);
+                    setCurrentMessage((prevState) => ({
+                        ...prevState,
+                        AIMessage: Errors.error6,
+                        AITimestamp: timestamp
+                    }));
+                })
         }).catch((e) => {
             console.log(e);
             setCurrentMessage((prevState) => ({
@@ -55,12 +73,6 @@ const Chat = () => {
             }));
         });
         setInputValue('');
-    };
-
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter' && inputValue.trim() !== '') {
-            handleSendClick();
-        }
     };
 
     useEffect(() => {
@@ -82,7 +94,7 @@ const Chat = () => {
     return (
         <div className={styles.chatMainContainer}
              style={{
-                 backgroundColor: theme.theme === Themes.dark ? Colors.blackBackground : "#d0e4f2",
+                 backgroundColor: theme.theme === Themes.dark ? Colors.blackBackground : "#d0e4f5",
                  color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
              }}
         >
@@ -98,7 +110,6 @@ const Chat = () => {
             <ChatBottomBar
                 inputValue={inputValue}
                 handleSendClick={handleSendClick}
-                handleKeyPress={handleKeyPress}
                 setInputValue={setInputValue}
             />
         </div>
@@ -112,7 +123,8 @@ const Chat = () => {
  */
 const ChatBottomBar = (props) => {
     const theme = useContext(ThemeContext);
-   const {inputValue, handleSendClick, handleKeyPress, setInputValue}=props;
+    const {inputValue, handleSendClick, setInputValue} = props;
+
     return (
         <div className={styles.chatBottomBar}>
             <input
@@ -125,18 +137,21 @@ const ChatBottomBar = (props) => {
                 className={styles.inputField}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                        handleSendClick();
+                    }
+                }}
             />
             <div
                 onClick={handleSendClick}
                 className={`sendButton ${inputValue.trim() === '' ? 'disabled' : ''}`}
-                style={inputValue.trim() === '' ? { cursor: 'not-allowed', opacity: 0.5 } : {}}
+                style={inputValue.trim() === '' ? {cursor: 'not-allowed', opacity: 0.5} : {}}
             >
-                <img alt="Send Icon" src={Images.sendIcon} className={styles.sendIcon} />
+                <img alt="Send Icon" src={Images.sendIcon} className={styles.sendIcon}/>
                 <i className="fas fa-paper-plane" aria-hidden="true"></i>
             </div>
         </div>
     );
 };
-
 export default Chat;
