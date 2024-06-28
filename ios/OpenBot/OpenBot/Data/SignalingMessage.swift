@@ -83,6 +83,10 @@ struct VehicleStatusEvent: Codable {
     }
 }
 
+struct FragmentStatus : Codable {
+    var FRAGMENT_TYPE: String
+}
+
 struct OfferEvent: Codable {
     var status: WebRTC
 

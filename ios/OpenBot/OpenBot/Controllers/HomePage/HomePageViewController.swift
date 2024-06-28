@@ -12,6 +12,7 @@ var currentOrientation: UIInterfaceOrientation = UIInterfaceOrientation.portrait
 var isBluetoothConnected = false;
 var viewControllerName: String?
 let gameController = GameController.shared
+let fragmentType = FragmentType.shared
 var leadingConstraint = NSLayoutConstraint()
 var isClientConnected: Bool = false
 let bottomSheet = UIView();
@@ -83,7 +84,10 @@ class HomePageViewController: CameraController, UICollectionViewDataSource, UICo
         NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
         DataLogger.shared.deleteZipFileFromDocument();
         gameController.resetControl = true
+        fragmentType.currentFragment = "Home";
         setupOpenCodeIcon();
+        let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: fragmentType.currentFragment));
+        client.send(message: msg);
     }
 
     override func initializeCamera() {
@@ -131,7 +135,6 @@ class HomePageViewController: CameraController, UICollectionViewDataSource, UICo
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
         }
         gameController.resetControl = true
-
     }
 
 
@@ -303,6 +306,5 @@ extension UIBarButtonItem {
         self.init(customView: button)
     }
 }
-
 
 

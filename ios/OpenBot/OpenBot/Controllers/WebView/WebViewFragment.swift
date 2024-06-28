@@ -41,7 +41,7 @@ class openCodeWebView: UIViewController, WKUIDelegate, WKNavigationDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         webView.navigationDelegate = self
-        let myURL = URL(string: "https://www.openbot.itinker.io/")
+        let myURL = URL(string: "https://www.playground.openbot.org/")
         let myRequest = URLRequest(url: myURL!)
         let scrollView = webView.scrollView
         scrollView.showsVerticalScrollIndicator = false

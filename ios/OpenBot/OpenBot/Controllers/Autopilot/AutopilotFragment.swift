@@ -23,6 +23,7 @@ class AutopilotFragment: CameraController {
     private var isInferenceQueueBusy = false
     private var result: Control?
     var autopilotEnabled = false
+    let fragmentType = FragmentType.shared
 
     /// Called after the view fragment has loaded.
     override func viewDidLoad() {
@@ -71,7 +72,10 @@ class AutopilotFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
         gameController.resetControl = false
+        fragmentType.currentFragment = "Autopilot";
         calculateFrame()
+        let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: self.fragmentType.currentFragment));
+        client.send(message: msg);
         //start the server
         var serverListener = ServerListener();
         serverListener.start();
@@ -244,4 +248,3 @@ class AutopilotFragment: CameraController {
 protocol autopilotDelegate: AnyObject {
     func didPerformAction()
 }
-

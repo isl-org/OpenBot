@@ -163,7 +163,6 @@ export const Constants = {
     subscribeButton: "Subscribe Now",
     Playground: "Playground Support",
     Message:"👋Hi! I am here to assist you in creating blocks for OpenBot. Feel free to ask for any information you need regarding the playground."
-
 }
 
 export const Month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

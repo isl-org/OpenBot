@@ -256,6 +256,7 @@ class scannerFragment: CameraController,autopilotDelegate {
         navigationController?.pushViewController(viewController, animated: true);
         whiteSheet.removeFromSuperview();
         jsEval = jsEvaluator(jsCode: commands);
+        preferencesManager.setBlocklyCode(value: commands);
     }
 
     /**

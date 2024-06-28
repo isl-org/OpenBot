@@ -56,5 +56,6 @@ extension Notification.Name {
     static let createCameraView = Notification.Name("createCameraView");
     static let pointGoalNav = Notification.Name("pointGoalNav");
     static let server = Notification.Name("server");
-    static let saveAs = Notification.Name("saveAs")
+    static let saveAs = Notification.Name("saveAs");
+    static let displayItems = Notification.Name("displayItems");
 }

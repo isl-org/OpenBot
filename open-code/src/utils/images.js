@@ -19,7 +19,7 @@ import dragDropWhite from "../../src/assets/images/drag_drop_white.gif";
 import dragDropDark from "../../src/assets/images/drag_drop_dark.gif";
 import cloud from "../assets/images/icon/cloud.png"
 import lightThemeIcon from "../assets/images/icon/light-theme-icon.png"
-import darkThemeIcon from "../assets/images/icon/whiteMode/white-mode-icon.png"
+import darkThemeIcon from "../assets/images/icon/white-mode-icon.png"
 import dots from "../assets/images/threedots.png";
 import darkDots from "../assets/images/darkdoticon.png";
 import avatar from "../assets/images/icon/Avatars.png";
@@ -36,7 +36,7 @@ import redoIcon from "../assets/images/icon/redo.png";
 import uploadIcon from "../assets/images/icon/upload-cloud.png";
 import rightSlider from "../assets/images/icon/right-slider.png";
 import rightSliderDark from "../assets/images/icon/right-slider-dark.png";
-import UpArrowIcon from "../assets/images/icon/up-arrow.png";
+import upArrowIcon from "../assets/images/icon/up-arrow.png";
 import downArrowIcon from "../assets/images/icon/down-arrow.png";
 import jsIconDarkTheme from "../assets/images/icon/js-icon-dark-theme.png";
 import jsIconLightTheme from "../assets/images/icon/js-con-light-theme.png";
@@ -95,7 +95,7 @@ export const Images = {
     undoIcon: undoIcon,
     redoIcon: redoIcon,
     uploadIcon: uploadIcon,
-    UpArrowIcon: UpArrowIcon,
+    upArrowIcon: upArrowIcon,
     downArrowIcon: downArrowIcon,
     jsIconDarkTheme: jsIconDarkTheme,
     jsIconLightTheme: jsIconLightTheme,

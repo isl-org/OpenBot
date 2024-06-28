@@ -1,5 +1,13 @@
 ## Google Firebase
 
+<p align="center">
+  <span>English</span> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
+</p>
+
 Google Firebase is a mobile and web application development platform that offers a variety of services and tools to help
 developers build high-quality apps quickly and efficiently. It includes features such as real-time database, user
 authentication, hosting, cloud storage and many more, all these are integrated into a single platform. Firebase provides
@@ -17,13 +25,13 @@ building great user experiences.
 
 - ### Usage
   In this application, we use Firebase for Google Sign-In authentication to
-  access [OpenBot Playground](https://github.com/3dwesupport/OpenBot/tree/react-blockly/open-code#readme) projects
+  access [OpenBot Playground](../../../../open-code/README.md) projects
   uploaded on Google Drive.
 
 - ### Note
   If you plan to clone this IOS application and build it on your device, it's important to note that you will need
-  to [set up Firebase](https://github.com/3dwesupport/OpenBot/tree/react-blockly/open-code#readme) for
-  the [OpenBot Playground](https://www.openbot.itinker.io/) web application as well. This is because the IOS app
+  to [set up Firebase](../../../../open-code/README.md) for
+  the [OpenBot Playground](https://www.playground.openbot.org/) web application as well. This is because the IOS app
   retrieves files from the user's Google Drive, which is created by Firebase Google Drive services. It's important to
   use the same Firebase project for both the IOS and web applications for Google Drive services to work properly.
 
@@ -43,9 +51,9 @@ building great user experiences.
     4. Click on the "Create Project" button.
 
     <p>
-    <img src="../../../../docs/images/create_project.jpg" alt="Create project" width="25%"/>
-    <img src="../../../../docs/images/enter_project_name.jpg" alt="Enter project name" width="24%"/>
-    <img src="../../../../docs/images/disable_analytics.jpg" alt="Disable analytics" width="27.5%"/>
+    <img src="../../../../docs/images/firebase_create_app_project.jpg" alt="Create project" width="25%"/>
+    <img src="../../../../docs/images/firebase_enter_project_name.jpg" alt="Enter project name" width="40%"/>
+    <img src="../../../../docs/images/firebase_disable_analytics.jpg" alt="Disable analytics" width="27.5%"/>
     </p>
 
 - To add a new IOS app to your Firebase project, do the following:
@@ -57,8 +65,8 @@ building great user experiences.
        information needed to use Firebase in your app.
 
        <p>
-       <img src="../../../../docs/images/add_ios_app.jpg" alt="Add IOS Application" width="47.5%"/>
-       <img src="../../../../docs/images/bundle_id.jpg" alt="Bundle ID Name" width="35%"/>
+       <img src="../../../../docs/images/firebase_add_ios_app.jpg" alt="Add IOS Application" width="47.5%"/>
+       <img src="../../../../docs/images/firebase_bundle_id.jpg" alt="Bundle ID Name" width="30.5%"/>
        </p>
 
     6. Click on the `Next` button and skip the third (Add Firebase SDK) and fourth (Add initialization code) steps as
@@ -66,8 +74,8 @@ building great user experiences.
     7. Continue to the Firebase Console to configure the Firebase services you want to use in your IOS app.
 
    <p>
-     <img src="../../../../docs/images/google_service_Info_plist.jpg" alt="Add IOS Application" width="40%"/>
-     <img src="../../../../docs/images/continue_to_console_ios.jpg" alt="Bundle ID Name" width="36.5%"/>
+     <img src="../../../../docs/images/firebase_google_service_info_plist.jpg" alt="Add IOS Application" width="35%"/>
+     <img src="../../../../docs/images/firebase_continue_to_console_ios.jpg" alt="Bundle ID Name" width="35%"/>
    </p>
 
 - To `enable Google Sign-In authentication` for your Firebase project, follow these steps:
@@ -79,12 +87,12 @@ building great user experiences.
     6. Click on the `toggle button` to `enable` Google Sign-In authentication.
 
     <p>
-    <img src="../../../../docs/images/firebase_product_services.jpg" alt="Firebase product services" width="47.5%"/>
-    <img src="../../../../docs/images/firebase_authentication.jpg" alt="Firebase authentication" width="42%"/>
+    <img src="../../../../docs/images/firebase_product_services.jpg" alt="Firebase product services" width="44.5%"/>
+    <img src="../../../../docs/images/firebase_app_authentication.jpg" alt="Firebase authentication" width="48%"/>
     </p>
     <p>
-    <img src="../../../../docs/images/google_signin.jpg" alt="Google Sign-In" width="60%"/>
-    <img src="../../../../docs/images/google_signin_enable.jpg" alt="Google Sign-In enable" width="31.5%"/>
+    <img src="../../../../docs/images/firebase_app_google_signin.jpg" alt="Google Sign-In" width="60%"/>
+    <img src="../../../../docs/images/firebase_google_signin_enable.jpg" alt="Google Sign-In enable" width="31.5%"/>
     </p>
 
 ### Set up the iOS Project

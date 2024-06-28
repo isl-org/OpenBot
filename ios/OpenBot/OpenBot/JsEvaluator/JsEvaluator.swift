@@ -107,8 +107,8 @@ class jsEvaluator {
                 let moveRight: @convention(block) (Float) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.moveRight(speed: speed)
                 }
-                let playSound: @convention(block) (Bool) -> Void = { (isPlaySound) in
-                    self.runOpenBotThreadClass?.playSound(isPlaySound: isPlaySound);
+                let playSound: @convention(block) (String) -> Void = { (inputString) in
+                    self.runOpenBotThreadClass?.playSound(inputString: inputString);
                 }
                 let playSoundSpeed: @convention(block) (String) -> Void = { (speed) in
                     self.runOpenBotThreadClass?.playSoundSpeed(speedMode: speed);
@@ -258,7 +258,7 @@ class jsEvaluator {
                 let enableMultipleDetection: @convention(block) (String, String, String, String) -> Void = { (object1, model, object2, task) in
                     self.runOpenBotThreadClass?.enableMultipleDetection(object1: object1, model: model, object2: object2, task: task);
                 }
-            
+
                 let enableMultipleAI: @convention(block) (String, String, String, String) -> Void = { (autoPilotModelName, task, object, detectorModel) in
                     print(autoPilotModelName, task, object, detectorModel);
 //                    enableAutopilot(autoPilotModelName);
@@ -271,6 +271,14 @@ class jsEvaluator {
 
                 let onLostFrames: @convention(block) (String, Int, String) -> Void = { (object, frames, task) in
                     self.runOpenBotThreadClass?.onLostFrames(object: object, frames: frames, task: task);
+                }
+
+                let displaySensorData: @convention(block) (String) -> Void = { (inputString) in
+                    self.runOpenBotThreadClass?.displaySensorData(inputString: inputString);
+                }
+
+                let displayString: @convention(block) (String) -> Void = { (inputString) in
+                    self.runOpenBotThreadClass?.displayString(inputString: inputString);
                 }
 
                 context.setObject(moveForward,
@@ -377,6 +385,10 @@ class jsEvaluator {
                         forKeyedSubscript: "onDetect" as NSString);
                 context.setObject(onLostFrames,
                         forKeyedSubscript: "onLostFrames" as NSString);
+                context.setObject(displaySensorData,
+                        forKeyedSubscript: "displaySensorData" as NSString);
+                context.setObject(displayString,
+                        forKeyedSubscript: "displayString" as NSString);
                 /// evaluateScript should be called below of setObject
                 context.evaluateScript(self.command);
             }
@@ -577,11 +589,12 @@ class jsEvaluator {
             sendControl(control: carControl);
         }
 
-        func playSound(isPlaySound: Bool) {
+        func playSound(inputString: String) {
             if isCancelled {
                 return
             }
-            print("inside playsound");
+            NotificationCenter.default.post(name: .commandName, object: "Play input sound");
+            audioPlayer.playInputString(input: inputString);
         }
 
         func playSoundSpeed(speedMode: String) {
@@ -603,7 +616,7 @@ class jsEvaluator {
                 break
             }
         }
-        
+
         func setSpeed(speedMode: String){
             if isCancelled {
                 return
@@ -1045,7 +1058,6 @@ class jsEvaluator {
             if isCancelled {
                 return
             }
-            print("object::::", object);
             runRobot.onDetection(object: object, model: model, task: task);
             taskStorage.addAttribute(classType: object, task: task, frames: 0, type: "detect");
             NotificationCenter.default.post(name: .createCameraView, object: "");
@@ -1064,6 +1076,19 @@ class jsEvaluator {
             }
             taskStorage.addAttribute(classType: object, task: task, frames: frames, type: "unDetect");
         }
+
+        func displaySensorData(inputString: String){
+            if isCancelled {
+                return
+            }
+            NotificationCenter.default.post(name: .displayItems, object: inputString);
+        }
+
+        func displayString(inputString: String){
+            if isCancelled {
+                return
+            }
+            NotificationCenter.default.post(name: .displayItems, object: inputString);
+        }
     }
 }
-
