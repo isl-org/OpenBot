@@ -23,7 +23,7 @@ const ChatBox = ({conversation}) => {
             {conversation.userMessage &&
                 <UserMessage timestamp={conversation.userTimestamp} message={conversation.userMessage}/>}
             <AssistantResponse timestamp={conversation.AITimestamp} message={conversation.AIMessage}
-                               image={conversation.blockImage} />
+                               image={conversation.blockImage}/>
 
         </div>
     );
@@ -50,7 +50,7 @@ const UserMessage = ({timestamp, message}) => (
  * @constructor
  * @param props
  */
-const AssistantResponse = ({timestamp, message,image}) => {
+const AssistantResponse = ({timestamp, message, image}) => {
     const [loader, setLoader] = useState(false);
     const parsedMessage = parseResponseMessage(message);
     const theme = useContext(ThemeContext);
@@ -98,7 +98,7 @@ const AssistantResponse = ({timestamp, message,image}) => {
                     >
                         Click me!
                     </button>
-                    {image}
+                    <img src={image} alt={"blocks"}/>
                 </div>
             )}
         </div>

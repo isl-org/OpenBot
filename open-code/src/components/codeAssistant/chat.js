@@ -20,7 +20,7 @@ const Chat = (props) => {
             id: 1,
             userTimestamp: "",
             AITimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
-            blockImage: undefined
+            blockImage: ""
         },
     ]);
     const [currentMessage, setCurrentMessage] = useState({
@@ -29,7 +29,7 @@ const Chat = (props) => {
         id: 2,
         userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
         AITimestamp: "",
-        blockImage: undefined
+        blockImage: ""
     });
 
     const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
@@ -45,6 +45,7 @@ const Chat = (props) => {
             AIMessage: "",
             id: allChatMessages.length + 1,
             AITimestamp: "",
+            blockImage: ""
         }));
 
         getAIMessage(userInput).then((res) => {
