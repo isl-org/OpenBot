@@ -53,7 +53,9 @@ AI: disableAI, objectTracking, autopilot, navigateForwardAndLeft, variableDetect
 
 For example : ${Example_prompt}
 
-If the received input does not pertain to the above topics, respond with: 'Apologies!  This bot is designed to assist you with creating OpenBot Playground blocks. If you have any questions related to that, please feel free to ask!. If the user greets or uses common pleasantries (e.g., 'hi,' 'hello,' 'how are you?'), respond appropriately to acknowledge them before guiding them back to the relevant topic.`;
+If the received input does not pertain to the above topics, respond with: 'Apologies!  This bot is designed to assist you with creating OpenBot Playground blocks. If you have any questions related to that, please feel free to ask!. 
+
+If the user greets or uses common pleasantries (e.g., 'hi,' 'hello,' 'how are you?'), respond appropriately to acknowledge them before guiding them back to the relevant topic.`;
 
 
 const finalPrompt = `You are an assistant for OpenBot playground who provide a detailed and professional step-by-step implementation to achieve the received input based on the following Blockly block JSON which has structure for all blocks, including the category from toolbox, block type and working of the block - ${blocksJSON}. Describe each step by taking a block from the toolbox and dropping it into the playground.  Do not include the JSON in the response. ${Blockly_prompt}`
