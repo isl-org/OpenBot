@@ -1,8 +1,7 @@
 [
   {
-    "category": "Control",
     "blockType": "start",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "%1 %2",
       "args0": [
@@ -22,9 +21,8 @@
     }
   },
   {
-    "category": "Control",
     "blockType": "forever",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "%1 %2",
       "args0": [
@@ -44,9 +42,8 @@
     }
   },
   {
-    "category": "Control",
     "blockType": "wait",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "%1 %2 ms",
       "args0": [
@@ -71,9 +68,8 @@
     "working": "wait for chosen time"
   },
   {
-    "category": "Sound",
     "blockType": "soundType",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "play sound %1 speed",
       "args0": [
@@ -105,9 +101,8 @@
     "working": "play chosen sound speed in robot phone"
   },
   {
-    "category": "Sound",
     "blockType": "soundMode",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "play sound %1 mode",
       "args0": [
@@ -139,9 +134,8 @@
     "working": "play chosen sound mode in robot phone"
   },
   {
-    "category": "Movement",
     "blockType": "forward&BackwardAtSpeed",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "move %1 at speed %2",
       "args0": [
@@ -176,9 +170,8 @@
     "working": "move robot in forward or backward direction at chosen speed"
   },
   {
-    "category": "Movement",
     "blockType": "left&RightAtSpeed",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "move %1 at speed %2",
       "args0": [
@@ -213,9 +206,8 @@
     "working": "move robot in left or right direction at chosen speed"
   },
   {
-    "category": "Movement",
     "blockType": "moveLeft&Right",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "move %1 %2 %3 %4",
       "args0": [
@@ -253,9 +245,8 @@
     "working": "move robot in left, right, forward, backward or circular direction at chosen speed"
   },
   {
-    "category": "Movement",
     "blockType": "movementStop",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "%1",
       "args0": [
@@ -274,9 +265,8 @@
     "working": "stop robot immediately"
   },
   {
-    "category": "Sensors",
     "blockType": "sonarReading",
-    "configuration": {
+    "definition": {
       "type": "ellipse_block",
       "message0": "sonar reading",
       "output": "Number",
@@ -287,9 +277,8 @@
     "working": "return sonar sensor readings"
   },
   {
-    "category": "Sensors",
     "blockType": "speedReading",
-    "configuration": {
+    "definition": {
       "type": "ellipse_block",
       "message0": "speed reading",
       "output": "Number",
@@ -300,9 +289,8 @@
     "working": "return speed sensor readings"
   },
   {
-    "category": "Sensors",
     "blockType": "voltageDividerReading",
-    "configuration": {
+    "definition": {
       "type": "ellipse_block",
       "message0": "voltage divider reading",
       "output": "Number",
@@ -313,9 +301,8 @@
     "working": "return voltage divider sensor readings"
   },
   {
-    "category": "Sensors",
     "blockType": "wheelOdometerSensors",
-    "configuration": {
+    "definition": {
       "type": "ellipse_block",
       "message0": " wheel odometry %1 ",
       "args0": [
@@ -342,9 +329,8 @@
     "working": "return wheel odometer sensor readings"
   },
   {
-    "category": "Sensors",
     "blockType": "gyroscope_reading",
-    "configuration": {
+    "definition": {
       "type": "ellipse_block",
       "message0": "gyroscope reading %1",
       "args0": [
@@ -375,9 +361,8 @@
     "working": "return gyroscope sensor readings"
   },
   {
-    "category": "Sensors",
     "blockType": "acceleration_reading",
-    "configuration": {
+    "definition": {
       "type": "ellipse_block",
       "message0": "acceleration reading %1",
       "args0": [
@@ -408,9 +393,8 @@
     "working": "return acceleration readings"
   },
   {
-    "category": "Sensors",
     "blockType": "magnetic_reading",
-    "configuration": {
+    "definition": {
       "type": "ellipse_block",
       "message0": "magnetic reading %1",
       "args0": [
@@ -441,9 +425,8 @@
     "working": "return magnetic sensor readings"
   },
   {
-    "category": "Controller",
     "blockType": "speedControl",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "set speed limit to %1",
       "args0": [
@@ -475,9 +458,8 @@
     "working": "set speed to chosen speed in robot app"
   },
   {
-    "category": "Controller",
     "blockType": "controllerMode",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "switch controller to %1",
       "args0": [
@@ -515,9 +497,8 @@
     "working": "set controller mode to chosen mode in robot app"
   },
   {
-    "category": "Controller",
     "blockType": "driveModeControls",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "switch drive mode to %1",
       "args0": [
@@ -564,9 +545,8 @@
     "working": "set drive mode to chosen mode in robot app"
   },
   {
-    "category": "Lights",
     "blockType": "brightness",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "set brightness of tail and head LEDs %1",
       "args0": [
@@ -587,9 +567,8 @@
     "working": "set brightness for tail and head led lights"
   },
   {
-    "category": "Lights",
     "blockType": "indicators",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "turn %1 indicator %2",
       "args0": [
@@ -624,9 +603,8 @@
     "working": "to ON/OFF left or right indicators of the openbot"
   },
   {
-    "category": "Lights",
     "blockType": "brightnessHighOrLow",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "turn LED brightness %1",
       "args0": [
@@ -647,9 +625,8 @@
     "working": "to ON/OFF tail and head led lights"
   },
   {
-    "category": "AI",
     "blockType": "disableAI",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "disable AI",
       "previousStatement": null,
@@ -661,9 +638,8 @@
     "working": "disable the ongoing artificial intelligence"
   },
   {
-    "category": "Sound",
     "blockType": "inputSound",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "play sound %1",
       "args0": [
@@ -682,9 +658,8 @@
     "working": "Play a custom sound from robot phone that is input in the text field"
   },
   {
-    "category": "Control",
     "blockType": "display_sensors",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "display sensor data %1",
       "args0": [
@@ -702,9 +677,8 @@
     "working": "display input sensor data on the robot phone"
   },
   {
-    "category": "Control",
     "blockType": "display_string",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "display string %1",
       "args0": [
@@ -723,9 +697,8 @@
     "working": "display input text on robot phone"
   },
   {
-    "category": "AI",
     "blockType": "objectTracking",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "follow a %1 using %2",
       "args0": [
@@ -767,9 +740,8 @@
     "working": "enabling object tracking to follow a chosen object at chosen model"
   },
   {
-    "category": "AI",
     "blockType": "autopilot",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "enable autopilot using %1",
       "args0": [
@@ -793,9 +765,8 @@
     "working": "enabling autopilot to run at chosen model"
   },
   {
-    "category": "AI",
     "blockType": "navigateForwardAndLeft",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "move to forward at %1 (cm) and left at %2 (cm) using %3",
       "args0": [
@@ -829,9 +800,8 @@
     "working": "enabling point goal navigation to run at chosen model"
   },
   {
-    "category": "AI",
     "blockType": "variableDetection",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "on %1 detected using %2 %3 do %4 on lost %5 frames %6 do %7",
       "args0": [
@@ -892,9 +862,8 @@
     "working": "Enable multiple object tracking to perform tasks upon detecting a chosen object and also execute different tasks when losing the chosen frames."
   },
   {
-    "category": "AI",
     "blockType": "multipleAIDetection",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "enable autopilot using %1 , %2 on detecting %3 using %4 %5  Do %6",
       "args0": [
@@ -956,9 +925,8 @@
     "working": "Enable object tracking and autopilot simultaneously to perform specified tasks upon detecting the chosen object. "
   },
   {
-    "category": "AI",
     "blockType": "multipleObjectTracking",
-    "configuration": {
+    "definition": {
       "type": "block_type",
       "message0": "follow a  %1 using %2 , %3 on detecting %4 %5 Do %6",
       "args0": [
@@ -1027,91 +995,69 @@
     }
   },
   {
-    "category": "Control",
     "blockType": "controls_if"
   },
   {
-    "category": "Control",
     "blockType": "controls_ifelse"
   },
   {
-    "category": "Control",
     "blockType": "logic_compare"
   },
   {
-    "category": "Control",
     "blockType": "logic_operation"
   },
   {
-    "category": "Control",
     "blockType": "logic_negate"
   },
   {
-    "category": "Control",
     "blockType": "logic_boolean"
   },
   {
-    "category": "Loops",
     "blockType": "controls_whileUntil"
   },
   {
-    "category": "Loops",
     "blockType": "controls_repeat"
   },
   {
-    "category": "Loops",
     "blockType": "controls_flow_statements"
   },
   {
-    "category": "Loops",
     "blockType": "controls_for"
   },
   {
-    "category": "Operators",
     "blockType": "math_arithmetic"
   },
   {
-    "category": "Operators",
     "blockType": "math_number"
   },
   {
-    "category": "Operators",
     "blockType": "math_modulo"
   },
   {
-    "category": "Operators",
     "blockType": "math_single"
   },
   {
-    "category": "Operators",
     "blockType": "math_constant"
   },
   {
-    "category": "Operators",
     "blockType": "math_number_property"
   },
   {
-    "category": "Operators",
     "blockType": "math_round"
   },
   {
-    "category": "Operators",
     "blockType": "math_random_int"
   },
   {
-    "category": "Variables",
     "blockType": "variables_set"
   },
   {
-    "category": "Variables",
     "blockType": "variables_get"
   },
   {
-    "category": "Variables",
     "blockType": "math_change"
   },
   {
-    "category": "Variables",
     "blockType": "math_number"
   }
 ]
