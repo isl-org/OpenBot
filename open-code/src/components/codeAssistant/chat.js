@@ -11,7 +11,7 @@ import {extractXmlFromResponse} from "../blockly/imageConverter";
 
 const Chat = (props) => {
     const theme = useContext(ThemeContext);
-    const {workspace, setWorkspace} = useContext(StoreContext);
+    const {workspace} = useContext(StoreContext);
     const [inputValue, setInputValue] = useState('');
     const [allChatMessages, setAllChatMessages] = useState([
         {
@@ -29,7 +29,7 @@ const Chat = (props) => {
         id: 2,
         userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
         AITimestamp: "",
-        blockImage: ""
+       
     });
 
     const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
@@ -61,7 +61,7 @@ const Chat = (props) => {
                     console.log("Error in creating block png-->", e);
                     setCurrentMessage((prevState) => ({
                         ...prevState,
-                        AIMessage: Errors.error6,
+                        AIMessage: Errors.error7,
                         AITimestamp: timestamp
                     }));
                 })
@@ -150,7 +150,6 @@ const ChatBottomBar = (props) => {
                 style={inputValue.trim() === '' ? {cursor: 'not-allowed', opacity: 0.5} : {}}
             >
                 <img alt="Send Icon" src={Images.sendIcon} className={styles.sendIcon}/>
-                <i className="fas fa-paper-plane" aria-hidden="true"></i>
             </div>
         </div>
     );

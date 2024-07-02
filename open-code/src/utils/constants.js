@@ -162,7 +162,7 @@ export const Constants = {
     subscriptionContinueInfo: "will need to upgrade your plan.",
     subscribeButton: "Subscribe Now",
     Playground: "Playground Support",
-    Message:"👋Hi! I am here to assist you in creating blocks for OpenBot. Feel free to ask for any information you need regarding the playground."
+    Message: "👋Hi! I am here to assist you in creating blocks for OpenBot. Feel free to ask for any information you need regarding the playground."
 }
 
 export const Month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -178,7 +178,8 @@ export const Errors = {
     error3: "Identical objects for multiple detection AI block.",
     error4: "AI block present within the forever block. Please review the block code.",
     error5: "Similar classes present in the Advanvced AI blocks",
-    error6:"Unable to connect to the server. Please try again later."
+    error6: "Unable to connect to the server. Please try again later.",
+    error7: "Error in creating .blocks PNG"
 }
 
 export const PlaygroundConstants = {

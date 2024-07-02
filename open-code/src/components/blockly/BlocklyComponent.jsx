@@ -13,9 +13,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {checkFileExistsInFolder, getFolderId, getShareableLink} from "../../services/googleDrive";
 import {RightDrawer} from "../drawer/drawer";
 import {useLocation} from "react-router-dom";
-import {blockToPngBase64} from "./imageConverter";
-import ChatBox from "../chatBox/messagebox";
-
 Blockly.setLocale(locale);
 
 /**

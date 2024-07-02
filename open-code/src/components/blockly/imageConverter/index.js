@@ -89,8 +89,8 @@ export const extractXmlFromResponse = async (message, workspace) => {
     if (match) {
         Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(match[0]), workspace);
 
-        const block = workspace.getTopBlocks()[0];
-        return await blockToPngBase64(block);
+        // const block = workspace.getTopBlocks()[0];
+        // return await blockToPngBase64(block);
     } else {
         console.log('No match found');
     }

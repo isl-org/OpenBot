@@ -1,10 +1,10 @@
-import React, {useRef, useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState, useContext} from 'react';
 import styles from './messageBox.module.css';
 import {ThemeContext} from "../../App";
 import {Themes} from "../../utils/constants";
 import {colors as Colors} from "../../utils/color";
 import {Images} from "../../utils/images";
-import Chat from "../codeAssistant/chat";
+
 
 
 /**
@@ -62,8 +62,8 @@ const AssistantResponse = ({timestamp, message, image}) => {
         }
     }, [message]);
 
-    const handleButtonClick = () => {
-    };
+    // const handleButtonClick = () => {
+    // };
 
     return (
         <div
@@ -88,17 +88,17 @@ const AssistantResponse = ({timestamp, message, image}) => {
                 >
                     {parsedMessage}
                     <div className={styles.timestamp}>{timestamp}</div>
-                    <button
-                        className={styles.responseButton}
-                        style={{
-                            backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
-                            color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
-                        }}
-                        onClick={handleButtonClick}
-                    >
-                        Click me!
-                    </button>
-                    <img src={image} alt={"blocks"}/>
+                    {/*<button*/}
+                    {/*    className={styles.responseButton}*/}
+                    {/*    style={{*/}
+                    {/*        backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",*/}
+                    {/*        color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",*/}
+                    {/*    }}*/}
+                    {/*    onClick={handleButtonClick}*/}
+                    {/*>*/}
+                    {/*    Click me!*/}
+                    {/*</button>*/}
+                    {/*<img src= " " />*/}
                 </div>
             )}
         </div>
@@ -115,27 +115,26 @@ const AssistantResponse = ({timestamp, message, image}) => {
 const parseResponseMessage = (message) => {
     const lines = message.split('\n');
     const parsedLines = [];
-
     lines.forEach((line, index) => {
         const leadingWhitespace = line.match(/^(\s+)/);
-        const indent = leadingWhitespace ? leadingWhitespace[1].length : 0;
-
+        const indent = leadingWhitespace? leadingWhitespace[1].length : 0;
         if (line.startsWith('###')) {
             parsedLines.push(
-                <h3 key={index} style={{paddingLeft: `${indent * 16}px`}}>
+                <h3 key={index} style={{ fontSize: 18, fontWeight: 900, paddingLeft: `${indent * 16}px` }}>
                     {line.replace('###', '')}
                 </h3>
             );
-        } else if (line.startsWith('-')) {
+        } else if (line.replace(/^\s+/, "").startsWith('-')) {
             parsedLines.push(
-                <li key={index} style={{paddingLeft: `${indent * 16}px`}}>
-                    {line.replace('-', '')}
+                <li key={index} style={{ listStyle: 'none', paddingLeft: `${indent * 16}px` }}>
+                    • {line.replace(/^\s+-/, '')}
                 </li>
             );
+
         } else if (line.includes('```')) {
             const code = line.replace('```', '');
             parsedLines.push(
-                <code key={index} style={{paddingLeft: `${indent * 16}px`}}>
+                <code key={index} style={{ fontSize: 14, fontFamily: 'Gilroy-Medium, sans-serif', paddingLeft: `${indent * 16}px` }}>
                     {code}
                 </code>
             );
@@ -144,17 +143,48 @@ const parseResponseMessage = (message) => {
                 <p
                     key={index}
                     style={{
-                        fontFamily: 'Gilroy-Bold',
-                        // fontWeight: 'bold',
+                        fontSize: 16,
+                        fontWeight: 'bold',
                         paddingLeft: `${indent * 16}px`,
                     }}
                 >
                     {line.replace(/(?:\*\*|\*)/g, '')}
                 </p>
             );
+        } else if (line.startsWith('**')) {
+            parsedLines.push(
+                <b key={index} style={{ fontSize: 16, fontWeight: 'bold', paddingLeft: `${indent * 16}px` }}>
+                    {line.replace('**', '')}
+                </b>
+            );
+        } else if (line.includes('<ol>')) {
+            const listItems = line.replace('<ol>', '').split('</li><li>');
+            parsedLines.push(
+                <ol key={index} style={{ paddingLeft: `${indent * 16}px` }}>
+                    {listItems.map((item, index) => (
+                        <li key={index} style={{ listStyle: 'decimal' }}>
+                            {item}
+                        </li>
+                    ))}
+                </ol>
+            );
+        } else if (line.includes('<code>')) {
+            const code = line.replace('<code>', '').replace('</code>', '');
+            parsedLines.push(
+                <code key={index} style={{ fontSize: 14, fontFamily:'Gilroy-Medium, sans-serif', paddingLeft: `${indent * 16}px` }}>
+                    {code}
+                </code>
+            );
+        } else if (line.includes('<xml>')) {
+            const xml = line.replace('<xml>', '').replace('</xml>', '');
+            parsedLines.push(
+                <pre key={index} style={{ fontSize: 14, fontFamily: 'Gilroy-Medium, sans-serif', paddingLeft: `${indent * 16}px` }}>
+          {xml}
+        </pre>
+            );
         } else {
             parsedLines.push(
-                <p key={index} style={{paddingLeft: `${indent * 16}px`}}>
+                <p key={index} style={{ fontSize: 16, paddingLeft: `${indent * 16}px` }}>
                     {line}
                 </p>
             );

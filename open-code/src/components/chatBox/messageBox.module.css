@@ -2,11 +2,14 @@
     border: 1px solid #ccc;
     padding: 15px;
     border-radius: 10px 10px 10px 0;
+    overflow-x:auto; /* Enable horizontal scrolling */
+
 }
 .responseContent {
     display: flex;
     flex-direction: column;
     /*padding: 10px;*/
+    overflow-x:auto;
 }
 .responseContent.timestamp {
     text-align: right;

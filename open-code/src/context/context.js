@@ -41,7 +41,6 @@ export default ({
     const [isSignIn, setIsSignIn] = useState(false);
     const [isDob, setIsDob] = useState(undefined);
     const [isAutoSyncEnabled, setIsAutoSyncEnabled] = useState(false)
-    const [currentAssistantXml,setCurrentAssistantXml] = useState('');
     const store = {
         projectName, setProjectName,
         drawer, setDrawer,
