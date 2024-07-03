@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styles from './messageBox.module.css';
-import {ThemeContext} from "../../App";
-import {Themes} from "../../utils/constants";
-import {colors as Colors} from "../../utils/color";
-import {Images} from "../../utils/images";
-
-
+import { ThemeContext } from "../../App";
+import { Themes } from "../../utils/constants";
+import { colors as Colors } from "../../utils/color";
+import { Images } from "../../utils/images";
+import ReactMarkdown from 'react-markdown';
 
 /**
  * Main ChatBox component that displays user and assistant messages
@@ -13,18 +12,17 @@ import {Images} from "../../utils/images";
  * @returns {React.JSX.Element}
  * @constructor
  */
-const ChatBox = ({conversation}) => {
+const ChatBox = ({ conversation }) => {
     const theme = useContext(ThemeContext);
     return (
         <div className={styles.chatBubble} style={{
             color: theme.theme === Themes.dark ? Colors.whiteFont : "#FFFFFF"
         }}>
-            {!conversation.userMessage && <img src={Images.openBotLogo} width={"20%"} alt={"openBot"}/>}
+            {!conversation.userMessage && <img src={Images.openBotLogo} width={"20%"} alt={"openBot"} />}
             {conversation.userMessage &&
-                <UserMessage timestamp={conversation.userTimestamp} message={conversation.userMessage}/>}
+                <UserMessage timestamp={conversation.userTimestamp} message={conversation.userMessage} />}
             <AssistantResponse timestamp={conversation.AITimestamp} message={conversation.AIMessage}
-                               image={conversation.blockImage}/>
-
+                               image={conversation.blockImage} />
         </div>
     );
 };
@@ -36,7 +34,7 @@ const ChatBox = ({conversation}) => {
  * @returns {React.JSX.Element}
  * @constructor
  */
-const UserMessage = ({timestamp, message}) => (
+const UserMessage = ({ timestamp, message }) => (
     <div className={styles.userMessage} title={timestamp}>
         <div>{message}</div>
         <div className={styles.userTimestamp}>{timestamp}</div>
@@ -44,154 +42,57 @@ const UserMessage = ({timestamp, message}) => (
 );
 
 /**
- *
- * Component to display assistant's response with timestamp
- * @returns {Element}
+ * Component to display assistant's response with typewriter effect and timestamp
+ * @param timestamp
+ * @param message
+ * @param image
+ * @returns {React.JSX.Element}
  * @constructor
- * @param props
  */
-const AssistantResponse = ({timestamp, message, image}) => {
+const AssistantResponse = ({ timestamp, message, image }) => {
+    const [displayedMessage, setDisplayedMessage] = useState('');
     const [loader, setLoader] = useState(false);
-    const parsedMessage = parseResponseMessage(message);
     const theme = useContext(ThemeContext);
+
     useEffect(() => {
-        if (message === "") {
-            setLoader(true);
-        } else {
-            setLoader(false);
+        setLoader(message === '');
+
+        if (message !== '') {
+            let index = 0;
+            const interval = setInterval(() => {
+                if (index <= message.length) {
+                    setDisplayedMessage(message.slice(0, index));
+                    index++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 50); // Adjust typing speed as needed
+            return () => clearInterval(interval);
         }
     }, [message]);
 
-    // const handleButtonClick = () => {
-    // };
-
     return (
-        <div
-            className={styles.responseBox}
-            title={timestamp}
-            style={{
-                backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
-                color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
-            }}
-        >
+        <div className={styles.responseBox}
+             title={timestamp}
+             style={{
+                 backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                 color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
+             }}>
             {loader ? (
-                <div
-                    className={`${styles.loader} ${theme.theme === Themes.dark ? styles.whiteLoader : styles.loader}`}
-                ></div>
+                <div className={`${styles.loader} ${theme.theme === Themes.dark ? styles.whiteLoader : styles.loader}`}>
+                </div>
             ) : (
-                <div
-                    className={styles.responseContent}
-                    style={{
-                        backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
-                        color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
-                    }}
-                >
-                    {parsedMessage}
+                <div className={styles.responseContent}
+                     style={{
+                         backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                         color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
+                     }}>
+                    <ReactMarkdown>{displayedMessage}</ReactMarkdown>
                     <div className={styles.timestamp}>{timestamp}</div>
-                    {/*<button*/}
-                    {/*    className={styles.responseButton}*/}
-                    {/*    style={{*/}
-                    {/*        backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",*/}
-                    {/*        color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",*/}
-                    {/*    }}*/}
-                    {/*    onClick={handleButtonClick}*/}
-                    {/*>*/}
-                    {/*    Click me!*/}
-                    {/*</button>*/}
-                    {/*<img src= " " />*/}
                 </div>
             )}
         </div>
     );
-};
-
-/**
- *
- * Parses a response message string and converts it into an array of JSX elements.
- * Handles different formatting rules such as headers, list items, code blocks, and bold text.
- * @param message
- * @returns {*[]}
- */
-const parseResponseMessage = (message) => {
-    const lines = message.split('\n');
-    const parsedLines = [];
-    lines.forEach((line, index) => {
-        const leadingWhitespace = line.match(/^(\s+)/);
-        const indent = leadingWhitespace? leadingWhitespace[1].length : 0;
-        if (line.startsWith('###')) {
-            parsedLines.push(
-                <h3 key={index} style={{ fontSize: 18, fontWeight: 900, paddingLeft: `${indent * 16}px` }}>
-                    {line.replace('###', '')}
-                </h3>
-            );
-        } else if (line.replace(/^\s+/, "").startsWith('-')) {
-            parsedLines.push(
-                <li key={index} style={{ listStyle: 'none', paddingLeft: `${indent * 16}px` }}>
-                    • {line.replace(/^\s+-/, '')}
-                </li>
-            );
-
-        } else if (line.includes('```')) {
-            const code = line.replace('```', '');
-            parsedLines.push(
-                <code key={index} style={{ fontSize: 14, fontFamily: 'Gilroy-Medium, sans-serif', paddingLeft: `${indent * 16}px` }}>
-                    {code}
-                </code>
-            );
-        } else if (line.includes('**') || line.includes('***')) {
-            parsedLines.push(
-                <p
-                    key={index}
-                    style={{
-                        fontSize: 16,
-                        fontWeight: 'bold',
-                        paddingLeft: `${indent * 16}px`,
-                    }}
-                >
-                    {line.replace(/(?:\*\*|\*)/g, '')}
-                </p>
-            );
-        } else if (line.startsWith('**')) {
-            parsedLines.push(
-                <b key={index} style={{ fontSize: 16, fontWeight: 'bold', paddingLeft: `${indent * 16}px` }}>
-                    {line.replace('**', '')}
-                </b>
-            );
-        } else if (line.includes('<ol>')) {
-            const listItems = line.replace('<ol>', '').split('</li><li>');
-            parsedLines.push(
-                <ol key={index} style={{ paddingLeft: `${indent * 16}px` }}>
-                    {listItems.map((item, index) => (
-                        <li key={index} style={{ listStyle: 'decimal' }}>
-                            {item}
-                        </li>
-                    ))}
-                </ol>
-            );
-        } else if (line.includes('<code>')) {
-            const code = line.replace('<code>', '').replace('</code>', '');
-            parsedLines.push(
-                <code key={index} style={{ fontSize: 14, fontFamily:'Gilroy-Medium, sans-serif', paddingLeft: `${indent * 16}px` }}>
-                    {code}
-                </code>
-            );
-        } else if (line.includes('<xml>')) {
-            const xml = line.replace('<xml>', '').replace('</xml>', '');
-            parsedLines.push(
-                <pre key={index} style={{ fontSize: 14, fontFamily: 'Gilroy-Medium, sans-serif', paddingLeft: `${indent * 16}px` }}>
-          {xml}
-        </pre>
-            );
-        } else {
-            parsedLines.push(
-                <p key={index} style={{ fontSize: 16, paddingLeft: `${indent * 16}px` }}>
-                    {line}
-                </p>
-            );
-        }
-    });
-
-    return parsedLines;
 };
 
 export default ChatBox;

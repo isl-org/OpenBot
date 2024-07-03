@@ -49,6 +49,8 @@ import darkPlusIcon from "../assets/images/icon/darkPlus.png"
 import lightPlusIcon from "../assets/images/icon/lightPlus.png"
 import subscriptionExpire from "../assets/images/subscription-expire.png"
 import sendIcon from "../assets/images/sendIcon.png"
+import pause from "../assets/images/icon/pause.png"
+
 import aiSupport from "../assets/images/icon/aiSupport.png"
 import openBotLogo from "../assets/images/icon/open-bot-logo.png"
 /**
@@ -108,5 +110,6 @@ export const Images = {
     subscriptionExpire:subscriptionExpire,
     sendIcon: sendIcon,
     aiSupport: aiSupport,
-   openBotLogo: openBotLogo
+   openBotLogo: openBotLogo,
+    pause:pause
 }
