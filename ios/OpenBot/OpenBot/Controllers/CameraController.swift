@@ -347,7 +347,9 @@ class CameraController: UIViewController, AVCaptureVideoDataOutputSampleBufferDe
 
     /// function to stop the camera sessions.
     func stopSession() {
-        captureSession.stopRunning()
+        if (captureSession !== nil) {
+            captureSession.stopRunning()
+        }
     }
 
     func shouldStartCamera() -> Bool {

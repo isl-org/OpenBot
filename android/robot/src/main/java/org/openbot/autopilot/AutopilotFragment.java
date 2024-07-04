@@ -16,19 +16,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
 import androidx.navigation.Navigation;
-
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
 import org.jetbrains.annotations.NotNull;
 import org.openbot.R;
 import org.openbot.common.CameraFragment;
@@ -43,7 +39,6 @@ import org.openbot.utils.Constants;
 import org.openbot.utils.Enums;
 import org.openbot.utils.PermissionUtils;
 import org.openbot.vehicle.Control;
-
 import timber.log.Timber;
 
 public class AutopilotFragment extends CameraFragment {
@@ -461,6 +456,16 @@ public class AutopilotFragment extends CameraFragment {
         return model;
     }
 
+    private void connectWebController() {
+        phoneController.connectWebServer();
+        Enums.DriveMode oldDriveMode = currentDriveMode;
+        // Currently only dual drive mode supported
+        setDriveMode(Enums.DriveMode.GAME);
+        binding.controllerContainer.driveMode.setAlpha(0.5f);
+        binding.controllerContainer.driveMode.setEnabled(false);
+        preferencesManager.setDriveMode(oldDriveMode.getValue());
+    }
+
     protected void setModel(Model model) {
         if (this.model != model) {
             Timber.d("Updating  model: %s", model);
@@ -534,7 +539,12 @@ public class AutopilotFragment extends CameraFragment {
                     if (!PermissionUtils.hasControllerPermissions(requireActivity()))
                         requestPermissionLauncher.launch(Constants.PERMISSIONS_CONTROLLER);
                     else connectPhoneController();
-
+                    break;
+                case WEBSERVER:
+                    binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_server);
+                    if (!PermissionUtils.hasControllerPermissions(requireActivity()))
+                        requestPermissionLauncher.launch(Constants.PERMISSIONS_CONTROLLER);
+                    else connectWebController();
                     break;
             }
             Timber.d("Updating  controlMode: %s", controlMode);
@@ -579,3 +589,4 @@ public class AutopilotFragment extends CameraFragment {
         binding.controllerContainer.driveMode.setAlpha(1.0f);
     }
 }
+

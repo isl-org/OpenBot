@@ -11,6 +11,7 @@ class GameController: GCPhysicalInputProfile {
     static let shared: GameController = GameController()
     private let maximumControllerCount: Int = 1
     private(set) var controllers = Set<GCController>()
+    var audioPlayer = AudioPlayer.shared
     private var panRecognizer: UIPanGestureRecognizer!
     var selectedSpeedMode: SpeedMode = SpeedMode.SLOW
     var selectedControlMode: ControlMode = ControlMode.GAMEPAD
@@ -321,6 +322,33 @@ class GameController: GCPhysicalInputProfile {
             bluetooth.sendData(payload: indicatorValues)
             indicator = indicatorValues
         }
+    }
+
+    func increaseSpeedMode(){
+        switch selectedSpeedMode {
+        case .SLOW:
+            selectedSpeedMode = .NORMAL;
+            break;
+        case .NORMAL:
+            selectedSpeedMode = .FAST;
+            break;
+        case .FAST:
+            return
+        }
+        audioPlayer.playSpeedMode(speedMode: selectedSpeedMode);
+    }
+    func decreaseSpeedMode(){
+        switch selectedSpeedMode {
+        case .SLOW:
+            return;
+        case .NORMAL:
+            selectedSpeedMode = .SLOW;
+            break;
+        case .FAST:
+            selectedSpeedMode = .NORMAL;
+            break;
+        }
+        audioPlayer.playSpeedMode(speedMode: selectedSpeedMode);
     }
 }
 
