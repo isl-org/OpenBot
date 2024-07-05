@@ -1,28 +1,37 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import styles from './messageBox.module.css';
-import { ThemeContext } from "../../App";
-import { Themes } from "../../utils/constants";
-import { colors as Colors } from "../../utils/color";
-import { Images } from "../../utils/images";
+import {ThemeContext} from "../../App";
+import {Themes} from "../../utils/constants";
+import {colors as Colors} from "../../utils/color";
+import {Images} from "../../utils/images";
 import ReactMarkdown from 'react-markdown';
+
 
 /**
  * Main ChatBox component that displays user and assistant messages
  * @param conversation
+ * @param handlePauseClick Function to handle pause click for a specific conversation
+ * @param setTyping
  * @returns {React.JSX.Element}
  * @constructor
  */
-const ChatBox = ({ conversation }) => {
+const ChatBox = ({conversation, handlePauseClick, setTyping}) => {
     const theme = useContext(ThemeContext);
     return (
         <div className={styles.chatBubble} style={{
             color: theme.theme === Themes.dark ? Colors.whiteFont : "#FFFFFF"
         }}>
-            {!conversation.userMessage && <img src={Images.openBotLogo} width={"20%"} alt={"openBot"} />}
+            {!conversation.userMessage && <img src={Images.openBotLogo} width={"20%"} alt={"openBot"}/>}
             {conversation.userMessage &&
-                <UserMessage timestamp={conversation.userTimestamp} message={conversation.userMessage} />}
-            <AssistantResponse timestamp={conversation.AITimestamp} message={conversation.AIMessage}
-                               image={conversation.blockImage} />
+                <UserMessage timestamp={conversation.userTimestamp} message={conversation.userMessage}/>}
+            <AssistantResponse
+                timestamp={conversation.AITimestamp}
+                message={conversation.AIMessage}
+                image={conversation.blockImage}
+                paused={conversation.paused} // Pass paused state
+                handlePauseClick={() => handlePauseClick(conversation.id)} // Pass handlePauseClick
+                setTyping={setTyping}
+            />
         </div>
     );
 };
@@ -34,7 +43,7 @@ const ChatBox = ({ conversation }) => {
  * @returns {React.JSX.Element}
  * @constructor
  */
-const UserMessage = ({ timestamp, message }) => (
+const UserMessage = ({timestamp, message}) => (
     <div className={styles.userMessage} title={timestamp}>
         <div>{message}</div>
         <div className={styles.userTimestamp}>{timestamp}</div>
@@ -46,10 +55,13 @@ const UserMessage = ({ timestamp, message }) => (
  * @param timestamp
  * @param message
  * @param image
+ * @param paused
+ * @param handlePauseClick
+ * @param setTyping
  * @returns {React.JSX.Element}
  * @constructor
  */
-const AssistantResponse = ({ timestamp, message, image }) => {
+const AssistantResponse = ({ timestamp, message, image, paused, setTyping }) => {
     const [displayedMessage, setDisplayedMessage] = useState('');
     const [loader, setLoader] = useState(false);
     const theme = useContext(ThemeContext);
@@ -60,16 +72,20 @@ const AssistantResponse = ({ timestamp, message, image }) => {
         if (message !== '') {
             let index = 0;
             const interval = setInterval(() => {
-                if (index <= message.length) {
+                if (!paused && index <= message.length) {
                     setDisplayedMessage(message.slice(0, index));
                     index++;
-                } else {
-                    clearInterval(interval);
+                } else if (paused) {
+                    clearInterval(interval); // Stop the typewriter when paused
                 }
-            }, 50); // Adjust typing speed as needed
+                if (index > message.length) {
+                    setTyping(false);
+                    clearInterval(interval); // Stop interval when message is fully displayed
+                }
+            }, 50);
             return () => clearInterval(interval);
         }
-    }, [message]);
+    }, [message, paused]);
 
     return (
         <div className={styles.responseBox}
@@ -95,4 +111,7 @@ const AssistantResponse = ({ timestamp, message, image }) => {
     );
 };
 
+
 export default ChatBox;
+
+

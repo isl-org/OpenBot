@@ -11,7 +11,7 @@ import {extractXmlFromResponse} from "../blockly/imageConverter";
 
 const Chat = (props) => {
     const theme = useContext(ThemeContext);
-    const {workspace} = useContext(StoreContext);
+    const { workspace } = useContext(StoreContext);
     const [inputValue, setInputValue] = useState('');
     const [allChatMessages, setAllChatMessages] = useState([
         {
@@ -19,25 +19,32 @@ const Chat = (props) => {
             AIMessage: Constants.Message,
             id: 1,
             userTimestamp: "",
-            AITimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
-            blockImage: ""
+            AITimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            blockImage: "",
+            paused: false // Add paused state
         },
     ]);
     const [currentMessage, setCurrentMessage] = useState({
         userMessage: "",
         AIMessage: "",
         id: 2,
-        userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+        userTimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         AITimestamp: "",
-       
+        blockImage: "",
+        paused: false // Add paused state
     });
 
-    const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const [isTyping, setIsTyping] = useState(false);
+
     const handleSendClick = async () => {
-        const userInput = inputValue.trim().toLowerCase(); // trim and convert to lowercase
+        const userInput = inputValue.trim().toLowerCase();
         if (userInput === '') {
             return;
         }
+
+        setIsTyping(true);
+
         setCurrentMessage((prevState) => ({
             ...prevState,
             userMessage: userInput,
@@ -45,7 +52,8 @@ const Chat = (props) => {
             AIMessage: "",
             id: allChatMessages.length + 1,
             AITimestamp: "",
-            blockImage: ""
+            blockImage: "",
+            paused: false // Reset paused state
         }));
 
         getAIMessage(userInput).then((res) => {
@@ -73,7 +81,16 @@ const Chat = (props) => {
                 AITimestamp: timestamp
             }));
         });
+
         setInputValue('');
+    };
+
+    const handlePauseClick = () => {
+        setIsTyping(false);
+        setCurrentMessage((prevState) => ({
+            ...prevState,
+            paused: true
+        }));
     };
 
     useEffect(() => {
@@ -83,11 +100,9 @@ const Chat = (props) => {
                 if (updatedMessages.length > 0) {
                     updatedMessages[updatedMessages.length - 1] = currentMessage;
                 }
-                console.log("updatedMessages:::", updatedMessages);
                 return updatedMessages;
             });
         } else if (currentMessage.userMessage) {
-            console.log("current message::", currentMessage);
             setAllChatMessages((prevMessages) => [...prevMessages, currentMessage]);
         }
     }, [currentMessage]);
@@ -100,31 +115,42 @@ const Chat = (props) => {
              }}
         >
             <div className={styles.chatHeader}>
-                <img src={Images.aiSupport} alt="Chat Assistant Logo" style={{width: 40, height: 40}}/>
+                <img src={Images.aiSupport} alt="Chat Assistant Logo" style={{ width: 40, height: 40 }} />
                 <h1>{Constants.Playground}</h1>
             </div>
-            <div style={{height: "100%", overflow: "auto"}}>
+            <div style={{ height: "100%", overflow: "auto" }}>
                 {allChatMessages.map((conversation, index) => (
-                    <ChatBox key={index} conversation={conversation}/>
+                    <ChatBox
+                        key={index}
+                        conversation={conversation}
+                        handlePauseClick={handlePauseClick}
+                        setTyping={setIsTyping}
+                    />
                 ))}
             </div>
             <ChatBottomBar
                 inputValue={inputValue}
                 handleSendClick={handleSendClick}
                 setInputValue={setInputValue}
+                isTyping={isTyping}
+                handlePauseClick={handlePauseClick} // Pass handlePauseClick
             />
         </div>
     );
 };
+
 /**
  * Component for the user input box
  * @param props
  * @returns {Element}
  * @constructor
  */
-const ChatBottomBar = (props) => {
+const ChatBottomBar = ({ inputValue, handleSendClick, setInputValue, isTyping, handlePauseClick }) => {
     const theme = useContext(ThemeContext);
-    const {inputValue, handleSendClick, setInputValue} = props;
+
+    useEffect(() => {
+        console.log("isTyping:", isTyping);
+    }, [isTyping]);
 
     return (
         <div className={styles.chatBottomBar}>
@@ -143,15 +169,24 @@ const ChatBottomBar = (props) => {
                         handleSendClick();
                     }
                 }}
+                disabled={isTyping} // Disable input when typing
             />
             <div
-                onClick={handleSendClick}
-                className={`sendButton ${inputValue.trim() === '' ? 'disabled' : ''}`}
-                style={inputValue.trim() === '' ? {cursor: 'not-allowed', opacity: 0.5} : {}}
+                onClick={isTyping ? handlePauseClick : handleSendClick} // Toggle between send and pause
+                className={`sendButton ${inputValue.trim() === '' ? 'disabled' : ''} ${isTyping ? '' : ''}`}
+                style={inputValue.trim() === '' ? { cursor: 'not-allowed', opacity: 0.5 } : {}}
             >
-                <img alt="Send Icon" src={Images.sendIcon} className={styles.sendIcon}/>
+                <img
+                    alt={isTyping ? "Pause Icon" : "Send Icon"}
+                    src={isTyping ? Images.pause : Images.sendIcon}
+                    className={styles.sendIcon}
+                />
             </div>
         </div>
     );
 };
+
+
+
+
 export default Chat;
