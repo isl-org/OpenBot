@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import styles from "./chat.module.css";
 import ChatBox from '../chatBox/messagebox';
 import {getAIMessage} from "../../services/chatAssistant";
@@ -36,6 +36,7 @@ const Chat = (props) => {
 
     const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const [isTyping, setIsTyping] = useState(false);
+    const chatContainerRef = useRef(null);
 
     const handleSendClick = async () => {
         const userInput = inputValue.trim().toLowerCase();
@@ -107,6 +108,12 @@ const Chat = (props) => {
         }
     }, [currentMessage]);
 
+    useEffect(() => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    }, [allChatMessages]);
+
     return (
         <div className={styles.chatMainContainer}
              style={{
@@ -118,7 +125,7 @@ const Chat = (props) => {
                 <img src={Images.aiSupport} alt="Chat Assistant Logo" style={{ width: 40, height: 40 }} />
                 <h1>{Constants.Playground}</h1>
             </div>
-            <div style={{ height: "100%", overflow: "auto" }}>
+            <div ref={chatContainerRef} style={{ height: "100%", overflow: "auto" }}>
                 {allChatMessages.map((conversation, index) => (
                     <ChatBox
                         key={index}
@@ -185,8 +192,5 @@ const ChatBottomBar = ({ inputValue, handleSendClick, setInputValue, isTyping, h
         </div>
     );
 };
-
-
-
 
 export default Chat;
