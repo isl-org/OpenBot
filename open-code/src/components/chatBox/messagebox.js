@@ -61,7 +61,7 @@ const UserMessage = ({timestamp, message}) => (
  * @returns {React.JSX.Element}
  * @constructor
  */
-const AssistantResponse = ({ timestamp, message, image, paused, setTyping }) => {
+const AssistantResponse = ({timestamp, message, image, paused, setTyping}) => {
     const [displayedMessage, setDisplayedMessage] = useState('');
     const [loader, setLoader] = useState(false);
     const theme = useContext(ThemeContext);
@@ -82,7 +82,7 @@ const AssistantResponse = ({ timestamp, message, image, paused, setTyping }) => 
                     setTyping(false);
                     clearInterval(interval); // Stop interval when message is fully displayed
                 }
-            }, 50);
+            }, 20);
             return () => clearInterval(interval);
         }
     }, [message, paused]);

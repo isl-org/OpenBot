@@ -8,7 +8,6 @@ import {ThemeContext} from "../../App";
 import {colors as Colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
 import {extractXmlFromResponse} from "../blockly/imageConverter";
-
 const Chat = (props) => {
     const theme = useContext(ThemeContext);
     const { workspace } = useContext(StoreContext);
@@ -110,9 +109,11 @@ const Chat = (props) => {
 
     useEffect(() => {
         if (chatContainerRef.current) {
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+            setTimeout(() => {
+                chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+            }, 100); // 100ms delay
         }
-    }, [allChatMessages]);
+    }, [allChatMessages, currentMessage.AIMessage]);
 
     return (
         <div className={styles.chatMainContainer}
