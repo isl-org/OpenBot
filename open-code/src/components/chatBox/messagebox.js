@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext,useRef} from 'react';
 import styles from './messageBox.module.css';
 import {ThemeContext} from "../../App";
 import {Themes} from "../../utils/constants";
@@ -61,15 +61,16 @@ const UserMessage = ({timestamp, message}) => (
  * @returns {React.JSX.Element}
  * @constructor
  */
-const AssistantResponse = ({timestamp, message, image, paused, setTyping}) => {
+const AssistantResponse = ({ timestamp, message, image, paused, setTyping }) => {
     const [displayedMessage, setDisplayedMessage] = useState('');
     const [loader, setLoader] = useState(false);
     const theme = useContext(ThemeContext);
+    const chatContainerRef = useRef(null); // Add a ref to the chat container
 
     useEffect(() => {
         setLoader(message === '');
 
-        if (message !== '') {
+        if (message!== '') {
             let index = 0;
             const interval = setInterval(() => {
                 if (!paused && index <= message.length) {
@@ -82,26 +83,31 @@ const AssistantResponse = ({timestamp, message, image, paused, setTyping}) => {
                     setTyping(false);
                     clearInterval(interval); // Stop interval when message is fully displayed
                 }
-            }, 20);
+            }, 10);
             return () => clearInterval(interval);
         }
     }, [message, paused]);
 
+    useEffect(() => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight; // Auto-scroll to bottom
+        }
+    }, [displayedMessage]); // Run this effect whenever displayedMessage changes
     return (
         <div className={styles.responseBox}
              title={timestamp}
              style={{
-                 backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
-                 color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
+                 backgroundColor: theme.theme === Themes.dark? Colors.blackPopupBackground : "#FFFFFF",
+                 color: theme.theme === Themes.dark? Colors.whiteFont : "#000000",
              }}>
-            {loader ? (
-                <div className={`${styles.loader} ${theme.theme === Themes.dark ? styles.whiteLoader : styles.loader}`}>
+            {loader? (
+                <div className={`${styles.loader} ${theme.theme === Themes.dark? styles.whiteLoader : styles.loader}`}>
                 </div>
             ) : (
                 <div className={styles.responseContent}
                      style={{
-                         backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
-                         color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
+                         backgroundColor: theme.theme === Themes.dark? Colors.blackPopupBackground : "#FFFFFF",
+                         color: theme.theme === Themes.dark? Colors.whiteFont : "#000000",
                      }}>
                     <ReactMarkdown>{displayedMessage}</ReactMarkdown>
                     <div className={styles.timestamp}>{timestamp}</div>
