@@ -29,7 +29,7 @@ Example: <next>...</next>
 
 <mutation> tag: Used to save specific changes or configurations of the block.
 
-The Available blocks and respective field names:
+The Available blocks and respective field names in "()":
 
 Control: start, forever, wait (time), display_sensors (value), display_string (text), controls_if, controls_ifelse, logic_compare, logic_operation, logic_negate, logic_boolean
 

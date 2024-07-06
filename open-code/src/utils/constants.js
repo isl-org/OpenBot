@@ -161,8 +161,12 @@ export const Constants = {
     subscriptionContinueService: "To continue using OpenBot Playground, you",
     subscriptionContinueInfo: "will need to upgrade your plan.",
     subscribeButton: "Subscribe Now",
+}
+
+export const ChatConstants = {
     Playground: "Playground Support",
-    Message: "👋Hi! I am here to assist you in creating blocks for OpenBot. Feel free to ask for any information you need regarding the playground."
+    Message: "👋 Hi! I am here to assist you in creating blocks for OpenBot. Feel free to ask for any information you need regarding the playground.",
+    videoURl : "https://www.youtube.com/embed/n9Yr-guo81s?autoplay=1&mute=1&loop=1&playlist=n9Yr-guo81s"
 }
 
 export const Month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

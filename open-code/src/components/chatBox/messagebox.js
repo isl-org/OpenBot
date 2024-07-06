@@ -1,9 +1,8 @@
-import React, {useEffect, useState, useContext,useRef} from 'react';
+import React, {useEffect, useState, useContext, useRef} from 'react';
 import styles from './messageBox.module.css';
 import {ThemeContext} from "../../App";
-import {Themes} from "../../utils/constants";
+import {ChatConstants, Themes} from "../../utils/constants";
 import {colors as Colors} from "../../utils/color";
-import {Images} from "../../utils/images";
 import ReactMarkdown from 'react-markdown';
 
 
@@ -21,7 +20,10 @@ const ChatBox = ({conversation, handlePauseClick, setTyping}) => {
         <div className={styles.chatBubble} style={{
             color: theme.theme === Themes.dark ? Colors.whiteFont : "#FFFFFF"
         }}>
-            {!conversation.userMessage && <img src={Images.openBotLogo} width={"20%"} alt={"openBot"}/>}
+            {!conversation.userMessage &&
+                <iframe height="250" style={{border: "none"}}
+                        src={ChatConstants.videoURl}>
+                </iframe>}
             {conversation.userMessage &&
                 <UserMessage timestamp={conversation.userTimestamp} message={conversation.userMessage}/>}
             <AssistantResponse
@@ -61,7 +63,7 @@ const UserMessage = ({timestamp, message}) => (
  * @returns {React.JSX.Element}
  * @constructor
  */
-const AssistantResponse = ({ timestamp, message, image, paused, setTyping }) => {
+const AssistantResponse = ({timestamp, message, image, paused, setTyping}) => {
     const [displayedMessage, setDisplayedMessage] = useState('');
     const [loader, setLoader] = useState(false);
     const theme = useContext(ThemeContext);
@@ -70,7 +72,7 @@ const AssistantResponse = ({ timestamp, message, image, paused, setTyping }) => 
     useEffect(() => {
         setLoader(message === '');
 
-        if (message!== '') {
+        if (message !== '') {
             let index = 0;
             const interval = setInterval(() => {
                 if (!paused && index <= message.length) {
@@ -97,17 +99,17 @@ const AssistantResponse = ({ timestamp, message, image, paused, setTyping }) => 
         <div className={styles.responseBox}
              title={timestamp}
              style={{
-                 backgroundColor: theme.theme === Themes.dark? Colors.blackPopupBackground : "#FFFFFF",
-                 color: theme.theme === Themes.dark? Colors.whiteFont : "#000000",
+                 backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                 color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
              }}>
-            {loader? (
-                <div className={`${styles.loader} ${theme.theme === Themes.dark? styles.whiteLoader : styles.loader}`}>
+            {loader ? (
+                <div className={`${styles.loader} ${theme.theme === Themes.dark ? styles.whiteLoader : styles.loader}`}>
                 </div>
             ) : (
                 <div className={styles.responseContent}
                      style={{
-                         backgroundColor: theme.theme === Themes.dark? Colors.blackPopupBackground : "#FFFFFF",
-                         color: theme.theme === Themes.dark? Colors.whiteFont : "#000000",
+                         backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                         color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
                      }}>
                     <ReactMarkdown>{displayedMessage}</ReactMarkdown>
                     <div className={styles.timestamp}>{timestamp}</div>

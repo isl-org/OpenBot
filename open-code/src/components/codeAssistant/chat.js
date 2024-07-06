@@ -3,22 +3,23 @@ import styles from "./chat.module.css";
 import ChatBox from '../chatBox/messagebox';
 import {getAIMessage} from "../../services/chatAssistant";
 import {Images} from "../../utils/images.js";
-import {Constants, Themes, Errors} from '../../utils/constants.js';
+import {Themes, Errors, ChatConstants} from '../../utils/constants.js';
 import {ThemeContext} from "../../App";
 import {colors as Colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
 import {extractXmlFromResponse} from "../blockly/imageConverter";
+
 const Chat = (props) => {
     const theme = useContext(ThemeContext);
-    const { workspace } = useContext(StoreContext);
+    const {workspace} = useContext(StoreContext);
     const [inputValue, setInputValue] = useState('');
     const [allChatMessages, setAllChatMessages] = useState([
         {
             userMessage: "",
-            AIMessage: Constants.Message,
+            AIMessage: ChatConstants.Message,
             id: 1,
             userTimestamp: "",
-            AITimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            AITimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
             blockImage: "",
             paused: false // Add paused state
         },
@@ -27,13 +28,13 @@ const Chat = (props) => {
         userMessage: "",
         AIMessage: "",
         id: 2,
-        userTimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
         AITimestamp: "",
         blockImage: "",
         paused: false // Add paused state
     });
 
-    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
     const [isTyping, setIsTyping] = useState(false);
     const chatContainerRef = useRef(null);
 
@@ -123,10 +124,10 @@ const Chat = (props) => {
              }}
         >
             <div className={styles.chatHeader}>
-                <img src={Images.aiSupport} alt="Chat Assistant Logo" style={{ width: 40, height: 40 }} />
-                <h1>{Constants.Playground}</h1>
+                <img src={Images.aiSupport} alt="Chat Assistant Logo" style={{width: 40, height: 40}}/>
+                <h1>{ChatConstants.Playground}</h1>
             </div>
-            <div ref={chatContainerRef} style={{ height: "100%", overflow: "auto" }}>
+            <div ref={chatContainerRef} style={{height: "100%", overflow: "auto"}}>
                 {allChatMessages.map((conversation, index) => (
                     <ChatBox
                         key={index}
@@ -153,7 +154,7 @@ const Chat = (props) => {
  * @returns {Element}
  * @constructor
  */
-const ChatBottomBar = ({ inputValue, handleSendClick, setInputValue, isTyping, handlePauseClick }) => {
+const ChatBottomBar = ({inputValue, handleSendClick, setInputValue, isTyping, handlePauseClick}) => {
     const theme = useContext(ThemeContext);
 
     useEffect(() => {
@@ -182,7 +183,7 @@ const ChatBottomBar = ({ inputValue, handleSendClick, setInputValue, isTyping, h
             <div
                 onClick={isTyping ? handlePauseClick : handleSendClick} // Toggle between send and pause
                 className={`sendButton ${inputValue.trim() === '' ? 'disabled' : ''} ${isTyping ? '' : ''}`}
-                style={inputValue.trim() === '' ? { cursor: 'not-allowed', opacity: 0.5 } : {}}
+                style={inputValue.trim() === '' ? {cursor: 'not-allowed', opacity: 0.5} : {}}
             >
                 <img
                     alt={isTyping ? "Pause Icon" : "Send Icon"}
