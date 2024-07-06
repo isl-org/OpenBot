@@ -13,6 +13,7 @@ const Chat = (props) => {
     const theme = useContext(ThemeContext);
     const {workspace} = useContext(StoreContext);
     const [inputValue, setInputValue] = useState('');
+    const [loader, setLoader] = useState(false);
     const [allChatMessages, setAllChatMessages] = useState([
         {
             userMessage: "",
@@ -20,7 +21,6 @@ const Chat = (props) => {
             id: 1,
             userTimestamp: "",
             AITimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
-            blockImage: "",
             paused: false // Add paused state
         },
     ]);
@@ -30,7 +30,6 @@ const Chat = (props) => {
         id: 2,
         userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
         AITimestamp: "",
-        blockImage: "",
         paused: false // Add paused state
     });
 
@@ -53,7 +52,6 @@ const Chat = (props) => {
             AIMessage: "",
             id: allChatMessages.length + 1,
             AITimestamp: "",
-            blockImage: "",
             paused: false // Reset paused state
         }));
 
@@ -63,7 +61,6 @@ const Chat = (props) => {
                     ...prevState,
                     AIMessage: res,
                     AITimestamp: timestamp,
-                    blockImage: image
                 }));
             })
                 .catch((e) => {
@@ -134,6 +131,9 @@ const Chat = (props) => {
                         conversation={conversation}
                         handlePauseClick={handlePauseClick}
                         setTyping={setIsTyping}
+                        allChatMessages={allChatMessages}
+                        setLoader={setLoader}
+                        loader={loader}
                     />
                 ))}
             </div>
@@ -142,7 +142,7 @@ const Chat = (props) => {
                 handleSendClick={handleSendClick}
                 setInputValue={setInputValue}
                 isTyping={isTyping}
-                handlePauseClick={handlePauseClick} // Pass handlePauseClick
+                handlePauseClick={handlePauseClick}
             />
         </div>
     );

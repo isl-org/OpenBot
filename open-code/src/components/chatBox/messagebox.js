@@ -8,13 +8,12 @@ import ReactMarkdown from 'react-markdown';
 
 /**
  * Main ChatBox component that displays user and assistant messages
- * @param conversation
- * @param handlePauseClick Function to handle pause click for a specific conversation
- * @param setTyping
  * @returns {React.JSX.Element}
  * @constructor
+ * @param props
  */
-const ChatBox = ({conversation, handlePauseClick, setTyping}) => {
+const ChatBox = (props) => {
+    const { conversation, handlePauseClick, setTyping, setLoader, loader, allChatMessages } = props;
     const theme = useContext(ThemeContext);
     return (
         <div className={styles.chatBubble} style={{
@@ -33,6 +32,10 @@ const ChatBox = ({conversation, handlePauseClick, setTyping}) => {
                 paused={conversation.paused} // Pass paused state
                 handlePauseClick={() => handlePauseClick(conversation.id)} // Pass handlePauseClick
                 setTyping={setTyping}
+                allChatMessages={allChatMessages}
+                id={conversation.id}
+                setLoader={setLoader}
+                loader={loader}
             />
         </div>
     );
@@ -58,14 +61,17 @@ const UserMessage = ({timestamp, message}) => (
  * @param message
  * @param image
  * @param paused
+ * @param setLoader
+ * @param loader
+ * @param allChatMessages
+ * @param id
  * @param handlePauseClick
  * @param setTyping
  * @returns {React.JSX.Element}
  * @constructor
  */
-const AssistantResponse = ({timestamp, message, image, paused, setTyping}) => {
+const AssistantResponse = ({ timestamp, message, image, paused, setTyping, setLoader, loader, allChatMessages, id, handlePauseClick }) => {
     const [displayedMessage, setDisplayedMessage] = useState('');
-    const [loader, setLoader] = useState(false);
     const theme = useContext(ThemeContext);
     const chatContainerRef = useRef(null); // Add a ref to the chat container
 
@@ -102,7 +108,7 @@ const AssistantResponse = ({timestamp, message, image, paused, setTyping}) => {
                  backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
                  color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
              }}>
-            {loader ? (
+            {loader && allChatMessages.length === id ? (
                 <div className={`${styles.loader} ${theme.theme === Themes.dark ? styles.whiteLoader : styles.loader}`}>
                 </div>
             ) : (
