@@ -1,11 +1,11 @@
 # Contribuer
 
 <p align="center">
-  <a href="README.md">English</a> |
-  <a href="README.zh-CN.md">简体中文</a> |
-  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="CONTRIBUTING.md">English</a> |
+  <a href="CONTRIBUTING.zh-CN.md">简体中文</a> |
+  <a href="CONTRIBUTING.de-DE.md">Deutsch</a> |
   <span>Français</span> |
-  <a href="README.es-ES.md">Español</a>
+  <a href="CONTRIBUTING.es-ES.md">Español</a>
 </p>
 
 ## Processus
