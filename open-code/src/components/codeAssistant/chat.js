@@ -9,6 +9,12 @@ import {colors as Colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
 import {extractXmlFromResponse} from "../blockly/imageConverter";
 
+/**
+ * Chat component handles user interactions and displays chat interface.
+ * @param props
+ * @returns {Element}
+ * @constructor
+ */
 const Chat = (props) => {
     const theme = useContext(ThemeContext);
     const {workspace} = useContext(StoreContext);
@@ -34,6 +40,10 @@ const Chat = (props) => {
         AITimestamp: "",
         paused: false
     });
+    /**
+     * Handles user click on send button
+     * @returns {Promise<void>}
+     */
     const handleSendClick = async () => {
         const userInput = inputValue.trim().toLowerCase();
         if (userInput === '') {
@@ -48,12 +58,17 @@ const Chat = (props) => {
             id: allChatMessages.length + 1,
             AITimestamp: "",
             paused: false
-        }));
+        }));// Updates current message state with user input
         abortControllerRef.current = new AbortController();
-
+        /**
+         * Sends user input to AI service and handles response
+         */
         getAIMessage(userInput, abortControllerRef.current.signal).then((res) => {
             console.log("res::", res);
             if (res !== undefined) {
+                /**
+                 * // Extracts XML data from AI response and updates current message state
+                 */
                 extractXmlFromResponse(res, workspace).then((image) => {
                     setCurrentMessage((prevState) => ({
                         ...prevState, AIMessage: res, AITimestamp: timestamp,
@@ -80,7 +95,10 @@ const Chat = (props) => {
         setInputValue('');
     };
 
-    const handlePauseClick = (id) => {
+    /**
+     * Handles user click on pause button
+     */
+    const handlePauseClick = () => {
         if (abortControllerRef.current) {
             abortControllerRef.current.abort();
         }
@@ -92,6 +110,9 @@ const Chat = (props) => {
         }
     };
 
+    /**
+     * Effect to update allChatMessages when currentMessage changes
+     */
     useEffect(() => {
         if (currentMessage.AIMessage) {
             setAllChatMessages((prevMessages) => {
@@ -106,6 +127,9 @@ const Chat = (props) => {
         }
     }, [currentMessage]);
 
+    /**
+     * Effect to scroll chat container to bottom when messages or AI message changes
+     */
     useEffect(() => {
         if (chatContainerRef.current) {
             setTimeout(() => {
@@ -114,77 +138,82 @@ const Chat = (props) => {
         }
     }, [allChatMessages, currentMessage.AIMessage]);
 
+    // Renders chat interface
     return (<div className={styles.chatMainContainer}
                  style={{
                      backgroundColor: theme.theme === Themes.dark ? Colors.blackBackground : "#d0e4f5",
                      color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
                  }}
-        >
-            <div className={styles.chatHeader}>
-                <img src={Images.aiSupport} alt="Chat Assistant Logo" style={{width: 40, height: 40}}/>
-                <h1>{ChatConstants.Playground}</h1>
-            </div>
-            <div ref={chatContainerRef} style={{height: "100%", overflow: "auto"}}>
-                {allChatMessages.map((conversation, index) => (<ChatBox
-                        key={index}
-                        conversation={conversation}
-                        handlePauseClick={handlePauseClick}
-                        setIsTyping={setIsTyping}
-                        allChatMessages={allChatMessages}
-                        setLoader={setLoader}
-                        loader={loader}
-                        chatContainerRef={chatContainerRef}
+    >
+        <div className={styles.chatHeader}>
+            <img src={Images.aiSupport} alt="Chat Assistant Logo" style={{width: 40, height: 40}}/>
+            <h1>{ChatConstants.Playground}</h1>
+        </div>
+        <div ref={chatContainerRef} style={{height: "100%", overflow: "auto"}}>
+            {allChatMessages.map((conversation, index) => (<ChatBox
+                key={index}
+                conversation={conversation}
+                handlePauseClick={handlePauseClick}
+                setIsTyping={setIsTyping}
+                allChatMessages={allChatMessages}
+                setLoader={setLoader}
+                loader={loader}
+                chatContainerRef={chatContainerRef}
 
-                    />))}
-            </div>
-            <ChatBottomBar
-                inputValue={inputValue}
-                handleSendClick={handleSendClick}
-                setInputValue={setInputValue}
-                isTyping={isTyping}
-                handlePauseClick={() => handlePauseClick(currentMessage.id)}
+            />))}
+        </div>
+        <ChatBottomBar
+            inputValue={inputValue}
+            handleSendClick={handleSendClick}
+            setInputValue={setInputValue}
+            isTyping={isTyping}
+            handlePauseClick={() => handlePauseClick(currentMessage.id)}
 
-            />
-        </div>);
+        />
+    </div>);
 };
-
+/**
+ * Component for rendering input field and send/pause button
+ * @param inputValue
+ * @param handleSendClick
+ * @param setInputValue
+ * @param isTyping
+ * @param handlePauseClick
+ * @returns {Element}
+ * @constructor
+ */
 const ChatBottomBar = ({inputValue, handleSendClick, setInputValue, isTyping, handlePauseClick}) => {
     const theme = useContext(ThemeContext);
-
-    useEffect(() => {
-        console.log("isTyping:", isTyping);
-    }, [isTyping]);
-
     return (<div className={styles.chatBottomBar}>
-            <input
-                style={{
-                    backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
-                    color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
-                }}
-                type="text"
-                placeholder="Enter a prompt here..."
-                className={styles.inputField}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                        handleSendClick();
-                    }
-                }}
-                disabled={isTyping}
+        <input
+            style={{
+                backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
+            }}
+            type="text"
+            placeholder="Enter a prompt here..."
+            className={styles.inputField}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                    handleSendClick();
+                }
+            }}
+            disabled={isTyping}
+        />
+        <div
+            onClick={isTyping ? handlePauseClick : handleSendClick}
+            className={`sendButton ${inputValue.trim() === '' ? 'disabled' : ''} ${isTyping ? '' : ''}`}
+            style={inputValue.trim() === '' ? {cursor: 'not-allowed', opacity: 0.5} : {}}
+        >
+            <img
+                alt={isTyping ? "Pause Icon" : "Send Icon"}
+                src={isTyping ? Images.pause : Images.sendIcon}
+                className={styles.sendIcon}
             />
-            <div
-                onClick={isTyping ? handlePauseClick : handleSendClick}
-                className={`sendButton ${inputValue.trim() === '' ? 'disabled' : ''} ${isTyping ? '' : ''}`}
-                style={inputValue.trim() === '' ? {cursor: 'not-allowed', opacity: 0.5} : {}}
-            >
-                <img
-                    alt={isTyping ? "Pause Icon" : "Send Icon"}
-                    src={isTyping ? Images.pause : Images.sendIcon}
-                    className={styles.sendIcon}
-                />
-            </div>
-        </div>);
+        </div>
+    </div>);
 };
-
+// Exports Chat component as default
 export default Chat;
