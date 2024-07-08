@@ -26,7 +26,7 @@ Hier ist ein Screenshot des Browsers:
 
 ## Erste Schritte
 
-Sie können diese Software auf einem PC, einem RaspberryPi-ähnlichen Gerät oder sogar auf [Pi Zero](https://www.raspberrypi.com/products/raspberry-pi-zero/) Geräten ausführen, die die ```Node.js``` Umgebung unterstützen. Stellen Sie zunächst sicher, dass Sie [Node.js](https://nodejs.org/) installiert haben, Version 10 oder neuer. Überprüfen Sie die Version:
+Sie können diese Software auf einem PC, einem RaspberryPi-ähnlichen Gerät oder sogar auf [Pi Zero](https://www.raspberrypi.com/products/raspberry-pi-zero/) Geräten ausführen, die die ```Node.js``` Umgebung unterstützen. Stellen Sie zunächst sicher, dass Sie [Node.js](https://nodejs.org/), Version 10 oder neuer, installiert haben. Überprüfen Sie die Version:
 
     node --version
 
@@ -35,7 +35,7 @@ Die Software befindet sich im Verzeichnis ```/controller/node-js``` des OpenBot-
     npm install
     npm start
 
-Der letzte Befehl startet den Server. Wenn Sie den Server ohne Terminal im Hintergrund ausführen möchten, können Sie unter ```Linux/MacOS``` Folgendes ausführen:
+Der letzte Befehl startet den Server. Wenn Sie den Server im Hintergrund ohne Terminal ausführen möchten, können Sie unter ```Linux/MacOS``` Folgendes ausführen:
 
     npm run start-nohup
 
@@ -43,9 +43,9 @@ oder einfach:
 
     nohup npm start
 
-Zeigen Sie mit Ihrem Browser auf die IP-Adresse des Servers auf Port 8081, zum Beispiel [http://localhost:8081](http://localhost:8081) oder [http://192.168.1.100:8081](http://192.168.1.100:8081). Beachten Sie, dass Sie von einem anderen Computer aus auf den Server zugreifen können, aber der Roboter, der Server und der Browser-PC müssen sich im selben Netzwerk befinden. In Zukunft können wir die Möglichkeit hinzufügen, auf den Server aus der Ferne zuzugreifen.
+Richten Sie Ihren Browser auf die IP-Adresse des Servers auf Port 8081, zum Beispiel [http://localhost:8081](http://localhost:8081) oder [http://192.168.1.100:8081](http://192.168.1.100:8081). Beachten Sie, dass Sie von einem anderen Computer aus auf den Server zugreifen können, aber der Roboter, der Server und der Browser-PC müssen sich im selben Netzwerk befinden. In Zukunft können wir die Möglichkeit hinzufügen, auf den Server aus der Ferne zuzugreifen.
 
-Stellen Sie sicher, dass Ihr Roboter im selben Netzwerk verbunden ist. Gehen Sie in der Android-App des Roboters zum ```Allgemein```-Panel und wählen Sie ```Telefon``` als Controller. Dadurch wird die Android-App mit dem Node-Server verbunden, und ein Video wird in der Benutzeroberfläche angezeigt.
+Stellen Sie sicher, dass Ihr Roboter im selben Netzwerk verbunden ist. Gehen Sie in der Android-App des Roboters zum ```Allgemein```-Panel und wählen Sie ```Telefon``` als Controller. Dies verbindet die Android-App mit dem Node-Server, und ein Video wird in der UI angezeigt.
 
 ## Wie es funktioniert
 
@@ -53,15 +53,15 @@ Stellen Sie sicher, dass Ihr Roboter im selben Netzwerk verbunden ist. Gehen Sie
 
 2. Der Node-Server erstellt einen HTTP-Server auf Port 8081 und beginnt, Anfragen vom Browser zu bedienen.
 
-3. Zusätzlich erstellt der Node-Server einen WebSocket-Server auf Port 7071. Dieser wird verwendet, um direkt mit dem Browser zu kommunizieren. Zusammengefasst hat der Server also zwei Socket-Verbindungen erstellt, eine zum Roboter und eine zum Browser.
+3. Zusätzlich erstellt der Node-Server einen WebSocket-Server auf Port 7071. Dieser wird verwendet, um direkt mit dem Browser zu kommunizieren. Zusammengefasst hat der Server bisher zwei Socket-Verbindungen erstellt, eine zum Roboter und eine zum Browser.
 
-4. Der Benutzer gibt Tastaturbefehle im Browser ein. Diese Tastendrücke werden über den WebSocket an den Server gesendet. Der Server wandelt diese in Befehle um, die der Roboter verstehen kann, wie ```{driveCmd: {r:0.4, l:0.34}}``` (eine Liste aller Befehle finden Sie in der Dokumentation für den Android-Controller [hier](https://github.com/isl-org/OpenBot/blob/master/docs/technical/OpenBotController.pdf)). Diese Befehle werden über die Socket-Verbindung an den Roboter gesendet.
+4. Der Benutzer gibt Tastaturbefehle vom Browser aus ein. Diese Tastendrücke werden über den WebSocket an den Server gesendet. Der Server wandelt diese in Befehle um, die der Roboter verstehen kann, wie ```{driveCmd: {r:0.4, l:0.34}}``` (eine Liste aller Befehle finden Sie in der Dokumentation für den Android-Controller [hier](https://github.com/isl-org/OpenBot/blob/master/docs/technical/OpenBotController.pdf)). Diese Befehle werden über die Socket-Verbindung an den Roboter gesendet.
 
-5. Der Roboter sendet Statusinformationen über die Socket-Verbindung zurück an den Server, und der Server leitet sie an die Benutzeroberfläche weiter. Die Benutzeroberfläche kann diese Informationen verwenden, um ihr Erscheinungsbild zu verbessern, wie z.B. das Anzeigen blinkender Indikatoren, aber derzeit werden diese Statusinformationen ignoriert.
+5. Der Roboter sendet Statusinformationen über die Socket-Verbindung zurück an den Server, und der Server leitet sie an die UI weiter. Die UI kann diese Informationen verwenden, um ihr Erscheinungsbild zu verbessern, wie z.B. das Anzeigen blinkender Indikatoren, aber derzeit wird dieser Status ignoriert.
 
 6. Der Node-Server fungiert auch als WebRTC-Signalisierungsproxy. Er leitet WebRTC-Verhandlungsbefehle zwischen dem Roboter und dem Browser weiter. Er nutzt die offenen Socket-Verbindungen für diesen Zweck, sodass keine zusätzliche Verbindung oder Konfiguration erforderlich ist.
 
-![Zeichnung](images/HowItWorks.png)
+![drawing](images/HowItWorks.png)
 
 ## Entwicklung
 
@@ -73,7 +73,7 @@ Wir verwenden [eslint](https://eslint.org/) für Linting und automatisches Forma
 
 ## Produktion
 
-Um eine Produktionsversion des ```Client``` zu erstellen, führen Sie Folgendes aus:
+Um eine Produktionsversion des ```client``` zu erstellen, führen Sie Folgendes aus:
 
     npm run build
 
@@ -81,7 +81,7 @@ Dies optimiert den Client-Code in ein ```build``` Verzeichnis, das auf einem Ser
 
 ## Fehlerbehebung
 
-* Manchmal zeigt der Browser nur das Titelmenü und nicht das Befehlsmenü an. Dies bedeutet, dass die WebSocket-Verbindung nicht hergestellt werden konnte. Dies passiert normalerweise direkt nach dem Starten des Servers. Wenn Sie die Browserkonsole untersuchen, finden Sie möglicherweise eine Nachricht darüber, dass die Verbindung nicht hergestellt werden konnte, etwas wie ```WebSocket connection to 'ws://localhost:7071/ws' failed```. Beenden Sie alle Node-Prozesse (pkill -9 node) und starten Sie sie neu. Laden Sie die Seite neu und die Verbindung sollte hergestellt werden.
+* Manchmal zeigt der Browser nur das Befehlsmenü und nicht den Titel an. Dies bedeutet, dass die WebSocket-Verbindung nicht hergestellt werden konnte. Dies passiert normalerweise direkt nach dem Starten des Servers. Wenn Sie die Browserkonsole untersuchen, finden Sie eine Nachricht darüber, dass die Verbindung nicht hergestellt werden konnte, etwa ```WebSocket connection to 'ws://localhost:7071/ws' failed```. Beenden Sie alle Node-Prozesse (pkill -9 node) und starten Sie sie neu. Laden Sie die Seite neu und die Verbindung sollte hergestellt werden.
 * Wenn Sie das Telefon nicht mit der App verbinden können, stellen Sie sicher, dass keine andere Instanz dieser Anwendung auf diesem oder einem anderen Computer im selben Netzwerk läuft.
 
 ## Bekannte Fehler
