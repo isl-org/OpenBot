@@ -16,12 +16,20 @@ Die einfachste Möglichkeit, den Roboter zu steuern, besteht darin, einen Gameco
 
 ## [Node.js-Controller](node-js)
 
-Dieser Controller erfordert, dass Ihr Telefon und ein Computer (z.B. Laptop, Raspberry PI) mit demselben WiFi-Netzwerk verbunden sind. Nach erfolgreicher Verbindung erhalten Sie einen Live-Video-Feed mit geringer Latenz und können die Tastatur verwenden, um den Roboter über den Browser zu steuern.
+Dieser Controller erfordert, dass Ihr Telefon und ein Computer (z.B. Laptop, Raspberry PI) mit demselben WiFi-Netzwerk verbunden sind. Nach erfolgreicher Verbindung erhalten Sie einen Live-Video-Feed mit geringer Latenz und können Ihre Tastatur verwenden, um den Roboter über den Browser zu steuern.
 
 Besonderer Dank geht an Ivo Zivkov [izivkov@gmail.com](mailto:izivkov@gmail.com) für die Entwicklung.
 
 ## [Python-Controller](python)
 
-Dieser Controller erfordert, dass Ihr Telefon und ein Computer (z.B. Laptop, Raspberry PI) mit demselben WiFi-Netzwerk verbunden sind. Nach erfolgreicher Verbindung erhalten Sie einen Live-RTSP-Video-Stream und können die Tastatur verwenden, um den Roboter über das Terminal zu steuern. Sie können das Python-Skript als Vorlage verwenden, um Ihren eigenen Controller zu entwickeln.
+Dieser Controller erfordert, dass Ihr Telefon und ein Computer (z.B. Laptop, Raspberry PI) mit demselben WiFi-Netzwerk verbunden sind. Nach erfolgreicher Verbindung erhalten Sie einen Live-RTSP-Video-Stream und können Ihre Tastatur verwenden, um den Roboter über das Terminal zu steuern. Sie können das Python-Skript als Vorlage verwenden, um Ihren eigenen Controller zu entwickeln.
 
 Besonderer Dank geht an Ivo Zivkov [izivkov@gmail.com](mailto:izivkov@gmail.com) für die Entwicklung.
+
+## [Flutter-Controller-App](flutter)
+
+Diese Controller-App dient als Fernsteuerung für das OpenBot-Fahrzeug, ähnlich wie ein BT-Controller (z.B. PS3/4 oder Xbox). Sie läuft auf einem anderen Android/iOS-Gerät und unterstützt neben der Steuerung auch Live-Video-/Audio-Streaming.
+
+## [Web-Server-Controller](web-server)
+
+Dies ist eine Cloud-Server-Version des lokalen Node.js-Controllers. Sie ermöglicht die Fernsteuerung des OpenBot-Roboters über das Internet.
