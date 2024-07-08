@@ -30,6 +30,7 @@ The block can be use multiple times within the playground for different classes 
 2. A dropdown field named "models", which contains object tracking models for the algorithm.
 3. A input text field named "frames" which varies from 1 to 90.
 This block is designed to run indefinitely. If it switches to another variableDetection object block and detects the previously detected object again, the instructions from the previous block will continue to execute.
+Important: This is a statement-type block and should not be placed inside start or forever blocks.
 For example:- user : When person is detected, move robot forward at speed 192 and when 90 frames are lost while detecting , set brightness of leds to 50.
 assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"variableDetection\\" id=\\"gs\`^[tv@Mo/!S2B@LoQI\\" x=\\"84\\" y=\\"88\\"><field name=\\"labels\\">person</field><field name=\\"models\\">MobileNetV1-300</field><field name=\\"frames\\">90</field><statement name=\\"detect_tasks\\"><block type=\\"forward&amp;BackwardAtSpeed\\" id=\\"w7YzG)-0U**78Cng?znl\\"><field name=\\"direction_type\\">moveForward</field><field name=\\"slider\\">192</field></block></statement><statement name=\\"framesLost_tasks\\"><block type=\\"brightness\\" id=\\"]gc(rG*2F]L(#,t5-^z^\\"><field name=\\"slider\\">50</field></block></statement></block></xml>"
 
