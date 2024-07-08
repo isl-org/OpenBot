@@ -183,7 +183,8 @@ export const Errors = {
     error4: "AI block present within the forever block. Please review the block code.",
     error5: "Similar classes present in the Advanvced AI blocks",
     error6: "Unable to connect to the server. Please try again later.",
-    error7: "Error in creating .blocks PNG"
+    error7: "Try again request interrupted",
+    error8: "Error in creating .blocks PNG"
 }
 
 export const PlaygroundConstants = {

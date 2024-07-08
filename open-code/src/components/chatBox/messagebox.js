@@ -5,15 +5,8 @@ import {ChatConstants, Themes} from "../../utils/constants";
 import {colors as Colors} from "../../utils/color";
 import ReactMarkdown from 'react-markdown';
 
-
-/**
- * Main ChatBox component that displays user and assistant messages
- * @returns {React.JSX.Element}
- * @constructor
- * @param props
- */
 const ChatBox = (props) => {
-    const { conversation, handlePauseClick, setTyping, setLoader, loader, allChatMessages } = props;
+    const {conversation, handlePauseClick, setIsTyping, setLoader, loader, allChatMessages} = props;
     const theme = useContext(ThemeContext);
     return (
         <div className={styles.chatBubble} style={{
@@ -28,10 +21,9 @@ const ChatBox = (props) => {
             <AssistantResponse
                 timestamp={conversation.AITimestamp}
                 message={conversation.AIMessage}
-                image={conversation.blockImage}
-                paused={conversation.paused} // Pass paused state
-                handlePauseClick={() => handlePauseClick(conversation.id)} // Pass handlePauseClick
-                setTyping={setTyping}
+                paused={conversation.paused}
+                handlePauseClick={() => handlePauseClick(conversation.id)}
+                setIsTyping={setIsTyping}
                 allChatMessages={allChatMessages}
                 id={conversation.id}
                 setLoader={setLoader}
@@ -41,13 +33,6 @@ const ChatBox = (props) => {
     );
 };
 
-/**
- * UserMessage component renders a user's message with a timestamp.
- * @param timestamp
- * @param message
- * @returns {React.JSX.Element}
- * @constructor
- */
 const UserMessage = ({timestamp, message}) => (
     <div className={styles.userMessage} title={timestamp}>
         <div>{message}</div>
@@ -55,25 +40,19 @@ const UserMessage = ({timestamp, message}) => (
     </div>
 );
 
-/**
- * Component to display assistant's response with typewriter effect and timestamp
- * @param timestamp
- * @param message
- * @param image
- * @param paused
- * @param setLoader
- * @param loader
- * @param allChatMessages
- * @param id
- * @param handlePauseClick
- * @param setTyping
- * @returns {React.JSX.Element}
- * @constructor
- */
-const AssistantResponse = ({ timestamp, message, image, paused, setTyping, setLoader, loader, allChatMessages, id, handlePauseClick }) => {
+const AssistantResponse = ({
+                               timestamp,
+                               message,
+                               paused,
+                               setIsTyping,
+                               setLoader,
+                               loader,
+                               allChatMessages,
+                               id
+                           }) => {
     const [displayedMessage, setDisplayedMessage] = useState('');
     const theme = useContext(ThemeContext);
-    const chatContainerRef = useRef(null); // Add a ref to the chat container
+    const chatContainerRef = useRef(null);
 
     useEffect(() => {
         setLoader(message === '');
@@ -81,15 +60,15 @@ const AssistantResponse = ({ timestamp, message, image, paused, setTyping, setLo
         if (message !== '') {
             let index = 0;
             const interval = setInterval(() => {
-                if (!paused && index <= message.length) {
+                if (paused) {
+                    clearInterval(interval);
+                } else if (index <= message.length) {
                     setDisplayedMessage(message.slice(0, index));
                     index++;
-                } else if (paused) {
-                    clearInterval(interval); // Stop the typewriter when paused
                 }
                 if (index > message.length) {
-                    setTyping(false);
-                    clearInterval(interval); // Stop interval when message is fully displayed
+                    setIsTyping(false);
+                    clearInterval(interval);
                 }
             }, 10);
             return () => clearInterval(interval);
@@ -98,9 +77,10 @@ const AssistantResponse = ({ timestamp, message, image, paused, setTyping, setLo
 
     useEffect(() => {
         if (chatContainerRef.current) {
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight; // Auto-scroll to bottom
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
-    }, [displayedMessage]); // Run this effect whenever displayedMessage changes
+    }, [displayedMessage]);
+
     return (
         <div className={styles.responseBox}
              title={timestamp}
@@ -125,7 +105,4 @@ const AssistantResponse = ({ timestamp, message, image, paused, setTyping, setLo
     );
 };
 
-
 export default ChatBox;
-
-
