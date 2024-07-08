@@ -859,7 +859,7 @@
       "tooltip": "",
       "helpUrl": ""
     },
-    "working": "Enable multiple object tracking to perform tasks upon detecting a chosen object and also execute different tasks when losing the chosen frames."
+    "working": "enable multiple object tracking for the main part and then colation of the given task to perform tasks upon detecting a chosen object and also execute different tasks when losing the chosen frames."
   },
   {
     "blockType": "multipleAIDetection",
