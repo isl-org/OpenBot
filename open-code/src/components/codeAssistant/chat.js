@@ -133,6 +133,8 @@ const Chat = (props) => {
                         allChatMessages={allChatMessages}
                         setLoader={setLoader}
                         loader={loader}
+                        chatContainerRef={chatContainerRef}
+
                     />))}
             </div>
             <ChatBottomBar
@@ -141,6 +143,7 @@ const Chat = (props) => {
                 setInputValue={setInputValue}
                 isTyping={isTyping}
                 handlePauseClick={() => handlePauseClick(currentMessage.id)}
+
             />
         </div>);
 };

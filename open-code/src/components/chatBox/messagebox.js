@@ -6,7 +6,7 @@ import {colors as Colors} from "../../utils/color";
 import ReactMarkdown from 'react-markdown';
 
 const ChatBox = (props) => {
-    const {conversation, handlePauseClick, setIsTyping, setLoader, loader, allChatMessages} = props;
+    const {conversation, handlePauseClick, setIsTyping, setLoader, loader, allChatMessages,chatContainerRef} = props;
     const theme = useContext(ThemeContext);
     return (
         <div className={styles.chatBubble} style={{
@@ -28,6 +28,7 @@ const ChatBox = (props) => {
                 id={conversation.id}
                 setLoader={setLoader}
                 loader={loader}
+                chatContainerRef={chatContainerRef}
             />
         </div>
     );
@@ -48,11 +49,10 @@ const AssistantResponse = ({
                                setLoader,
                                loader,
                                allChatMessages,
-                               id
+                               id,chatContainerRef
                            }) => {
     const [displayedMessage, setDisplayedMessage] = useState('');
     const theme = useContext(ThemeContext);
-    const chatContainerRef = useRef(null);
 
     useEffect(() => {
         setLoader(message === '');
@@ -79,7 +79,7 @@ const AssistantResponse = ({
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
-    }, [displayedMessage]);
+    }, [displayedMessage, chatContainerRef]);
 
     return (
         <div className={styles.responseBox}
