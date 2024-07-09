@@ -181,10 +181,10 @@ export const Errors = {
     error2: "Detected adjacent AI blocks. Please review the Start block configuration. When using adjacent AI blocks,insert a 'disable AI' block between them.",
     error3: "Identical objects for multiple detection AI block.",
     error4: "AI block present within the forever block. Please review the block code.",
-    error5: "Similar classes present in the Advanvced AI blocks",
+    error5: "Similar classes present in the advanced AI blocks",
     error6: "Unable to connect to the server. Please try again later.",
     error7: "Try again request interrupted",
-    error8: "Error in creating .blocks PNG"
+    error8: "Error in adding blocks to blockly playground"
 }
 
 export const PlaygroundConstants = {

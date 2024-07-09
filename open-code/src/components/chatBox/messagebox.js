@@ -1,9 +1,11 @@
 import React, {useEffect, useState, useContext} from 'react';
 import styles from './messageBox.module.css';
+import mstyles from './markDown.module.css';
 import {ThemeContext} from '../../App';
 import {ChatConstants, Themes} from '../../utils/constants';
 import {colors as Colors} from '../../utils/color';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 /**
  * ChatBox component renders a chat bubble containing user and assistant messages.
@@ -86,19 +88,16 @@ const AssistantResponse = ({
                            }) => {
     const [displayedMessage, setDisplayedMessage] = useState('');
     const theme = useContext(ThemeContext);
-    /**
-     *  Effect to handle the typewriter effect for displaying messages.
-     * It runs when 'message' or 'paused' state changes.
-     */
+
     useEffect(() => {
         setLoader(message === '');
 
         if (message !== '') {
             let index = 0;
-            // const cleanMessage = message.replace(/<[^>]*>?/gm, '').trim();
 
             const regex = /<xml xmlns="https:\/\/developers.google.com\/blockly\/xml">[\s\S]*?<\/xml>/;
             const cleanMessage = message.replace(regex, '');
+            console.log("clean,cleanMessage:", cleanMessage);
             if (allChatMessages.length === id) {
                 const interval = setInterval(() => {
                     if (paused) {
@@ -116,36 +115,58 @@ const AssistantResponse = ({
             }
         }
     }, [message, paused]);
-    /**
-     * Effect to scroll chatContainerRef to bottom when displayedMessage changes.
-     */
+
     useEffect(() => {
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [displayedMessage, chatContainerRef]);
 
-    return (<div
-        className={styles.responseBox}
-        title={timestamp}
-        style={{
-            backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : '#FFFFFF',
-            color: theme.theme === Themes.dark ? Colors.whiteFont : '#000000',
-        }}
-    >
-        {loader && allChatMessages.length === id ? (<div
-            className={`${styles.loader} ${theme.theme === Themes.dark ? styles.whiteLoader : styles.loader}`}
-        ></div>) : (<div
-            className={styles.responseContent}
+    return (
+        <div
+            className={styles.responseBox}
+            title={timestamp}
             style={{
                 backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : '#FFFFFF',
                 color: theme.theme === Themes.dark ? Colors.whiteFont : '#000000',
             }}
         >
-            <ReactMarkdown>{displayedMessage}</ReactMarkdown>
-            <div className={styles.timestamp}>{timestamp}</div>
-        </div>)}
-    </div>);
+            {loader && allChatMessages.length === id ? (
+                <div
+                    className={`${styles.loader} ${theme.theme === Themes.dark ? styles.whiteLoader : styles.loader}`}
+                ></div>
+            ) : (
+                <div
+                    className={styles.responseContent}
+                    style={{
+                        backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : '#FFFFFF',
+                        color: theme.theme === Themes.dark ? Colors.whiteFont : '#000000',
+                    }}
+                >
+                    <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                            h1: ({node, ...props}) => <h1 className={`${mstyles.heading1} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            h2: ({node, ...props}) => <h2 className={`${mstyles.heading2} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            h3: ({node, ...props}) => <h3 className={`${mstyles.heading3} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            p: ({node, ...props}) => <p className={`${mstyles.paragraph} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            strong: ({node, ...props}) => <strong className={`${mstyles.strong} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            em: ({node, ...props}) => <em className={`${mstyles.em} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            ul: ({node, ...props}) => <ul className={`${mstyles.list} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            ol: ({node, ...props}) => <ol className={`${mstyles.orderedList} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            li: ({node, ...props}) => <li className={`${mstyles.listItem} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            blockquote: ({node, ...props}) => <blockquote className={`${mstyles.blockquote} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            code: ({node, ...props}) => <code className={`${mstyles.code} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                        }}
+                    >
+                        {displayedMessage}
+                    </ReactMarkdown>
+
+                    <div className={styles.timestamp}>{timestamp}</div>
+                </div>
+            )}
+        </div>
+    );
 };
 
 

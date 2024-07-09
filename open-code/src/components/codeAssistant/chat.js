@@ -41,10 +41,8 @@ const Chat = ({drawer}) => {
         AITimestamp: "",
         paused: false
     });
-    /**
-     * Handles user click on send button
-     * @returns {Promise<void>}
-     */
+
+    //Handles user click on send button
     const handleSendClick = async () => {
         const userInput = inputValue.trim().toLowerCase();
         if (userInput === '') {
@@ -61,16 +59,10 @@ const Chat = ({drawer}) => {
             paused: false
         }));// Updates current message state with user input
         abortControllerRef.current = new AbortController();
-        /**
-         * Sends user input to AI service and handles response
-         */
         getAIMessage(userInput, abortControllerRef.current.signal).then((res) => {
             console.log("res::", res);
             if (res !== undefined) {
-                /**
-                 * // Extracts XML data from AI response and updates current message state
-                 */
-                extractXmlFromResponse(res, workspace).then((image) => {
+                extractXmlFromResponse(res, workspace).then(() => {
                     setCurrentMessage((prevState) => ({
                         ...prevState, AIMessage: res, AITimestamp: timestamp,
                     }));
@@ -78,7 +70,7 @@ const Chat = ({drawer}) => {
                     .catch((e) => {
                         console.log("Error in creating block png-->", e);
                         setCurrentMessage((prevState) => ({
-                            ...prevState, AIMessage: Errors.error8, AITimestamp: timestamp
+                            ...prevState, AIMessage: res + "\n" + Errors.error8, AITimestamp: timestamp,
                         }));
                     })
             } else {
@@ -154,9 +146,10 @@ const Chat = ({drawer}) => {
                            color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
                        }}
         >
-            <img src={theme.theme === Themes.dark ? Images.aiSupportWhite: Images.aiSupport} alt="Chat Assistant Logo" style={{
-                width:30
-            }}/>
+            <img src={theme.theme === Themes.dark ? Images.aiSupportWhite : Images.aiSupport} alt="Chat Assistant Logo"
+                 style={{
+                     width: theme.theme === Themes.dark ? "25px" : "30px"
+                 }}/>
             <h1>{ChatConstants.Playground}</h1>
         </div> : ""}
         <div ref={chatContainerRef} style={{height: "100%", overflow: "auto"}}>
