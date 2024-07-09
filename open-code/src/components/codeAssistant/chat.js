@@ -15,7 +15,7 @@ import {extractXmlFromResponse} from "../blockly/imageConverter";
  * @returns {Element}
  * @constructor
  */
-const Chat = (props) => {
+const Chat = ({drawer}) => {
     const theme = useContext(ThemeContext);
     const {workspace} = useContext(StoreContext);
     const [inputValue, setInputValue] = useState('');
@@ -24,6 +24,7 @@ const Chat = (props) => {
     const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
     const abortControllerRef = useRef(null);
     const chatContainerRef = useRef(null);
+
     const [allChatMessages, setAllChatMessages] = useState([{
         userMessage: "",
         AIMessage: ChatConstants.Message,
@@ -143,12 +144,21 @@ const Chat = (props) => {
                  style={{
                      backgroundColor: theme.theme === Themes.dark ? Colors.blackBackground : "#d0e4f5",
                      color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000"
+
                  }}
     >
-        <div className={styles.chatHeader}>
-            <img src={Images.aiSupport} alt="Chat Assistant Logo" style={{width: 40, height: 40}}/>
+
+        {drawer ? <div className={styles.chatHeader}
+                       style={{
+                           backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                           color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
+                       }}
+        >
+            <img src={theme.theme === Themes.dark ? Images.aiSupportWhite: Images.aiSupport} alt="Chat Assistant Logo" style={{
+                width:30
+            }}/>
             <h1>{ChatConstants.Playground}</h1>
-        </div>
+        </div> : ""}
         <div ref={chatContainerRef} style={{height: "100%", overflow: "auto"}}>
             {allChatMessages.map((conversation, index) => (<ChatBox
                 key={index}
@@ -162,14 +172,13 @@ const Chat = (props) => {
 
             />))}
         </div>
-        <ChatBottomBar
+        {drawer ? <ChatBottomBar
             inputValue={inputValue}
             handleSendClick={handleSendClick}
             setInputValue={setInputValue}
             isTyping={isTyping}
             handlePauseClick={() => handlePauseClick(currentMessage.id)}
-
-        />
+        /> : ""}
     </div>);
 };
 /**

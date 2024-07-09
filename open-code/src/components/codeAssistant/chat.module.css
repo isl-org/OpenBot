@@ -32,7 +32,7 @@
     color: #fff;
     cursor: pointer;
     display: flex;
-    align-items: center;  /* Center align icon vertically */
+    align-items: center; /* Center align icon vertically */
 }
 
 .sendButton:hover {
@@ -48,16 +48,15 @@
 
 .chatHeader {
     text-align: center;
-    text-decoration-color: white;
-    background-color:#FFFFFF;
     font-family: Gilroy-Medium, sans-serif;
-    color: black;
     padding: 10px;
-    display:flex;
+    display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap:10px;
+    gap: 10px;
+    font-size: 12px;
 }
+
 .sendButton.disabled {
     pointer-events: none;
     opacity: 0.5;

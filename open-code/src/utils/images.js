@@ -52,6 +52,7 @@ import sendIcon from "../assets/images/sendIcon.png"
 import pause from "../assets/images/icon/pause.png"
 
 import aiSupport from "../assets/images/icon/aiSupport.png"
+import aiSupportWhite from "../assets/images/icon/aiSupportWhite.png"
 import openBotLogo from "../assets/images/icon/open-bot-logo.png"
 /**
  * Images used in opeBot-Playgorund is listed here
@@ -111,5 +112,6 @@ export const Images = {
     sendIcon: sendIcon,
     aiSupport: aiSupport,
    openBotLogo: openBotLogo,
-    pause:pause
+    pause:pause,
+    aiSupportWhite: aiSupportWhite
 }

@@ -1,5 +1,4 @@
 .responseBox {
-    border: 1px solid #ccc;
     padding: 15px;
     border-radius: 10px 10px 10px 0;
     overflow-x:auto; /* Enable horizontal scrolling */
@@ -8,7 +7,6 @@
 .responseContent {
     display: flex;
     flex-direction: column;
-    /*padding: 10px;*/
     overflow-x:auto;
 }
 .responseContent.timestamp {
@@ -33,7 +31,6 @@
     border-radius: 10px 10px 0 10px;
     padding: 15px;
     max-width: 70%;
-    border: 1px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
