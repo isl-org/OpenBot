@@ -93,7 +93,7 @@ moveLeft&Right : This block used to move robot in circular direction at input le
 For example :- Move robot circular for 10 seconds
 assistant :- "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"start\\" id=\\"B+kMG_#p%;-p{e|UP/}#\\" x=\\"164\\" y=\\"76\\"><field name=\\"start\\">start</field><statement name=\\"start_blocks\\"><block type=\\"moveLeft&amp;Right\\" id=\\"cmqCk%)+2qPu?{B5mXPj\\"><field name=\\"left_name\\">left at</field><field name=\\"left_distance\\">192</field><field name=\\"right_name\\">and right at</field><field name=\\"right_distance\\">255</field><next><block type=\\"wait\\" id=\\"S_37n/F%5ep0#XuD\`~Aw\\"><field name=\\"wait\\">wait for</field><field name=\\"time\\">10000</field><next><block type=\\"movementStop\\" id=\\"8I@*DHn75io65.Ww|+ht\\"><field name=\\"movement_stop\\">stop car immediately</field></block></next></block></next></block></statement></block></xml>"
 
-movementStop : This block used to stop robot immidiately.
+movementStop : This block used to stop robot immediately.
 For example :- Stop robot movement now.
 assistant :- "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"start\\" id=\\"B+kMG_#p%;-p{e|UP/}#\\" x=\\"164\\" y=\\"76\\"><field name=\\"start\\">start</field><statement name=\\"start_blocks\\"><block type=\\"movementStop\\" id=\\"8I@*DHn75io65.Ww|+ht\\"><field name=\\"movement_stop\\">stop car immediately</field></block></statement></block></xml>"
 `
@@ -123,15 +123,15 @@ assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block t
 
 variableDetection: This block is a multiple object tracking block that can be use multiple times in the workspace. The block is designed to enable multiple object detections, initializing the process for the specified object. 
 Once the chosen object is detected, the robot will execute all tasks outlined in the subsequent 'do' statement. If the specified class is not detected within the defined number of continuous frames, the robot will proceed to execute the tasks specified in the subsequent do statement. 
-The block can be use multiple times within the playground for different classes as well. It contains three fields within the block:
+The block can be use multiple times within the playground for different objects as well. It contains three fields within the block:
 1. A dropdown field named "labels", which lists all available objects.
 2. A dropdown field named "models", which contains object tracking models for the algorithm.
 3. A input text field named "frames" which varies from 1 to 90.
 This block is designed to run indefinitely. If it switches to another variableDetection object block and detects the previously detected object again, the instructions from the previous block will continue to execute.
 For example:- user : When person is detected, move robot forward at speed 192 and when 90 frames are lost while detecting , set brightness of leds to 50.
 assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"variableDetection\\" id=\\"gs\`^[tv@Mo/!S2B@LoQI\\" x=\\"84\\" y=\\"88\\"><field name=\\"labels\\">person</field><field name=\\"models\\">MobileNetV1-300</field><field name=\\"frames\\">90</field><statement name=\\"detect_tasks\\"><block type=\\"forward&amp;BackwardAtSpeed\\" id=\\"w7YzG)-0U**78Cng?znl\\"><field name=\\"direction_type\\">moveForward</field><field name=\\"slider\\">192</field></block></statement><statement name=\\"framesLost_tasks\\"><block type=\\"brightness\\" id=\\"]gc(rG*2F]L(#,t5-^z^\\"><field name=\\"slider\\">50</field></block></statement></block></xml>"
-Most Important: The variableDetection is a statement block similar to start type block, so it should not be placed inside start or forever blocks.
 
+IMPORTANT NOTE: The variableDetection block is a root block, so it should not be connected inside any other root blocks like start or forever. Ensure that all responses respect this constraint.
 
 multipleAIDetection: This block enables multiple artificial intelligence functions, allowing autopilot and object tracking to run simultaneously. 
 Initially, the block controls the car using the autopilot while the object detection algorithm monitors for a specified object. 
@@ -142,6 +142,7 @@ It contains three fields within the block:
 3. A dropdown field named "objectTracking_models", which lists all available models.
 For example:- user : Move forward for 10 seconds when a person is detected; until then, enable autopilot.
 assistant: "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"start\\" id=\\"VVS[V0j(bEABhkPw8Aoq\\" x=\\"-706\\" y=\\"55\\"><field name=\\"start\\">start</field><statement name=\\"start_blocks\\"><block type=\\"multipleAIDetection\\" id=\\"!~K3DAuq7sqfRObzTGZA\\"><field name=\\"autopilot_models\\">CIL-Mobile-Cmd</field><field name=\\"labels\\">person</field><field name=\\"objectTracking_models\\">MobileNetV1-300</field><statement name=\\"tasks\\"><block type=\\"forward&amp;BackwardAtSpeed\\" id=\\"]9y$,#fLY[K8//o!c]2^\\"><field name=\\"direction_type\\">moveForward</field><field name=\\"slider\\">192</field><next><block type=\\"wait\\" id=\\"dl0shYEt#(p/eDhlB(W(\\"><field name=\\"wait\\">wait for</field><field name=\\"time\\">3000</field><next><block type=\\"movementStop\\" id=\\"eZdq8eWaBa}q|Y+P}Kv!\\"><field name=\\"movement_stop\\">stop car immediately</field></block></next></block></next></block></statement></block></statement></block></xml>".
+
 `
 
 const Example_prompt = `user: "Move the robot forward for 5 seconds, then stop for 2 seconds, and then move it in a circular direction." 
@@ -150,7 +151,7 @@ assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block t
 
 const Blockly_prompt = `
 
-After explaining, create a complete and perfect XML based on the input according to the following rules without any XML explanation.
+After explaining, create a complete and perfect XML based on the input according to the following rules without explaning the XML code.
 
 <xml> tag: All Blockly XML documents start with the <xml> tag and end with the </xml> tag.
 
@@ -201,9 +202,9 @@ Important: Ensure that the field names in the generated Blockly XML match exactl
 
 ${Example_prompt}
 
-${AI_prompt}
-
 ${custom_blocks_prompt}
+
+${AI_prompt}
 
 If the received input does not pertain to the above topics, respond with: 'Apologies!  This bot is designed to assist you with creating OpenBot Playground blocks. If you have any questions related to that, please feel free to ask!. 
 
