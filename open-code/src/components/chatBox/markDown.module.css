@@ -17,13 +17,12 @@
 }
 
 .paragraph {
-    margin-bottom: 1em;
-    color: #000000;
+    margin-bottom: 0.5em;
 }
 
 .strong {
     font-weight: bold;
-    color: #0071c5;
+    color: #000000;
 }
 
 .em {
@@ -34,17 +33,20 @@
 .list {
     padding-left: 20px;
     color: #000000;
+    margin-bottom: 0.5em;
 }
 
 .orderedList {
+    margin-bottom: 0.5em;
     padding-left: 20px;
     list-style-type: decimal;
-    color:#000000;
+    color:#0071c5;
 }
 
 .listItem {
     margin-bottom: 0.5em;
     color: #000000;
+
 }
 
 .blockquote {
@@ -55,6 +57,7 @@
     color: #666666;
 }
 
+/* Light Theme */
 .code {
     font-family: monospace;
     background-color: #F5F5F5;
@@ -67,29 +70,29 @@
 .darkTheme .heading1 {
     font-size: 2em;
     margin-bottom: 0.5em;
-    color: #D63384;
+    color: #458ff7;
 }
 
 .darkTheme .heading2 {
     font-size: 1.5em;
     margin-bottom: 0.5em;
-    color: #D63384;
+    color:#458ff7;
 }
 
 .darkTheme.heading3 {
     font-size: 1.5em;
     margin-bottom: 0.5em;
-    color: #D63384;
+    color: #458ff7;
 }
 
-.darkTheme.paragraph {
+.darkTheme .paragraph {
     margin-bottom: 1em;
     color: #FFFFFF;
 }
 
 .darkTheme .strong {
     font-weight: bold;
-    color: #63bcf3;
+    color: #FFFFFF;
 }
 
 .darkTheme .em {
@@ -100,30 +103,34 @@
 .darkTheme .list {
     padding-left: 20px;
     color: #FFFFFF;
+    margin-bottom: 0.5em;
 }
 
 .darkTheme .orderedList {
     padding-left: 20px;
     list-style-type: decimal;
     color: #FFFFFF;
+    margin-bottom: 0.5em;
 }
 
 .darkTheme .listItem {
     margin-bottom: 0.5em;
     color: #FFFFFF;
+
 }
 
 .darkTheme .blockquote {
     margin: 1em 0;
     padding-left: 1em;
-    border-left: 4px solid #333333;
-    background-color: #1A1A1A;
+    border-left: 4px solid #CCCCCC;
+    background-color: #F5F5F5;
+    color: #666666;
 }
 
 .darkTheme .code {
     font-family: monospace;
-    background-color: #1E1E1E;
     padding: 2px 4px;
     border-radius: 3px;
     color: #d56235;
+    background-color: transparent;
 }

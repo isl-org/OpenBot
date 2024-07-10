@@ -7,7 +7,7 @@ import {Themes, Errors, ChatConstants} from '../../utils/constants.js';
 import {ThemeContext} from "../../App";
 import {colors as Colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
-import {extractXmlFromResponse} from "../blockly/imageConverter";
+import {addBlocksToWorkspace} from "../blockly/imageConverter";
 
 /**
  * Chat component handles user interactions and displays chat interface.
@@ -62,7 +62,7 @@ const Chat = ({drawer}) => {
         getAIMessage(userInput, abortControllerRef.current.signal).then((res) => {
             console.log("res::", res);
             if (res !== undefined) {
-                extractXmlFromResponse(res, workspace).then(() => {
+                addBlocksToWorkspace(res, workspace).then(() => {
                     setCurrentMessage((prevState) => ({
                         ...prevState, AIMessage: res, AITimestamp: timestamp,
                     }));
@@ -125,9 +125,11 @@ const Chat = ({drawer}) => {
      */
     useEffect(() => {
         if (chatContainerRef.current) {
-            setTimeout(() => {
-                chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-            }, 100);
+            {
+                if (chatContainerRef.current.scrollHeight !== null) {
+                    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+                }
+            }
         }
     }, [allChatMessages, currentMessage.AIMessage]);
 
