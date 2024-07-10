@@ -26,7 +26,7 @@ For example :- user : Turn left indicator on
 assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"start\\" id=\\"lfY}pa1;W1x,7K3Hw*Cc\\" x=\\"93\\" y=\\"182\\"><field name=\\"start\\">start</field><statement name=\\"start_blocks\\"><block type=\\"indicators\\" id=\\"QUhqsh(SU;wuGr$|Cvu%\\"><field name=\\"side\\">left</field><field name=\\"TOGGLE_STATE\\">ON</field></block></statement></block></xml>"
 
 brightnessHighOrLow : This block used to turn both tail and head LED lights ON/OFF.
-For example :- user :  Turn on LED lights
+For example :- user :  Turn on LED light
 assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"start\\" id=\\"lfY}pa1;W1x,7K3Hw*Cc\\" x=\\"93\\" y=\\"182\\"><field name=\\"start\\">start</field><statement name=\\"start_blocks\\"><block type=\\"brightnessHighOrLow\\" id=\\"VM?/8]Tky}Twc|walUrZ\\"><field name=\\"TOGGLE_STATE\\">ON</field></block></statement></block></xml>" 
 
 speedControl: This block is used to set the robot's speed to static values: slow, medium, or fast.
@@ -142,8 +142,9 @@ It contains three fields within the block:
 3. A dropdown field named "objectTracking_models", which lists all available models.
 For example:- user : Move forward for 10 seconds when a person is detected; until then, enable autopilot.
 assistant: "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"start\\" id=\\"VVS[V0j(bEABhkPw8Aoq\\" x=\\"-706\\" y=\\"55\\"><field name=\\"start\\">start</field><statement name=\\"start_blocks\\"><block type=\\"multipleAIDetection\\" id=\\"!~K3DAuq7sqfRObzTGZA\\"><field name=\\"autopilot_models\\">CIL-Mobile-Cmd</field><field name=\\"labels\\">person</field><field name=\\"objectTracking_models\\">MobileNetV1-300</field><statement name=\\"tasks\\"><block type=\\"forward&amp;BackwardAtSpeed\\" id=\\"]9y$,#fLY[K8//o!c]2^\\"><field name=\\"direction_type\\">moveForward</field><field name=\\"slider\\">192</field><next><block type=\\"wait\\" id=\\"dl0shYEt#(p/eDhlB(W(\\"><field name=\\"wait\\">wait for</field><field name=\\"time\\">3000</field><next><block type=\\"movementStop\\" id=\\"eZdq8eWaBa}q|Y+P}Kv!\\"><field name=\\"movement_stop\\">stop car immediately</field></block></next></block></next></block></statement></block></statement></block></xml>".
-
 `
+
+const suggested_blocks = `After creating the XML, you can suggest various additional blocks that can be added to the playground to enhance the given input.`
 
 const Example_prompt = `user: "Move the robot forward for 5 seconds, then stop for 2 seconds, and then move it in a circular direction." 
 
@@ -206,6 +207,8 @@ ${custom_blocks_prompt}
 
 ${AI_prompt}
 
+${suggested_blocks}
+
 If the received input does not pertain to the above topics, respond with: 'Apologies!  This bot is designed to assist you with creating OpenBot Playground blocks. If you have any questions related to that, please feel free to ask!. 
 
 If the user greets or uses common pleasantries (e.g., 'hi,' 'hello,' 'how are you?'), respond appropriately to acknowledge them before guiding them back to the relevant topic.</mutation>`;
@@ -219,8 +222,6 @@ const response_structure = `Explain the process according to following rules :
 IMPORTANT NOTE: Ensure that all responses respect this above constraint.
 `
 
-
 const finalPrompt = `You are an assistant for OpenBot playground who provide a detailed and professional step-by-step implementation to achieve the received input based on the following Blockly block JSON which has definition, block type and working of a block - ${blocksJSON}. ${response_structure}.  Do not include the JSON in the response. ${Blockly_prompt}`
 
 module.exports = {finalPrompt};
-
