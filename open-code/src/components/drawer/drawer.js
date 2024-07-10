@@ -52,7 +52,7 @@ export function RightDrawer() {
                                 color: theme === Themes.dark ? colors.whiteFont : colors.blackFont,
                                 top: isTabletQuery ? "6rem" : isLandscape ? "4rem" : "5rem",
                                 bottom: category !== Constants.chat ? (isMobile ? "9%" : isLandscape ? "18%" : "4.4rem") : 'none',
-                                height: category === Constants.chat ? isMobile ? "calc(100% - (9% + 5rem))" : isTabletQuery ? "calc(100% - (10.4rem))" : isLandscape ? "calc(100% - (7rem))" : "calc(100% - 9.4rem)" : 'none'
+                                height: category === Constants.chat ? isMobile ? "calc(100% - (9% + 5rem))" : isTabletQuery ? "calc(100% - (10.4rem))" : isLandscape ? "calc(100% - (8.4rem))" : "calc(100% - 9.4rem)" : 'none'
                             },
                         }}
                         // Drawer is always visible and can only be closed programmatically
