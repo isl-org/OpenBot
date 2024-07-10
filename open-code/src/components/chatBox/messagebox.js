@@ -119,9 +119,7 @@ const AssistantResponse = ({
     useEffect(() => {
         if (chatContainerRef.current) {
             if (chatContainerRef.current.scrollHeight !== null) {
-                console.log("dfghj;lkjhb")
                 chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-
             }
         }
     }, [displayedMessage, chatContainerRef]);
