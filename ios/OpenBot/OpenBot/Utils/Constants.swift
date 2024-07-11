@@ -27,6 +27,7 @@ struct Images {
     static let closeIcon = UIImage(named: "closeIcon")
     static let phoneIcon = UIImage(named: "phone")
     static let gamepadIcon = UIImage(named: "gamepad")
+    static let webIcon = UIImage(systemName: "globe");
     static let slowIcon = UIImage(named: "slow")
     static let mediumIcon = UIImage(named: "medium")
     static let fastIcon = UIImage(named: "fast")
@@ -84,7 +85,7 @@ struct Constants {
             ModeItem(label: Strings.freeRoam, icon: Images.freeRoam!, identifier: Strings.ScreenFreeRoam, color: Colors.freeRoamColor),
             ModeItem(label: Strings.dataCollection, icon: Images.dataCollection!, identifier: Strings.ScreenDataCollection, color: Colors.dataCollectionColor),
             ModeItem(label: Strings.controllerMapping, icon: Images.controllerMapping!, identifier: Strings.ScreenControllerMapping, color: Colors.controllerMappingColor),
-            ModeItem(label: Strings.robotInfo, icon: Images.robotInfoIcon!, identifier: Strings.ScreenRobotInfo, color: Colors.robotInfoColor)
+            ModeItem(label: Strings.robotInfo, icon: Images.robotInfoIcon!, identifier: Strings.ScreenRobotInfo, color: Colors.robotInfoColor),
         ],
         // AI
         [
@@ -114,7 +115,7 @@ enum SpeedMode: Float {
 
 /// The different control interfaces of an OpenBot (either by gamepad or using another phone/computer)
 enum ControlMode : String {
-    case PHONE, GAMEPAD
+    case PHONE, GAMEPAD, WEB
 }
 
 /// The different speed modes of an OpenBot
