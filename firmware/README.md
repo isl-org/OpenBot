@@ -84,27 +84,27 @@ To install the ESP32 board in your Arduino IDE, follow these next instructions:
   <img src="../docs/images/arduino_boardsManager.png" width="800" alt="App GUI"/>
 </p>
 
-4. Search for ESP32 and press install button for the “ESP32 by Espressif Systems“:
+4. Go to tools and select the upload speed as 115200 (For newer ESP-32 chips such as ESP32-D0WD-V3 (revision v3.0)) .
+<p align="center">
+<img src="../docs/images/arduino_upload-speed-select.png" width="600" alt="App GUI"/>
+</p>
+
+5. Search for ESP32 and press install button for the “ESP32 by Espressif Systems“:
 <p align="center">
   <img src="../docs/images/arduino_installing.png" width="600" alt="App GUI"/>
 </p>
 
-5. You should now have everything to successfully flash the ESP32 board of your OpenBot using the Arduino development envinronment
+6. You should now have everything to successfully flash the ESP32 board of your OpenBot using the Arduino development envinronment
 <p align="center">
   <img src="../docs/images/arduino_ESP32-Board-add-on-in-Arduino-IDE-installed.png" width="600" alt="App GUI"/>
 </p>
 
-6. To flash the OpenBot with your new code, simply select **ESP32 Dev Module** in the menu **Tools > Board > ESP32 Arduino**. Note that additional content as well as troubleshooting of the ESP32 flashing prcess can be found in the following [link](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/).
-
+7. To flash the OpenBot with your new code, simply select **ESP32 Dev Module** in the menu **Tools > Board > ESP32 Arduino**. Note that additional content as well as troubleshooting of the ESP32 flashing prcess can be found in the following [link](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/).
 <p align="center">
   <img src="../docs/images/arduino_windows-select-board.png" width="600" alt="App GUI"/>
 </p>
 
-7. Go to tools and select the upload speed as 115200 (For newer ESP-32 chips such as ESP32-D0WD-V3 (revision v3.0)) .
 
-<p align="center">
-<img src="../docs/images/arduino_upload-speed-select.png" width="600" alt="App GUI"/>
-</p>
 ## Upload
 
 ### Settings (Arduino nano setup)
