@@ -7,29 +7,29 @@ const router = express.Router();
  * API to fetch response as per the user prompt
  */
 router.post('/generate-code-assistance', async (req, res) => {
-
-    const {userPrompt} = req.body;
-    console.log("userPrompt::", userPrompt);
-
+    const {userPrompt, currentXML} = req.body;
+    console.log("currentXML isha", currentXML);
     if (!userPrompt) {
-        return res.status(400).json({error: 'Missing required data userPrompt.'});
+        return res.status(400).json({error: 'Missing required data: userPrompt.'});
     }
+
     const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY,
     });
 
+    console.log("final request::", userPrompt + "\nInput XML : " + currentXML);
     try {
         const response = await openai.chat.completions.create({
             model: 'gpt-4o',
-            messages: [
-                {role: 'system', content: finalPrompt},
-                {role: 'user', content: userPrompt}
-            ],
+            messages: [{role: 'system', content: finalPrompt}, {
+                role: 'user',
+                content: "final request::" + userPrompt + "\nInput XML : " + currentXML
+            }],
             max_tokens: 1500,
         });
 
         const aiResponse = response.choices[0].message.content.trim();
-        console.log(aiResponse)
+        console.log(aiResponse);
         res.json({aiResponse});
     } catch (error) {
         console.error('Error with OpenAI API request:', error.response ? error.response.data : error.message);

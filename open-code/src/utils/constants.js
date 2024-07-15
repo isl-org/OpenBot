@@ -184,7 +184,8 @@ export const Errors = {
     error5: "Similar classes present in the advanced AI blocks",
     error6: "Unable to connect to the server. Please try again later.",
     error7: "Try again request interrupted",
-    error8: "Error in adding blocks to blockly playground"
+    error8: "Error in adding blocks to blockly playground",
+    error9: "An error occurred while processing your request."
 }
 
 export const PlaygroundConstants = {

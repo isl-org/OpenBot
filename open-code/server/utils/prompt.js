@@ -7,7 +7,7 @@ assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block t
 
 const blockly_prompt = `
 
-After explaining, create a complete and perfect XML based on the input according to the following rules.
+After explaining, update the input XML based on the user prompt according to the following rules.
 
 <xml> tag: All Blockly XML documents start with the <xml> tag and end with the </xml> tag.
 

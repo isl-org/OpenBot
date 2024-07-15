@@ -9,10 +9,17 @@ import Blockly from "blockly/core";
 export const addBlocksToWorkspace = async (message, workspace) => {
     const regex = /<xml xmlns="https:\/\/developers.google.com\/blockly\/xml">[\s\S]*?<\/xml>/;
     const match = message.match(regex);
+    workspace.clear()
     if (match) {
-        console.log("match::",match)
-        Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(match[0]), workspace);
+        try {
+            // workspace.clear()
+            const xmlDom = Blockly.utils.xml.textToDom(match[0]);
+            Blockly.Xml.domToWorkspace(xmlDom, workspace);
+        } catch (error) {
+            console.error("Error parsing XML or adding to workspace:", error);
+        }
     } else {
         console.log('No match found');
     }
+
 };

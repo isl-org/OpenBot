@@ -1,5 +1,7 @@
+import {getCurrentProject} from "./workspace";
+
 /**
- *
+ * Api to get the assistant response
  * @param userPrompt
  * @param signal
  * @returns {Promise<string | string>}
@@ -10,7 +12,7 @@ export const getAIMessage = (userPrompt, signal) => {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ userPrompt: userPrompt }),
+        body: JSON.stringify({userPrompt: userPrompt, currentXML: getCurrentProject().xmlValue}),
         signal: signal
     }).then(res => res.json())
         .then((res) => {

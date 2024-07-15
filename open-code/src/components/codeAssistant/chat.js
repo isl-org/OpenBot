@@ -88,9 +88,8 @@ const Chat = ({drawer}) => {
         setInputValue('');
     };
 
-    /**
-     * Handles user click on pause button
-     */
+    //Handles user click on pause button
+
     const handlePauseClick = () => {
         if (abortControllerRef.current) {
             abortControllerRef.current.abort();
@@ -103,9 +102,8 @@ const Chat = ({drawer}) => {
         }
     };
 
-    /**
-     * Effect to update allChatMessages when currentMessage changes
-     */
+    //Effect to update allChatMessages when currentMessage changes
+
     useEffect(() => {
         if (currentMessage.AIMessage) {
             setAllChatMessages((prevMessages) => {
@@ -120,9 +118,9 @@ const Chat = ({drawer}) => {
         }
     }, [currentMessage]);
 
-    /**
-     * Effect to scroll chat container to bottom when messages or AI message changes
-     */
+
+    // Effect to scroll chat container to bottom when messages or AI message changes
+
     useEffect(() => {
         if (chatContainerRef.current) {
             {
