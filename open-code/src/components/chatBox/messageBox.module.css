@@ -19,10 +19,7 @@
     display: flex;
     flex-direction: column;
     gap: 28px;
-    font-family: Gilroy-Medium, sans-serif;
-    font-size: 15px;
     padding: 28px 28px 0 28px;
-
 }
 
 .userMessage {

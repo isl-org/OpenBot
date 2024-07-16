@@ -50,7 +50,7 @@ Sensors: sonarReading, speedReading, voltageDividerReading, wheelOdometerSensors
 
 Movement: forward&BackwardAtSpeed, left&RightAtSpeed, moveLeft&Right, movementStop
 
-AI: disableAI, objectTracking, autopilot, navigateForwardAndLeft, variableDetection, multipleAIDetection
+AI: disableAI, objectTracking, autopilot, navigateForwardAndLeft, objectDetection, multipleAIDetection
 
 All available blocks are also defined in the following blocklyJSON - ${blocksJSON} .Each object in the array refers to a block with its unique type and definition. The definition includes an "args0" array, which contains all the block fields with its "name" and "type".
 

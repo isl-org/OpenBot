@@ -121,17 +121,17 @@ If user wants to given right from reference then "left" must be given in negativ
 For example: user : Enable point goal navigation and set goal as forward to 20 and left to 30
 assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"start\\" id=\\"VVS[V0j(bEABhkPw8Aoq\\" x=\\"-706\\" y=\\"55\\"><field name=\\"start\\">start</field><statement name=\\"start_blocks\\"><block type=\\"navigateForwardAndLeft\\" id=\\"RV~W1?F2G=ftJfjV%/ab\\"><field name=\\"forward\\">20</field><field name=\\"left\\">30</field><field name=\\"navigation_models\\">PilotNet-Goal</field></block></statement></block></xml>"
 
-variableDetection: This block is a multiple object tracking block that can be use multiple times in the workspace. The block is designed to enable multiple object detections, initializing the process for the specified object. 
+objectDetection: This block is a multiple object tracking block that can be use multiple times in the workspace. The block is designed to enable multiple object detections, initializing the process for the specified object. 
 Once the chosen object is detected, the robot will execute all tasks outlined in the subsequent 'do' statement. If the specified class is not detected within the defined number of continuous frames, the robot will proceed to execute the tasks specified in the subsequent do statement. 
 The block can be use multiple times within the playground for different objects as well. It contains three fields within the block:
 1. A dropdown field named "labels", which lists all available objects.
 2. A dropdown field named "models", which contains object tracking models for the algorithm.
 3. A input text field named "frames" which varies from 1 to 90.
-This block is designed to run indefinitely. If it switches to another variableDetection object block and detects the previously detected object again, the instructions from the previous block will continue to execute.
+This block is designed to run indefinitely. If it switches to another objectDetection object block and detects the previously detected object again, the instructions from the previous block will continue to execute.
 For example:- user : When person is detected, move robot forward at speed 192 and when 90 frames are lost while detecting , set brightness of leds to 50.
-assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"variableDetection\\" id=\\"gs\`^[tv@Mo/!S2B@LoQI\\" x=\\"84\\" y=\\"88\\"><field name=\\"labels\\">person</field><field name=\\"models\\">MobileNetV1-300</field><field name=\\"frames\\">90</field><statement name=\\"detect_tasks\\"><block type=\\"forward&amp;BackwardAtSpeed\\" id=\\"w7YzG)-0U**78Cng?znl\\"><field name=\\"direction_type\\">moveForward</field><field name=\\"slider\\">192</field></block></statement><statement name=\\"framesLost_tasks\\"><block type=\\"brightness\\" id=\\"]gc(rG*2F]L(#,t5-^z^\\"><field name=\\"slider\\">50</field></block></statement></block></xml>"
+assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"objectDetection\\" id=\\"gs\`^[tv@Mo/!S2B@LoQI\\" x=\\"84\\" y=\\"88\\"><field name=\\"labels\\">person</field><field name=\\"models\\">MobileNetV1-300</field><field name=\\"frames\\">90</field><statement name=\\"detect_tasks\\"><block type=\\"forward&amp;BackwardAtSpeed\\" id=\\"w7YzG)-0U**78Cng?znl\\"><field name=\\"direction_type\\">moveForward</field><field name=\\"slider\\">192</field></block></statement><statement name=\\"framesLost_tasks\\"><block type=\\"brightness\\" id=\\"]gc(rG*2F]L(#,t5-^z^\\"><field name=\\"slider\\">50</field></block></statement></block></xml>"
 
-IMPORTANT NOTE: The variableDetection block is a root block, so it should not be connected inside any other root blocks like start. Ensure that all responses respect this constraint.
+IMPORTANT NOTE: The objectDetection block is a root block, so it should not be connected inside any other root blocks like start. Ensure that all responses respect this constraint.
 
 multipleAIDetection: This block enables multiple artificial intelligence functions, allowing autopilot and object tracking to run simultaneously. 
 Initially, the block controls the car using the autopilot while the object detection algorithm monitors for a specified object. 

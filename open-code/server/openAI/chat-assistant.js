@@ -16,8 +16,6 @@ router.post('/generate-code-assistance', async (req, res) => {
     const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY,
     });
-
-    console.log("final request::", userPrompt + "\nInput XML : " + currentXML);
     try {
         const response = await openai.chat.completions.create({
             model: 'gpt-4o',

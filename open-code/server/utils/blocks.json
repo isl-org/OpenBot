@@ -800,7 +800,7 @@
     "working": "enabling point goal navigation to run at chosen model"
   },
   {
-    "blockType": "variableDetection",
+    "blockType": "objectDetection",
     "definition": {
       "type": "block_type",
       "message0": "on %1 detected using %2 %3 do %4 on lost %5 frames %6 do %7",

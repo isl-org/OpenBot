@@ -105,11 +105,11 @@ export const BottomBar = () => {
                 const forever = workspace.getBlocksByType(PlaygroundConstants.forever);
                 const detection = workspace.getBlocksByType(PlaygroundConstants.detectionOrUndetection);
                 const multipleObjectTracking = workspace.getBlocksByType(PlaygroundConstants.multipleObjectTracking);
-                const variableDetection = workspace.getBlocksByType(PlaygroundConstants.variableDetection);
+                const objectDetection = workspace.getBlocksByType(PlaygroundConstants.objectDetection);
                 let objNameArray = [];
-                if (variableDetection?.length > 0) {
-                    for (let i = 0; i < variableDetection.length; i++) {
-                        objNameArray.push(variableDetection[i].getFieldValue(PlaygroundConstants.labels));
+                if (objectDetection?.length > 0) {
+                    for (let i = 0; i < objectDetection.length; i++) {
+                        objNameArray.push(objectDetection[i].getFieldValue(PlaygroundConstants.labels));
                     }
                 }
                 let isClassesSimiliar = false;
@@ -137,7 +137,7 @@ export const BottomBar = () => {
                     object_2 = multipleObjectTrackingEnabledBlocks[0].getFieldValue(PlaygroundConstants.labels2)
                 }
 
-                if (start.length === 0 && forever.length === 0 && detection.length === 0 && variableDetection.length === 0) {
+                if (start.length === 0 && forever.length === 0 && detection.length === 0 && objectDetection.length === 0) {
                     handleError(Errors.error1);
                 } else if (isAIBlocksAdjacent === true && start.length > 0) {
                     handleError(Errors.error2);

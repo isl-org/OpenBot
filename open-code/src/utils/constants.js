@@ -193,7 +193,7 @@ export const PlaygroundConstants = {
     forever: "forever",
     detectionOrUndetection: "detectionOrUndetection",
     multipleObjectTracking: "multipleObjectTracking",
-    variableDetection: "variableDetection",
+    objectDetection: "objectDetection",
     labels: "labels",
     disableAI: "disableAI",
     object_1: "object_1",
