@@ -7,12 +7,12 @@ import Blockly from "blockly/core";
  * @returns {Promise<void>}
  */
 export const addBlocksToWorkspace = async (message, workspace) => {
-    workspace.clear()
     const regex = /<xml xmlns="https:\/\/developers.google.com\/blockly\/xml">[\s\S]*?<\/xml>/;
     const match = message.match(regex);
     if (match) {
         try {
             // workspace.clear()
+            workspace.clear()
             const xmlDom = Blockly.utils.xml.textToDom(match[0]);
             Blockly.Xml.domToWorkspace(xmlDom, workspace);
         } catch (error) {

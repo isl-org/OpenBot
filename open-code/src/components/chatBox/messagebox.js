@@ -131,13 +131,6 @@ const AssistantResponse = ({
             }
         }
     }, [displayedMessage, chatContainerRef]);
-
-    const toggleXmlVisibility = () => {
-        setShowXml(!showXml);
-    };
-
-    const hasXml = message.match(/<xml xmlns="https:\/\/developers.google.com\/blockly\/xml">[\s\S]*?<\/xml>/)!== null;
-
     return (
         <div
             className={styles.responseBox}
@@ -188,16 +181,6 @@ const AssistantResponse = ({
                     >
                         {displayedMessage}
                     </ReactMarkdown>
-                    {hasXml && (
-                        <button onClick={toggleXmlVisibility} className={styles.toggleXmlButton}>
-                            {showXml? 'Hide XML' : 'Show XML'}
-                        </button>
-                    )}
-                    {showXml && (
-                        <pre className={styles.xmlContent}>
-              {message.match(/<xml xmlns="https:\/\/developers.google.com\/blockly\/xml">[\s\S]*?<\/xml>/)[0]}
-            </pre>
-                    )}
                     <div className={styles.timestamp}>{timestamp}</div>
                 </div>
             )}

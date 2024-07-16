@@ -1,23 +1,24 @@
 /* Light Theme */
 .heading1 {
-    font-size: 2em;
+    font-size: 18px;
     margin-bottom: 0.5em;
     color: #0071c5;
 }
 
 .heading2 {
-    font-size: 1.5em;
+    font-size: 15px;
     margin-bottom: 0.5em;
     color:#0071c5;
 }
 .heading3 {
-    font-size: 1.5em;
+    font-size: 16px;
     margin-bottom: 0.5em;
     color:#0071c5;
 }
 
 .paragraph {
     margin-bottom: 0.5em;
+    font-size: 15px;
 }
 
 .strong {
@@ -64,23 +65,25 @@
     padding: 2px 4px;
     border-radius: 3px;
     color: #d56235;
+    font-size: 14px;
 }
 
 /* Dark Theme */
 .darkTheme .heading1 {
-    font-size: 2em;
+    font-size: 18px;
     margin-bottom: 0.5em;
     color: #458ff7;
+
 }
 
 .darkTheme .heading2 {
-    font-size: 1.5em;
+    font-size: 16px;
     margin-bottom: 0.5em;
     color:#458ff7;
 }
 
 .darkTheme.heading3 {
-    font-size: 1.5em;
+    font-size: 16px;
     margin-bottom: 0.5em;
     color: #458ff7;
 }
@@ -88,6 +91,7 @@
 .darkTheme .paragraph {
     margin-bottom: 1em;
     color: #FFFFFF;
+    font-size: 15px;
 }
 
 .darkTheme .strong {
@@ -133,4 +137,5 @@
     border-radius: 3px;
     color: #d56235;
     background-color: transparent;
+    font-size: 14px;
 }

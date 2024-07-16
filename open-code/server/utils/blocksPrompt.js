@@ -7,7 +7,7 @@ forever : The forever will create an infinite loop which indicates that loop wil
 For example:- user : If the sonar reading is greater than 20 then move forward else stop.
 assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"forever\\" id=\\"f_forever_block\\" x=\\"355\\" y=\\"-27\\"><field name=\\"forever\\">forever</field><statement name=\\"forever_loop_blocks\\"><block type=\\"controls_ifelse\\" id=\\"q#AbGdf{l@sUXt}ISi6-\\"><value name=\\"IF0\\"><block type=\\"logic_compare\\" id=\\"2jd5,N{1f/I_8^welNJy\\"><field name=\\"OP\\">GT</field><value name=\\"A\\"><block type=\\"sonarReading\\" id=\\"95^1=)aeGu@f(A~rE~w$\\"></block></value><value name=\\"B\\"><block type=\\"math_number\\" id=\\"x}AXBL[-Uvfx4M{Cmqby\\"><field name=\\"NUM\\">20</field></block></value></block></value><statement name=\\"DO0\\"><block type=\\"forward&amp;BackwardAtSpeed\\" id=\\"w0Y|XHuPsS-fc.y\`-m}X\\"><field name=\\"direction_type\\">moveForward</field><field name=\\"slider\\">192</field></block></statement><statement name=\\"ELSE\\"><block type=\\"movementStop\\" id=\\"R5{fxix(/__UxWhP-YN2\\"><field name=\\"movement_stop\\">stop car immediately</field></block></statement></block></statement></block></xml>"
 
-IMPORTANT NOTE: The forever block is a root block, so it should not be connected inside any other root blocks like start. Ensure that all responses respect this constraint.
+VERY IMPORTANT NOTE: The forever block is a root block, so it should not be connected inside any other root blocks like start. Ensure that all responses respect this constraint.
 
 display_sensors : This block is used to display given sensor readings on robot phone display.
 For example:- user : Give live sonar reading on robot phone display.
