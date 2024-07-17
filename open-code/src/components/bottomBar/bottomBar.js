@@ -13,8 +13,7 @@ import {Images} from "../../utils/images";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {uploadToGoogleDrive} from "../../services/googleDrive";
 import {
-    getCurrentProject,
-    handleChildBlockInWorkspace
+    getCurrentProject, handleChildBlockInWorkspace
 } from "../../services/workspace";
 import navbarStyle from "../navBar/navbar.module.css";
 import BlueText from "../fonts/blueText";
@@ -40,14 +39,7 @@ export const BottomBar = () => {
     const [error, setError] = useState("");
     const [isSubscriptionExpire, setIsSubscriptionExpire] = useState(null);
     const {
-        isOnline,
-        generate,
-        setGenerateCode,
-        setCode,
-        setDrawer,
-        workspace,
-        isError,
-        setIsError, setCategory,
+        isOnline, generate, setGenerateCode, setCode, setDrawer, workspace, isError, setIsError, setCategory,
     } = useContext(StoreContext);
 
     //handling error states on playground
@@ -98,9 +90,7 @@ export const BottomBar = () => {
                 setDrawer(false);
                 setIsLoader(true);
                 //javaScript generator
-                let code = javascriptGenerator.workspaceToCode(
-                    workspace
-                );
+                let code = javascriptGenerator.workspaceToCode(workspace);
                 const start = workspace.getBlocksByType(PlaygroundConstants.start);
                 const forever = workspace.getBlocksByType(PlaygroundConstants.forever);
                 const detection = workspace.getBlocksByType(PlaygroundConstants.detectionOrUndetection);
@@ -151,36 +141,32 @@ export const BottomBar = () => {
 
                     // Replace comments with an empty string
                     let codeWithoutComments = code.replace(/\/\/.*$/gm, '');
-                    if (start.length > 0)
-                        codeWithoutComments += "\nstart();";
-                    if (forever.length > 0)
-                        codeWithoutComments += "\nforever();";
+                    if (start.length > 0) codeWithoutComments += "\nstart();";
+                    if (forever.length > 0) codeWithoutComments += "\nforever();";
                     setGenerateCode(!generate);
                     console.log(codeWithoutComments);
                     uploadToGoogleDrive(codeWithoutComments, "js").then((res) => {
-                            let linkCode = {
-                                driveLink: res,
-                                projectName: getCurrentProject().projectName
-                            }
-                            const data = {
-                                projectName: getCurrentProject().projectName,
-                                xmlValue: getCurrentProject().xmlValue,
-                                createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
-                            }
-                            uploadToGoogleDrive(data, "xml")   // Call function to upload xml data to Google Drive
-                                .then(async () => {
-                                    setCode(linkCode);
-                                    setCategory(Constants.qr);
-                                    setIsLoader(false);
-                                    setDrawer(true);
-                                })
-                                .catch((err) => {
-                                    errorToast("Failed to upload");
-                                    console.log(err);
-                                    setIsLoader(false);
-                                })
+                        let linkCode = {
+                            driveLink: res, projectName: getCurrentProject().projectName
                         }
-                    ).catch((err) => {
+                        const data = {
+                            projectName: getCurrentProject().projectName,
+                            xmlValue: getCurrentProject().xmlValue,
+                            createdDate: new Date().toLocaleDateString() // Todo on create button add newly created date and time
+                        }
+                        uploadToGoogleDrive(data, "xml")   // Call function to upload xml data to Google Drive
+                            .then(async () => {
+                                setCode(linkCode);
+                                setCategory(Constants.qr);
+                                setIsLoader(false);
+                                setDrawer(true);
+                            })
+                            .catch((err) => {
+                                errorToast("Failed to upload");
+                                console.log(err);
+                                setIsLoader(false);
+                            })
+                    }).catch((err) => {
                         console.log("err::", err)
                         setIsLoader(false);
                         errorToast("Failed to Upload");
@@ -201,9 +187,7 @@ export const BottomBar = () => {
 
     useEffect(() => {
         const handleOrientationChange = () => {
-            setIsLandscape(
-                window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches
-            );
+            setIsLandscape(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
         };
         window.addEventListener("resize", handleOrientationChange);
     }, []);
@@ -223,8 +207,7 @@ export const BottomBar = () => {
         const isUndo = () => {
             const workspace = Blockly.getMainWorkspace();
             if (workspace) {
-                return workspace.undoStack_.length !== 0 ||
-                    (workspace.undoStack_.length === 0 && workspace.redoStack_.length === 0);
+                return workspace.undoStack_.length !== 0 || (workspace.undoStack_.length === 0 && workspace.redoStack_.length === 0);
             }
             return false;
         };
@@ -307,8 +290,7 @@ export const BottomBar = () => {
         </div>
     }
 
-    return (
-        <>
+    return (<>
             {isSubscriptionExpire && <SubscriptionModel isSubscriptionExpire={isSubscriptionExpire}
                                                         setIsSubscriptionExpire={setIsSubscriptionExpire}/>}
             <div
@@ -318,16 +300,12 @@ export const BottomBar = () => {
                                      className={styles.errorDiv}>
                         <div>Compilation failed due to following error(s).</div>
                         <div className={styles.errorItems}>error : &nbsp;&nbsp; {error}</div>
-                    </div>
-                    }
-                    {isLoader &&
-                        <div className={styles.loaderText}>
-                            <CompilationLoader/>
-                            {theme === "dark" ?
-                                <WhiteText text={"Compiling Code..."} extraStyle={styles.textItem}/> :
-                                <BlackText text={"Compiling Code..."} extraStyle={styles.textItem}/>}
-                        </div>
-                    }
+                    </div>}
+                    {isLoader && <div className={styles.loaderText}>
+                        <CompilationLoader/>
+                        {theme === "dark" ? <WhiteText text={"Compiling Code..."} extraStyle={styles.textItem}/> :
+                            <BlackText text={"Compiling Code..."} extraStyle={styles.textItem}/>}
+                    </div>}
                 </div>
                 <div className={styles.buttonsDiv}>
                     {/*generate code*/}
@@ -335,15 +313,12 @@ export const BottomBar = () => {
                                       buttonActive={buttonActive} clickedButton={clickedButton}
                                       setIsAIModelComponent={setIsAIModelComponent} setFile={setFile}/>
                     {/*model upload pop up */}
-                    {
-                        isAIModelComponent &&
-                        <ModelUploadingComponent isAIModelComponent={isAIModelComponent}
-                                                 setIsSubscriptionExpire={setIsSubscriptionExpire}
-                                                 setIsAIModelComponent={setIsAIModelComponent} file={file}/>
-                    }
+                    {isAIModelComponent && <ModelUploadingComponent isAIModelComponent={isAIModelComponent}
+                                                                    setIsSubscriptionExpire={setIsSubscriptionExpire}
+                                                                    setIsAIModelComponent={setIsAIModelComponent}
+                                                                    file={file}/>}
 
                     <div className={styles.operationsDiv}>
-                        <ChatBot setDrawer={setDrawer} setCategory={setCategory}/>
                         {/*undo redo*/}
                         <UndoRedo clickedButton={clickedButton} buttonSelected={buttonSelected}
                                   buttonActive={buttonActive}/>
@@ -354,8 +329,7 @@ export const BottomBar = () => {
                     </div>
                 </div>
             </div>
-        </>
-    );
+        </>);
 }
 
 /**
@@ -401,12 +375,8 @@ function UploadCodeButton(params) {
 
     useEffect(() => {
         const handleOrientationChange = () => {
-            setIsLandscape(
-                window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches
-            );
-            setIsTabletQuery(
-                window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches
-            );
+            setIsLandscape(window.matchMedia("(max-height: 500px) and (max-width: 1000px) and (orientation: landscape)").matches);
+            setIsTabletQuery(window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches);
         };
         window.addEventListener("resize", handleOrientationChange);
     }, []);
@@ -430,18 +400,14 @@ function UploadCodeButton(params) {
         };
     }, [popUpRef, arrowClick]);
 
-    return (
-        <div className={styles.iconMargin + " " + styles.noSpace}
-             style={{width: "25%"}}>
+    return (<div className={styles.iconMargin + " " + styles.noSpace}
+                 style={{width: "25%"}}>
             {/*generate QR code*/}
             <button id={"uploadCode"}
                     className={`${styles.uploadCodeButton} ${buttonSelected === "uploadCode" && buttonActive ? styles.buttonColor : ""}`}
                     name={"uploadCode"} onClick={clickedButton}>
-                {isMobile || isLandscape || isTabletQuery.matches || isDesktopSmallerScreen ? (
-                    ""
-                ) : (
-                    <span className={styles.leftButton + " " + styles.iconMargin}>Upload Code </span>
-                )}
+                {isMobile || isLandscape || isTabletQuery.matches || isDesktopSmallerScreen ? ("") : (
+                    <span className={styles.leftButton + " " + styles.iconMargin}>Upload Code </span>)}
                 <img alt={""}
                      className={styles.iconDiv} src={Images.uploadIcon}/>
             </button>
@@ -460,20 +426,16 @@ function UploadCodeButton(params) {
                     >
                         <img alt="Icon" className={styles.langIcon}
                              src={theme.theme === "dark" ? Images.jsIconDarkTheme : Images.jsIconLightTheme}/>
-                        {theme.theme === "dark" ?
-                            <WhiteText inlineStyle={{fontWeight: 400}} text={"Javascript"}/> :
-                            <BlueText text={"Javascript"}/>
-                        }
+                        {theme.theme === "dark" ? <WhiteText inlineStyle={{fontWeight: 400}} text={"Javascript"}/> :
+                            <BlueText text={"Javascript"}/>}
                     </div>
                     <div onClick={(event) => handleLanguageDropDown(Constants.py, event)}
                          className={`${styles.langItem} ${styles.pyDivMargin} ${(theme.theme === "dark" ? navbarStyle.darkItem : navbarStyle.lightItem)}`}
                     >
                         <img alt="Icon" className={styles.langIcon}
                              src={theme.theme === "dark" ? Images.pyIconDarkTheme : Images.pyIconLightTheme}/>
-                        {theme.theme === "dark" ?
-                            <WhiteText extraStyle={styles.pyText} text={"Python"}/> :
-                            <BlueText extraStyle={styles.pyText} text={"Python"}/>
-                        }
+                        {theme.theme === "dark" ? <WhiteText extraStyle={styles.pyText} text={"Python"}/> :
+                            <BlueText extraStyle={styles.pyText} text={"Python"}/>}
                     </div>
                     <div onClick={() => inputRef.current?.click()}
                          style={{marginTop: 0}}
@@ -481,10 +443,7 @@ function UploadCodeButton(params) {
                     >
                         <img alt="Icon" className={styles.langIcon}
                              src={theme.theme === "dark" ? Images.darkPlusIcon : Images.lightPlusIcon}/>
-                        {theme.theme === "dark" ?
-                            <WhiteText text={"Add Model"}/> :
-                            <BlueText text={"Add Model"}/>
-                        }
+                        {theme.theme === "dark" ? <WhiteText text={"Add Model"}/> : <BlueText text={"Add Model"}/>}
                         <input ref={inputRef} style={{display: "none"}} type="file"
                                accept=".tflite"
                                onChange={handleChange}/>
@@ -494,8 +453,7 @@ function UploadCodeButton(params) {
 
                 </div>
             </Popper>
-        </div>
-    )
+        </div>)
 }
 
 
@@ -504,8 +462,7 @@ function UploadCodeButton(params) {
  */
 function UndoRedo(params) {
     const {clickedButton, buttonSelected, buttonActive} = params
-    return (
-        <div className={styles.buttonMargin + " " + styles.iconMargin}>
+    return (<div className={styles.buttonMargin + " " + styles.iconMargin}>
             <button title={"Undo"}
                     onClick={clickedButton}
                     className={`${styles.buttonStyle} ${styles.minusStyle} ${styles.borderStyle} ${buttonSelected === "undo" && buttonActive ? styles.buttonColor : ""}`}
@@ -517,8 +474,7 @@ function UndoRedo(params) {
                     name={"redo"}>
                 <img alt={""} className={styles.commandSize} src={Images.redoIcon}/>
             </button>
-        </div>
-    )
+        </div>)
 }
 
 
@@ -531,8 +487,7 @@ function UndoRedo(params) {
  */
 function ZoomInOut(params) {
     const {clickedButton, buttonSelected, buttonActive} = params;
-    return (
-        <div className={styles.iconMargin}>
+    return (<div className={styles.iconMargin}>
             <button onClick={clickedButton} title={"Zoom Out"}
                     className={`${styles.buttonStyle} ${styles.minusStyle} ${styles.borderStyle} ${buttonSelected === "minus" && buttonActive ? styles.buttonColor : ""}`}
                     name={"minus"}>
@@ -543,24 +498,5 @@ function ZoomInOut(params) {
                     name={"plus"}>
                 <span className={styles.operationSize}>+</span>
             </button>
-        </div>
-    );
-}
-
-/**
- * function for chatbot window
- * @param params
- * @returns {Element}
- * @constructor
- */
-function ChatBot(params) {
-    const {setDrawer, setCategory} = params;
-    return <>
-        <div onClick={() => {
-            setCategory(Constants.chat);
-            setDrawer(true)
-        }}
-             className={` ${styles.chatButton}`}>AI Assistant
-        </div>
-    </>
+        </div>);
 }

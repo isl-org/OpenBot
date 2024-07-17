@@ -62,3 +62,14 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+
+.crossIcon {
+    height: 18px;
+    width: 18px;
+    cursor: pointer;
+    display: flex;
+    margin-left: 150px;
+
+}
+

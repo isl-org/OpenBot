@@ -72,7 +72,8 @@ const response_structure = `Explain the process according to following rules :
 1. Explain the process of dragging each block from the toolbox and dropping it into the playground. Provide this explanation for each block.
 2. Include a description of the use case for each block.
 3. Suggest various additional blocks that can be added to the playground to enhance the given input.
-4. When there are greetings then it should not add the previous xml to the response
+4. When there are greetings or not related to blocks then it should not add the previous xml to the response and respond accordingly.
+5. Do not give the any enhanced xml in response
 IMPORTANT NOTE: Ensure that all responses respect this above constraint.
 `
 

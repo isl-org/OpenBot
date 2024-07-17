@@ -17,7 +17,7 @@ import {addBlocksToWorkspace} from "../blockly/imageConverter";
  */
 const Chat = ({drawer}) => {
     const theme = useContext(ThemeContext);
-    const {workspace} = useContext(StoreContext);
+    const {workspace, setDrawer} = useContext(StoreContext);
     const [inputValue, setInputValue] = useState('');
     const [loader, setLoader] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
@@ -138,7 +138,6 @@ const Chat = ({drawer}) => {
 
                  }}
     >
-
         {drawer ? <div className={styles.chatHeader}
                        style={{
                            backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
@@ -150,6 +149,9 @@ const Chat = ({drawer}) => {
                      width: theme.theme === Themes.dark ? "25px" : "30px"
                  }}/>
             <h1>{ChatConstants.Playground}</h1>
+            <img onClick={() => setDrawer(false)} alt={"cross icon"} className={styles.crossIcon}
+                 src={theme === Themes.dark ? Images.darkCrossIcon : Images.lightCrossIcon}/>
+
         </div> : ""}
         <div ref={chatContainerRef} style={{height: "100%", overflow: "auto"}}>
             {allChatMessages.map((conversation, index) => (<ChatBox

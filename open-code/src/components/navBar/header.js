@@ -34,7 +34,9 @@ export function Header() {
         isOnline,
         isSessionExpireModal,
         setIsSessionExpireModal,
-        setTimeoutId
+        setTimeoutId,
+        setDrawer,
+        setCategory
     } = useContext(StoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [deleteProject, setDeleteProject] = useState(false);
@@ -102,98 +104,82 @@ export function Header() {
 
     //Loader while getting date of birth
     function SimpleBackdrop() {
-        return (
-            <div>
-                <Backdrop
-                    sx={{color: colors.openBotBlue, zIndex: (theme) => theme.zIndex.drawer + 1}}
-                    open={editProfileLoaderOpen}
-                >
-                    <CircularProgress color="inherit"/>
-                </Backdrop>
-            </div>
-        );
+        return (<div>
+            <Backdrop
+                sx={{color: colors.openBotBlue, zIndex: (theme) => theme.zIndex.drawer + 1}}
+                open={editProfileLoaderOpen}
+            >
+                <CircularProgress color="inherit"/>
+            </Backdrop>
+        </div>);
     }
 
     useEffect(() => {
         auth.onAuthStateChanged(function (currentUser) {
             setUser({
-                photoURL: currentUser?.photoURL,
-                displayName: currentUser?.displayName,
-                email: currentUser?.email,
+                photoURL: currentUser?.photoURL, displayName: currentUser?.displayName, email: currentUser?.email,
             });
         })
     }, [isEditProfileModal, setUser])
 
-    return (
-        <div>
-            {/*delete project modal*/}
-            {deleteProject &&
-                <PopUpModal setVariable={setDeleteProject}
-                            inlineStyle={{backgroundColor: "#E03E1A"}}
-                            headerText={"Delete this file?"}
-                            containText={"You cannot restore this file later."}
-                            buttonText={"Delete"}
-                            deleteLoader={deleteLoader}
-                            setInlineStyling={true}
-                            handleButtonClick={handleDeleteProject}/>
-            }
+    return (<div>
+        {/*delete project modal*/}
+        {deleteProject && <PopUpModal setVariable={setDeleteProject}
+                                      inlineStyle={{backgroundColor: "#E03E1A"}}
+                                      headerText={"Delete this file?"}
+                                      containText={"You cannot restore this file later."}
+                                      buttonText={"Delete"}
+                                      deleteLoader={deleteLoader}
+                                      setInlineStyling={true}
+                                      handleButtonClick={handleDeleteProject}/>}
 
-            <div className={styles.navbarDiv}>
-                {/*logo*/}
-                <LogoSection/>
+        <div className={styles.navbarDiv}>
+            {/*logo*/}
+            <LogoSection/>
+            {/*project name on center when screen is playground*/}
+            <ProjectNameSection anchorEl={anchorEl} setProjectName={setProjectName}
+                                setOpen={setOpen} open={open}
+                                handleClick={handleClick} projectName={projectName}
+                                setDeleteProject={setDeleteProject} theme={theme}/>
+            <div className={styles.navbarIconDiv}>
+                <RightSection setIsHelpCenterModal={setIsHelpCenterModal} toggleTheme={toggleTheme}
+                              location={location} isOnline={isOnline} isAutoSync={isAutoSync}
+                              setIsAutoSync={setIsAutoSync}
+                              theme={theme} setIsProfileModal={setIsProfileModal} user={user} setUser={setUser}/>
 
-                {/*project name on center when screen is playground*/}
-                <ProjectNameSection anchorEl={anchorEl} setProjectName={setProjectName}
-                                    setOpen={setOpen} open={open}
-                                    handleClick={handleClick} projectName={projectName}
-                                    setDeleteProject={setDeleteProject} theme={theme}/>
-
-                <div className={styles.navbarIconDiv}>
-                    <RightSection setIsHelpCenterModal={setIsHelpCenterModal} toggleTheme={toggleTheme}
-                                  location={location} isOnline={isOnline} isAutoSync={isAutoSync}
-                                  setIsAutoSync={setIsAutoSync}
-                                  theme={theme} setIsProfileModal={setIsProfileModal} user={user} setUser={setUser}/>
-
-                    {/* delete edit profile option popup*/}
-                    {isProfileModal &&
-                        <ProfileOptionModal
-                            isProfileModal={isProfileModal}
-                            setIsProfileModal={setIsProfileModal}
-                            setIsEditProfileModal={setIsEditProfileModal}
-                            setIsLogoutModal={setIsLogoutModal}
-                            setEditProfileLoaderOpen={setEditProfileLoaderOpen}
-                            isAutoSync={isAutoSync} setIsAutoSync={setIsAutoSync}
-                            setIsHelpCenterModal={setIsHelpCenterModal} isDobChanged={isDobChanged}/>
-                    }
-                    {/*edit profile pop up */}
-                    {editProfileLoaderOpen && <SimpleBackdrop/>}
-                    {isEditProfileModal &&
-                        <EditProfileModal
-                            isEditProfileModal={isEditProfileModal}
-                            setIsEditProfileModal={setIsEditProfileModal}
-                            user={user} isDob={isDob} setIsDobChanged={setIsDobChanged}/>
-                    }
-                    {/*log out pop up*/}
-                    {isLogoutModal &&
-                        <PopUpModal setVariable={setIsLogoutModal}
-                                    headerText={"Confirm Logout"}
-                                    containText={"Are you sure you want to logout?"}
-                                    buttonText={"Ok"}
-                                    handleButtonClick={handleSignOut}/>
-                    }
-                    {/*help icon pop up*/}
-                    {isHelpCenterModal && <HelpCenterModal isHelpCenterModal={isHelpCenterModal}
-                                                           setIsHelpCenterModal={setIsHelpCenterModal}/>}
-                    {/*Session expire pop up*/}
-                    {isSessionExpireModal && <PopUpModal setVariable={setIsSessionExpireModal}
-                                                         headerText={"Session Expired"}
-                                                         containText={"Your session has expired.Please login again to continue."}
-                                                         buttonText={"Login"}
-                                                         handleButtonClick={handleSignIn}/>}
-                </div>
+                {/* delete edit profile option popup*/}
+                {isProfileModal && <ProfileOptionModal
+                    isProfileModal={isProfileModal}
+                    setIsProfileModal={setIsProfileModal}
+                    setIsEditProfileModal={setIsEditProfileModal}
+                    setIsLogoutModal={setIsLogoutModal}
+                    setEditProfileLoaderOpen={setEditProfileLoaderOpen}
+                    isAutoSync={isAutoSync} setIsAutoSync={setIsAutoSync}
+                    setIsHelpCenterModal={setIsHelpCenterModal} isDobChanged={isDobChanged}/>}
+                {/*edit profile pop up */}
+                {editProfileLoaderOpen && <SimpleBackdrop/>}
+                {isEditProfileModal && <EditProfileModal
+                    isEditProfileModal={isEditProfileModal}
+                    setIsEditProfileModal={setIsEditProfileModal}
+                    user={user} isDob={isDob} setIsDobChanged={setIsDobChanged}/>}
+                {/*log out pop up*/}
+                {isLogoutModal && <PopUpModal setVariable={setIsLogoutModal}
+                                              headerText={"Confirm Logout"}
+                                              containText={"Are you sure you want to logout?"}
+                                              buttonText={"Ok"}
+                                              handleButtonClick={handleSignOut}/>}
+                {/*help icon pop up*/}
+                {isHelpCenterModal && <HelpCenterModal isHelpCenterModal={isHelpCenterModal}
+                                                       setIsHelpCenterModal={setIsHelpCenterModal}/>}
+                {/*Session expire pop up*/}
+                {isSessionExpireModal && <PopUpModal setVariable={setIsSessionExpireModal}
+                                                     headerText={"Session Expired"}
+                                                     containText={"Your session has expired.Please login again to continue."}
+                                                     buttonText={"Login"}
+                                                     handleButtonClick={handleSignIn}/>}
             </div>
         </div>
-    );
+    </div>);
 }
 
 
@@ -214,62 +200,58 @@ function RightSection(params) {
         location,
         isOnline,
         isAutoSync,
-        setIsAutoSync
+        setIsAutoSync,
     } = params
     const themes = useTheme();
     const isMobile = useMediaQuery(themes.breakpoints.down('sm'));
     const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
     const isSignedIn = localStorage.getItem("isSigIn") === "true";
-    const {setIsAutoSyncEnabled} = useContext(StoreContext);
-    return (
-        <>
-            {location.pathname === PathName.playGround && isSignedIn && !isMobile && !tabletQuery && !isMobileLandscape &&
-                <img title={"Auto Sync"} className={`${styles.listStyle} ${isAutoSync && styles.sync}`} alt={"syncIcon"}
-                     src={Images.darkSyncIcon}
-                     onClick={async () => {
-                         if (isOnline) {
-                             if (localStorage.getItem("isSigIn") === "true") {
-                                 setIsAutoSync(true)
-                                 await autoSync().then(() => {
-                                     setIsAutoSyncEnabled(true);
+    const {setIsAutoSyncEnabled, setDrawer, setCategory} = useContext(StoreContext);
+    return (<>
+        {location.pathname === PathName.playGround && !isMobile && !isMobileLandscape &&
+            <ChatBot setDrawer={setDrawer} setCategory={setCategory}/>}
+        {location.pathname === PathName.playGround && isSignedIn && !isMobile && !tabletQuery && !isMobileLandscape &&
+            <img title={"Auto Sync"} className={`${styles.listStyle} ${isAutoSync && styles.sync}`} alt={"syncIcon"}
+                 src={Images.darkSyncIcon}
+                 onClick={async () => {
+                     if (isOnline) {
+                         if (localStorage.getItem("isSigIn") === "true") {
+                             setIsAutoSync(true)
+                             await autoSync().then(() => {
+                                 setIsAutoSyncEnabled(true);
+                                 setIsAutoSync(false);
+                             })
+                                 .catch((e) => {
+                                     errorToast("Something went wrong!")
                                      setIsAutoSync(false);
                                  })
-                                     .catch((e) => {
-                                         errorToast("Something went wrong!")
-                                         setIsAutoSync(false);
-                                     })
-                             } else {
-                                 errorToast("Please sign-In to auto sync.")
-                             }
                          } else {
-                             errorToast(Constants.InternetOffMsg)
+                             errorToast("Please sign-In to auto sync.")
                          }
+                     } else {
+                         errorToast(Constants.InternetOffMsg)
                      }
-                     }
-                     style={{height: 24}}/>
-            }
-            {/*help icon if screen is playground and device is not mobile*/}
-            {location.pathname === PathName.playGround && !isMobile && !tabletQuery && !isMobileLandscape &&
-                <img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon}
-                     onClick={() => setIsHelpCenterModal(true)}
-                     style={{height: 24}} title={"Help"}/>
-            }
-            {/*if screen is playground, and it's mobile than do not show change theme icon and divider*/}
-            {!(location.pathname === PathName.playGround && isMobile) &&
-                <>
-                    {/*change theme icon*/}
-                    <img title={"Theme"} alt="icon" onClick={() => toggleTheme(!theme)}
-                         src={theme === "dark" ? Images.lightThemeIcon : Images.darkThemeIcon}
-                         className={`${theme === "dark" ? styles.lightThemeIcon : styles.darkThemeIcon} ${styles.iconMargin}`}/>
-                    {/*divider*/}
-                    <img alt="icon" src={Images.line} className={`${styles.lineIcon} ${styles.iconMargin}`}/>
-                </>
-            }
-            {/*if signed in then show icon and name or else sign in option*/}
-            <ProfileSignIn setIsProfileModal={setIsProfileModal} user={user} setUser={setUser}/>
-        </>
-    )
+                 }}
+                 style={{height: 24}}/>}
+        {/*help icon if screen is playground and device is not mobile*/}
+        {location.pathname === PathName.playGround && !isMobile && !tabletQuery && !isMobileLandscape &&
+            <img className={styles.listStyle} alt={"helpCenter"} src={Images.helpIcon}
+                 onClick={() => setIsHelpCenterModal(true)}
+                 style={{height: 24}} title={"Help"}/>}
+        {/*if screen is playground, and it's mobile than do not show change theme icon and divider*/}
+        {!(location.pathname === PathName.playGround && isMobile) && <>
+            {/*change theme icon*/}
+            <img title={"Theme"} alt="icon" onClick={() => toggleTheme(!theme)}
+                 src={theme === "dark" ? Images.lightThemeIcon : Images.darkThemeIcon}
+                 className={`${theme === "dark" ? styles.lightThemeIcon : styles.darkThemeIcon} ${styles.iconMargin}`}/>
+            {/*divider*/}
+            <img alt="icon" src={Images.line} className={`${styles.lineIcon} ${styles.iconMargin}`}/>
+        </>}
+        {/*if signed in then show icon and name or else sign in option*/}
+        <ProfileSignIn setIsProfileModal={setIsProfileModal} user={user} setUser={setUser}/>
+
+    </>)
 }
 
 
@@ -282,14 +264,32 @@ function RightSection(params) {
 function ProjectNameSection(params) {
     const {anchorEl, handleClick, projectName, open, setOpen, setDeleteProject, theme, setProjectName} = params
     const location = useLocation();
-    return (
-        //when screen is playground then show project name and if clicked on project name then show projectName with popUp
+    return (//when screen is playground then show project name and if clicked on project name then show projectName with popUp
         location.pathname === PathName.playGround ? !open ?
-                <ProjectName handleClick={handleClick} projectName={projectName}/>
-                :
-                <ProjectNamePopUp anchorEl={anchorEl} setOpen={setOpen} setProjectName={setProjectName}
-                                  handleClick={handleClick} projectName={projectName} open={open}
-                                  setDeleteProject={setDeleteProject} theme={theme}/>
-            : ""
-    )
+            <ProjectName handleClick={handleClick} projectName={projectName}/> :
+            <ProjectNamePopUp anchorEl={anchorEl} setOpen={setOpen} setProjectName={setProjectName}
+                              handleClick={handleClick} projectName={projectName} open={open}
+                              setDeleteProject={setDeleteProject} theme={theme}/> : "")
+}
+
+/**
+ * function for chatbot window
+ * @param params
+ * @returns {Element}
+ * @constructor
+ */
+function ChatBot(params) {
+    const {setDrawer, setCategory} = params;
+    return <>
+        <div onClick={() => {
+            setCategory(Constants.chat);
+            setDrawer(true)
+        }}
+        >
+            <img src={Images.chatIcon}
+                 width={"30"}
+                 alt="Chat Icon"
+                 className={`${styles.listStyle}`}/>
+        </div>
+    </>
 }

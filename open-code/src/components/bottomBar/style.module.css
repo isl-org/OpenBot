@@ -72,20 +72,6 @@
     cursor: pointer;
 }
 
-.chatButton {
-    background-color: #0071C5;
-    color: white;
-    border: black;
-    border-radius: 0.4rem;
-    height: 3.1rem;
-    width: 7rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: Gilroy-Medium, sans-serif;
-}
-
 .features {
     display: flex;
     align-items: center;
