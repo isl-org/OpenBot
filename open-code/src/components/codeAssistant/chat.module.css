@@ -3,6 +3,7 @@
     justify-content: space-between;
     height: 100%;
     flex-direction: column;
+    font-family: Gilroy-Medium, sans-serif;
 }
 
 .chatBottomBar {
@@ -51,7 +52,6 @@
     font-family: Gilroy-Medium, sans-serif;
     padding: 10px;
     display: flex;
-    justify-content: flex-start;
     align-items: center;
     gap: 10px;
     font-size: 12px;
@@ -69,7 +69,7 @@
     width: 18px;
     cursor: pointer;
     display: flex;
-    margin-left: 150px;
+    margin-left: auto;
 
 }
 

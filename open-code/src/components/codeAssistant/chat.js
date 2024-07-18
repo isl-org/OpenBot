@@ -121,12 +121,11 @@ const Chat = ({drawer}) => {
     // Effect to scroll chat container to bottom when messages or AI message changes
 
     useEffect(() => {
-        if (chatContainerRef.current) {
+        if (chatContainerRef.current&& chatContainerRef.current.scrollHeight !== null) {
             {
-                if (chatContainerRef.current.scrollHeight !== null) {
                     chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
                 }
-            }
+
         }
     }, [allChatMessages, currentMessage.AIMessage]);
 
@@ -138,20 +137,22 @@ const Chat = ({drawer}) => {
 
                  }}
     >
-        {drawer ? <div className={styles.chatHeader}
+        {drawer ? <div
                        style={{
                            backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
                            color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
                        }}
         >
-            <img src={theme.theme === Themes.dark ? Images.aiSupportWhite : Images.aiSupport} alt="Chat Assistant Logo"
-                 style={{
-                     width: theme.theme === Themes.dark ? "25px" : "30px"
-                 }}/>
-            <h1>{ChatConstants.Playground}</h1>
-            <img onClick={() => setDrawer(false)} alt={"cross icon"} className={styles.crossIcon}
-                 src={theme === Themes.dark ? Images.darkCrossIcon : Images.lightCrossIcon}/>
-
+            <div className={styles.chatHeader}>
+                <img src={theme.theme === Themes.dark ? Images.aiSupportWhite : Images.aiSupport}
+                     alt="Chat Assistant Logo"
+                     style={{
+                         width: theme.theme === Themes.dark ? "25px" : "30px"
+                     }}/>
+                <h1>{ChatConstants.Playground}</h1>
+                <img onClick={() => setDrawer(false)} alt={"cross icon"} className={styles.crossIcon}
+                     src={theme === Themes.dark ? Images.darkCrossIcon : Images.lightCrossIcon}/>
+            </div>
         </div> : ""}
         <div ref={chatContainerRef} style={{height: "100%", overflow: "auto"}}>
             {allChatMessages.map((conversation, index) => (<ChatBox
