@@ -123,7 +123,7 @@ const Chat = ({drawer}) => {
     useEffect(() => {
         if (chatContainerRef.current && chatContainerRef.current.scrollHeight !== null) {
 
-                    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
 
 
         }
@@ -138,10 +138,10 @@ const Chat = ({drawer}) => {
                  }}
     >
         {drawer ? <div
-                       style={{
-                           backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
-                           color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
-                       }}
+            style={{
+                backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : "#FFFFFF",
+                color: theme.theme === Themes.dark ? Colors.whiteFont : "#000000",
+            }}
         >
             <div className={styles.chatHeader}>
                 <img src={theme.theme === Themes.dark ? Images.aiSupportWhite : Images.aiSupport}

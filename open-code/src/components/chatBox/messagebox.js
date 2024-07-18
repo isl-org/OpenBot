@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import styles from './messageBox.module.css';
 import mstyles from './markDown.module.css';
-import { ThemeContext } from '../../App';
-import { ChatConstants, Themes } from '../../utils/constants';
-import { colors as Colors } from '../../utils/color';
+import {ThemeContext} from '../../App';
+import {ChatConstants, Themes} from '../../utils/constants';
+import {colors as Colors} from '../../utils/color';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -28,7 +28,7 @@ const ChatBox = (props) => {
             {!conversation.userMessage && (
                 <iframe
                     height='250'
-                    style={{ border: 'none' }}
+                    style={{border: 'none'}}
                     src={ChatConstants.videoURl}
                     title="openBot"
                 ></iframe>
@@ -62,7 +62,7 @@ const ChatBox = (props) => {
  * @returns {React.JSX.Element}
  * @constructor
  */
-const UserMessage = ({ timestamp, message }) => (
+const UserMessage = ({timestamp, message}) => (
     <div className={styles.userMessage} title={timestamp}>
         <div>{message}</div>
         <div className={styles.userTimestamp}>{timestamp}</div>
@@ -124,17 +124,12 @@ const AssistantResponse = ({
         }
     }, [message, paused, allChatMessages.length, id, setIsTyping, setLoader]);
 
+    //useEffect for auto scrolling the content
     useEffect(() => {
         if (chatContainerRef.current && chatContainerRef.current.scrollHeight !== null) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
-    }, [displayedMessage, chatContainerRef]);
-
-    useEffect(() => {
-        if (loader && chatContainerRef.current) {
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-        }
-    }, [loader, chatContainerRef, allChatMessages.length]);
+    }, [displayedMessage, chatContainerRef, loader, allChatMessages.length]);
 
     return (
         <div
@@ -160,27 +155,27 @@ const AssistantResponse = ({
                     <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
-                            h1: ({ node, ...props }) => <h1
+                            h1: ({node, ...props}) => <h1
                                 className={`${mstyles.heading1} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
-                            h2: ({ node, ...props }) => <h2
+                            h2: ({node, ...props}) => <h2
                                 className={`${mstyles.heading2} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
-                            h3: ({ node, ...props }) => <h3
+                            h3: ({node, ...props}) => <h3
                                 className={`${mstyles.heading3} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
-                            p: ({ node, ...props }) => <p
+                            p: ({node, ...props}) => <p
                                 className={`${mstyles.paragraph} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
-                            strong: ({ node, ...props }) => <strong
+                            strong: ({node, ...props}) => <strong
                                 className={`${mstyles.strong} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
-                            em: ({ node, ...props }) => <em
+                            em: ({node, ...props}) => <em
                                 className={`${mstyles.em} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
-                            ul: ({ node, ...props }) => <ul
+                            ul: ({node, ...props}) => <ul
                                 className={`${mstyles.list} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
-                            ol: ({ node, ...props }) => <ol
+                            ol: ({node, ...props}) => <ol
                                 className={`${mstyles.orderedList} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
-                            li: ({ node, ...props }) => <li
+                            li: ({node, ...props}) => <li
                                 className={`${mstyles.listItem} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
-                            blockquote: ({ node, ...props }) => <blockquote
+                            blockquote: ({node, ...props}) => <blockquote
                                 className={`${mstyles.blockquote} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
-                            code: ({ node, ...props }) => <code
+                            code: ({node, ...props}) => <code
                                 className={`${mstyles.code} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
                         }}
                     >
