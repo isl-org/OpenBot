@@ -22,7 +22,7 @@ const ChatBox = (props) => {
         <div
             className={styles.chatBubble}
             style={{
-                color: theme.theme === Themes.dark? Colors.whiteFont : '#FFFFFF',
+                color: theme.theme === Themes.dark ? Colors.whiteFont : '#FFFFFF',
             }}
         >
             {!conversation.userMessage && (
@@ -30,6 +30,7 @@ const ChatBox = (props) => {
                     height='250'
                     style={{ border: 'none' }}
                     src={ChatConstants.videoURl}
+                    title="openBot"
                 ></iframe>
             )}
             {conversation.userMessage && (
@@ -95,13 +96,12 @@ const AssistantResponse = ({
                                chatContainerRef,
                            }) => {
     const [displayedMessage, setDisplayedMessage] = useState('');
-    const [showXml, setShowXml] = useState(false);
     const theme = useContext(ThemeContext);
 
     useEffect(() => {
         setLoader(message === '');
 
-        if (message!== '') {
+        if (message !== '') {
             let index = 0;
 
             const regex = /<xml xmlns="https:\/\/developers.google.com\/blockly\/xml">[\s\S]*?<\/xml>/;
@@ -122,61 +122,66 @@ const AssistantResponse = ({
                 return () => clearInterval(interval);
             }
         }
-    }, [message, paused]);
+    }, [message, paused, allChatMessages.length, id, setIsTyping, setLoader]);
 
     useEffect(() => {
-        if (chatContainerRef.current) {
-            if (chatContainerRef.current.scrollHeight!== null) {
-                chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-            }
+        if (chatContainerRef.current && chatContainerRef.current.scrollHeight !== null) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [displayedMessage, chatContainerRef]);
+
+    useEffect(() => {
+        if (loader && chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    }, [loader, chatContainerRef, allChatMessages.length]);
+
     return (
         <div
             className={styles.responseBox}
             title={timestamp}
             style={{
-                backgroundColor: theme.theme === Themes.dark? Colors.blackPopupBackground : '#FFFFFF',
-                color: theme.theme === Themes.dark? Colors.whiteFont : '#000000',
+                backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : '#FFFFFF',
+                color: theme.theme === Themes.dark ? Colors.whiteFont : '#000000',
             }}
         >
-            {loader && allChatMessages.length === id? (
+            {loader && allChatMessages.length === id ? (
                 <div
-                    className={`${styles.loader} ${theme.theme === Themes.dark? styles.whiteLoader : styles.loader}`}
+                    className={`${styles.loader} ${theme.theme === Themes.dark ? styles.whiteLoader : styles.loader}`}
                 ></div>
             ) : (
                 <div
                     className={styles.responseContent}
                     style={{
-                        backgroundColor: theme.theme === Themes.dark? Colors.blackPopupBackground : '#FFFFFF',
-                        color: theme.theme === Themes.dark? Colors.whiteFont : '#000000',
+                        backgroundColor: theme.theme === Themes.dark ? Colors.blackPopupBackground : '#FFFFFF',
+                        color: theme.theme === Themes.dark ? Colors.whiteFont : '#000000',
                     }}
                 >
                     <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
-                            h1: ({node,...props}) => <h1
-                                className={`${mstyles.heading1} ${theme.theme === Themes.dark? mstyles.darkTheme : ''}`} {...props} />,
-                            h2: ({node,...props}) => <h2
-                                className={`${mstyles.heading2} ${theme.theme === Themes.dark? mstyles.darkTheme : ''}`} {...props} />,
-                            h3: ({node,...props}) => <h3
-                                className={`${mstyles.heading3} ${theme.theme === Themes.dark? mstyles.darkTheme : ''}`} {...props} />,
-                            p: ({node,...props}) => <p
-                                className={`${mstyles.paragraph} ${theme.theme === Themes.dark? mstyles.darkTheme : ''}`} {...props} />,
-                            strong: ({node,...props}) => <strong
-                                className={`${mstyles.strong} ${theme.theme === Themes.dark? mstyles.darkTheme : ''}`} {...props} />,
-                            em: ({node,...props}) => <em
-                                className={`${mstyles.em} ${theme.theme === Themes.dark? mstyles.darkTheme : ''}`} {...props} />,
-                            ul: ({node,...props}) => <ul
-                                className={`${mstyles.list} ${theme.theme === Themes.dark? mstyles.darkTheme : ''}`} {...props} />,
-                            ol: ({node,...props}) => <ol
-                                className={`${mstyles.orderedList} ${theme.theme === Themes.dark? mstyles.darkTheme : ''}`} {...props} />,
-                            li: ({node,...props}) => <li
-                                className={`${mstyles.listItem} ${theme.theme === Themes.dark? mstyles.darkTheme : ''}`} {...props} />,
-                            blockquote: ({node,...props}) => <blockquote
-                                className={`${mstyles.blockquote} ${theme.theme === Themes.dark? mstyles.darkTheme : ''}`} {...props} />,
-                            code: ({node,...props}) => <code
-                                className={`${mstyles.code} ${theme.theme === Themes.dark? mstyles.darkTheme : ''}`} {...props} />,
+                            h1: ({ node, ...props }) => <h1
+                                className={`${mstyles.heading1} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            h2: ({ node, ...props }) => <h2
+                                className={`${mstyles.heading2} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            h3: ({ node, ...props }) => <h3
+                                className={`${mstyles.heading3} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            p: ({ node, ...props }) => <p
+                                className={`${mstyles.paragraph} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            strong: ({ node, ...props }) => <strong
+                                className={`${mstyles.strong} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            em: ({ node, ...props }) => <em
+                                className={`${mstyles.em} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            ul: ({ node, ...props }) => <ul
+                                className={`${mstyles.list} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            ol: ({ node, ...props }) => <ol
+                                className={`${mstyles.orderedList} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            li: ({ node, ...props }) => <li
+                                className={`${mstyles.listItem} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            blockquote: ({ node, ...props }) => <blockquote
+                                className={`${mstyles.blockquote} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
+                            code: ({ node, ...props }) => <code
+                                className={`${mstyles.code} ${theme.theme === Themes.dark ? mstyles.darkTheme : ''}`} {...props} />,
                         }}
                     >
                         {displayedMessage}

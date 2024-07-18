@@ -121,10 +121,10 @@ const Chat = ({drawer}) => {
     // Effect to scroll chat container to bottom when messages or AI message changes
 
     useEffect(() => {
-        if (chatContainerRef.current&& chatContainerRef.current.scrollHeight !== null) {
-            {
+        if (chatContainerRef.current && chatContainerRef.current.scrollHeight !== null) {
+
                     chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-                }
+
 
         }
     }, [allChatMessages, currentMessage.AIMessage]);
