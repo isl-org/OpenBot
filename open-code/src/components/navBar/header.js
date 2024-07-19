@@ -35,8 +35,6 @@ export function Header() {
         isSessionExpireModal,
         setIsSessionExpireModal,
         setTimeoutId,
-        setDrawer,
-        setCategory
     } = useContext(StoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [deleteProject, setDeleteProject] = useState(false);
@@ -207,10 +205,10 @@ function RightSection(params) {
     const tabletQuery = window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches;
     const isMobileLandscape = window.matchMedia("(max-height:440px) and (max-width: 1000px) and (orientation: landscape)").matches
     const isSignedIn = localStorage.getItem("isSigIn") === "true";
-    const {setIsAutoSyncEnabled, setDrawer, setCategory} = useContext(StoreContext);
+    const {setIsAutoSyncEnabled, setDrawer, setCategory,drawer} = useContext(StoreContext);
     return (<>
         {location.pathname === PathName.playGround && !isMobile && !isMobileLandscape &&
-            <ChatBot setDrawer={setDrawer} setCategory={setCategory}/>}
+            <ChatBot setDrawer={setDrawer} setCategory={setCategory} drawer={drawer}/>}
         {location.pathname === PathName.playGround && isSignedIn && !isMobile && !tabletQuery && !isMobileLandscape &&
             <img title={"Auto Sync"} className={`${styles.listStyle} ${isAutoSync && styles.sync}`} alt={"syncIcon"}
                  src={Images.darkSyncIcon}
@@ -279,17 +277,21 @@ function ProjectNameSection(params) {
  * @constructor
  */
 function ChatBot(params) {
-    const {setDrawer, setCategory} = params;
-    return <>
-        <div onClick={() => {
-            setCategory(Constants.chat);
-            setDrawer(true)
-        }}
-        >
-            <img src={Images.chatIcon}
-                 width={"30"}
-                 alt="Chat Icon"
-                 className={`${styles.listStyle}`}/>
+    const { setDrawer, setCategory, drawer } = params;
+
+    const handleChatClick = () => {
+        setCategory(Constants.chat);
+        setDrawer(!drawer);  // Toggle the drawer state
+    };
+
+    return (
+        <div onClick={handleChatClick}>
+            <img
+                src={Images.chatIcon}
+                width="30"
+                alt="Chat Icon"
+                className={styles.listStyle}
+            />
         </div>
-    </>
+    );
 }

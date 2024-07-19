@@ -84,32 +84,3 @@
     border-radius: 9px;
     cursor: pointer;
 }
-
-.toggleXmlButton {
-    background-color: #007bff;
-    border: none;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-top: 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.toggleXmlButton:hover {
-    background-color: #0056b3;
-}
-
-.xmlContent {
-    background-color: #f1f1f1;
-    color: #333;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top: 10px;
-    white-space: pre-wrap;
-}

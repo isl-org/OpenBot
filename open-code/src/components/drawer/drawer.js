@@ -77,7 +77,9 @@ export function RightDrawer() {
                                         height: "100%",
                                         display: "flex",
                                         alignItems: "center",
-                                        backgroundColor: !drawer && colors.chatBackgroundColor
+                                         backgroundColor : !drawer
+                                            ? (theme === Themes.dark ? colors.blackPopupBackground : colors.chatBackgroundColor)
+                                            : undefined
                                     }}><RightSlider/></div>
                                     <Chat drawer={drawer}/>
                                 </div>
