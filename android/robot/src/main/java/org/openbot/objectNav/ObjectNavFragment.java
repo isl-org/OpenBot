@@ -617,7 +617,12 @@ public class ObjectNavFragment extends CameraFragment {
           if (!PermissionUtils.hasControllerPermissions(requireActivity()))
             requestPermissionLauncher.launch(Constants.PERMISSIONS_CONTROLLER);
           else connectPhoneController();
-
+          break;
+        case WEBSERVER:
+          binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_server);
+          if (!PermissionUtils.hasControllerPermissions(requireActivity()))
+            requestPermissionLauncher.launch(Constants.PERMISSIONS_CONTROLLER);
+          else connectWebController();
           break;
       }
       Timber.d("Updating  controlMode: %s", controlMode);
@@ -650,6 +655,16 @@ public class ObjectNavFragment extends CameraFragment {
     Enums.DriveMode oldDriveMode = currentDriveMode;
     // Currently only dual drive mode supported
     setDriveMode(Enums.DriveMode.DUAL);
+    binding.controllerContainer.driveMode.setAlpha(0.5f);
+    binding.controllerContainer.driveMode.setEnabled(false);
+    preferencesManager.setDriveMode(oldDriveMode.getValue());
+  }
+
+  private void connectWebController() {
+    phoneController.connectWebServer();
+    Enums.DriveMode oldDriveMode = currentDriveMode;
+    // Currently only dual drive mode supported
+    setDriveMode(Enums.DriveMode.GAME);
     binding.controllerContainer.driveMode.setAlpha(0.5f);
     binding.controllerContainer.driveMode.setEnabled(false);
     preferencesManager.setDriveMode(oldDriveMode.getValue());

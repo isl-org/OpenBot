@@ -149,11 +149,10 @@ class AudioPlayer : AVPlayer, AVSpeechSynthesizerDelegate  {
             speechSynthesizer.speak(utterance)
         }
     }
-    
+
     func playInputString(input:String){
         if(input != ""){
             playString(input: input)
         }
     }
 }
-

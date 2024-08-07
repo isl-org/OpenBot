@@ -22,7 +22,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -38,7 +37,6 @@ import org.openbot.googleServices.GoogleServices;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.nononsenseapps.filepicker.Utils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.openbot.R;
 import org.openbot.databinding.FragmentModelManagementBinding;
 import org.openbot.googleServices.GoogleServices;

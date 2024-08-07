@@ -1,0 +1,141 @@
+/* Light Theme */
+.heading1 {
+    font-size: 18px;
+    margin-bottom: 0.5em;
+    color: #0071c5;
+}
+
+.heading2 {
+    font-size: 15px;
+    margin-bottom: 0.5em;
+    color:#0071c5;
+}
+.heading3 {
+    font-size: 16px;
+    margin-bottom: 0.5em;
+    color:#0071c5;
+}
+
+.paragraph {
+    margin-bottom: 0.5em;
+    font-size: 15px;
+}
+
+.strong {
+    font-weight: bold;
+    color: #000000;
+}
+
+.em {
+    font-style: italic;
+    color: #555555;
+}
+
+.list {
+    padding-left: 20px;
+    color: #000000;
+    margin-bottom: 0.5em;
+}
+
+.orderedList {
+    margin-bottom: 0.5em;
+    padding-left: 20px;
+    list-style-type: decimal;
+    color:#0071c5;
+}
+
+.listItem {
+    margin-bottom: 0.5em;
+    color: #000000;
+
+}
+
+.blockquote {
+    margin: 1em 0;
+    padding-left: 1em;
+    border-left: 4px solid #CCCCCC;
+    background-color: #F5F5F5;
+    color: #666666;
+}
+
+/* Light Theme */
+.code {
+    font-family: monospace;
+    background-color: #F5F5F5;
+    padding: 2px 4px;
+    border-radius: 3px;
+    color: #d56235;
+    font-size: 14px;
+}
+
+/* Dark Theme */
+.darkTheme .heading1 {
+    font-size: 18px;
+    margin-bottom: 0.5em;
+    color: #458ff7;
+
+}
+
+.darkTheme .heading2 {
+    font-size: 16px;
+    margin-bottom: 0.5em;
+    color:#458ff7;
+}
+
+.darkTheme.heading3 {
+    font-size: 16px;
+    margin-bottom: 0.5em;
+    color: #458ff7;
+}
+
+.darkTheme .paragraph {
+    margin-bottom: 1em;
+    color: #FFFFFF;
+    font-size: 15px;
+}
+
+.darkTheme .strong {
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.darkTheme .em {
+    font-style: italic;
+    color: #1d6c01;
+}
+
+.darkTheme .list {
+    padding-left: 20px;
+    color: #FFFFFF;
+    margin-bottom: 0.5em;
+}
+
+.darkTheme .orderedList {
+    padding-left: 20px;
+    list-style-type: decimal;
+    color: #FFFFFF;
+    margin-bottom: 0.5em;
+}
+
+.darkTheme .listItem {
+    margin-bottom: 0.5em;
+    color: #FFFFFF;
+
+}
+
+.darkTheme .blockquote {
+    margin: 1em 0;
+    padding-left: 1em;
+    border-left: 4px solid #CCCCCC;
+    background-color: #F5F5F5;
+    color: #666666;
+}
+
+.darkTheme .code {
+    font-family: monospace;
+    padding: 2px 4px;
+    border-radius: 3px;
+    color: #d56235;
+    background-color: transparent;
+    font-size: 14px;
+}

@@ -13,7 +13,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {checkFileExistsInFolder, getFolderId, getShareableLink} from "../../services/googleDrive";
 import {RightDrawer} from "../drawer/drawer";
 import {useLocation} from "react-router-dom";
-
 Blockly.setLocale(locale);
 
 /**
@@ -240,6 +239,7 @@ function BlocklyComponent(props) {
             primaryWorkspace.current.dispose();
         }
     }, [theme, toolbox, blocklyDiv, props, isAutoSyncEnabled]);
+
 
     // Return the blockly div and hidden toolbox
     return (

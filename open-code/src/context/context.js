@@ -58,7 +58,7 @@ export default ({
         isDob, setIsDob,
         isAutoSyncEnabled, setIsAutoSyncEnabled,
         isSessionExpireModal, setIsSessionExpireModal,
-        setIsSessionExpire, isTimeoutId, setTimeoutId
+        setIsSessionExpire, isTimeoutId, setTimeoutId,
     }
     return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }

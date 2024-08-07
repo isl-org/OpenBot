@@ -63,7 +63,7 @@ class jsEvaluator {
         runOpenBotThreadClass = nil
         bluetooth.sendDataFromJs(payloadData: "c" + String(0) + "," + String(0) + "\n");
     }
-    
+
     /**
      function defined for all the methods of openBot blockly
      */
@@ -272,11 +272,11 @@ class jsEvaluator {
                 let onLostFrames: @convention(block) (String, Int, String) -> Void = { (object, frames, task) in
                     self.runOpenBotThreadClass?.onLostFrames(object: object, frames: frames, task: task);
                 }
-                
+
                 let displaySensorData: @convention(block) (String) -> Void = { (inputString) in
                     self.runOpenBotThreadClass?.displaySensorData(inputString: inputString);
                 }
-                
+
                 let displayString: @convention(block) (String) -> Void = { (inputString) in
                     self.runOpenBotThreadClass?.displayString(inputString: inputString);
                 }
@@ -811,8 +811,11 @@ class jsEvaluator {
                 break;
             case "gamepad":
                 gameController.selectedControlMode = .GAMEPAD;
-                preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
+                preferencesManager.setControlMode(value: ControlMode.WEB.rawValue);
                 break;
+            case "web":
+                gameController.selectedControlMode = .WEB;
+                preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
             default:
                 break;
             }
@@ -1076,14 +1079,14 @@ class jsEvaluator {
             }
             taskStorage.addAttribute(classType: object, task: task, frames: frames, type: "unDetect");
         }
-        
+
         func displaySensorData(inputString: String){
             if isCancelled {
                 return
             }
             NotificationCenter.default.post(name: .displayItems, object: inputString);
         }
-        
+
         func displayString(inputString: String){
             if isCancelled {
                 return
@@ -1092,4 +1095,3 @@ class jsEvaluator {
         }
     }
 }
-

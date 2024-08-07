@@ -10,6 +10,7 @@ export const colors = {
     whiteBackground: '#FFFFFF',
     blackPopupBackground: "#303030",
     blocklyBackground: "#202020",
+    chatBackgroundColor: "#d0e4f5"
 }
 
 export const buttonColor = {

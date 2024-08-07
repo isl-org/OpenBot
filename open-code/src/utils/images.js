@@ -48,8 +48,16 @@ import lightSyncIcon from "../assets/images/icon/lightSyncIcon.png"
 import darkPlusIcon from "../assets/images/icon/darkPlus.png"
 import lightPlusIcon from "../assets/images/icon/lightPlus.png"
 import subscriptionExpire from "../assets/images/subscription-expire.png"
+import sendIcon from "../assets/images/sendIcon.png"
+import pause from "../assets/images/icon/pause.png"
+
+import aiSupport from "../assets/images/icon/aiSupport.png"
+import aiSupportWhite from "../assets/images/icon/aiSupportWhite.png"
+import openBotLogo from "../assets/images/icon/open-bot-logo.png"
+import chatIcon from "../assets/images/icon/chatIcon.png"
+import darkChatIcon from "../assets/images/icon/darkChatIcon.png"
 /**
- * Images used in opeBot-Playgorund is listed here
+ * Images used in opeBot-Playground is listed here
  * @type {{lightThemeIcon: *, darkPencilIcon: *, line: *, undoIcon: *, pencilIcon: *, profileImage: *, laptop: *, lightCrossIcon: *, login: *, gameIcon: *, joystickIcon: *, gamepadIcon: *, cloud: *, infoLight: *, logo: *, blueTheme: *, crossIcon: *, darkDots: *, phoneIcon: *, logoutIcon: *, Carousal2Dark: *, dots: *, uploadIcon: *, redoIcon: *, Carousal3Dark: *, avatar: *, darkThemeIcon: *, errorEmojiIcon: *, editProfileIcon: *, darkUserIcon: *, darkLogoutIcon: *, dualDriveIcon: *, dragDropWhite: *, dragDropDark: *, userIcon: *, darkCrossIcon: *, successfulEmojiIcon: *, helpIcon: *, Carousal3: *, Carousal2: *}}
  */
 export const Images = {
@@ -102,5 +110,13 @@ export const Images = {
     lightSyncIcon: lightSyncIcon,
     darkPlusIcon: darkPlusIcon,
     lightPlusIcon: lightPlusIcon,
-    subscriptionExpire:subscriptionExpire
+    subscriptionExpire:subscriptionExpire,
+    sendIcon: sendIcon,
+    aiSupport: aiSupport,
+   openBotLogo: openBotLogo,
+    pause:pause,
+    aiSupportWhite: aiSupportWhite,
+    chatIcon:chatIcon,
+    darkChatIcon: darkChatIcon,
+
 }

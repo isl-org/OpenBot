@@ -10,4 +10,4 @@
 
 Sie können den Startbildschirm mit Ihren eigenen gewünschten Assets anpassen, indem Sie die Bilddateien in diesem Verzeichnis ersetzen.
 
-Sie können dies auch tun, indem Sie das Xcode-Projekt Ihres Flutter-Projekts mit `open ios/Runner.xcworkspace` öffnen, `Runner/Assets.xcassets` im Projektnavigator auswählen und die gewünschten Bilder einfügen.
+Sie können dies auch tun, indem Sie das Xcode-Projekt Ihres Flutter-Projekts mit `open ios/Runner.xcworkspace` öffnen, `Runner/Assets.xcassets` im Projekt-Navigator auswählen und die gewünschten Bilder einfügen.

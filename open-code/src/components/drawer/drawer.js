@@ -13,6 +13,7 @@ import QrCode from "../qrcode/qrcode";
 import {Constants} from "../../utils/constants";
 import CodeEditor from "../editor/codeEditor";
 import {Themes} from "../../utils/constants"
+import Chat from "../codeAssistant/chat";
 
 /**
  * QrDrawer component renders a drawer with a QR code and some instructions on how to use it.
@@ -21,7 +22,7 @@ import {Themes} from "../../utils/constants"
  */
 export function RightDrawer() {
     const {theme} = useContext(ThemeContext) // Retrieve the current theme from the ThemeContext
-    const {drawer, code, category} = useContext(StoreContext)  // Retrieve the drawer state from the StoreContext
+    const {drawer, code, category, currentAssistantXml, setCurrentAssistantXml} = useContext(StoreContext)  // Retrieve the drawer state from the StoreContext
     const themes = useTheme();// Get the current theme breakpoints using useTheme hook
     const isMobile = useMediaQuery(themes.breakpoints.down("sm"));// Determine if the screen is a mobile device using useMediaQuery hook
     const [isLandscape, setIsLandscape] = useState(window.matchMedia("(max-height: 450px) and (max-width: 1000px) and (orientation: landscape)").matches);
@@ -34,6 +35,7 @@ export function RightDrawer() {
         window.addEventListener("resize", handleOrientationChange);
     }, []);
 
+
     return (
         <>
             {(code || category !== Constants.qr) &&
@@ -44,12 +46,13 @@ export function RightDrawer() {
                             width: 0,
                             flexShrink: 0,
                             '& .MuiDrawer-paper': {
-                                width: drawer ? category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' : isLandscape ? '50%' : isTabletQuery ? '45%' : '25%' : isMobile ? isLandscape ? '3%' : '6%' : '2%',
+                                width: drawer ? category === Constants.chat ? isMobile ? '85%' : isLandscape ? '60%' : '40%' : category !== Constants.qr ? isMobile ? isLandscape ? '35%' : '62%' : '40%' : isMobile ? isLandscape ? '32%' : '62%' : isLandscape ? '50%' : isTabletQuery ? '45%' : '25%' : isMobile ? isLandscape ? '3%' : '6%' : category === Constants.chat ? "1.7%" : '2%',
                                 borderLeft: drawer ? theme === Themes.dark ? "0.5px solid gray" : '1px solid rgba(0, 0, 0, 0.2)' : "0.0",
                                 backgroundColor: theme === Themes.dark ? colors.blackBackground : colors.whiteBackground,
                                 color: theme === Themes.dark ? colors.whiteFont : colors.blackFont,
-                                top: isLandscape ? "4rem" : isTabletQuery ? "6rem" : "5rem",
-                                bottom: isMobile ? "9%" : isLandscape ? "18%" : isTabletQuery ? "4.4rem" : "4.4rem",
+                                top: isTabletQuery ? "6rem" : isLandscape ? "4rem" : "5rem",
+                                bottom: category !== Constants.chat ? (isMobile ? "9%" : isLandscape ? "18%" : "4.4rem") : 'none',
+                                height: category === Constants.chat ? isMobile ? "calc(100% - (9% + 5rem))" : isTabletQuery ? "calc(100% - (10.4rem))" : isLandscape ? "calc(100% - (8.4rem))" : "calc(100% - 9.4rem)" : 'none'
                             },
                         }}
                         // Drawer is always visible and can only be closed programmatically
@@ -67,14 +70,29 @@ export function RightDrawer() {
                                     </div>
                                 </div>
                             </> :
-                            <div style={{
-                                display: "flex",
-                                height: isLandscape ? "65.5%" : isMobile ? "80%" : "79%",
-                                position: "relative",
-                                overflow: "scroll"
-                            }}>
-                                <CodeEditor/>
-                            </div>
+                            category === Constants.chat ?
+                                <div style={{height: "100%"}}>
+                                    <div style={{
+                                        position: "absolute",
+                                        height: "100%",
+                                        display: "flex",
+                                        alignItems: "center",
+                                         backgroundColor : !drawer
+                                            ? (theme === Themes.dark ? colors.blackPopupBackground : colors.chatBackgroundColor)
+                                            : undefined
+                                    }}><RightSlider/></div>
+                                    <Chat drawer={drawer}/>
+                                </div>
+                                :
+                                <div style={{
+                                    display: "flex",
+                                    height: isLandscape ? "65.5%" : isMobile ? "80%" : "79%",
+                                    position: "relative",
+                                    overflow: "scroll"
+                                }}>
+                                    <CodeEditor currentAssistantXml={currentAssistantXml}
+                                                setCurrentAssistantXml={setCurrentAssistantXml}/>
+                                </div>
 
                         }
                     </Drawer>
@@ -137,4 +155,3 @@ export const DrawerBody = (props) => {
         </>
     )
 }
-

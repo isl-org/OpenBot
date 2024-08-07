@@ -324,7 +324,7 @@ javascriptGenerator.forBlock['multipleObjectTracking'] = function (block) {
 };
 
 //Javascript generated function for AI on frame detection
-javascriptGenerator.forBlock['variableDetection'] = function (block, generator) {
+javascriptGenerator.forBlock['objectDetection'] = function (block, generator) {
     let labels = block.getFieldValue('labels');
     let models = block.getFieldValue('models');
     let detect_tasks = javascriptGenerator.statementToCode(block, 'detect_tasks');

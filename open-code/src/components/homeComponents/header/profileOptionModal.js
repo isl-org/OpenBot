@@ -33,7 +33,7 @@ export function ProfileOptionModal(props) {
     const location = useLocation();
     const themes = useTheme();
     const {theme, toggleTheme} = useContext(ThemeContext);
-    const {isOnline, setIsDob, isDob, setIsAutoSyncEnabled, setUser} = useContext(StoreContext);
+    const {isOnline, setIsDob, isDob, setIsAutoSyncEnabled, setUser, setCategory, setDrawer} = useContext(StoreContext);
     const isMobile = useMediaQuery(themes.breakpoints.down('md'));
     const isSignedIn = localStorage.getItem("isSigIn") === "true";
     const isHomePage = location.pathname === PathName.home;
@@ -128,7 +128,14 @@ export function ProfileOptionModal(props) {
                                     modelStyle={{width: "14px", height: "18px"}}
                                     icon={theme === Themes.dark ? Images.darkSyncIcon : Images.lightSyncIcon}/>
                 }
-                {((isHomePage) || (isOnPlaygroundPage && isSignedIn)) &&
+                {(isOnPlaygroundPage && isMobile) &&
+                    <PopUpInRowText onClick={() => {
+                        handleClose();
+                        setCategory(Constants.chat);
+                        setDrawer(true)
+                    }} text={"AI Assistant"}
+                                    icon={theme === Themes.dark ? Images.chatIcon : Images.darkChatIcon}/>}
+                {((isHomePage) || (isOnPlaygroundPage)) &&
                     <PopUpInRowText onClick={() => handleOnclick(setIsLogoutModal)} text={"Logout"}
                                     icon={theme === Themes.dark ? Images.darkLogoutIcon : Images.logoutIcon}/>
                 }

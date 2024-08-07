@@ -878,7 +878,7 @@ Blockly.Blocks["multipleObjectTracking"] = {
 };
 
 //Blockly json structure for multiple object detection
-Blockly.Blocks["variableDetection"] = {
+Blockly.Blocks["objectDetection"] = {
     init: function () {
         this.jsonInit({
             "type": "block_type",

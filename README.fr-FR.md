@@ -26,11 +26,14 @@
 OpenBot utilise les smartphones comme cerveaux pour des robots à faible coût. Nous avons conçu un petit véhicule électrique qui coûte environ 50 $ et sert de corps de robot. Notre pile logicielle pour smartphones Android prend en charge des charges de travail robotiques avancées telles que le suivi de personnes et la navigation autonome en temps réel.
 
 ## Commencez avec OpenBot
-- Construisez votre propre [Corps de Robot](body/README.md)
-- Flashez le [Firmware Arduino](firmware/README.md)
-- Installez les [Applications Android](android/README.md)
-- Conduisez le robot via un [Contrôleur](controller/README.md)
-- Entraînez votre propre [Politique de Conduite](policy/README.md)
+
+- Lisez la [Clause de non-responsabilité](DISCLAIMER.md)
+- Construisez votre propre [Corps de Robot](body/README.fr-FR.md)
+- Flashez le [Firmware Arduino](firmware/README.fr-FR.md)
+- Installez les [Applications Android](android/README.fr-FR.md)
+- Conduisez le robot via un [Contrôleur](controller/README.fr-FR.md)
+- Programmez votre robot dans le [Playground](open-code/README.fr-FR.md)
+- Entraînez votre propre [Politique de Conduite](policy/README.fr-FR.md)
 
 ## Obtenez le code source
 
@@ -39,7 +42,7 @@ OpenBot utilise les smartphones comme cerveaux pour des robots à faible coût. 
     ```bash
     git clone https://github.com/intel-isl/OpenBot.git
     ```
-- Vous pouvez forker le dépôt OpenBot puis cloner votre copie locale. Ceci est recommandé, surtout si vous souhaitez [contribuer](CONTRIBUTING.md).
+- Vous pouvez forker le dépôt OpenBot puis cloner votre copie locale. Cela est recommandé, surtout si vous souhaitez [contribuer](CONTRIBUTING.md).
 
 ## Vidéos
 
@@ -51,9 +54,9 @@ OpenBot utilise les smartphones comme cerveaux pour des robots à faible coût. 
   <img align="center" width="300" alt="youtube video" src="https://img.youtube.com/vi/qc8hFLyWDOM/hqdefault.jpg" />
 </a>
 
-## Projets intéressants utilisant OpenBot
+## Projets sympas utilisant OpenBot
 
-Il existe déjà de nombreux projets intéressants utilisant OpenBot. Voici une petite sélection. Cliquez sur les images pour être redirigé vers les projets respectifs.
+Il existe déjà de nombreux projets sympas utilisant OpenBot. Voici une petite sélection. Cliquez sur les images pour être redirigé vers les projets respectifs.
 
 <p float="left">
   <a href="https://www.thingiverse.com/thing:4670884" target="_blank">

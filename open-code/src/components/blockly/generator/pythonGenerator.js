@@ -278,7 +278,7 @@ pythonGenerator.forBlock['multipleObjectTracking'] = function (block) {
     return code;
 };
 
-pythonGenerator.forBlock['variableDetection'] = function (block, generator) {
+pythonGenerator.forBlock['objectDetection'] = function (block, generator) {
     let labels = block.getFieldValue('labels');
     let models = block.getFieldValue('models');
     let detect_tasks = pythonGenerator.statementToCode(block, 'detect_tasks');

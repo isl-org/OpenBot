@@ -148,6 +148,7 @@ export const Constants = {
     js: "js",
     py: "py",
     qr: "qr",
+    chat: "chat",
     xml: "xml",
     json: "json",
     tflite: "tflite",
@@ -156,10 +157,16 @@ export const Constants = {
     projects: "projects",
     models: "models",
     theme: "theme",
-    subscriptionEnded:"Your trial has just ended!",
-    subscriptionContinueService:"To continue using OpenBot Playground, you",
-    subscriptionContinueInfo:"will need to upgrade your plan.",
-    subscribeButton:"Subscribe Now"
+    subscriptionEnded: "Your trial has just ended!",
+    subscriptionContinueService: "To continue using OpenBot Playground, you",
+    subscriptionContinueInfo: "will need to upgrade your plan.",
+    subscribeButton: "Subscribe Now",
+}
+
+export const ChatConstants = {
+    Playground: "Playground Support",
+    Message: "👋 Hi! I am here to assist you in creating blocks for OpenBot. Feel free to ask for any information you need regarding the playground.",
+    videoURl : "https://www.youtube.com/embed/n9Yr-guo81s?autoplay=1&mute=1&loop=1&playlist=n9Yr-guo81s"
 }
 
 export const Month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -174,7 +181,11 @@ export const Errors = {
     error2: "Detected adjacent AI blocks. Please review the Start block configuration. When using adjacent AI blocks,insert a 'disable AI' block between them.",
     error3: "Identical objects for multiple detection AI block.",
     error4: "AI block present within the forever block. Please review the block code.",
-    error5: "Similar classes present in the Advanvced AI blocks"
+    error5: "Similar classes present in the advanced AI blocks",
+    error6: "Unable to connect to the server. Please try again later.",
+    error7: "Try again request interrupted",
+    error8: "Error in adding blocks to blockly playground",
+    error9: "An error occurred while processing your request."
 }
 
 export const PlaygroundConstants = {
@@ -182,7 +193,7 @@ export const PlaygroundConstants = {
     forever: "forever",
     detectionOrUndetection: "detectionOrUndetection",
     multipleObjectTracking: "multipleObjectTracking",
-    variableDetection: "variableDetection",
+    objectDetection: "objectDetection",
     labels: "labels",
     disableAI: "disableAI",
     object_1: "object_1",
@@ -353,11 +364,11 @@ export const errorToast = (message) => {
 export const aiBlocks = ["objectTracking", "autopilot", "multipleObjectTracking", "navigateForwardAndLeft", "multipleAIDetection"];
 
 /**
-user usage tables
+ user usage tables
  */
 export const tables = {
-    users : "users",
+    users: "users",
     projects: "projects",
-    models:"models",
-    userUsage:"userUsage"
+    models: "models",
+    userUsage: "userUsage"
 }
