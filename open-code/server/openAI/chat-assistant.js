@@ -8,7 +8,7 @@ const router = express.Router();
  */
 router.post('/generate-code-assistance', async (req, res) => {
     const {userPrompt, currentXML} = req.body;
-    console.log("currentXML isha", currentXML);
+    console.log("currentXML", currentXML);
     if (!userPrompt) {
         return res.status(400).json({error: 'Missing required data: userPrompt.'});
     }
@@ -18,7 +18,7 @@ router.post('/generate-code-assistance', async (req, res) => {
     });
     try {
         const response = await openai.chat.completions.create({
-            model: 'gpt-4o',
+            model: 'gpt-4o-mini',
             messages: [{role: 'system', content: finalPrompt}, {
                 role: 'user',
                 content: "final request::" + userPrompt + "\nInput XML : " + currentXML
