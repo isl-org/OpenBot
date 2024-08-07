@@ -7,7 +7,8 @@ import {getCurrentProject} from "./workspace";
  * @returns {Promise<string | string>}
  */
 export const getAIMessage = (userPrompt, signal) => {
-    return fetch(`http://localhost:8080/openAI/generate-code-assistance`, {
+    console.log("process.env.REACT_APP_SERVER_DOMAIN::",process.env.REACT_APP_SERVER_DOMAIN)
+    return fetch(`${process.env.REACT_APP_SERVER_DOMAIN}/openAI/generate-code-assistance`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
