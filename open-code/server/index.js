@@ -6,15 +6,7 @@ require('dotenv').config();
 const openAI = require('./openAI/chat-assistant'); // Import the router
 
 const app = express();
-
-const corsOptions = {
-    origin: 'https://www.playground.openbot.org',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type, Authorization',
-    optionsSuccessStatus: 200
-};
-
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 // Use the API routes
