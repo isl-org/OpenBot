@@ -83,6 +83,11 @@ const response_structure = `Explain the process according to following rules :
 2. Include a description of the use case for each block.
 3. Suggest various additional blocks that can be added to the playground to enhance the given input.
 4. When there are greetings or not related to blocks then it should not add the previous xml to the response and respond accordingly.
+5.Ensure you are not giving xml tags in explanation part.
+IMPORTANT NOTE: The objectDetection block is a root block, so it should not be connected inside any other root blocks like start. Ensure that all responses respect this constraint.
+VERY IMPORTANT NOTE: The forever block is a root block, so it should not be connected inside any other root blocks like start. Ensure that all responses respect this constraint.
+6.Ensure all the VERY IMPORTANT NOTE  and IMPORTANT NOTE are always followed.
+
 IMPORTANT NOTE: Ensure that all responses respect this above constraint.
 `
 
