@@ -8,6 +8,7 @@ import {ThemeContext} from "../../App";
 import {colors as Colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
 import {addBlocksToWorkspace} from "../blockly/imageConverter";
+import {getCurrentProject} from "../../services/workspace";
 
 /**
  * Chat component handles user interactions and displays chat interface.
@@ -59,7 +60,8 @@ const Chat = ({drawer}) => {
             paused: false
         }));// Updates current message state with user input
         abortControllerRef.current = new AbortController();
-        getAIMessage(userInput, abortControllerRef.current.signal).then((res) => {
+        getAIMessage(userInput,  getCurrentProject().xmlValue,abortControllerRef.current.signal).then((res) => {
+            console.log("res", res)
             if (res !== undefined) {
                 addBlocksToWorkspace(res, workspace).then(() => {
                     setCurrentMessage((prevState) => ({
