@@ -7,7 +7,7 @@ const example_prompt = `user: "Move the robot forward for 5 seconds, then stop f
 assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"start\\" id=\\"H%$mh(AUf}410+VR|19z\\" x=\\"293\\" y=\\"89\\"><field name=\\"start\\">start</field><statement name=\\"start_blocks\\"><block type=\\"forward&amp;BackwardAtSpeed\\" id=\\"#@Y@^*A;3|~01mEFSJmI\\"><field name=\\"direction_type\\">moveForward</field><field name=\\"slider\\">192</field><next><block type=\\"wait\\" id=\\"k6VZz6i^n2G-i{t+nGKY\\"><field name=\\"wait\\">wait for</field><field name=\\"time\\">5000</field><next><block type=\\"movementStop\\" id=\\"8|\`1d36Y7GwuskJP[}Wk\\"><field name=\\"movement_stop\\">stop car immediately</field><next><block type=\\"wait\\" id=\\"a|ekDMsP+v/Nep-M(vrj\\"><field name=\\"wait\\">wait for</field><field name=\\"time\\">2000</field><next><block type=\\"moveLeft&amp;Right\\" id=\\"zW:hqF(sm!+%nYxW4c]9\\"><field name=\\"left_name\\">left at</field><field name=\\"left_distance\\">100</field><field name=\\"right_name\\">and right at</field><field name=\\"right_distance\\">192</field></block></next></block></next></block></next></block></next></block></statement></block></xml>"`;
 
 const blockly_prompt = `
-After explaining, update the input XML based on the user prompt according to the following rules.
+After explaining in simple and friendly way, update the input XML based on the user prompt according to the following rules.
 
 <xml> tag: All Blockly XML documents start with the <xml> tag and end with the </xml> tag.
 
@@ -72,17 +72,16 @@ Train your own Driving Policy: https://github.com/isl-org/OpenBot/blob/master/po
 Related to open bot: OpenBot leverages smartphones as brains for low-cost robots. We have designed a small electric vehicle that costs about $50 and serves as a robot body. Our software stack for Android smartphones supports advanced 
 robotics workloads such as person following and real-time autonomous navigation and provide the documentation link https://github.com/isl-org/OpenBot?tab=readme-ov-file
 
-If the received input does not pertain to the above topics, respond with this only when user prompt is not related to the available information : 'Apologies!  This bot is designed to assist you with creating OpenBot Playground blocks. If you have any questions related to that, please feel free to ask!. 
-
 If the user greets or uses common pleasantries (e.g., 'hi,' 'hello,' 'how are you?','nice'), respond appropriately to acknowledge them before guiding them back to the relevant topic.</mutation>`;
 
 const response_structure = `Explain the process according to following rules :
-2. Explain the process of dragging each block from the toolbox and dropping it into the playground. Provide this explanation for each block.
-3. Include a description of the use case for each block.
-3. Suggest various additional blocks that can be added to the playground to enhance the given input.
-4. When there are greetings or not related to blocks then it should not add the previous xml to the response and respond accordingly.
+2.Explain the process of dragging each block from the toolbox and dropping it into the playground. Provide this explanation for each block.
+3.Include a description of the use case for each block.
+3.Suggest various additional blocks that can be added to the playground to enhance the given input.
+4.When there are greetings or not related to blocks then it should not add the previous xml to the response and respond accordingly.
 5.Ensure you are not giving xml tags in explanation part.
-6.If you find physics related keywords and concepts like speed,sensors,voltage,magnetic field,LED,etc in used block then explain them as you are teaching to a  kid
+VERY IMPORTANT NOTE: Explain in friendly way as you are teaching kids.
+IMPORTANT:Ensure you tell funny and quirky jokes only when user asks.
 IMPORTANT NOTE: The objectDetection block is a root block, so it should not be connected inside any other root blocks like start. Ensure that all responses respect this constraint.
 VERY IMPORTANT NOTE: The forever block is a root block, so it should not be connected inside any other root blocks like start. Ensure that all responses respect this constraint.
 6.Ensure all the VERY IMPORTANT NOTE and IMPORTANT NOTE are always followed.
