@@ -49,9 +49,11 @@ soundMode : This block used to play static sound from robot phone which are "dua
 For example:- user : Play sound dual drive from robot phone
 assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"start\\" id=\\"}wsD(ZyI{/1z*0Y]*rU(\\" x=\\"90\\" y=\\"70\\"><field name=\\"start\\">start</field><statement name=\\"start_blocks\\"><block type=\\"soundMode\\" id=\\"M?f7yQ#8=,fa%Q9N$[|6\\"><field name=\\"mode_type\\">dual drive</field></block></statement></block></xml>"
 
-inputSound : This block used to play custom user input sound from robot phone.
+inputSound : This block used to play custom user input sound from robot phone.When user ask to say or tell something that means input sound block is used.
 For example:- user : Play sound "openbot" from robot phone.
 assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"start\\" id=\\"}wsD(ZyI{/1z*0Y]*rU(\\" x=\\"90\\" y=\\"70\\"><field name=\\"start\\">start</field><statement name=\\"start_blocks\\"><block type=\\"inputSound\\" id=\\"K_C|nywhk2MDLPdpDuf^\\"><field name=\\"text\\">openbot</field></block></statement></block></xml>"
+
+IMPORTANT NOTE:When user ask to say or tell something that means input sound block is used.
 
 sonarReading : This block used to return live sonar reading of robot.
 For example :- user: Display live sonar reading of robot on robot screen.
@@ -142,6 +144,16 @@ It contains three fields within the block:
 3. A dropdown field named "objectTracking_models", which lists all available models.
 For example:- user : Move forward for 10 seconds when a person is detected; until then, enable autopilot.
 assistant: "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"start\\" id=\\"VVS[V0j(bEABhkPw8Aoq\\" x=\\"-706\\" y=\\"55\\"><field name=\\"start\\">start</field><statement name=\\"start_blocks\\"><block type=\\"multipleAIDetection\\" id=\\"!~K3DAuq7sqfRObzTGZA\\"><field name=\\"autopilot_models\\">CIL-Mobile-Cmd</field><field name=\\"labels\\">person</field><field name=\\"objectTracking_models\\">MobileNetV1-300</field><statement name=\\"tasks\\"><block type=\\"forward&amp;BackwardAtSpeed\\" id=\\"]9y$,#fLY[K8//o!c]2^\\"><field name=\\"direction_type\\">moveForward</field><field name=\\"slider\\">192</field><next><block type=\\"wait\\" id=\\"dl0shYEt#(p/eDhlB(W(\\"><field name=\\"wait\\">wait for</field><field name=\\"time\\">3000</field><next><block type=\\"movementStop\\" id=\\"eZdq8eWaBa}q|Y+P}Kv!\\"><field name=\\"movement_stop\\">stop car immediately</field></block></next></block></next></block></statement></block></statement></block></xml>".
+
+VERY IMPORTANT NOTE:
+Root Blocks: These are the block that can not be connected to inside other block 
+In cases when there is need to use start forever and object detection block together it should make their separate xml instead merging in one and should create individual blocks.
+1.Start , forever ,object detection block these are root block hence they cannot be connected inside any other block.
+for example: If a user asks like create a block to move in forward direction then wait for 10s and then move in backward direction forever and also a block to detect a person in this case there will be three blocks with respective functionality.
+assistant:- <xml xmlns="https://developers.google.com/blockly/xml"><block type="forever" id="forever_block" x="20" y="20"><field name="forever">forever</field><statement name="forever_loop_blocks"><block type="wait" id="wait_block"><field name="wait">wait for</field><field name="time">10000</field><next><block type="forward&amp;BackwardAtSpeed" id="move_backward_block"><field name="direction_type">moveBackward</field><field name="slider">192</field></block></next></block></statement></block><block type="start" id="q2Sts5hD36S.!;qajOZd" x="411" y="46"><field name="start">start</field><statement name="start_blocks"><block type="forward&amp;BackwardAtSpeed" id="move_forward_block"><field name="direction_type">moveForward</field><field name="slider">192</field></block></statement></block><block type="objectDetection" id="objectDetection_block" x="85" y="250"><field name="labels">person</field><field name="models">MobileNetV1-300</field><field name="frames">90</field><statement name="detect_tasks"><block type="forward&amp;BackwardAtSpeed" id="person_detected_move"><field name="direction_type">moveForward</field><field name="slider">192</field></block></statement></block></xml>
+
+
+
 `
 
 module.exports = {custom_blocks_prompt, AI_prompt};
