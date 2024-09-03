@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "955078484078-kiqt23b9043p6lpevmdd2c42bid22rct.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.openbot",
+            "certificate_hash": "d6550cd35e6f79362f3d379f65f5bf7b607830f5"
+          }
+        },
+        {
           "client_id": "955078484078-kbadvp54dljcpk0g0j5bnf5c17q63ir2.apps.googleusercontent.com",
           "client_type": 3
         }
