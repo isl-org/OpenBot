@@ -1,42 +1,79 @@
 import {finalPrompt} from "../utils/prompt";
-/**
- * API to get the assistant response
- * @param {string} userPrompt - The prompt provided by the user
- * @param {AbortSignal} signal - Abort signal to cancel the request
- * @param currentXML
- * @returns {Promise<string>} - The AI response or an error message
- */
-export const getAIMessage = async (userPrompt, currentXML, signal) => {
 
-    const url = `https://api.openai.com/v1/chat/completions`; // backend API endpoint
-    // const personaItem = persona.filter((item) => item.key === personaIndex);
+/**
+ * API to get the assistant response with streaming
+ * @param userPrompt
+ * @param currentXML
+ * @param signal
+ * @param onMessage
+ * @returns {Promise<string>}
+ */
+export const getAIMessage = async (userPrompt, currentXML, signal, onMessage) => {
+    const url = `https://api.openai.com/v1/chat/completions`;
+
     try {
-        console.log("key::", process.env.REACT_APP_OPENAI_API_KEY);
         const response = await fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`, // Ensure you have the right API key here
+                "Authorization": `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
             },
             body: JSON.stringify({
                 "messages": [
-                    {role: 'system', content: finalPrompt + "\nInput XML : " + currentXML},
-                    {
-                        role: 'user',
-                        content: userPrompt
-                    }
+                    { role: 'system', content: finalPrompt + "\nInput XML : " + currentXML },
+                    { role: 'user', content: userPrompt }
                 ],
                 "model": "gpt-4o-mini",
-                "stream": false
+                "stream": true
             }),
             signal
         });
 
-        const result = await response.json();
-        return result.choices[0].message.content;
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let resultText = '';
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            // Decode the stream chunk
+            const chunk = decoder.decode(value, { stream: true });
+            // Stop if the request was aborted
+            if (signal.aborted) {
+                return "Request was cancelled.";
+
+            }
+            const parsedChunk = chunk
+                .split("\n")
+                .filter(line => line.trim()) // Filter out empty lines
+                .map(line => line.replace(/^data: /, "")) // Remove "data: " prefix
+                .map(line => {
+                    try {
+                        return JSON.parse(line);
+                    } catch (e) {
+                        console.error("JSON parse error:", e);
+                        return null;
+                    }
+                })
+                .filter(parsed => parsed !== null);
+            for (const parsed of parsedChunk) {
+                const content = parsed?.choices[0]?.delta?.content;
+                if (content) {
+                    onMessage(content);  // Update UI with new content
+                    resultText += content;
+                }
+                if (parsed?.choices[0]?.finish_reason === "stop") {
+                    onMessage("Done");
+                    return resultText;
+                }
+            }
+        }
+
+        return resultText;
+
     } catch (error) {
         if (error.name === 'AbortError') {
-            console.log('Request cancelled');
             return "Request was cancelled.";
         } else {
             console.error('Error occurred:', error);

@@ -75,11 +75,12 @@ robotics workloads such as person following and real-time autonomous navigation 
 If the user greets or uses common pleasantries (e.g., 'hi,' 'hello,' 'how are you?','nice'), respond appropriately to acknowledge them before guiding them back to the relevant topic.</mutation>`;
 
 const response_structure = `Explain the process according to following rules :
-2.Explain the process of dragging each block from the toolbox and dropping it into the playground. Provide this explanation for each block.
-3.Include a description of the use case for each block.
+1.Explain the process of dragging each block from the toolbox and dropping it into the playground. Provide this explanation for each block.
+2.Include a description of the use case for each block.
 3.Suggest various additional blocks that can be added to the playground to enhance the given input.
 4.When there are greetings or not related to blocks then it should not add the previous xml to the response and respond accordingly.
 5.Ensure you are not giving xml tags in explanation part.
+IMPORTANT: Ensure you provide XML code at the end always.
 VERY IMPORTANT NOTE: Explain in friendly way as you are teaching kids.
 IMPORTANT:Ensure you tell funny and quirky jokes only when user asks.
 IMPORTANT NOTE: The objectDetection block is a root block, so it should not be connected inside any other root blocks like start. Ensure that all responses respect this constraint.
@@ -87,7 +88,6 @@ VERY IMPORTANT NOTE: The forever block is a root block, so it should not be conn
 6.Ensure all the VERY IMPORTANT NOTE and IMPORTANT NOTE are always followed.
 IMPORTANT NOTE: Ensure that all responses respect this above constraint.
 `
-
 const finalPrompt = `You are an assistant for OpenBot playground who provide a detailed and professional step-by-step implementation to achieve the received input based on the following Blockly block JSON which has definition, block type and working of a block - ${blocksJSON}. ${response_structure}.  Do not include the JSON in the response. ${blockly_prompt}`
 
 module.exports = {finalPrompt};

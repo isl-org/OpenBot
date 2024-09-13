@@ -98,30 +98,14 @@ const AssistantResponse = ({
     const [displayedMessage, setDisplayedMessage] = useState('');
     const theme = useContext(ThemeContext);
 
+    //Effect hook to manage loading state and update the displayed message when dependencies change.
     useEffect(() => {
         setLoader(message === '');
 
         if (message !== '') {
-            let index = 0;
-
-            const regex = /<xml xmlns="https:\/\/developers.google.com\/blockly\/xml">[\s\S]*?<\/xml>/;
-            const cleanMessage = message.replace(regex, '');
-            if (allChatMessages.length === id) {
-                const interval = setInterval(() => {
-                    if (paused) {
-                        clearInterval(interval);
-                    } else if (index <= cleanMessage.length) {
-                        setDisplayedMessage(cleanMessage.slice(0, index));
-                        index++;
-                    }
-                    if (index > cleanMessage.length) {
-                        setIsTyping(false);
-                        clearInterval(interval);
-                    }
-                }, 10);
-                return () => clearInterval(interval);
-            }
+            setDisplayedMessage(message);
         }
+
     }, [message, paused, allChatMessages.length, id, setIsTyping, setLoader]);
 
     //useEffect for auto scrolling the content

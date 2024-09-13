@@ -25,7 +25,6 @@ const Chat = ({drawer}) => {
     const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
     const abortControllerRef = useRef(null);
     const chatContainerRef = useRef(null);
-
     const [allChatMessages, setAllChatMessages] = useState([{
         userMessage: "",
         AIMessage: ChatConstants.Message,
@@ -58,16 +57,52 @@ const Chat = ({drawer}) => {
             id: allChatMessages.length + 1,
             AITimestamp: "",
             paused: false
-        }));// Updates current message state with user input
+        }));
         abortControllerRef.current = new AbortController();
-        getAIMessage(userInput,  getCurrentProject().xmlValue,abortControllerRef.current.signal).then((res) => {
-            console.log("res", res)
-            if (res !== undefined) {
-                addBlocksToWorkspace(res, workspace).then(() => {
+        let messageBuffer = '';
+
+       //Handles incoming message chunks from the api on streaming.
+        const onMessage = (chunk) => {
+            setIsTyping(true);
+
+            if (chunk === "Done") {
+                setIsTyping(false);
+                return;
+            }
+            messageBuffer += chunk;
+            if ((messageBuffer.includes('<'))) {
+                if (messageBuffer.includes('<x')) {
+                    if (messageBuffer.includes("</xml>")) {
+                        messageBuffer = '';
+                    }
+                } else if (messageBuffer.includes('DONE')) {
                     setCurrentMessage((prevState) => ({
-                        ...prevState, AIMessage: res, AITimestamp: timestamp,
+                        ...prevState,
+                        AIMessage: prevState.AIMessage + chunk,
+                        AITimestamp: timestamp,
                     }));
-                })
+                } else {
+                    setCurrentMessage((prevState) => ({
+                        ...prevState,
+                        AIMessage: prevState.AIMessage + chunk,
+                        AITimestamp: timestamp,
+                    }));
+                }
+            } else {
+                setCurrentMessage((prevState) => ({
+                    ...prevState,
+                    AIMessage: prevState.AIMessage + chunk,
+                    AITimestamp: timestamp,
+                }));
+            }
+        };
+
+
+        // To add the blocks to the current workspace
+        getAIMessage(userInput, getCurrentProject().xmlValue, abortControllerRef.current.signal, onMessage).then((res) => {
+            // console.log("res-->", res)
+            if (res !== undefined) {
+                addBlocksToWorkspace(res, workspace)
                     .catch((e) => {
                         console.log("Error in creating block png-->", e);
                         setCurrentMessage((prevState) => ({
@@ -89,13 +124,17 @@ const Chat = ({drawer}) => {
         setInputValue('');
     };
 
-    //Handles user click on pause button
-
+    //function to pause the content
     const handlePauseClick = () => {
         if (abortControllerRef.current) {
             abortControllerRef.current.abort();
         }
         setIsTyping(false);
+        if(loader===true) {
+            setCurrentMessage((prevState) => ({
+                ...prevState, AIMessage: Errors.error7, AITimestamp: timestamp
+            }));
+        }
         if (currentMessage.AIMessage !== "") {
             setCurrentMessage((prevState) => ({
                 ...prevState, paused: true
@@ -104,7 +143,6 @@ const Chat = ({drawer}) => {
     };
 
     //Effect to update allChatMessages when currentMessage changes
-
     useEffect(() => {
         if (currentMessage.AIMessage) {
             setAllChatMessages((prevMessages) => {
@@ -121,7 +159,6 @@ const Chat = ({drawer}) => {
 
 
     // Effect to scroll chat container to bottom when messages or AI message changes
-
     useEffect(() => {
         if (chatContainerRef.current && chatContainerRef.current.scrollHeight !== null) {
 
@@ -190,6 +227,9 @@ const Chat = ({drawer}) => {
  */
 const ChatBottomBar = ({inputValue, handleSendClick, setInputValue, isTyping, handlePauseClick}) => {
     const theme = useContext(ThemeContext);
+
+    // console.log("typing value-->", isTyping);
+
     return (<div className={styles.chatBottomBar}>
         <input
             style={{
@@ -209,7 +249,7 @@ const ChatBottomBar = ({inputValue, handleSendClick, setInputValue, isTyping, ha
             disabled={isTyping}
         />
         <div
-            onClick={isTyping ? handlePauseClick : handleSendClick}
+            onClick={isTyping  ? handlePauseClick : handleSendClick}
             className={`sendButton ${inputValue.trim() === '' ? 'disabled' : ''} ${isTyping ? '' : ''}`}
             style={inputValue.trim() === '' ? {cursor: 'not-allowed', opacity: 0.5} : {}}
         >
