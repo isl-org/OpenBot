@@ -18,13 +18,36 @@ export const getAIMessage = async (userPrompt, currentXML, signal, onMessage) =>
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
             },
+
             body: JSON.stringify({
                 "messages": [
-                    { role: 'system', content: finalPrompt + "\nInput XML : " + currentXML },
-                    { role: 'user', content: userPrompt }
+                    {role: 'system', content: finalPrompt + "\nInput XML : " + currentXML},
+                    {role: 'user', content: userPrompt}
                 ],
-                "model": "gpt-4o-mini",
-                "stream": true
+                model: "gpt-4o-mini-2024-07-18",
+                stream: true,
+                response_format: {
+                    type: "json_schema",
+                    json_schema: {
+                        name: "blockly_chat_assistant",
+                        schema: {
+                            type: "object",
+                            strict: true,
+                            properties: {
+                                BLOCKLY_RESPONSE: {
+                                    type: "string",
+                                    description: `Always Provide only assistant explanation for blockly blocks in '"BLOCKLY_RESPONSE"' field. Do not provide XML code at any cost`
+                                },
+                                BLOCKLY_XML_CODE: {
+                                    type: "string",
+                                    description: `Always provide XML format code only for blockly code blocks in '"BLOCKLY_XML_CODE"' field`
+                                },
+                            },
+                            required: ["BLOCKLY_RESPONSE", "BLOCKLY_XML_CODE"],
+                            additionalProperties: false
+                        },
+                    }
+                }
             }),
             signal
         });
@@ -34,11 +57,12 @@ export const getAIMessage = async (userPrompt, currentXML, signal, onMessage) =>
         let resultText = '';
 
         while (true) {
-            const { done, value } = await reader.read();
+            const {done, value} = await reader.read();
             if (done) break;
 
             // Decode the stream chunk
-            const chunk = decoder.decode(value, { stream: true });
+            const chunk = decoder.decode(value, {stream: true});
+            //  console.log("chunks----->>", chunk)
             // Stop if the request was aborted
             if (signal.aborted) {
                 return "Request was cancelled.";

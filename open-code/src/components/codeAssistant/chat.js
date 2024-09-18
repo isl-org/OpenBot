@@ -61,46 +61,29 @@ const Chat = ({drawer}) => {
         abortControllerRef.current = new AbortController();
         let messageBuffer = '';
 
-       //Handles incoming message chunks from the api on streaming.
+        //Handles incoming message chunks from the api on streaming.
         const onMessage = (chunk) => {
-            setIsTyping(true);
 
-            if (chunk === "Done") {
-                setIsTyping(false);
-                return;
-            }
+            // if (chunk === "Done") {
+            //     setIsTyping(false);
+            //     return;
+            // }
             messageBuffer += chunk;
-            if ((messageBuffer.includes('<'))) {
-                if (messageBuffer.includes('<x')) {
-                    if (messageBuffer.includes("</xml>")) {
-                        messageBuffer = '';
-                    }
-                } else if (messageBuffer.includes('DONE')) {
-                    setCurrentMessage((prevState) => ({
-                        ...prevState,
-                        AIMessage: prevState.AIMessage + chunk,
-                        AITimestamp: timestamp,
-                    }));
+            if ((messageBuffer.includes('"BLOCKLY_RESPONSE":"')) && chunk !== '":"') {
+                setIsTyping(true);
+                if (messageBuffer.includes('","')) {
+                    messageBuffer = '';
+                    setIsTyping(false)
                 } else {
                     setCurrentMessage((prevState) => ({
-                        ...prevState,
-                        AIMessage: prevState.AIMessage + chunk,
-                        AITimestamp: timestamp,
+                        ...prevState, AIMessage: prevState.AIMessage + chunk, AITimestamp: timestamp,
                     }));
                 }
-            } else {
-                setCurrentMessage((prevState) => ({
-                    ...prevState,
-                    AIMessage: prevState.AIMessage + chunk,
-                    AITimestamp: timestamp,
-                }));
             }
         };
 
-
         // To add the blocks to the current workspace
         getAIMessage(userInput, getCurrentProject().xmlValue, abortControllerRef.current.signal, onMessage).then((res) => {
-            // console.log("res-->", res)
             if (res !== undefined) {
                 addBlocksToWorkspace(res, workspace)
                     .catch((e) => {
@@ -130,7 +113,7 @@ const Chat = ({drawer}) => {
             abortControllerRef.current.abort();
         }
         setIsTyping(false);
-        if(loader===true) {
+        if (loader === true) {
             setCurrentMessage((prevState) => ({
                 ...prevState, AIMessage: Errors.error7, AITimestamp: timestamp
             }));
@@ -228,8 +211,6 @@ const Chat = ({drawer}) => {
 const ChatBottomBar = ({inputValue, handleSendClick, setInputValue, isTyping, handlePauseClick}) => {
     const theme = useContext(ThemeContext);
 
-    // console.log("typing value-->", isTyping);
-
     return (<div className={styles.chatBottomBar}>
         <input
             style={{
@@ -249,7 +230,7 @@ const ChatBottomBar = ({inputValue, handleSendClick, setInputValue, isTyping, ha
             disabled={isTyping}
         />
         <div
-            onClick={isTyping  ? handlePauseClick : handleSendClick}
+            onClick={isTyping ? handlePauseClick : handleSendClick}
             className={`sendButton ${inputValue.trim() === '' ? 'disabled' : ''} ${isTyping ? '' : ''}`}
             style={inputValue.trim() === '' ? {cursor: 'not-allowed', opacity: 0.5} : {}}
         >
