@@ -20,9 +20,10 @@ android {
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
 
         defaultConfig {
             ndk {
@@ -45,12 +46,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
     packagingOptions {
         resources {
@@ -59,6 +60,7 @@ android {
     }
 
     namespace 'org.openbot.controller'
+    ndkVersion '23.1.7779620'
 }
 
 dependencies {
@@ -79,13 +81,14 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
     // WiFi direct
-    implementation 'com.abemart.wroup:wroup:0.9'
+//    implementation 'com.abemart.wroup:wroup:0.9'
+
 
     // material design
     implementation 'com.google.android.material:material:1.4.0'
 
     // WebRTC
-    implementation "org.webrtc:google-webrtc:$webrtc_version"
+    implementation 'io.github.webrtc-sdk:android:125.6422.05'
 
     // For a library module, uncomment the following line and comment the one after
     // apply plugin: 'com.android.library'
