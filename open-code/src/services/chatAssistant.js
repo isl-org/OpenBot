@@ -11,7 +11,6 @@ export const getAIMessage = async (userPrompt, currentXML, signal) => {
     const url = `https://api.openai.com/v1/chat/completions`; // backend API endpoint
     // const personaItem = persona.filter((item) => item.key === personaIndex);
     try {
-        console.log("key::", process.env.REACT_APP_OPENAI_API_KEY);
         const response = await fetch(url, {
             method: "POST",
             headers: {

@@ -61,7 +61,6 @@ const Chat = ({drawer}) => {
         }));// Updates current message state with user input
         abortControllerRef.current = new AbortController();
         getAIMessage(userInput,  getCurrentProject().xmlValue,abortControllerRef.current.signal).then((res) => {
-            console.log("res", res)
             if (res !== undefined) {
                 addBlocksToWorkspace(res, workspace).then(() => {
                     setCurrentMessage((prevState) => ({
