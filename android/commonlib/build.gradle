@@ -7,6 +7,8 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+//Abemart wroup and google webRtc are both deprecated on maven and other similar repositories
+//Hence created a local implementation of those libraries using pre-compiled .aar files in a shared modules called commonlib
 dependencies {
     api files('libs/google-webrtc-1.0.32006.aar')
     api files('libs/Wroup-master-release.aar')
