@@ -1,0 +1,13 @@
+plugins {
+    id 'java-library'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    api files('libs/google-webrtc-1.0.32006.aar')
+    api files('libs/Wroup-master-release.aar')
+}
