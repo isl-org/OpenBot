@@ -15,7 +15,7 @@ import remarkGfm from 'remark-gfm';
  */
 const ChatBox = (props) => {
     const {
-        conversation, handlePauseClick, setIsTyping, setLoader, loader, allChatMessages, chatContainerRef,
+        conversation, handlePauseClick, setIsTyping, setLoader, loader, allChatMessages, chatContainerRef,setCodeBufferLoader,codeBufferLoader
     } = props;
     const theme = useContext(ThemeContext);
     return (
@@ -47,6 +47,8 @@ const ChatBox = (props) => {
                 setIsTyping={setIsTyping}
                 allChatMessages={allChatMessages}
                 id={conversation.id}
+                setCodeBufferLoader={setCodeBufferLoader}
+                codeBufferLoader={codeBufferLoader}
                 setLoader={setLoader}
                 loader={loader}
                 chatContainerRef={chatContainerRef}
@@ -78,6 +80,7 @@ const UserMessage = ({timestamp, message}) => (
  * @param setIsTyping
  * @param setLoader
  * @param loader
+ * @param codeBufferLoader
  * @param allChatMessages
  * @param id
  * @param chatContainerRef
@@ -91,6 +94,7 @@ const AssistantResponse = ({
                                setIsTyping,
                                setLoader,
                                loader,
+                               codeBufferLoader,
                                allChatMessages,
                                id,
                                chatContainerRef,
@@ -136,6 +140,7 @@ const AssistantResponse = ({
                         color: theme.theme === Themes.dark ? Colors.whiteFont : '#000000',
                     }}
                 >
+
                     <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
@@ -165,6 +170,18 @@ const AssistantResponse = ({
                     >
                         {displayedMessage}
                     </ReactMarkdown>
+                    {codeBufferLoader && allChatMessages.length === id && (
+                        <div className={ theme.theme === Themes.dark ? styles.loaderHeadingDark:styles.loaderHeading}>Generating Code
+
+                        <span
+                            className={`${styles.loaderContainer} ${
+                                theme.theme === Themes.dark ? styles.whiteLoader : styles.loader
+                            }`}
+                        >
+                        </span>
+                        </div>
+
+                    )}
                     <div className={styles.timestamp}>{timestamp}</div>
                 </div>
             )}

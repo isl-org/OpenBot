@@ -73,6 +73,20 @@
     align-items: center;
     height: 100%;
 }
+.loaderHeading{
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: black;
+    margin: 0;
+}
+.loaderHeadingDark{
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: white;
+    margin: 0;
+}
 .timestamp {
     font-size: 12px;
     color: #666;

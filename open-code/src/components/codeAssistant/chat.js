@@ -9,6 +9,8 @@ import {colors as Colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
 import {addBlocksToWorkspace} from "../blockly/imageConverter";
 import {getCurrentProject} from "../../services/workspace";
+import ReactMarkdown from "react-markdown";
+import {handler} from "../../utils/handler";
 
 /**
  * Chat component handles user interactions and displays chat interface.
@@ -25,6 +27,7 @@ const Chat = ({drawer}) => {
     const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
     const abortControllerRef = useRef(null);
     const chatContainerRef = useRef(null);
+    const [codeBufferLoader, setCodeBufferLoader] = useState(false);
     const [allChatMessages, setAllChatMessages] = useState([{
         userMessage: "",
         AIMessage: ChatConstants.Message,
@@ -69,12 +72,16 @@ const Chat = ({drawer}) => {
             //     return;
             // }
             messageBuffer += chunk;
-            if ((messageBuffer.includes('"BLOCKLY_RESPONSE":"')) && chunk !== '":"') {
+            if ((messageBuffer.includes('"BLOCKLY_RESPONSE":"')) && chunk !== '":"' || (messageBuffer.includes('"BLOCKLY_XML_CODE":"'))) {
                 setIsTyping(true);
+                setCodeBufferLoader(true);
                 if (messageBuffer.includes('","')) {
                     messageBuffer = '';
-                    setIsTyping(false)
+                    setIsTyping(false);
+                    setCodeBufferLoader(true);
+
                 } else {
+                    setCodeBufferLoader(false);
                     setCurrentMessage((prevState) => ({
                         ...prevState, AIMessage: prevState.AIMessage + chunk, AITimestamp: timestamp,
                     }));
@@ -85,11 +92,16 @@ const Chat = ({drawer}) => {
         // To add the blocks to the current workspace
         getAIMessage(userInput, getCurrentProject().xmlValue, abortControllerRef.current.signal, onMessage).then((res) => {
             if (res !== undefined) {
+                let finalMessage = handler(res);
+                setCodeBufferLoader(false);
+                setCurrentMessage((prevState) => ({
+                    ...prevState, AIMessage: finalMessage, AITimestamp: timestamp,
+                }));
                 addBlocksToWorkspace(res, workspace)
                     .catch((e) => {
                         console.log("Error in creating block png-->", e);
                         setCurrentMessage((prevState) => ({
-                            ...prevState, AIMessage: res + "\n" + Errors.error8, AITimestamp: timestamp,
+                            ...prevState, AIMessage: finalMessage + "\n" + Errors.error8, AITimestamp: timestamp,
                         }));
                     })
             } else {
@@ -98,10 +110,8 @@ const Chat = ({drawer}) => {
                 }));
             }
         }).catch((e) => {
+            setCodeBufferLoader(false);
             console.log(e);
-            setCurrentMessage((prevState) => ({
-                ...prevState, AIMessage: Errors.error6, AITimestamp: timestamp
-            }));
         });
 
         setInputValue('');
@@ -184,6 +194,8 @@ const Chat = ({drawer}) => {
                 setIsTyping={setIsTyping}
                 allChatMessages={allChatMessages}
                 setLoader={setLoader}
+                setCodeBufferLoader={setCodeBufferLoader}
+                codeBufferLoader={codeBufferLoader}
                 loader={loader}
                 chatContainerRef={chatContainerRef}
 
