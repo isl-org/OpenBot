@@ -15,7 +15,15 @@ import remarkGfm from 'remark-gfm';
  */
 const ChatBox = (props) => {
     const {
-        conversation, handlePauseClick, setIsTyping, setLoader, loader, allChatMessages, chatContainerRef,setCodeBufferLoader,codeBufferLoader
+        conversation,
+        handlePauseClick,
+        setIsTyping,
+        setLoader,
+        loader,
+        allChatMessages,
+        chatContainerRef,
+        setCodeBufferLoader,
+        codeBufferLoader
     } = props;
     const theme = useContext(ThemeContext);
     return (
@@ -171,13 +179,14 @@ const AssistantResponse = ({
                         {displayedMessage}
                     </ReactMarkdown>
                     {codeBufferLoader && allChatMessages.length === id && (
-                        <div className={ theme.theme === Themes.dark ? styles.loaderHeadingDark:styles.loaderHeading}>Generating Code
-
-                        <span
-                            className={`${styles.loaderContainer} ${
-                                theme.theme === Themes.dark ? styles.whiteLoader : styles.loader
-                            }`}
-                        >
+                        <div className={theme.theme === Themes.dark ? styles.loaderHeadingDark : styles.loaderHeading}
+                             style={{marginTop: "20px"}}>Generating Code
+                            <span
+                                style={{marginLeft: '10px'}}
+                                className={`${styles.loaderContainer} ${
+                                    theme.theme === Themes.dark ? styles.whiteLoader : styles.loader
+                                }`}
+                            >
                         </span>
                         </div>
 

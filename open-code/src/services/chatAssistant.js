@@ -36,11 +36,11 @@ export const getAIMessage = async (userPrompt, currentXML, signal, onMessage) =>
                             properties: {
                                 BLOCKLY_RESPONSE: {
                                     type: "string",
-                                    description: `The explanation part of the blocks will always generated inside this. No need to provide XML inside this.`
+                                    description: `Make sure you Provide only an explanation in clear, simple text. This section should describe the purpose and usage of the Blockly blocks. Do not include any XML code or technical details in this part—just the explanation.`
                                 },
                                 BLOCKLY_XML_CODE: {
                                     type: "string",
-                                    description: `The XML code will always generated inside this. `
+                                    description: `Ensure you Provide only valid XML code for the Blockly blocks. Do not include any explanations in this section—only XML code.`
                                 },
                             },
                             required: ["BLOCKLY_RESPONSE", "BLOCKLY_XML_CODE"],

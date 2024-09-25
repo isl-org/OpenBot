@@ -93,10 +93,15 @@ const Chat = ({drawer}) => {
         getAIMessage(userInput, getCurrentProject().xmlValue, abortControllerRef.current.signal, onMessage).then((res) => {
             if (res !== undefined) {
                 let finalMessage = handler(res);
-                setCodeBufferLoader(false);
-                setCurrentMessage((prevState) => ({
-                    ...prevState, AIMessage: finalMessage, AITimestamp: timestamp,
-                }));
+                if(finalMessage!==undefined) {
+                    setCodeBufferLoader(false);
+                    setCurrentMessage((prevState) => ({
+                        ...prevState, AIMessage: finalMessage, AITimestamp: timestamp,
+                    }));
+                }
+                else{
+                    setCodeBufferLoader(false);
+                }
                 addBlocksToWorkspace(res, workspace)
                     .catch((e) => {
                         console.log("Error in creating block png-->", e);
@@ -210,6 +215,7 @@ const Chat = ({drawer}) => {
         /> : ""}
     </div>);
 };
+
 /**
  * Component for rendering input field and send/pause button
  * @param inputValue

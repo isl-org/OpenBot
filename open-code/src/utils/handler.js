@@ -1,5 +1,8 @@
 export const handler = (message) => {
-    const parsedMessage = JSON.parse(message);
-    const blocklyResponse = parsedMessage.BLOCKLY_RESPONSE;
-    return blocklyResponse;
-}
+    try {
+        const parsedMessage = JSON.parse(message);
+        return parsedMessage?.BLOCKLY_RESPONSE ?? null;
+    } catch (error) {
+        console.error('JSON parsing error:', error);
+    }
+};
