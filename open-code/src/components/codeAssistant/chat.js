@@ -9,7 +9,6 @@ import {colors as Colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
 import {addBlocksToWorkspace} from "../blockly/imageConverter";
 import {getCurrentProject} from "../../services/workspace";
-import ReactMarkdown from "react-markdown";
 import {handler} from "../../utils/handler";
 
 /**
@@ -67,21 +66,23 @@ const Chat = ({drawer}) => {
         //Handles incoming message chunks from the api on streaming.
         const onMessage = (chunk) => {
 
-            // if (chunk === "Done") {
-            //     setIsTyping(false);
-            //     return;
-            // }
             messageBuffer += chunk;
-            if ((messageBuffer.includes('"BLOCKLY_RESPONSE":"')) && chunk !== '":"' || (messageBuffer.includes('"BLOCKLY_XML_CODE":"'))) {
-                setIsTyping(true);
+
+
+            if (messageBuffer.includes('<xml')) {
                 setCodeBufferLoader(true);
-                if (messageBuffer.includes('","')) {
+            } else {
+                setCodeBufferLoader(false);
+            }
+            if ((messageBuffer.includes('"BLOCKLY_RESPONSE":"')) && chunk !== '":"') {
+                setIsTyping(true);
+                //to stop displaying xml
+                if (messageBuffer.includes('","' || messageBuffer.includes('"BLOCKLY_XML_CODE":"'))) {
                     messageBuffer = '';
                     setIsTyping(false);
-                    setCodeBufferLoader(true);
-
+                    //setCodeBufferLoader(true);
                 } else {
-                    setCodeBufferLoader(false);
+                    // setCodeBufferLoader(false);
                     setCurrentMessage((prevState) => ({
                         ...prevState, AIMessage: prevState.AIMessage + chunk, AITimestamp: timestamp,
                     }));
@@ -93,13 +94,12 @@ const Chat = ({drawer}) => {
         getAIMessage(userInput, getCurrentProject().xmlValue, abortControllerRef.current.signal, onMessage).then((res) => {
             if (res !== undefined) {
                 let finalMessage = handler(res);
-                if(finalMessage!==undefined) {
+                if (finalMessage !== undefined) {
                     setCodeBufferLoader(false);
                     setCurrentMessage((prevState) => ({
                         ...prevState, AIMessage: finalMessage, AITimestamp: timestamp,
                     }));
-                }
-                else{
+                } else {
                     setCodeBufferLoader(false);
                 }
                 addBlocksToWorkspace(res, workspace)
@@ -128,14 +128,9 @@ const Chat = ({drawer}) => {
             abortControllerRef.current.abort();
         }
         setIsTyping(false);
-        if (loader === true) {
+        if (loader && allChatMessages.length === currentMessage.id) {
             setCurrentMessage((prevState) => ({
                 ...prevState, AIMessage: Errors.error7, AITimestamp: timestamp
-            }));
-        }
-        if (currentMessage.AIMessage !== "") {
-            setCurrentMessage((prevState) => ({
-                ...prevState, paused: true
             }));
         }
     };

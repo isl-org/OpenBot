@@ -82,34 +82,25 @@ const UserMessage = ({timestamp, message}) => (
 /**
  * AssistantResponse component renders assistant's response with typewriter effect.
  * Manages display of response content, loader, and scrolling behavior.
- * @param timestamp
- * @param message
- * @param paused
- * @param setIsTyping
- * @param setLoader
- * @param loader
- * @param codeBufferLoader
- * @param allChatMessages
- * @param id
- * @param chatContainerRef
  * @returns {Element}
  * @constructor
+ * @param props
  */
-const AssistantResponse = ({
-                               timestamp,
-                               message,
-                               paused,
-                               setIsTyping,
-                               setLoader,
-                               loader,
-                               codeBufferLoader,
-                               allChatMessages,
-                               id,
-                               chatContainerRef,
-                           }) => {
+const AssistantResponse = (props) => {
+    const {
+        timestamp,
+        message,
+        paused,
+        setIsTyping,
+        setLoader,
+        loader,
+        codeBufferLoader,
+        allChatMessages,
+        id,
+        chatContainerRef,
+    } = props;
     const [displayedMessage, setDisplayedMessage] = useState('');
     const theme = useContext(ThemeContext);
-
     //Effect hook to manage loading state and update the displayed message when dependencies change.
     useEffect(() => {
         setLoader(message === '');
@@ -126,6 +117,7 @@ const AssistantResponse = ({
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [displayedMessage, chatContainerRef, loader, allChatMessages.length]);
+
 
     return (
         <div
