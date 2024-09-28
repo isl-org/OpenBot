@@ -23,7 +23,6 @@ If you used the custom PCB, check the version and set either `OPENBOT PCB_V1` or
 
 You can run the OpenBot via bluetooth as well, for that you can enable the bluetooth by setting `BLUETOOTH 1` (disable: 0). For bluetooth to work you need OpenBot with ESP32 boards like `(RTR_520, MTV, DIY_ESP32)`.
 
-
 ## Config
 
 Next, you need to configure which features you want to enable. Disabled features are not compiled to save memory and make the code faster. If a flag is not defined, the feature will be disabled. Each model has some default settings, that you may need to change depending on your configuration.
@@ -43,6 +42,7 @@ If you have enabled the speed sensors or the ultrasonic sensor, you need to inst
 If you have enabled the OLED, you need to install the libraries [Adafruit_SSD1306](https://github.com/adafruit/Adafruit_SSD1306) and [Adafruit_GFX Library](https://github.com/adafruit/Adafruit-GFX-Library).
 
 You can install libraries by following these steps:
+
 1. Open the Library Manager: `Tools` :arrow_right: `Manage Libraries`
 2. Enter the name of the library in the search bar.
 3. Select the latest version and click install. If you have already installed the library it will show and you may be able to update it.
@@ -69,14 +69,14 @@ To install the ESP32 board in your Arduino IDE, follow these next instructions:
   <img src="../docs/images/arduino-ide-open-preferences.png" width="300" alt="App GUI"/>
 </p>
 
-2. Enter *https://dl.espressif.com/dl/package_esp32_index.json* into the “*Additional Board Manager URLs*” field as shown in the figure below. Then, click the “OK” button:
+2. Enter *https://dl.espressif.com/dl/package_esp32_index.json* into the “_Additional Board Manager URLs_” field as shown in the figure below. Then, click the “OK” button:
 <p align="center">
   <img src="../docs/images/arduino_preferences.png" width="600" alt="App GUI"/>
 </p>
 
 **Note:** if you already have the ESP8266 boards URL, you can separate the URLs with a comma as follows:
 
-    https://dl.espressif.com/dl/package_esp32_index.json, 
+    https://dl.espressif.com/dl/package_esp32_index.json,
     http://arduino.esp8266.com/stable/package_esp8266com_index.json
 
 3. Open the Boards Manager. Go to **Tools > Board > Boards Manager**:
@@ -84,21 +84,26 @@ To install the ESP32 board in your Arduino IDE, follow these next instructions:
   <img src="../docs/images/arduino_boardsManager.png" width="800" alt="App GUI"/>
 </p>
 
-4. Search for ESP32 and press install button for the “ESP32 by Espressif Systems“:
+4. Go to tools and select the upload speed as 115200 (For newer ESP-32 chips such as ESP32-D0WD-V3 (revision v3.0)) .
+<p align="center">
+<img src="../docs/images/arduino_upload-speed-select.png" width="600" alt="App GUI"/>
+</p>
+
+5. Search for ESP32 and press install button for the “ESP32 by Espressif Systems“:
 <p align="center">
   <img src="../docs/images/arduino_installing.png" width="600" alt="App GUI"/>
 </p>
 
-5. You should now have everything to successfully flash the ESP32 board of your OpenBot using the Arduino development envinronment
+6. You should now have everything to successfully flash the ESP32 board of your OpenBot using the Arduino development envinronment
 <p align="center">
   <img src="../docs/images/arduino_ESP32-Board-add-on-in-Arduino-IDE-installed.png" width="600" alt="App GUI"/>
 </p>
 
-6. To flash the OpenBot with your new code, simply select **ESP32 Dev Module** in the menu **Tools > Board > ESP32 Arduino**. Note that additional content as well as troubleshooting of the ESP32 flashing prcess can be found in the following [link](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/).
-
+7. To flash the OpenBot with your new code, simply select **ESP32 Dev Module** in the menu **Tools > Board > ESP32 Arduino**. Note that additional content as well as troubleshooting of the ESP32 flashing prcess can be found in the following [link](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/).
 <p align="center">
   <img src="../docs/images/arduino_windows-select-board.png" width="600" alt="App GUI"/>
 </p>
+
 
 ## Upload
 
@@ -108,7 +113,7 @@ To install the ESP32 board in your Arduino IDE, follow these next instructions:
 - `Tools` :arrow_right: `Processor` :arrow_right: `ATmega328P (Old Bootloader)`
 - `Tools` :arrow_right: `Port` :arrow_right: `*Select the USB port*`
 
-:memo: NOTE: Currently, most cheap Arduino Nano boards come with the *Old Bootloader*. However, depending on the seller you may also get one with the new bootloader. So if you are unable to upload the firmware, chances are that you need to change the processor to *ATmega328P*.
+:memo: NOTE: Currently, most cheap Arduino Nano boards come with the _Old Bootloader_. However, depending on the seller you may also get one with the new bootloader. So if you are unable to upload the firmware, chances are that you need to change the processor to _ATmega328P_.
 
 ### Settings (ESP32 setup)
 
@@ -125,9 +130,9 @@ The firmware can now be uploaded through `Sketch` :arrow_right: `Upload` or by p
 This section explains how to test all functionalities of the car after the firmware was flashed successfully.
 
 1. Confirm that:
-    1. the wheels are not connected to the car
-    2. the Arduino is connected to the computer
-    3. the correct USB port is selected
+   1. the wheels are not connected to the car
+   2. the Arduino is connected to the computer
+   3. the correct USB port is selected
 2. Open the Serial Monitor: `Tools` :arrow_right: `Serial Monitor`
 
 #### Sending messages to the OpenBot
@@ -143,7 +148,7 @@ You can also send messages to the Arduino by typing a command into the input fie
 - `h<time_ms>` where `<time_ms>` corresponds to the time in ms after which the robot will stop if no new heartbeat message was received (default = -1).
 - `b<time_ms>` where `<time_ms>` corresponds to the time in ms after which the bumper trigger will be reset (default = 750).
 - `n<color>,<state>` where `<color>` corresponds to a status LED (`b` = blue, `g` = green, `y` = yellow) and `state` to its value (`0` = off, `1` = on).
-- `f` will send a request to the OpenBot to return a message with the robot type and its features, e.g. voltage measurement (`v`), indicators (`i`), sonar (`s`), bump sensors (`b`),  wheel odometry (`wf`, `wb`), LEDs (`lf`, `lb`, `ls`), etc. For example, for the `RTR_V1` version of OpenBot the message would look like this: `fRTR_V1:v:i:s:b:wf:wb:lf:lb:ls:`.
+- `f` will send a request to the OpenBot to return a message with the robot type and its features, e.g. voltage measurement (`v`), indicators (`i`), sonar (`s`), bump sensors (`b`), wheel odometry (`wf`, `wb`), LEDs (`lf`, `lb`, `ls`), etc. For example, for the `RTR_V1` version of OpenBot the message would look like this: `fRTR_V1:v:i:s:b:wf:wb:lf:lb:ls:`.
 
 #### Receiving messages from the OpenBot
 
@@ -162,25 +167,25 @@ Before you proceed, make sure the tires are removed. You will need the Serial Mo
 
 1. Turn on the car and observe the battery voltage (the number after the `v`). You can verify the reading with a multimeter and adjust the `VOLTAGE_DIVIDER_FACTOR` if necessary.
 2. If you have an ultrasonic sensor installed:
-    1. Hold your hand in front of the sensor and move it back and forth. You should see the readings (the number after the `s`) change correspondingly.
-    2. We have observed that the ultrasonic sensor is very sensitive to vibrations! So it is advisable to make sure you will get reliable readings during operation by performing the following test:
-        1. Place the OpenBot with the ultrasonic sensor installed such that there is at least 200cm of free space in front of it. You should see a reading of `200` or more.
-        2. Observe the readings on the serial monitor for some time and then enter the command `c128,128`.
-        3. If the sensor readings change significantly, you will need to dampen the vibrations transmitted to the ultrasonic sensor from the chassis (e.g. add some silicon, adjust the mounting position).
+   1. Hold your hand in front of the sensor and move it back and forth. You should see the readings (the number after the `s`) change correspondingly.
+   2. We have observed that the ultrasonic sensor is very sensitive to vibrations! So it is advisable to make sure you will get reliable readings during operation by performing the following test:
+      1. Place the OpenBot with the ultrasonic sensor installed such that there is at least 200cm of free space in front of it. You should see a reading of `200` or more.
+      2. Observe the readings on the serial monitor for some time and then enter the command `c128,128`.
+      3. If the sensor readings change significantly, you will need to dampen the vibrations transmitted to the ultrasonic sensor from the chassis (e.g. add some silicon, adjust the mounting position).
 3. If you have the speed sensors installed:
-    1. Make sure, you have plenty of free space in front of the ultrasonic sensor. The reading (the number after the `s`) needs to be at least above the `STOP_DISTANCE` which is `10` by default.
-    2. Send the command `c128,128`. The motors will start spinning at *slow speed* (50% PWM). The speed sensor readings (values after the `w`) are reported in rpm and should be between 250 and 300 for the RTR_TT version depending on the SOC of the battery. If you are using the DIY version or a weaker battery, values may be lower. Check that all motors are spinning forward and that the speed sensor readings are positive.
-    3. Try sending different controls and observe the speed sensor readings. For example, the command `c-128,-128` will spin all motors backward at *slow speed* (50% PWM). The command `c255,-255` will spin the left motors forward and the right motors backward at *fast speed* (100% PWM). The command `c-192,192` will spin the left motors backward and the right motors forward at *normal speed* (75% PWM).
+   1. Make sure, you have plenty of free space in front of the ultrasonic sensor. The reading (the number after the `s`) needs to be at least above the `STOP_DISTANCE` which is `10` by default.
+   2. Send the command `c128,128`. The motors will start spinning at _slow speed_ (50% PWM). The speed sensor readings (values after the `w`) are reported in rpm and should be between 250 and 300 for the RTR_TT version depending on the SOC of the battery. If you are using the DIY version or a weaker battery, values may be lower. Check that all motors are spinning forward and that the speed sensor readings are positive.
+   3. Try sending different controls and observe the speed sensor readings. For example, the command `c-128,-128` will spin all motors backward at _slow speed_ (50% PWM). The command `c255,-255` will spin the left motors forward and the right motors backward at _fast speed_ (100% PWM). The command `c-192,192` will spin the left motors backward and the right motors forward at _normal speed_ (75% PWM).
 4. Stop the motors by sending the command `c0,0` or by holding your hand in front of the ultrasonic sensor
 5. If you have the indicator LEDs installed, send the command `i1,0` and observe the left indicator light flashing. The send the command `i0,1` and observe the right indicator light flashing. Finally, turn the indicator off by sending the command `i0,0`.
 
 ### No Phone Mode
 
-Before testing the car with a smartphone that has the OpenBot application installed, you can also test the car without a phone first. Simply set the option `NO_PHONE_MODE` to `1`. The car will now drive at *normal_speed* (75% PWM) and slow down as it detects obstacles with the ultrasonic sensor. Once it gets close to the `TURN_THRESHOLD` (default: 50cm), it will start turning in a random direction and turn on the LED on that side. If the estimated free space in front of the car falls below the `TURN_THRESHOLD`, it will slowly go backwards and both LEDs will turn on. Note that both the car and the Arduino need to be powered. The Arduino can be powered by connecting the 5V pin to the 5V output of the L298N motor driver, or by connecting the USB cable to a power source (e.g. phone).
+Before testing the car with a smartphone that has the OpenBot application installed, you can also test the car without a phone first. Simply set the option `NO_PHONE_MODE` to `1`. The car will now drive at _normal_speed_ (75% PWM) and slow down as it detects obstacles with the ultrasonic sensor. Once it gets close to the `TURN_THRESHOLD` (default: 50cm), it will start turning in a random direction and turn on the LED on that side. If the estimated free space in front of the car falls below the `TURN_THRESHOLD`, it will slowly go backwards and both LEDs will turn on. Note that both the car and the Arduino need to be powered. The Arduino can be powered by connecting the 5V pin to the 5V output of the L298N motor driver, or by connecting the USB cable to a power source (e.g. phone).
 
 Before running the car, we recommend to remove the tires, connect the Arduino to a computer and observe the serial monitor like in the section [Testing](#testing). The output on the serial monitor is a bit easier to parse (same as OLED) and shows the battery voltage, the rpm for the left and right motors and the estimated free space in front of the car. You can move a large object back and forth in front of ultrasonic sensor and observe the speed of the motors changing.
 
-:warning: WARNING: If you do not have an ultrasonic sensor installed or if it is disabled, the car will just drive forward at *normal_speed* (75% PWM) and will eventually collide. Even with the sensor installed, the car may collide occasionally due to noisy readings.
+:warning: WARNING: If you do not have an ultrasonic sensor installed or if it is disabled, the car will just drive forward at _normal_speed_ (75% PWM) and will eventually collide. Even with the sensor installed, the car may collide occasionally due to noisy readings.
 
 ## Using other MCUs (requirements)
 
