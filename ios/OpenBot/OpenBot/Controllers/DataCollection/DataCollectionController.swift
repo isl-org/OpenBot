@@ -5,6 +5,7 @@
 import Foundation
 import UIKit
 import AVFoundation
+import ZIPFoundation
 
 /// The DataCollectionController class implements a set of mechanisms allowing to sample visual observations and sensor data from the phone
 /// and to save this data in a collection of zip files, that will be later used for training purposes.
@@ -28,12 +29,22 @@ class DataCollectionController: CameraController {
     private var isImageCaptureQueueBusy = false
     var saveZipFilesName = [URL]()
     var paths: [String] = [""]
+    var selectedSaveAsDropdown: String = "Local";
+    let webSocketMsgHandler = WebSocketMessageHandler();
+    let fragmentType = FragmentType.shared
 
     /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         dataLogger.reset()
+    }
+
+    /**
+     Removing all notifications
+     */
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     /// Called after the view controller has loaded.
@@ -49,6 +60,22 @@ class DataCollectionController: CameraController {
             let newBackButton = UIBarButtonItem(image: backNavigationIcon, title: Strings.dataCollection, target: self, action: #selector(DataCollectionController.back(sender:)), titleColor: Colors.navigationColor ?? .white)
             navigationItem.leftBarButtonItem = newBackButton
         }
+                
+        if let value = preferencesManager.getSensorData(sensor: "isVehicleLogSelected"){
+            dataLogger.isVehicleLogSelected = value as! Bool;
+        }
+        if let value = preferencesManager.getSensorData(sensor: "isGpsLogSelected"){
+            dataLogger.isGpsLogSelected = value as! Bool;        }
+        if let value = preferencesManager.getSensorData(sensor: "isMagneticLogSelected"){
+            dataLogger.isMagneticLogSelected = value as! Bool;
+        }
+        if let value = preferencesManager.getSensorData(sensor: "isGyroscopeLogSelected"){
+            dataLogger.isGyroscopeLogSelected = value as! Bool;
+        }
+        if let value = preferencesManager.getSensorData(sensor: "isAccelerationLogSelected"){
+            dataLogger.isAccelerationLogSelected = value as! Bool;
+        }
+        
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         NotificationCenter.default.addObserver(self, selector: #selector(switchCamera), name: .switchCamera, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(openBluetoothSettings), name: .ble, object: nil)
@@ -56,8 +83,18 @@ class DataCollectionController: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updatePreview), name: .updatePreview, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTraining), name: .updateTraining, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateLightsCommandFromControllerApp), name: .updateLightsCommandFromControllerApp, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateLogData), name: .logData, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSaveAs), name: .saveAs, object: nil)
+
         gameController.resetControl = false
+        fragmentType.currentFragment = "DataCollection";
+        //Start the server
+        var serverListener = ServerListener();
+        serverListener.start();
+        dataLogger.getDocumentDirectoryInformation()
+        let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: self.fragmentType.currentFragment));
+        client.send(message: msg);
     }
 
     /// Notifies the view controller that its view is about to be added to a view hierarchy.
@@ -91,27 +128,40 @@ class DataCollectionController: CameraController {
     ///
     /// - Parameters: path of the folder to compress
     func createZip(path: URL) {
-        for t in DataLogger.shared.baseDirList {
-            let baseDirectoryName = t + ".zip";
-            let fm = FileManager.default
-            let baseDirectoryUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(Strings.forwardSlash + t)
-            var error: NSError?
-            let coordinator = NSFileCoordinator()
-            coordinator.coordinate(readingItemAt: baseDirectoryUrl, options: [.forUploading], error: &error) { (zipUrl) in
-                let tmpUrl = try! fm.url(
-                        for: .itemReplacementDirectory,
-                        in: .userDomainMask,
-                        appropriateFor: zipUrl,
-                        create: true
-                ).appendingPathComponent(baseDirectoryName)
-                try! fm.moveItem(at: zipUrl, to: tmpUrl)
-                saveZipFilesName.append(tmpUrl)
+        for file in dataLogger.baseDirList {
+            let baseDirectoryName = file + ".zip";
+            let fileManager = FileManager.default
+            let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
+            var sourceURL = URL(fileURLWithPath: path)
+            sourceURL.appendPathComponent(file);
+            var destinationURL = URL(fileURLWithPath: path)
+            destinationURL.appendPathComponent(baseDirectoryName);
+            do {
+                try fileManager.zipItem(at: sourceURL, to: destinationURL, shouldKeepParent: false)
+                saveZipFilesName.append(destinationURL);
+                if let last = saveZipFilesName.last {
+                    switch selectedSaveAsDropdown {
+                    case "Server":
+                        uploadFile(saveZipFilesName: last)
+                    case "Drive":
+                        uploadFilToDrive(saveZipFilesName: last);
+                    default:
+                        print();
+                    }
+
+                };
+            } catch {
+                print(error)
             }
         }
+    }
+
+
+    func presentActivityController() {
         let avc = UIActivityViewController(activityItems: saveZipFilesName, applicationActivities: nil)
         present(avc, animated: true)
         avc.completionWithItemsHandler = { activity, success, items, error in
-            DataLogger.shared.deleteFiles(fileNameToDelete: Strings.forwardSlash + DataLogger.shared.getBaseDirectoryName())
+            DataLogger.shared.deleteZipFileFromDocument();
         }
     }
 
@@ -226,7 +276,6 @@ class DataCollectionController: CameraController {
 
     /// Activate/deactivate logging
     @objc func toggleLogging() {
-
         loggingEnabled = !loggingEnabled;
         isLoggedButtonPressed = true;
 
@@ -251,7 +300,11 @@ class DataCollectionController: CameraController {
 
             // Save the collected sensor data
             dataLogger.saveSensorData()
-
+            if let url = URL(string: dataLogger.openbotPath) {
+                if isLoggedButtonPressed {
+                    createZip(path: url)
+                }
+            }
             // Reset data logger
             dataLogger.reset()
         }
@@ -308,10 +361,11 @@ class DataCollectionController: CameraController {
         if isLoggedButtonPressed && loggingEnabled {
             toggleLogging()
         }
-        if let url = URL(string: dataLogger.openbotPath) {
-            if isLoggedButtonPressed {
-                createZip(path: url)
+        if saveZipFilesName.count != 0 {
+            if selectedSaveAsDropdown == "Local" {
+                presentActivityController()
             }
+
         }
         _ = navigationController?.popViewController(animated: true)
     }
@@ -328,6 +382,38 @@ class DataCollectionController: CameraController {
             gameController.sendControlFromPhoneController(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
         }
     }
+    
+    /// update screen command data coming from application
+    @objc func updateLightsCommandFromControllerApp(_ notification: Notification) {
+        if gameController.selectedControlMode == ControlMode.GAMEPAD {
+            return
+        }
+        if notification.object != nil {
+            let command = notification.object as! String
+            let controllerCommand = command.slice(from: "command: ", to: " }")
+            switch controllerCommand {
+            case "INDICATOR_LEFT":
+                self.webSocketMsgHandler.indicatorLeft()
+                break;
+            case "INDICATOR_RIGHT":
+                self.webSocketMsgHandler.indicatorRight();
+                break
+            case "INDICATOR_STOP":
+                self.webSocketMsgHandler.cancelIndicator();
+            case "SPEED_DOWN":
+                self.webSocketMsgHandler.speedDown();
+                break;
+            case "SPEED_UP":
+                self.webSocketMsgHandler.speedUp();
+                break;
+            case "DRIVE_MODE":
+                self.webSocketMsgHandler.driveMode()
+                break;
+            default:
+                break;
+            }
+        }
+    }
 
     /// update the logs data
     @objc func updateLogData(_ notification: Notification) {
@@ -336,6 +422,91 @@ class DataCollectionController: CameraController {
             loggingEnabled = logData;
         }
     }
+
+    /**
+     Function to upload file on server
+     - Parameter saveZipFilesName:
+     */
+    func uploadFile(saveZipFilesName: URL) {
+        let fileURL = saveZipFilesName
+        guard let fileData = try? Data(contentsOf: fileURL) else {
+            print("Failed to read file data.")
+            return
+        }
+
+        if let host = ServerCommunication.serverEndPoint?.host {
+            let port = ServerCommunication.serverEndPoint?.port ?? "8000";
+            var request = URLRequest(url: URL(string: "http://\(host):\(port)/upload")!)
+            request.httpMethod = "POST"
+            let boundary = "Boundary-\(UUID().uuidString)"
+            let contentType = "multipart/form-data; boundary=\(boundary)"
+            request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+
+            let body = NSMutableData()
+
+            // Add file data
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileURL.lastPathComponent)\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: application/zip\r\n\r\n".data(using: .utf8)!)
+            body.append(fileData)
+            body.append("\r\n".data(using: .utf8)!)
+
+            // Add more fields if needed
+
+            body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+            request.httpBody = body as Data
+
+            let session = URLSession.shared
+            let task = session.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error.localizedDescription)")
+                    return
+                }
+
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("Status code: \(httpResponse.statusCode)")
+                }
+
+                if let data = data {
+                    // Handle the response data here
+                    print("Response data: \(data)")
+                }
+            }
+            task.resume()
+        }
+    }
+
+    /**
+     Notofication handler of save as dropdown
+     - Parameter notification:
+     */
+    @objc func updateSaveAs(_ notification: Notification) {
+        if notification.object != nil {
+            selectedSaveAsDropdown = notification.object as! String
+        }
+    }
+
+    /**
+     Function to upload collected data on the google drive
+     - Parameter saveZipFilesName:
+     */
+    func uploadFilToDrive(saveZipFilesName: URL) {
+        if Authentication.googleAuthentication.googleSignIn.currentUser == nil {
+            return
+        }
+        Authentication.googleAuthentication.checkFolderExistsInDrive { folderId in
+            if folderId == String() {
+                Authentication.googleAuthentication.createOpenBotFolder { folderId in
+                    Authentication.googleAuthentication.uploadZipFileToDrive(saveZipFilesName: saveZipFilesName, folderId: folderId)
+                }
+            } else {
+                Authentication.googleAuthentication.uploadZipFileToDrive(saveZipFilesName: saveZipFilesName, folderId: folderId)
+            }
+        }
+    }
+
+
 }
 
 

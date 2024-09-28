@@ -42,8 +42,21 @@ extension Notification.Name {
     static let increaseSpeedMode = Notification.Name("increaseSpeedMode");
     static let updateDriveMode = Notification.Name("updateDriveMode");
     static let updateStringFromControllerApp = Notification.Name("updateStringFromControllerApp");
+    static let updateLightsCommandFromControllerApp = Notification.Name("updateLightsCommandFromControllerApp");
     static let updateDataFromControllerApp = Notification.Name("updateDataFromControllerApp");
     static let cameraBuffer = Notification.Name("cameraBuffer");
     static let clientConnected = Notification.Name("clientConnected");
     static let clientDisConnected = Notification.Name("clientDisConnected");
+    static let googleSignIn = Notification.Name("googleSignIn");
+    static let cancelThread = Notification.Name("cancelThread");
+    static let reInitializeCamera = Notification.Name("reInitializeCamera");
+    static let commandName = Notification.Name("commandName");
+    static let projectDeleted = Notification.Name("projectDeleted");
+    static let autoSynced = Notification.Name("autoSynced");
+    static let commandObject = Notification.Name("commandObject");
+    static let createCameraView = Notification.Name("createCameraView");
+    static let pointGoalNav = Notification.Name("pointGoalNav");
+    static let server = Notification.Name("server");
+    static let saveAs = Notification.Name("saveAs");
+    static let displayItems = Notification.Name("displayItems");
 }

@@ -92,7 +92,6 @@ class WebRTCDelegates: WebRTCClientDelegate {
             print(error)
 
         }
-
     }
 
     ///function to send the offer/answer SDP to the controller

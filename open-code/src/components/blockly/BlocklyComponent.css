@@ -1,0 +1,172 @@
+#blocklyDiv {
+    color: #000000;
+    background-color: white;
+    position: fixed;
+    top: 5rem;
+    bottom: 4.4rem;
+}
+
+/* Adds padding around the group of categories and separators. */
+.blocklyToolboxContents {
+    padding-top: 3rem;
+    border-right: 0.5px solid black;
+    height: 100%;
+    position: relative;
+    left: 0;
+    bottom: 10px;
+}
+
+.blocklyMainBackground{
+    stroke: none;
+}
+
+/* Adds space between the categories, rounds the corners and adds space around the label. */
+.blocklyTreeRow {
+    margin-bottom: 0;
+    height: 2.5rem;
+    line-height: 2.5rem;
+}
+
+
+.blocklyFieldToggle text {
+    fill: white !important;
+}
+
+.field-toggle-on {
+    fill: #4ddc64 !important;
+}
+
+.field-toggle-off {
+    fill: #95a5a6 !important;
+}
+
+.blocklyDropDownMenu .goog-menuitem {
+    border-radius: 50px; /* Adjust the value to achieve the desired ellipse shape */
+}
+
+.blocklyMenuItemSelected .blocklyMenuItemCheckbox {
+    background: url("../../assets/images/icon/blockly-icons.png") no-repeat -48px -16px;
+}
+
+.sensorsHeading > .blocklyFlyoutLabelText {
+    font-size: 1.4rem !important;
+    fill: white !important;
+    font-family: Gilroy-Bold, sans-serif;
+}
+
+.Heading > .blocklyFlyoutLabelText {
+    font-size: 1.4rem !important;
+    fill: white !important;
+    font-family: Gilroy-Bold, sans-serif;
+}
+
+
+@media (max-width: 767px) {
+
+    #blocklyDiv {
+        bottom: 9%;
+    }
+
+    .blocklyTreeLabel {
+        font: 1rem sans-serif;
+        padding: 0 4px;
+    }
+
+    .blocklyTreeRow {
+        padding: 4px;
+    }
+
+    .blocklyDropDownMenu {
+        padding-bottom: inherit;
+    }
+
+    .blocklyToolboxContents {
+        padding-top: 3rem;
+        border-right: 0.5px solid black;
+        height: 140%;
+        position: relative;
+        left: 0;
+        bottom: 10px;
+    }
+
+    .sensorsHeading > .blocklyFlyoutLabelText {
+        font-size: 1.2rem !important;
+    }
+
+    .Heading > .blocklyFlyoutLabelText {
+        font-size: 1.2rem !important;
+    }
+}
+
+
+@media (max-width: 768px) and (max-height: 670px) {
+
+    .blocklyTreeLabel {
+        font: 14px sans-serif;
+        padding: 0 4px;
+    }
+
+    .blocklyTreeRow {
+        height: 2rem;
+        line-height: 2rem;
+    }
+}
+
+@media only screen and (min-width: 400px) and (max-width: 1024px) and (max-height: 450px) and (orientation: landscape) {
+
+    #blocklyDiv {
+        bottom: 18%;
+        top: 4rem;
+    }
+
+    .blocklyTreeLabel {
+        font: 15px sans-serif;
+        padding: 0 4px;
+    }
+
+    .blocklyTreeRow {
+        height: 2.3rem;
+        line-height: 2.3rem;
+    }
+
+    .blocklyToolboxContents {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        height: 250%;
+    }
+}
+
+@media (min-width: 744px) and (max-width: 1024px) and (min-height: 650px) {
+
+    #blocklyDiv {
+        bottom: 4.4rem;
+        top: 6rem;
+    }
+
+    .blocklyTreeLabel {
+        font-size: 24px;
+        padding: 0 4px;
+    }
+
+    .blocklyTreeRow {
+        height: 4rem;
+        line-height: 4rem;
+        padding-right: 2rem;
+    }
+
+    .blocklyTreeRowContentContainer {
+        padding-left: 0.5rem;
+    }
+
+    .blocklyToolboxContents {
+        height: 140%;
+    }
+}
+
+/*.zelos-renderer.dark-theme .blocklyText{*/
+/*    fill: white;*/
+/*}*/
+
+/*.zelos-renderer.light-theme .blocklyText{*/
+/*    fill: black;*/
+/*}*/

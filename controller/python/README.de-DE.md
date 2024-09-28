@@ -38,7 +38,7 @@ Die Python-Skripte warten auf eine eingehende Verbindung. Gehen Sie auf dem Tele
 
 ### Verwendung von Pygame
 
-Diese Skripte ermöglichen es Ihnen, den Roboter mit der Tastatur ähnlich wie bei einem Autorennspiel zu steuern.
+Diese Skripte ermöglichen es Ihnen, den Roboter mit der Tastatur ähnlich wie in einem Autorennspiel zu steuern.
 
 Führen Sie den Controller ohne Video aus:
 
@@ -48,15 +48,15 @@ Führen Sie den Controller mit Video aus:
 
 `python keyboard-pygame.py --video`
 
-Hier ist die Nutzung:
+Hier ist die Verwendung:
 
 ```
     W:        Vorwärts fahren
     S:        Rückwärts fahren
     A:        Leicht nach links drehen (während der Fahrt)
     D:        Leicht nach rechts drehen (während der Fahrt)
-    Q:        Nach links rotieren
-    E:        Nach rechts rotieren
+    Q:        Nach links drehen
+    E:        Nach rechts drehen
 
     M:        Fahrmodus
     N:        Rauschen umschalten
@@ -76,7 +76,7 @@ Führen Sie den Controller aus:
 
 `python keyboard-click.py`
 
-Hier ist die Nutzung:
+Hier ist die Verwendung:
 
 ```bash
     W:        Geschwindigkeit erhöhen
@@ -93,5 +93,4 @@ Hier ist die Nutzung:
     Unten:    Netzwerkmodus
     LEERTASTE: Protokollierung umschalten
     ESC:      Beenden
-```
 ```

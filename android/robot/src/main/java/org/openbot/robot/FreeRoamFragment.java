@@ -48,7 +48,6 @@ public class FreeRoamFragment extends ControlsFragment {
     binding.voltageInfo.setText(getString(R.string.voltageInfo, "--.-"));
     binding.controllerContainer.speedInfo.setText(getString(R.string.speedInfo, "---,---"));
     binding.sonarInfo.setText(getString(R.string.distanceInfo, "---"));
-
     if (vehicle.getConnectionType().equals("USB")) {
       binding.usbToggle.setVisibility(View.VISIBLE);
       binding.bleToggle.setVisibility(View.GONE);
@@ -111,6 +110,17 @@ public class FreeRoamFragment extends ControlsFragment {
           binding.bleToggle.setChecked(vehicle.bleConnected());
           Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
         });
+    binding.bleToggle.setOnClickListener(
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
+        });
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    binding.bleToggle.setChecked(vehicle.bleConnected());
   }
 
   @Override
@@ -216,6 +226,14 @@ public class FreeRoamFragment extends ControlsFragment {
             requestPermissionLauncher.launch(Constants.PERMISSIONS_CONTROLLER);
           else connectPhoneController();
           break;
+        case WEBSERVER:
+          binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_server);
+          if (!PermissionUtils.hasControllerPermissions(requireActivity()))
+            requestPermissionLauncher.launch(Constants.PERMISSIONS_CONTROLLER);
+          else {
+            connectWebController();
+          }
+          break;
       }
       Timber.d("Updating  controlMode: %s", controlMode);
       preferencesManager.setControlMode(controlMode.getValue());
@@ -247,6 +265,16 @@ public class FreeRoamFragment extends ControlsFragment {
     DriveMode oldDriveMode = currentDriveMode;
     // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);
+    binding.controllerContainer.driveMode.setAlpha(0.5f);
+    binding.controllerContainer.driveMode.setEnabled(false);
+    preferencesManager.setDriveMode(oldDriveMode.getValue());
+  }
+
+  private void connectWebController() {
+    phoneController.connectWebServer();
+    Enums.DriveMode oldDriveMode = currentDriveMode;
+    // Currently only dual drive mode supported
+    setDriveMode(Enums.DriveMode.GAME);
     binding.controllerContainer.driveMode.setAlpha(0.5f);
     binding.controllerContainer.driveMode.setEnabled(false);
     preferencesManager.setDriveMode(oldDriveMode.getValue());

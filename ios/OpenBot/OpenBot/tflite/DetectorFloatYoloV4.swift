@@ -148,8 +148,8 @@ class DetectorFloatYoloV4: Detector {
                     let scaleX = CGFloat(width) / CGFloat(getImageSizeX())
                     let scaleY = CGFloat(height) / CGFloat(getImageSizeY())
                     //let scale = min(scaleX, scaleY)
-                    let dx = (CGFloat(width) - scaleX*CGFloat(getImageSizeX()))/2
-                    let dy = (CGFloat(height) - scaleY*CGFloat(getImageSizeY()))/2
+                    let dx = (CGFloat(width) - scaleX * CGFloat(getImageSizeX())) / 2
+                    let dy = (CGFloat(height) - scaleY * CGFloat(getImageSizeY())) / 2
                     let transform = CGAffineTransform.identity.translatedBy(x: dx, y: dy).scaledBy(x: scaleX, y: scaleY)
                     let detection = CGRect(x: CGFloat(max(0, xPos - w / 2)), y: CGFloat(max(0, yPos - h / 2)), width: CGFloat(w), height: CGFloat(h)).applying(transform);
                     recognitions.append(Recognition(id: String(i), title: labels[classId], confidence: maxClass, location: detection, classId: classId));
@@ -157,6 +157,88 @@ class DetectorFloatYoloV4: Detector {
             }
         }
         // Execute non-maximum suppression 
+        return nms(recognitions: recognitions);
+    }
+
+    override func getMultipleRecognitions(classA: String, classB: String, width: Int, height: Int) -> [Recognition] {
+        var recognitions: [Recognition] = [];
+        var outputScores2D = Array(repeating: Array<Float32>(repeating: 0, count: labels.count), count: NUM_DETECTIONS);
+        for a in 0..<NUM_DETECTIONS {
+            for b in 0..<labels.count {
+                outputScores2D[a][b] = outputScores![a * labels.count + b];
+            }
+        }
+
+        if (NUM_DETECTIONS > 0) {
+            for i in 0..<NUM_DETECTIONS {
+                var maxClass: Float = 0;
+                var classId = -1;
+                let classes = outputScores2D[i];
+
+                for c in 0..<classes.count {
+                    if (classes[c] > maxClass) {
+                        classId = c;
+                        maxClass = classes[c];
+                    }
+                }
+
+                if (classId > -1 && (classA == labels[classId] || classB == labels[classId])) {
+                    let xPos = outputLocations![4 * i];
+                    let yPos = outputLocations![4 * i + 1];
+                    let w = outputLocations![4 * i + 2];
+                    let h = outputLocations![4 * i + 3];
+                    let scaleX = CGFloat(width) / CGFloat(getImageSizeX())
+                    let scaleY = CGFloat(height) / CGFloat(getImageSizeY())
+                    //let scale = min(scaleX, scaleY)
+                    let dx = (CGFloat(width) - scaleX * CGFloat(getImageSizeX())) / 2
+                    let dy = (CGFloat(height) - scaleY * CGFloat(getImageSizeY())) / 2
+                    let transform = CGAffineTransform.identity.translatedBy(x: dx, y: dy).scaledBy(x: scaleX, y: scaleY)
+                    let detection = CGRect(x: CGFloat(max(0, xPos - w / 2)), y: CGFloat(max(0, yPos - h / 2)), width: CGFloat(w), height: CGFloat(h)).applying(transform);
+                    recognitions.append(Recognition(id: String(i), title: labels[classId], confidence: maxClass, location: detection, classId: classId));
+                }
+            }
+        }
+        // Execute non-maximum suppression
+        return nms(recognitions: recognitions);
+    }
+
+    override func getAllRecognitions(width: Int, height: Int) -> [Recognition] {
+        var recognitions: [Recognition] = [];
+        var outputScores2D = Array(repeating: Array<Float32>(repeating: 0, count: labels.count), count: NUM_DETECTIONS);
+        for a in 0..<NUM_DETECTIONS {
+            for b in 0..<labels.count {
+                outputScores2D[a][b] = outputScores![a * labels.count + b];
+            }
+        }
+        if (NUM_DETECTIONS > 0) {
+            for i in 0..<NUM_DETECTIONS {
+                var maxClass: Float = 0;
+                var classId = -1;
+                let classes = outputScores2D[i];
+                for c in 0..<classes.count {
+                    if (classes[c] > maxClass) {
+                        classId = c;
+                        maxClass = classes[c];
+                    }
+                }
+                if (classId > -1) {
+                    let xPos = outputLocations![4 * i];
+                    let yPos = outputLocations![4 * i + 1];
+                    let w = outputLocations![4 * i + 2];
+                    let h = outputLocations![4 * i + 3];
+                    let scaleX = CGFloat(width) / CGFloat(getImageSizeX())
+                    let scaleY = CGFloat(height) / CGFloat(getImageSizeY())
+                    //let scale = min(scaleX, scaleY)
+                    let dx = (CGFloat(width) - scaleX * CGFloat(getImageSizeX())) / 2
+                    let dy = (CGFloat(height) - scaleY * CGFloat(getImageSizeY())) / 2
+                    let transform = CGAffineTransform.identity.translatedBy(x: dx, y: dy).scaledBy(x: scaleX, y: scaleY)
+                    let detection = CGRect(x: CGFloat(max(0, xPos - w / 2)), y: CGFloat(max(0, yPos - h / 2)), width: CGFloat(w), height: CGFloat(h)).applying(transform);
+                    recognitions.append(Recognition(id: String(i), title: labels[classId], confidence: maxClass, location: detection, classId: classId));
+                }
+
+            }
+        }
+        // Execute non-maximum suppression
         return nms(recognitions: recognitions);
     }
 }

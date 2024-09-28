@@ -24,6 +24,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import java.util.Objects;
 import org.openbot.OpenBotApplication;
 import org.openbot.R;
 import org.openbot.utils.Constants;
@@ -40,14 +42,17 @@ public class MainActivity extends AppCompatActivity {
   private BroadcastReceiver localBroadcastReceiver;
   private Vehicle vehicle;
   private LocalBroadcastManager localBroadcastManager;
+  private BottomNavigationView bottomNavigationView;
+  private NavController navController;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
     viewModel = new ViewModelProvider(this).get(MainViewModel.class);
     vehicle = OpenBotApplication.vehicle;
+    bottomNavigationView = findViewById(R.id.bottomNavigationView);
+    bottomNavigationView.setSelectedItemId(R.id.home);
     //    if (vehicle == null) {
     //      SharedPreferences sharedPreferences =
     // PreferenceManager.getDefaultSharedPreferences(this);
@@ -115,20 +120,46 @@ public class MainActivity extends AppCompatActivity {
 
     NavHostFragment navHostFragment =
         (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-    NavController navController = navHostFragment.getNavController();
+    navController = navHostFragment.getNavController();
     AppBarConfiguration appBarConfiguration =
         new AppBarConfiguration.Builder(navController.getGraph()).build();
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
+    bottomNavigationView.setOnItemReselectedListener(
+        item -> {
+          // Do nothing when the selected item is already selected
+        });
+
     NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
+    NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
     navController.addOnDestinationChangedListener(
         (controller, destination, arguments) -> {
           if (destination.getId() == R.id.mainFragment
               || destination.getId() == R.id.settingsFragment
-              || destination.getId() == R.id.usbFragment) toolbar.setVisibility(View.VISIBLE);
-          else toolbar.setVisibility(View.GONE);
+              || destination.getId() == R.id.usbFragment
+              || destination.getId() == R.id.projectsFragment
+              || destination.getId() == R.id.profileFragment) {
+            toolbar.setVisibility(View.VISIBLE);
+            bottomNavigationView.setVisibility(View.VISIBLE);
+          } else {
+            toolbar.setVisibility(View.GONE);
+            bottomNavigationView.setVisibility(View.GONE);
+          }
+
+          // To update the toolbar icon according to the Fragment.
+          Menu menu = toolbar.getMenu();
+          if (destination.getId() == R.id.projectsFragment) {
+            menu.findItem(R.id.settingsFragment).setVisible(false);
+            menu.findItem(R.id.barCodeScannerFragment).setVisible(true);
+          } else {
+            menu.findItem(R.id.barCodeScannerFragment).setVisible(false);
+            if (vehicle.getConnectionType().equals("Bluetooth")) {
+              menu.findItem(R.id.bluetoothFragment).setVisible(true);
+            }
+            menu.findItem(R.id.settingsFragment).setVisible(true);
+          }
         });
 
     //    if (savedInstanceState == null) {
@@ -142,6 +173,15 @@ public class MainActivity extends AppCompatActivity {
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.menu_items, menu);
+    // Get the current destination id.
+    int currentDestinationId =
+        Objects.requireNonNull(navController.getCurrentDestination()).getId();
+    if (currentDestinationId == R.id.projectsFragment) {
+      menu.findItem(R.id.barCodeScannerFragment).setVisible(true);
+      menu.findItem(R.id.settingsFragment).setVisible(false);
+    } else {
+      menu.findItem(R.id.barCodeScannerFragment).setVisible(false);
+    }
     if (vehicle.getConnectionType().equals("Bluetooth")) {
       menu.findItem(R.id.usbFragment).setVisible(false);
       menu.findItem(R.id.bluetoothFragment).setVisible(true);
@@ -155,6 +195,11 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+    if (item.getItemId() == R.id.barCodeScannerFragment) {
+      navController.navigate(R.id.barCodeScannerFragment);
+      return true;
+    }
+
     return NavigationUI.onNavDestinationSelected(item, navController)
         || super.onOptionsItemSelected(item);
   }
@@ -179,10 +224,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Check that the event came from a game controller
     if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) {
-      if (event.getAction() == KeyEvent.ACTION_UP) {
-        bundle.putParcelable(Constants.DATA, event);
-        getSupportFragmentManager().setFragmentResult(Constants.KEY_EVENT, bundle);
-      }
+      bundle.putParcelable(Constants.DATA, event);
+      getSupportFragmentManager().setFragmentResult(Constants.KEY_EVENT, bundle);
       return true;
     }
     return super.dispatchKeyEvent(event);

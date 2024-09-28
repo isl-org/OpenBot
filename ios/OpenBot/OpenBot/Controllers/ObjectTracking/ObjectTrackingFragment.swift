@@ -29,7 +29,9 @@ class ObjectTrackingFragment: CameraController {
     private var bufferWidth = 0
     private let edgeOffset: CGFloat = 2.0
     private var useDynamicSpeed: Bool = false
-    
+    let webSocketMsgHandler = WebSocketMessageHandler();
+    let fragmentType = FragmentType.shared
+
     /// Called after the view fragment has loaded.
     override func viewDidLoad() {
         let modelItems = Common.loadAllModelItemsFromBundle()
@@ -38,7 +40,28 @@ class ObjectTrackingFragment: CameraController {
             currentModel = model
             detector = try! Detector.create(model: Model.fromModelItem(item: model ?? modelItems[0]), device: RuntimeDevice.CPU, numThreads: numberOfThreads) as? Detector
         }
-        
+        if let threads = preferencesManager.getThreads(){
+            numberOfThreads = Int(threads) ?? 4
+            detector?.tfliteOptions.threadCount = numberOfThreads
+        }
+        if let confidence = preferencesManager.getObjectTrackConfidence(){
+            MINIMUM_CONFIDENCE_TF_OD_API = Float(confidence as! Int) / 100.0
+        }
+        if let device = preferencesManager.getDevice(){
+            currentDevice = RuntimeDevice(rawValue: device) ?? RuntimeDevice.CPU
+            detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector
+            detector?.tfliteOptions.threadCount = numberOfThreads
+        }
+        if let lastModel = preferencesManager.getObjectTrackModel(){
+            if Common.isModelItemAvailableInDocument(modelName: lastModel) == true {
+                currentModel = Common.returnModelItem(modelName: lastModel)
+                detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector
+            }
+        }
+        if let object = preferencesManager.getObjectTrackingObject(){
+            currentObject = object;
+            detector?.setSelectedClass(newClass: object);
+        }
         objectTrackingSettings = ObjectTrackingSettings(frame: CGRect(x: 0, y: height - 375, width: width, height: 375), detector: detector, model: currentModel)
         objectTrackingSettings!.backgroundColor = Colors.freeRoamButtonsColor
         objectTrackingSettings!.layer.cornerRadius = 5
@@ -55,18 +78,22 @@ class ObjectTrackingFragment: CameraController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateModel), name: .updateModel, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateSelectedObject), name: .updateObject, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateLightsCommandFromControllerApp), name: .updateLightsCommandFromControllerApp, object: nil)
         setupNavigationBarItem()
         gameController.resetControl = false
+        fragmentType.currentFragment = "ObjectDetection";
         calculateFrame()
+        let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: self.fragmentType.currentFragment));
+        client.send(message: msg);
         super.viewDidLoad()
     }
-    
+
     /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         calculateFrame()
     }
-    
+
     func calculateFrame() {
         if currentOrientation == .portrait || currentOrientation == .portraitUpsideDown {
             objectTrackingSettings?.frame.origin.x = 0
@@ -76,12 +103,12 @@ class ObjectTrackingFragment: CameraController {
             objectTrackingSettings?.frame.origin.y = 30
         }
     }
-    
+
     @objc func openBluetoothSettings() {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
         navigationController?.pushViewController(nextViewController!, animated: true)
     }
-    
+
     /// Initialization routine
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -97,37 +124,40 @@ class ObjectTrackingFragment: CameraController {
             autoMode = false
         }
     }
-    
+
     @objc func switchCamera() {
         switchCameraView()
     }
-    
+
     /// function to update the detector model when change in device[CPU, GPU, NNAPI] is triggered.
     @objc func updateDevice(_ notification: Notification) throws {
         currentDevice = RuntimeDevice(rawValue: notification.object as! String) ?? RuntimeDevice.CPU
         detector = try! Detector.create(model: Model.fromModelItem(item: currentModel), device: currentDevice, numThreads: numberOfThreads) as? Detector
         currentDevice.rawValue == RuntimeDevice.GPU.rawValue ? NotificationCenter.default.post(name: .updateThreadLabel, object: "N/A") : NotificationCenter.default.post(name: .updateThreadLabel, object: String(numberOfThreads))
         detector?.tfliteOptions.threadCount = numberOfThreads
+        preferencesManager.setDevice(value: notification.object as! String);
     }
-    
+
     /// function to update the number of threads.
     @objc func updateThread(_ notification: Notification) {
         let threadCount = notification.object as! String
         numberOfThreads = Int(threadCount) ?? 4
         detector?.tfliteOptions.threadCount = numberOfThreads
+        preferencesManager.setThreads(value: notification.object as! String);
     }
-    
+
     /// function to update the confidence of the model
     @objc func updateConfidence(_ notification: Notification) {
         let confidence = notification.object as! Int
         MINIMUM_CONFIDENCE_TF_OD_API = Float(confidence) / 100.0
+        preferencesManager.setObjectTrackConfidence(value: confidence);
     }
-    
+
     /// function to toggle the auto mode
     @objc func toggleAutoMode() {
         autoMode = !autoMode
     }
-    
+
     /// function to send the controls to the device.
     func sendControl(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
@@ -139,7 +169,7 @@ class ObjectTrackingFragment: CameraController {
             NotificationCenter.default.post(name: .updateRpmLabel, object: String(Int(control.getLeft())) + "," + String(Int(control.getRight())))
         }
     }
-    
+
     /// function to update the model
     @objc func updateModel(_ notification: Notification) throws {
         let selectedModelName = notification.object as! String
@@ -148,13 +178,13 @@ class ObjectTrackingFragment: CameraController {
         NotificationCenter.default.post(name: .updateObjectList, object: detector?.getLabels())
         NotificationCenter.default.post(name: .updateObject, object: currentObject)
     }
-    
+
     /// function to update the selected object.
     @objc func updateSelectedObject(_ notification: Notification) throws {
         currentObject = notification.object as! String
         detector?.setSelectedClass(newClass: notification.object as! String)
     }
-    
+
     /// Called after the view was dismissed, covered or otherwise hidden.
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -162,7 +192,7 @@ class ObjectTrackingFragment: CameraController {
             autoMode = false
         }
     }
-    
+
     func setupNavigationBarItem() {
         if UIImage(named: "back") != nil {
             let backNavigationIcon = (UIImage(named: "back")?.withRenderingMode(.alwaysOriginal))!
@@ -170,34 +200,34 @@ class ObjectTrackingFragment: CameraController {
             navigationItem.leftBarButtonItem = newBackButton
         }
     }
-    
+
     @objc func back(sender: UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
-    
+
     func updateTarget(_ detection: CGRect) -> Control {
-        
+
         // Left and right wheels control values
         var left: Float = 0.0
         var right: Float = 0.0
-        
+
         let frameWidth = UIScreen.main.bounds.size.width
         let frameHeight = UIScreen.main.bounds.size.height
-    
+
         let dx: CGFloat = CGFloat(detector!.getImageSizeX()) / frameWidth
         let dy: CGFloat = CGFloat(detector!.getImageSizeY()) / frameHeight
         let trackedPos = detection.applying(CGAffineTransform(scaleX: dx, y: dy))
-        
+
         // Calculate track box area for distance estimate
         let boxArea: Float = Float(trackedPos.height * trackedPos.width)
-        
+
         // Make sure object center is in frame
         var centerX: Float = Float(trackedPos.midX)
         centerX = max(0, min(centerX, Float(frameWidth)))
-        
+
         // Scale relative position along x-axis between -1 and 1
         let x_pos_norm: Float = 1.0 - 2.0 * centerX / Float(frameWidth)
-        
+
         // Generate vehicle controls
         if (x_pos_norm < 0.0) {
             left = 1.0
@@ -206,9 +236,9 @@ class ObjectTrackingFragment: CameraController {
             left = 1 - x_pos_norm
             right = 1.0
         }
-        
+
         // Adjust speed depending on size of detected object bounding box
-        if (useDynamicSpeed) {
+        if (objectTrackingSettings!.dynamicSpeedCheckbox.isChecked) {  //  Set use of dynamic speed on or off (used in updateTarget())
             var scaleFactor: Float = 1.0 - boxArea / Float(frameWidth * frameHeight)
             scaleFactor = scaleFactor > 0.75 ? 1.0 : scaleFactor // tracked object far, full speed
             // apply scale factor if tracked object is not too near, otherwise stop
@@ -220,17 +250,17 @@ class ObjectTrackingFragment: CameraController {
                 right = 0.0
             }
         }
-        
+
         return Control(left: left, right: right)
     }
-    
+
     /// Set use of dynamic speed on or off (used in updateTarget())
     ///
     /// - Parameter isEnabled
     func setDynamicSpeed(isEnabled: Bool) {
         self.useDynamicSpeed = isEnabled
     }
-    
+
     /// function to create the frame on the screen for detection on based of image device(front/back) or orientation (portrait/landscape).
     func addFrame(item: Detector.Recognition, color: UIColor) -> UIView {
         let frame = UIView()
@@ -265,15 +295,15 @@ class ObjectTrackingFragment: CameraController {
         if convertedRect.origin.x < 0 {
             convertedRect.origin.x = edgeOffset
         }
-        
+
         if convertedRect.origin.y < 0 {
             convertedRect.origin.y = edgeOffset
         }
-        
+
         if convertedRect.maxY > UIScreen.main.bounds.maxY {
             convertedRect.size.height = UIScreen.main.bounds.maxY - convertedRect.origin.y - edgeOffset
         }
-        
+
         if convertedRect.maxX > UIScreen.main.bounds.maxX {
             convertedRect.size.width = UIScreen.main.bounds.maxX - convertedRect.origin.x - edgeOffset
         }
@@ -290,16 +320,16 @@ class ObjectTrackingFragment: CameraController {
         frame.addSubview(nameString)
         return frame
     }
-    
+
     /// callback function when any image is clicked on object tracking fragment.
     override func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        
+
         // extract the image buffer from the sample buffer
         let pixelBuffer: CVPixelBuffer? = CMSampleBufferGetImageBuffer(sampleBuffer)
-        
+
         bufferWidth = CVPixelBufferGetWidth(pixelBuffer!)
         bufferHeight = CVPixelBufferGetHeight(pixelBuffer!)
-        
+
         guard let imagePixelBuffer = pixelBuffer else {
             debugPrint("unable to get image from sample buffer")
             return
@@ -313,12 +343,12 @@ class ObjectTrackingFragment: CameraController {
         guard !isInferenceQueueBusy else {
             return
         }
-        
+
         inferenceQueue.async {
             if self.autoMode {
                 self.isInferenceQueueBusy = true
                 let startTime = Date().millisecondsSince1970
-                let res = self.detector?.recognizeImage(pixelBuffer: imagePixelBuffer)
+                let res = self.detector?.recognizeImage(pixelBuffer: imagePixelBuffer,detectionType: "single")
                 let endTime = Date().millisecondsSince1970
                 if (res!.count > 0) {
                     self.result = self.updateTarget(res!.first!.getLocation())
@@ -328,9 +358,9 @@ class ObjectTrackingFragment: CameraController {
                 guard let controlResult = self.result else {
                     return
                 }
-                
+
                 DispatchQueue.main.async {
-                    
+
                     if (self.frames.count > 0) {
                         for frame in self.frames {
                             frame.removeFromSuperview()
@@ -348,7 +378,7 @@ class ObjectTrackingFragment: CameraController {
                             }
                         }
                     }
-                    
+
                     if (endTime - startTime) != 0 {
                         NotificationCenter.default.post(name: .updateObjectTrackingFps, object: 1000 / (endTime - startTime))
                     }
@@ -362,7 +392,7 @@ class ObjectTrackingFragment: CameraController {
             self.isInferenceQueueBusy = false
         }
     }
-    
+
     /// function to update the data from the controller.
     @objc func updateDataFromControllerApp(_ notification: Notification) {
         if gameController.selectedControlMode == ControlMode.GAMEPAD {
@@ -375,4 +405,37 @@ class ObjectTrackingFragment: CameraController {
             gameController.sendControlFromPhoneController(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
         }
     }
+    
+    /// update screen command data coming from application
+    @objc func updateLightsCommandFromControllerApp(_ notification: Notification) {
+        if gameController.selectedControlMode == ControlMode.GAMEPAD {
+            return
+        }
+        if notification.object != nil {
+            let command = notification.object as! String
+            let controllerCommand = command.slice(from: "command: ", to: " }")
+            switch controllerCommand {
+            case "INDICATOR_LEFT":
+                self.webSocketMsgHandler.indicatorLeft()
+                break;
+            case "INDICATOR_RIGHT":
+                self.webSocketMsgHandler.indicatorRight();
+                break
+            case "INDICATOR_STOP":
+                self.webSocketMsgHandler.cancelIndicator();
+            case "SPEED_DOWN":
+                self.webSocketMsgHandler.speedDown();
+                break;
+            case "SPEED_UP":
+                self.webSocketMsgHandler.speedUp();
+                break;
+            case "DRIVE_MODE":
+                self.webSocketMsgHandler.driveMode()
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
 }

@@ -14,6 +14,7 @@ public class FeatureList {
   public static final String GENERAL = "General";
   public static final String LEGACY = "Legacy";
   public static final String DEFAULT = "Default";
+  public static final String PROJECTS = "Projects";
   public static final String CONTROLLER = "Controller";
   public static final String CONTROLLER_MAPPING = "Controller Mapping";
   public static final String ROBOT_INFO = "Robot Info";
@@ -71,7 +72,8 @@ public class FeatureList {
     ArrayList<SubCategory> subCategories;
 
     subCategories = new ArrayList<>();
-    subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FC814A"));
+    subCategories.add(new SubCategory(FREE_ROAM, R.drawable.ic_game, "#FFFF6D00"));
+
     subCategories.add(new SubCategory(DATA_COLLECTION, R.drawable.ic_storage, "#93C47D"));
     subCategories.add(new SubCategory(CONTROLLER_MAPPING, R.drawable.ic_controller, "#7268A6"));
     subCategories.add(new SubCategory(ROBOT_INFO, R.drawable.ic_openbot_space, "#4B7BFF"));
