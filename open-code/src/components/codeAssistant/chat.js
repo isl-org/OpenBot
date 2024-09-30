@@ -9,7 +9,7 @@ import {colors as Colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
 import {addBlocksToWorkspace} from "../blockly/imageConverter";
 import {getCurrentProject} from "../../services/workspace";
-import {handler} from "../../utils/handler";
+import {cleanAndFormatResponse, handler} from "../../utils/handler";
 
 /**
  * Chat component handles user interactions and displays chat interface.
@@ -128,6 +128,11 @@ const Chat = ({drawer}) => {
             abortControllerRef.current.abort();
         }
         setIsTyping(false);
+        const finalMessage = cleanAndFormatResponse(currentMessage.AIMessage.replace(/\n+/g, ' ').trim());
+
+        setCurrentMessage((prevState) => ({
+            ...prevState, AIMessage: finalMessage, AITimestamp: timestamp
+        }));
         if (loader && allChatMessages.length === currentMessage.id) {
             setCurrentMessage((prevState) => ({
                 ...prevState, AIMessage: Errors.error7, AITimestamp: timestamp

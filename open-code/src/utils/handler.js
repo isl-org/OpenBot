@@ -8,23 +8,24 @@ export const handler = (message) => {
 };
 
 export function cleanAndFormatResponse(response) {
-    // Replace multiple newlines with a single space
-    let cleanedResponse = response.replace(/\n{2,}/g, ' ');
 
-    // Replace single newlines that are not followed by a numbered list or bullet point with a space
-    cleanedResponse = cleanedResponse.replace(/(?<!\d)\n(?!\d|\s*-\s*)/g, ' ');
+    // Replace multiple newlines (two or more) with double newlines to ensure paragraph breaks
+    let cleanedResponse = response.replace(/\n{2,}/g, '\n\n');
 
-    // Ensure that numbered lists are formatted correctly
-    cleanedResponse = cleanedResponse.replace(/(\d+)\.\s+/g, '');
+    // Convert single newlines into spaces to prevent displaying "\n" in text
+    cleanedResponse = cleanedResponse.replace(/([^\n])\n([^\n])/g, '$1 $2');
 
-    // Properly format bullet points
-    cleanedResponse = cleanedResponse.replace(/(\s*-\s+)/g, '');
+    // Ensure that numbered lists (e.g., "1. ...") are formatted correctly by keeping a newline before them
+    cleanedResponse = cleanedResponse.replace(/(\d+)\.\s+/g, '\n$1. ');
 
-    // Add double newlines after sentences for paragraph breaks
-    cleanedResponse = cleanedResponse.replace(/(?<!\d)\.\s+/g, '');
+    // Properly format bullet points (e.g., "- ") by keeping a newline before them
+    cleanedResponse = cleanedResponse.replace(/\s*-\s+/g, '\n- ');
 
-    // Remove extra spaces
+    // Add double newlines after periods for paragraph breaks, unless it's part of a list or bullet point
+    cleanedResponse = cleanedResponse.replace(/(?<!\d)\.\s+/g, '.\n\n');
+
+    // Clean up any extra spaces and ensure proper formatting
     cleanedResponse = cleanedResponse.replace(/\s{2,}/g, ' ').trim();
 
-    return cleanedResponse.replace(/\n\n/g, ' ');
+    return cleanedResponse;
 }

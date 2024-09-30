@@ -62,7 +62,6 @@ export const getAIMessage = async (userPrompt, currentXML, signal, onMessage) =>
 
             // Decode the stream chunk
             const chunk = decoder.decode(value, {stream: true});
-            //  console.log("chunks----->>", chunk)
             // Stop if the request was aborted
             if (signal.aborted) {
                 return "Request was cancelled.";
