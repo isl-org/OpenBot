@@ -80,9 +80,9 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.2.8"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
-    //Implementing shared module commonlib for shared libraries
+    //Implementing shared module comlib for shared libraries
 
-    implementation project(':commonlib')
+    implementation project(':comlib')
 
     // WiFi direct
 //    implementation 'com.abemart.wroup:wroup:0.9'

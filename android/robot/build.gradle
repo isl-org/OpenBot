@@ -67,8 +67,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation 'com.google.android.material:material:1.4.0'
 
-    //Implementing shared module commonlib for shared libraries
-    implementation project(':commonlib')
+    //Implementing shared module comlib for shared libraries
+    implementation project(':comlib')
 
     // Build off of stable TensorFlow Lite
     implementation 'org.tensorflow:tensorflow-lite:2.4.0'
