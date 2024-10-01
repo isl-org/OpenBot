@@ -34,16 +34,16 @@ export const getAIMessage = async (userPrompt, currentXML, signal, onMessage) =>
                             type: "object",
                             strict: true,
                             properties: {
-                                BLOCKLY_RESPONSE: {
+                                RETORT: {
                                     type: "string",
-                                    description: `Make sure you Provide only an explanation in clear, simple text. This section should describe the purpose and usage of the Blockly blocks. Do not include any XML code or technical details in this part—just the explanation.`
+                                    description: `Make sure you Provide only an explanation in clear, simple text. This section should describe the purpose and usage of the Blockly blocks. Do not include any XML code or technical details in this part—just the explanation`
                                 },
-                                BLOCKLY_XML_CODE: {
+                                TRANSIENT: {
                                     type: "string",
                                     description: `Ensure you Provide only valid XML code for the Blockly blocks. Do not include any explanations in this section—only XML code.`
                                 },
                             },
-                            required: ["BLOCKLY_RESPONSE", "BLOCKLY_XML_CODE"],
+                            required: ["RETORT", "TRANSIENT"],
                             additionalProperties: false
                         },
                     }

@@ -7,7 +7,7 @@ const example_prompt = `user: "Move the robot forward for 5 seconds, then stop f
 assistant : "<xml xmlns=\\"https://developers.google.com/blockly/xml\\"><block type=\\"start\\" id=\\"H%$mh(AUf}410+VR|19z\\" x=\\"293\\" y=\\"89\\"><field name=\\"start\\">start</field><statement name=\\"start_blocks\\"><block type=\\"forward&amp;BackwardAtSpeed\\" id=\\"#@Y@^*A;3|~01mEFSJmI\\"><field name=\\"direction_type\\">moveForward</field><field name=\\"slider\\">192</field><next><block type=\\"wait\\" id=\\"k6VZz6i^n2G-i{t+nGKY\\"><field name=\\"wait\\">wait for</field><field name=\\"time\\">5000</field><next><block type=\\"movementStop\\" id=\\"8|\`1d36Y7GwuskJP[}Wk\\"><field name=\\"movement_stop\\">stop car immediately</field><next><block type=\\"wait\\" id=\\"a|ekDMsP+v/Nep-M(vrj\\"><field name=\\"wait\\">wait for</field><field name=\\"time\\">2000</field><next><block type=\\"moveLeft&amp;Right\\" id=\\"zW:hqF(sm!+%nYxW4c]9\\"><field name=\\"left_name\\">left at</field><field name=\\"left_distance\\">100</field><field name=\\"right_name\\">and right at</field><field name=\\"right_distance\\">192</field></block></next></block></next></block></next></block></next></block></statement></block></xml>"`;
 
 const blockly_prompt = `
-After explaining in simple and friendly way, update the current XML based on the user prompt according to the following rules.
+After explaining in simple and friendly way, update the input XML based on the user prompt according to the following rules.
 
 <xml> tag: All Blockly XML documents start with the <xml> tag and end with the </xml> tag.
 
@@ -85,7 +85,7 @@ IMPORTANT:Ensure you tell funny and quirky jokes only when user asks.
 IMPORTANT NOTE: The objectDetection block is a root block, so it should not be connected inside any other root blocks like start. Ensure that all responses respect this constraint.
 VERY IMPORTANT NOTE: The forever block is a root block, so it should not be connected inside any other root blocks like start. Ensure that all responses respect this constraint.
 6.Ensure all the VERY IMPORTANT NOTE and IMPORTANT NOTE are always followed.
-IMPORTANT NOTE: Ensure that all responses respect this above constraint.
+VERY IMPORTANT NOTE: Ensure that all responses respect this above constraint.
 `
 const finalPrompt = `You are an assistant for OpenBot playground who provide a detailed and professional step-by-step implementation to achieve the received input based on the following Blockly block JSON which has definition, block type and working of a block - ${blocksJSON}. ${response_structure}.  Do not include the JSON in the response. ${blockly_prompt}`
 
