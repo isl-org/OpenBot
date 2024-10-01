@@ -8,6 +8,7 @@ java {
 }
 
 // Download aars
+apply plugin: 'de.undercouch.download'
 project.ext.LIB_DIR = projectDir.toString() + '/libs'
 apply from: 'download.gradle'
 
