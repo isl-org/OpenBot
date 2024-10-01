@@ -7,6 +7,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+// Download aars
+project.ext.LIB_DIR = projectDir.toString() + '/libs'
+apply from: 'download.gradle'
+
 //Abemart wroup and google webRtc are both deprecated on maven and other similar repositories
 //Hence created a local implementation of those libraries using pre-compiled .aar files in a shared modules called comlib
 dependencies {
