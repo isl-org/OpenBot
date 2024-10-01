@@ -80,19 +80,12 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.2.8"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
-    //Implementing shared module comlib for shared libraries
-
+    // Implementing shared module comlib for shared libraries
+    // WiFi direct + WebRTC
     implementation project(':comlib')
-
-    // WiFi direct
-//    implementation 'com.abemart.wroup:wroup:0.9'
-
 
     // material design
     implementation 'com.google.android.material:material:1.4.0'
-
-    // WebRTC
-//    implementation 'io.github.webrtc-sdk:android:125.6422.05'
 
     // For a library module, uncomment the following line and comment the one after
     // apply plugin: 'com.android.library'

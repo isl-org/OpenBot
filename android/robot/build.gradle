@@ -165,8 +165,6 @@ dependencies {
     implementation 'com.google.ar:core:1.29.0'
     implementation 'de.javagl:obj:0.2.1'
 
-//    // WebRTC
-//    implementation 'io.github.webrtc-sdk:android:125.6422.05'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
     implementation 'com.koushikdutta.ion:ion:3.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
