@@ -8,5 +8,3 @@ task downloadAars(type: Download) {
     onlyIfModified true
     overwrite false
 }
-
-preBuild.dependsOn downloadAars
