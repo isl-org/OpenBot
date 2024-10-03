@@ -11,14 +11,14 @@ export const addBlocksToWorkspace = async (message, workspace) => {
 
     try {
         const parsedMessage = JSON.parse(message);
-        xmlData = parsedMessage.TRANSIENT || null;
+        xmlData = parsedMessage.$$RESPONSE$$ || null;
     } catch (jsonParseError) {
         console.warn("Message is not valid JSON, falling back to regex extraction");
     }
 
     // If no XML was extracted from the JSON, use regex to find the XML
     if (!xmlData) {
-        const regex = /TRANSIENT":"(<xml xmlns=\\"https:\/\/developers.google.com\/blockly\/xml\\">[\s\S]*?<\/xml>)"/;
+        const regex = /$$RESPONSE$$":"(<xml xmlns=\\"https:\/\/developers.google.com\/blockly\/xml\\">[\s\S]*?<\/xml>)"/;
         const match = message.match(regex);
         if (match) {
             xmlData = match[1].replace(/\\"/g, '"');

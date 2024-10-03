@@ -1,7 +1,7 @@
 export const handler = (message) => {
     try {
         const parsedMessage = JSON.parse(message);
-        return parsedMessage?.RETORT ?? undefined;
+        return parsedMessage?.$$CONTENT$$ ?? undefined;
     } catch (error) {
         console.error('JSON parsing error:', error);
     }

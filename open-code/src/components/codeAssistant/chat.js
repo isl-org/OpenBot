@@ -69,18 +69,20 @@ const Chat = ({drawer}) => {
             messageBuffer += chunk;
 
 
-            if (messageBuffer.includes('<xml')) {
+            if (messageBuffer.includes('$$RESPONSE$$')) {
                 setCodeBufferLoader(true);
             } else {
                 setCodeBufferLoader(false);
             }
-            if ((messageBuffer.includes('RETORT":"')) && chunk !== '":"') {
+            if ((messageBuffer.includes('$$CONTENT$$":"')) && chunk !== '":"') {
                 setIsTyping(true);
                 //to stop displaying xml
-                //|| messageBuffer.includes('BLOCKLY_XML_CODE":"')
+                //|| messageBuffer.includes('BLOCKLY_XML_CODE":"') || "','"
                 if (messageBuffer.includes('","')) {
-                    messageBuffer = '';
-                    setIsTyping(false);
+                    if ("$$RESPONSE$$") {
+                        messageBuffer = '';
+                        setIsTyping(false);
+                    }
                     //setCodeBufferLoader(true);
                 } else {
                     // setCodeBufferLoader(false);
@@ -93,7 +95,6 @@ const Chat = ({drawer}) => {
 
         // To add the blocks to the current workspace
         getAIMessage(userInput, getCurrentProject().xmlValue, abortControllerRef.current.signal, onMessage).then((res) => {
-            console.log("res",res);
             if (res !== undefined) {
                 let finalMessage = handler(res);
                 if (finalMessage !== undefined) {
