@@ -1,14 +1,24 @@
+//Function that hide the xml and provide complete formatted response on ui after response is completed
 export const handler = (message) => {
     try {
         const parsedMessage = JSON.parse(message);
-        return parsedMessage?.$$CONTENT$$ ?? undefined;
+        let content = parsedMessage?.$$CONTENT$$;
+
+        // Define a regex to match XML content that starts with <xml xmlns="https://developers.google.com/blockly/xml">
+        const xmlRegex = /<xml xmlns="https:\/\/developers\.google\.com\/blockly\/xml"[\s\S]*<\/xml>/g;
+
+        // If the content contains XML, replace it with an empty string
+        if (content && xmlRegex.test(content)) {
+            content = content.replace(xmlRegex, '');
+        }
+        return content ?? undefined;
     } catch (error) {
         console.error('JSON parsing error:', error);
     }
 };
 
+//This function is to provide formatting on clicking pause icon
 export function cleanAndFormatResponse(response) {
-
     // Replace multiple newlines (two or more) with double newlines to ensure paragraph breaks
     let cleanedResponse = response.replace(/\n{2,}/g, '\n\n');
 
