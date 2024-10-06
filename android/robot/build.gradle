@@ -15,6 +15,8 @@ appVersioning {
 apply plugin: 'com.android.application'
 apply plugin: 'de.undercouch.download'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
+
 
 android {
     compileSdkVersion 33
@@ -64,11 +66,10 @@ apply from: 'download.gradle'
 apply plugin: 'kotlin-android'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    implementation 'com.google.android.material:material:1.4.0'
-
-    //Implementing shared module comlib for shared libraries
+    // WiFi direct + WebRTC
     implementation project(':comlib')
+
+    implementation 'com.google.android.material:material:1.4.0'
 
     // Build off of stable TensorFlow Lite
     implementation 'org.tensorflow:tensorflow-lite:2.4.0'
@@ -188,5 +189,4 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
         exclude module: 'guava-jdk5'
     }
-    apply plugin: 'com.google.gms.google-services'
 }

@@ -29,6 +29,7 @@ task checkAars {
 }
 
 dependencies {
+
     def googleWebrtcFile = file("${project.ext.LIB_DIR}/google-webrtc-1.0.32006.aar")
     def wroupFile = file("${project.ext.LIB_DIR}/Wroup-master-release.aar")
 
