@@ -97,7 +97,7 @@
             android:id="@+id/camera_toggle"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginRight="48dp"
+            android:layout_marginRight="16dp"
             android:background="@android:color/transparent"
             android:scaleType="center"
             android:src="@drawable/ic_cameraswitch"
