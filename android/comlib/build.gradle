@@ -14,14 +14,14 @@ java {
 project.ext.LIB_DIR = "${projectDir}/libs"
 apply from: 'download.gradle'
 
+def googleWebrtcFile = file("${project.ext.LIB_DIR}/google-webrtc-1.0.32006.aar")
+def wroupFile = file("${project.ext.LIB_DIR}/Wroup-master-release.aar")
+
 // Task to check for AAR files
 task checkAars {
     dependsOn downloadAars // Ensure this matches the actual download task name
 
     doLast {
-        def googleWebrtcFile = file("${project.ext.LIB_DIR}/google-webrtc-1.0.32006.aar")
-        def wroupFile = file("${project.ext.LIB_DIR}/Wroup-master-release.aar")
-
         if (!googleWebrtcFile.exists() || !wroupFile.exists()) {
             throw new GradleException("Required AAR files are missing. Please run the download task.")
         }
@@ -29,10 +29,6 @@ task checkAars {
 }
 
 dependencies {
-
-    def googleWebrtcFile = file("${project.ext.LIB_DIR}/google-webrtc-1.0.32006.aar")
-    def wroupFile = file("${project.ext.LIB_DIR}/Wroup-master-release.aar")
-
     if (googleWebrtcFile.exists()) {
         api files(googleWebrtcFile)
     }

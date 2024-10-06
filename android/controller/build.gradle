@@ -63,7 +63,16 @@ android {
     ndkVersion '23.1.7779620'
 }
 
+// Define the path to the comlib lib directory
+def comlibDir = file("${project.rootDir}/comlib/libs")
+
 dependencies {
+
+    // WiFi direct + WebRTC
+    implementation project(':comlib')
+
+    // Include AAR files from comlib/lib
+    implementation fileTree(dir: comlibDir, include: ['*.aar'])
 
     //noinspection GradleDependency
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -79,9 +88,6 @@ dependencies {
     // RxJava
     implementation "io.reactivex.rxjava2:rxjava:2.2.8"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
-
-    // WiFi direct + WebRTC
-    implementation project(':comlib')
 
     // material design
     implementation 'com.google.android.material:material:1.4.0'

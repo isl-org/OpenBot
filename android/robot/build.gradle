@@ -65,9 +65,16 @@ project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
 apply from: 'download.gradle'
 apply plugin: 'kotlin-android'
 
+// Define the path to the comlib lib directory
+def comlibDir = file("${project.rootDir}/comlib/libs")
+
 dependencies {
+
     // WiFi direct + WebRTC
     implementation project(':comlib')
+
+    // Include AAR files from comlib/lib
+    implementation fileTree(dir: comlibDir, include: ['*.aar'])
 
     implementation 'com.google.android.material:material:1.4.0'
 
