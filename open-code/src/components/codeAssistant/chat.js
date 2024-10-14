@@ -78,6 +78,9 @@ const Chat = ({drawer}) => {
                 setIsTyping(true);
                 //to stop displaying xml
                 //|| messageBuffer.includes('BLOCKLY_XML_CODE":"') || "','"
+                const formattedChunk = chunk
+                    .replace(/\\n/g, '\n') // Replace single backslash n with actual newline
+                    .replace(/\\n/g, '\n');
                 if (messageBuffer.includes('","')) {
                     if ("$$RESPONSE$$") {
                         messageBuffer = '';
@@ -87,7 +90,7 @@ const Chat = ({drawer}) => {
                 } else {
                     // setCodeBufferLoader(false);
                     setCurrentMessage((prevState) => ({
-                        ...prevState, AIMessage: prevState.AIMessage + chunk, AITimestamp: timestamp,
+                        ...prevState, AIMessage: prevState.AIMessage + formattedChunk, AITimestamp: timestamp,
                     }));
                 }
             }
