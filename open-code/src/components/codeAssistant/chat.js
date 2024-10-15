@@ -69,7 +69,8 @@ const Chat = ({drawer}) => {
             // Append current chunk to the message buffer
             messageBuffer += chunk;
 
-            if(chunk === "n"){
+
+            if (chunk === "n") {
                 chunk = "";
             }
 
@@ -218,6 +219,7 @@ const Chat = ({drawer}) => {
             handleSendClick={handleSendClick}
             setInputValue={setInputValue}
             isTyping={isTyping}
+            codeBufferLoader={codeBufferLoader}
             handlePauseClick={() => handlePauseClick(currentMessage.id)}
         /> : ""}
     </div>);
@@ -230,10 +232,11 @@ const Chat = ({drawer}) => {
  * @param setInputValue
  * @param isTyping
  * @param handlePauseClick
+ * @param codeBufferLoader
  * @returns {Element}
  * @constructor
  */
-const ChatBottomBar = ({inputValue, handleSendClick, setInputValue, isTyping, handlePauseClick}) => {
+const ChatBottomBar = ({inputValue, handleSendClick, setInputValue, isTyping, handlePauseClick, codeBufferLoader}) => {
     const theme = useContext(ThemeContext);
 
     return (<div className={styles.chatBottomBar}>
@@ -252,7 +255,7 @@ const ChatBottomBar = ({inputValue, handleSendClick, setInputValue, isTyping, ha
                     handleSendClick();
                 }
             }}
-            disabled={isTyping}
+            disabled={isTyping || codeBufferLoader}
         />
         <div
             onClick={isTyping ? handlePauseClick : handleSendClick}
