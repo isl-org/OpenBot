@@ -66,31 +66,37 @@ const Chat = ({drawer}) => {
         //Handles incoming message chunks from the api on streaming.
         const onMessage = (chunk) => {
 
+            // Append current chunk to the message buffer
             messageBuffer += chunk;
 
+            if(chunk === "n"){
+                chunk = "";
+            }
+
+            const formattedChunk = chunk
+                .replace(/\\n/g, ' \n\n') // Markdown requires two spaces before a newline for a line break
+                .replace(/\\t/g, '\t') // Replace escaped tabs if needed
+                .replace(/\\"/g, '"')  // Replace escaped double quotes
+                .replace(/\\\\/g, '\n') // Replace escaped backslashes
+                .replace(/\\/g, ' '); // Markdown requires two spaces before a newline for a line break
 
             if (messageBuffer.includes('$$RESPONSE$$')) {
                 setCodeBufferLoader(true);
             } else {
                 setCodeBufferLoader(false);
             }
-            if ((messageBuffer.includes('$$CONTENT$$":"')) && chunk !== '":"') {
+
+            if (messageBuffer.includes('$$CONTENT$$":"') && chunk !== '":"') {
                 setIsTyping(true);
-                //to stop displaying xml
-                //|| messageBuffer.includes('BLOCKLY_XML_CODE":"') || "','"
-                const formattedChunk = chunk
-                    .replace(/\\n/g, '\n') // Replace single backslash n with actual newline
-                    .replace(/\\n/g, '\n');
+
                 if (messageBuffer.includes('","')) {
-                    if ("$$RESPONSE$$") {
-                        messageBuffer = '';
-                        setIsTyping(false);
-                    }
-                    //setCodeBufferLoader(true);
+                    messageBuffer = '';
+                    setIsTyping(false);
                 } else {
-                    // setCodeBufferLoader(false);
                     setCurrentMessage((prevState) => ({
-                        ...prevState, AIMessage: prevState.AIMessage + formattedChunk, AITimestamp: timestamp,
+                        ...prevState,
+                        AIMessage: prevState.AIMessage + formattedChunk,
+                        AITimestamp: timestamp,
                     }));
                 }
             }
