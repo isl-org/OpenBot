@@ -12,6 +12,7 @@ var currentOrientation: UIInterfaceOrientation = UIInterfaceOrientation.portrait
 var isBluetoothConnected = false;
 var viewControllerName: String?
 let gameController = GameController.shared
+let fragmentType = FragmentType.shared
 var leadingConstraint = NSLayoutConstraint()
 var isClientConnected: Bool = false
 let bottomSheet = UIView();
@@ -19,33 +20,35 @@ let whiteSheet = UIView(frame: UIScreen.main.bounds)
 
 class HeaderView: UICollectionReusableView {
     var label: UILabel!
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        label = UILabel(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height+30))
+
+        label = UILabel(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height + 30))
         label.textAlignment = .left
         label.font = UIFont.boldSystemFont(ofSize: 20) // Change the font to bold and size to 20
         self.addSubview(label)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-class HomePageViewController: CameraController,UICollectionViewDataSource,UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class HomePageViewController: CameraController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     @IBOutlet weak var bluetooth: UIButton!
     @IBOutlet weak var settings: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet var modesCollectionView: UICollectionView!;
     let sectionHeaders = ["  General", "  AI"]
 
+    @IBOutlet weak var openCodeWebView: UIView!
+
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        UITabBar.appearance().tintColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white: UIColor.black;
+
+        UITabBar.appearance().tintColor = traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black;
         bluetoothDataController.shared.startScan()
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         setUpTitle();
@@ -62,14 +65,14 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
         layout.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
         layout.minimumLineSpacing = 30
         layout.collectionView?.backgroundColor = Colors.voltageDividerColor
-        
+
         modesCollectionView.delegate = self
         modesCollectionView.dataSource = self
         modesCollectionView.collectionViewLayout = layout;
         modesCollectionView.register(modesCollectionViewCell.self, forCellWithReuseIdentifier: modesCollectionViewCell.identifier)
         modesCollectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         self.view.addSubview(modesCollectionView)
-        
+
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         changeNavigationColor()
         NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
@@ -78,9 +81,13 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
-    
+        NotificationCenter.default.addObserver(self, selector: #selector(googleSignIn), name: .googleSignIn, object: nil)
+        DataLogger.shared.deleteZipFileFromDocument();
         gameController.resetControl = true
-
+        fragmentType.currentFragment = "Home";
+        setupOpenCodeIcon();
+        let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: fragmentType.currentFragment));
+        client.send(message: msg);
     }
 
     override func initializeCamera() {
@@ -119,7 +126,6 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated);
         DeviceCurrentOrientation.shared.findDeviceOrientation()
-        DataLogger.shared.deleteZipFileFromDocument()
         viewControllerName = classNameFrom(self)
         if (isBluetoothConnected) {
             bluetooth.setImage(Images.bluetoothConnected, for: .normal)
@@ -129,7 +135,6 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
             bluetooth.setImage(Images.bluetoothDisconnected, for: .normal)
         }
         gameController.resetControl = true
-
     }
 
 
@@ -147,6 +152,7 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
 
     func setUpTitle() {
         titleLabel.text = Strings.OpenBot
+        titleLabel.textColor = Colors.title;
     }
 
     @IBAction func onTapSettings() {
@@ -185,16 +191,19 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
     }
 
     @objc func clientDisconnected(_ notification: Notification) {
-        print("inside clientDisconnected")
         isClientConnected = false
         stopSession()
     }
 
+    @objc func googleSignIn(_ notification: Notification) {
+        whiteSheet.removeFromSuperview()
+    }
+
     // Number of sections
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-            return sectionHeaders.count
+        return sectionHeaders.count
     }
-    
+
     // Number of items in section
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return Constants.gameModes[section].count
@@ -203,40 +212,41 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
     // Cell for item at index path
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: modesCollectionViewCell.identifier, for: indexPath) as! modesCollectionViewCell;
-        
+
         cell.configure(with: Constants.gameModes[indexPath.section][indexPath.row]);
-        
+
         return cell
-        
+
     }
-    
+
     // View for header in section
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-            switch kind {
-            case UICollectionView.elementKindSectionHeader:
-                let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! HeaderView
-                headerView.label.text = sectionHeaders[indexPath.section]
-                return headerView
-            default:
-                assert(false, "Unexpected element kind")
-            }
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! HeaderView
+            headerView.label.text = sectionHeaders[indexPath.section]
+            return headerView
+        default:
+            assert(false, "Unexpected element kind")
         }
-    
+    }
+
 
     func classNameFrom(_ viewController: UIViewController) -> String {
         let currentViewControllerName = NSStringFromClass(viewController.classForCoder).components(separatedBy: ".").last!
         return currentViewControllerName
     }
+
     // Size for item at index path
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            return CGSize(width: collectionView.frame.size.width/5+5, height: collectionView.frame.size.width/5+5)
-        }
-    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.size.width / 5 + 5, height: collectionView.frame.size.width / 5 + 5)
+    }
+
     // Size for header in section
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-            return CGSize(width: collectionView.frame.size.width, height: 60)
-        }
-    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.size.width, height: 60)
+    }
+
     // Space between rows
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 45.0
@@ -246,17 +256,36 @@ class HomePageViewController: CameraController,UICollectionViewDataSource,UIColl
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 8.0
     }
-    
+
     // Inset for section
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-     collectionView.deselectItem(at: indexPath, animated: true)
-     let viewController = (storyboard?.instantiateViewController(withIdentifier: Constants.gameModes[indexPath.section][indexPath.row].identifier))!
-     navigationController?.pushViewController(viewController, animated: true);
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let viewController = (storyboard?.instantiateViewController(withIdentifier: Constants.gameModes[indexPath.section][indexPath.row].identifier))!
+        navigationController?.pushViewController(viewController, animated: true);
     }
+
+    /**
+     Function to setup openCodeIcon
+     */
+    private func setupOpenCodeIcon() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(loadWebView))
+        openCodeWebView.addGestureRecognizer(tap)
+    }
+
+    /**
+     Function to handle and open webview controller on webview tap
+     - Parameter sender:
+     */
+    @objc func loadWebView(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "openCode", bundle: nil)
+        let viewController = (storyboard.instantiateViewController(withIdentifier: "webView"))
+        navigationController?.pushViewController(viewController, animated: true);
+    }
+
 }
 
 

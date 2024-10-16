@@ -332,7 +332,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
             let startPose = Pose(tx: currentPosition.position.x, ty: currentPosition.position.y, tz: currentPosition.position.z, qx: currentPosition.orientation.x, qy: currentPosition.orientation.y, qz: currentPosition.orientation.z, qw: currentPosition.orientation.w)
             let endPose = Pose(tx: endingPoint.position.x, ty: endingPoint.position.y, tz: endingPoint.position.z, qx: endingPoint.orientation.x, qy: endingPoint.orientation.y, qz: endingPoint.orientation.z, qw: endingPoint.orientation.w)
             let yaw = computeDeltaYaw(pose: startPose, goalPose: endPose)
-
+            print("startPose ===== \(startPose.qx) , endPose ======> \(endPose.qx) , yaw ====> \(yaw)")
             let converted = try! blueDress.convertToBGRA(imageBuffer: pixelBuffer)
 
             let refCon = NSMutableData()
@@ -350,7 +350,7 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
             guard let controlResult = self.result else {
                 return
             }
-            
+
             if self.isReached {
                 self.sendControl(control: Control())
             } else {
@@ -466,8 +466,9 @@ class PointGoalFragment: UIViewController, ARSCNViewDelegate, UITextFieldDelegat
     /// - Parameter control:
     func sendControl(control: Control) {
         if (control.getRight() != vehicleControl.getRight() || control.getLeft() != vehicleControl.getLeft()) {
-            let left = control.getLeft() * SpeedMode.NORMAL.rawValue
-            let right = control.getRight() * SpeedMode.NORMAL.rawValue
+            let left = control.getLeft() * gameController.selectedSpeedMode.rawValue
+            let right = control.getRight() * gameController.selectedSpeedMode.rawValue
+            print("left -> \(control.getLeft()) , right ----> \(control.getRight())")
             vehicleControl = control
             bluetooth.sendData(payload: "c" + String(left) + "," + String(right) + "\n")
             NotificationCenter.default.post(name: .updateSpeedLabel, object: String(Int(left)) + "," + String(Int(right)))
@@ -492,12 +493,12 @@ extension SCNVector3 {
     var simdVector: simd_float3 {
         simd_float3(x, y, z)
     }
-    
+
     func transformed(by matrix: SCNMatrix4) -> SCNVector3 {
         let x = self.x * matrix.m11 + self.y * matrix.m21 + self.z * matrix.m31 + matrix.m41
         let y = self.x * matrix.m12 + self.y * matrix.m22 + self.z * matrix.m32 + matrix.m42
         let z = self.x * matrix.m13 + self.y * matrix.m23 + self.z * matrix.m33 + matrix.m43
-        
+
         return SCNVector3(x: x, y: y, z: z)
     }
 }

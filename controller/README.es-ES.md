@@ -25,3 +25,11 @@ Agradecimientos especiales a Ivo Zivkov [izivkov@gmail.com](mailto:izivkov@gmail
 Este controlador requiere que tu teléfono y una computadora (por ejemplo, laptop, Raspberry PI) estén conectados a la misma red WiFi. Después de una conexión exitosa, obtienes una transmisión de video RTSP en vivo y puedes usar tu teclado para controlar el robot desde la terminal. Puedes usar el script de Python como plantilla para desarrollar tu propio controlador.
 
 Agradecimientos especiales a Ivo Zivkov [izivkov@gmail.com](mailto:izivkov@gmail.com) por el desarrollo.
+
+## [Aplicación Controladora Flutter](flutter)
+
+Esta aplicación controladora sirve como un control remoto para el vehículo OpenBot similar a un controlador BT (por ejemplo, PS3/4 o Xbox). Funciona en otro dispositivo Android/iOS y soporta transmisión de video/audio en vivo además del control.
+
+## [Controlador de Servidor Web](web-server)
+
+Esta es una versión en la nube del controlador local de Node.js. Permite la teleoperación remota del robot OpenBot a través de internet.

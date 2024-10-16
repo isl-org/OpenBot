@@ -201,6 +201,11 @@ public class ObjectNavFragment extends CameraFragment {
           binding.bleToggle.setChecked(vehicle.bleConnected());
           Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
         });
+    binding.bleToggle.setOnClickListener(
+        v -> {
+          binding.bleToggle.setChecked(vehicle.bleConnected());
+          Navigation.findNavController(requireView()).navigate(R.id.open_bluetooth_fragment);
+        });
 
     setSpeedMode(Enums.SpeedMode.getByID(preferencesManager.getSpeedMode()));
     setControlMode(Enums.ControlMode.getByID(preferencesManager.getControlMode()));
@@ -619,7 +624,12 @@ public class ObjectNavFragment extends CameraFragment {
           if (!PermissionUtils.hasControllerPermissions(requireActivity()))
             requestPermissionLauncher.launch(Constants.PERMISSIONS_CONTROLLER);
           else connectPhoneController();
-
+          break;
+        case WEBSERVER:
+          binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_server);
+          if (!PermissionUtils.hasControllerPermissions(requireActivity()))
+            requestPermissionLauncher.launch(Constants.PERMISSIONS_CONTROLLER);
+          else connectWebController();
           break;
       }
       Timber.d("Updating  controlMode: %s", controlMode);
@@ -653,6 +663,16 @@ public class ObjectNavFragment extends CameraFragment {
     setDriveMode(Enums.DriveMode.DUAL);
     binding.controllerContainer.driveMode.setAlpha(0.5f);
     binding.controllerContainer.driveMode.setEnabled(false);
+  }
+
+  private void connectWebController() {
+    phoneController.connectWebServer();
+    Enums.DriveMode oldDriveMode = currentDriveMode;
+    // Currently only dual drive mode supported
+    setDriveMode(Enums.DriveMode.GAME);
+    binding.controllerContainer.driveMode.setAlpha(0.5f);
+    binding.controllerContainer.driveMode.setEnabled(false);
+    preferencesManager.setDriveMode(oldDriveMode.getValue());
   }
 
   private void disconnectPhoneController() {

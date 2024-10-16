@@ -1,0 +1,44 @@
+//Abemart wroup and google webRtc are both deprecated on maven and other similar repositories
+//Hence created a local implementation of those libraries using pre-compiled .aar files in a shared modules called comlib
+plugins {
+    id 'java-library'
+    id 'de.undercouch.download'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+// Define the libs directory
+project.ext.LIB_DIR = "${projectDir}/libs"
+apply from: 'download.gradle'
+
+def googleWebrtcFile = file("${project.ext.LIB_DIR}/google-webrtc-1.0.32006.aar")
+def wroupFile = file("${project.ext.LIB_DIR}/Wroup-master-release.aar")
+
+// Task to check for AAR files
+task checkAars {
+    dependsOn downloadAars // Ensure this matches the actual download task name
+
+    doLast {
+        if (!googleWebrtcFile.exists() || !wroupFile.exists()) {
+            throw new GradleException("Required AAR files are missing. Please run the download task.")
+        }
+    }
+}
+
+dependencies {
+    if (googleWebrtcFile.exists()) {
+        api files(googleWebrtcFile)
+    }
+    
+    if (wroupFile.exists()) {
+        api files(wroupFile)
+    }
+}
+
+// Ensure that checkAars runs before any Java compile tasks
+tasks.withType(JavaCompile) {
+    dependsOn checkAars
+}

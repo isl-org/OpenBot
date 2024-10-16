@@ -77,7 +77,7 @@
             android:id="@+id/usbToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:button="@drawable/usb_toggle"
             app:layout_constraintBottom_toBottomOf="@+id/camera_toggle"
             app:layout_constraintEnd_toStartOf="@+id/camera_toggle"
@@ -87,7 +87,7 @@
             android:id="@+id/bleToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="4dp"
             android:button="@drawable/ble_toggle"
             app:layout_constraintBottom_toBottomOf="@+id/camera_toggle"
             app:layout_constraintEnd_toStartOf="@+id/camera_toggle"
@@ -97,14 +97,25 @@
             android:id="@+id/camera_toggle"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginEnd="4dp"
             android:background="@android:color/transparent"
             android:scaleType="center"
             android:src="@drawable/ic_cameraswitch"
             android:text="@string/camera_facing_back"
-            app:layout_constraintTop_toTopOf="@+id/autoLinearLayout"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/mirrorControl"
+            app:layout_constraintTop_toTopOf="@+id/autoLinearLayout"
             app:tint="@color/openBotBlue" />
+
+        <CheckBox
+            android:id="@+id/mirrorControl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:button="@drawable/mirror_control"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/autoLinearLayout" />
 
 
         <LinearLayout

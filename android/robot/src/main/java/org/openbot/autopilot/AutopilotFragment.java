@@ -379,12 +379,9 @@ public class AutopilotFragment extends CameraFragment {
 
     private void setNetworkEnabled(boolean b) {
         binding.autoSwitch.setChecked(b);
-        System.out.println("drive mode:::" + currentDriveMode);
         binding.controllerContainer.controlMode.setEnabled(!b);
         binding.controllerContainer.driveMode.setEnabled(!b);
         binding.controllerContainer.speedMode.setEnabled(!b);
-
-        System.out.println("drive mode color::" + b);
         binding.controllerContainer.controlMode.setAlpha(b ? 0.5f : 1f);
         binding.controllerContainer.driveMode.setAlpha(b ? 0.5f : 1f);
         binding.controllerContainer.speedMode.setAlpha(b ? 0.5f : 1f);
@@ -464,6 +461,16 @@ public class AutopilotFragment extends CameraFragment {
         return model;
     }
 
+    private void connectWebController() {
+        phoneController.connectWebServer();
+        Enums.DriveMode oldDriveMode = currentDriveMode;
+        // Currently only dual drive mode supported
+        setDriveMode(Enums.DriveMode.GAME);
+        binding.controllerContainer.driveMode.setAlpha(0.5f);
+        binding.controllerContainer.driveMode.setEnabled(false);
+        preferencesManager.setDriveMode(oldDriveMode.getValue());
+    }
+
     protected void setModel(Model model) {
         if (this.model != model) {
             Timber.d("Updating  model: %s", model);
@@ -537,7 +544,12 @@ public class AutopilotFragment extends CameraFragment {
                     if (!PermissionUtils.hasControllerPermissions(requireActivity()))
                         requestPermissionLauncher.launch(Constants.PERMISSIONS_CONTROLLER);
                     else connectPhoneController();
-
+                    break;
+                case WEBSERVER:
+                    binding.controllerContainer.controlMode.setImageResource(R.drawable.ic_server);
+                    if (!PermissionUtils.hasControllerPermissions(requireActivity()))
+                        requestPermissionLauncher.launch(Constants.PERMISSIONS_CONTROLLER);
+                    else connectWebController();
                     break;
             }
             Timber.d("Updating  controlMode: %s", controlMode);
@@ -561,7 +573,6 @@ public class AutopilotFragment extends CameraFragment {
 
             Timber.d("Updating  driveMode: %s", driveMode);
             vehicle.setDriveMode(driveMode);
-            System.out.println("set drive mode in setDriveMode-->" + driveMode.getValue());
             preferencesManager.setDriveMode(driveMode.getValue());
         }
     }
@@ -573,13 +584,13 @@ public class AutopilotFragment extends CameraFragment {
         setDriveMode(Enums.DriveMode.DUAL);
         binding.controllerContainer.driveMode.setAlpha(0.5f);
         binding.controllerContainer.driveMode.setEnabled(false);
+        preferencesManager.setDriveMode(oldDriveMode.getValue());
     }
 
     private void disconnectPhoneController() {
         phoneController.disconnect();
         setDriveMode(Enums.DriveMode.getByID(preferencesManager.getDriveMode()));
         binding.controllerContainer.driveMode.setEnabled(true);
-        System.out.println("drive mode color::" + 1.0f);
         binding.controllerContainer.driveMode.setAlpha(1.0f);
     }
 }
