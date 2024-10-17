@@ -428,6 +428,10 @@ public class ObjectNavFragment extends CameraFragment {
         binding.controllerContainer.driveMode.setAlpha(0.5f);
         binding.controllerContainer.driveMode.setEnabled(false);
       }
+     else if (Enums.DriveMode.getByID(preferencesManager.getDriveMode()) == Enums.DriveMode.GAME && Enums.ControlMode.getByID(preferencesManager.getControlMode()) == Enums.ControlMode.WEBSERVER) {
+        binding.controllerContainer.driveMode.setAlpha(0.5f);
+        binding.controllerContainer.driveMode.setEnabled(false);
+      }
     }
 
     resetFpsUi();
@@ -667,12 +671,10 @@ public class ObjectNavFragment extends CameraFragment {
 
   private void connectWebController() {
     phoneController.connectWebServer();
-    Enums.DriveMode oldDriveMode = currentDriveMode;
     // Currently only dual drive mode supported
     setDriveMode(Enums.DriveMode.GAME);
     binding.controllerContainer.driveMode.setAlpha(0.5f);
     binding.controllerContainer.driveMode.setEnabled(false);
-    preferencesManager.setDriveMode(oldDriveMode.getValue());
   }
 
   private void disconnectPhoneController() {
