@@ -50,6 +50,7 @@ const Chat = ({drawer}) => {
         if (userInput === '') {
             return;
         }
+        const personaKey = 4;
         setIsTyping(true);
         setCurrentMessage((prevState) => ({
             ...prevState,
@@ -62,6 +63,7 @@ const Chat = ({drawer}) => {
         }));
         abortControllerRef.current = new AbortController();
         let messageBuffer = '';
+        const modifiedUserInput = `${userInput} {persona: ${personaKey}}`;
 
         //Handles incoming message chunks from the api on streaming.
         const onMessage = (chunk) => {
@@ -104,7 +106,7 @@ const Chat = ({drawer}) => {
         };
 
         // To add the blocks to the current workspace
-        getAIMessage(userInput, getCurrentProject().xmlValue, abortControllerRef.current.signal, onMessage).then((res) => {
+        getAIMessage(modifiedUserInput, getCurrentProject().xmlValue, abortControllerRef.current.signal, onMessage).then((res) => {
             if (res !== undefined) {
                 let finalMessage = handler(res);
                 if (finalMessage !== undefined) {

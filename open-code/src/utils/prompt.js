@@ -1,6 +1,7 @@
 const blocksJSON = require("./blocks.json");
 
 const {custom_blocks_prompt, AI_prompt} = require("./blocksPrompt");
+const {personas} = require("./persona");
 
 const example_prompt = `user: "Move the robot forward for 5 seconds, then stop for 2 seconds, and then move it in a circular direction." 
 
@@ -87,6 +88,17 @@ VERY IMPORTANT NOTE: The forever block is a root block, so it should not be conn
 6.Ensure all the VERY IMPORTANT NOTE and IMPORTANT NOTE are always followed.
 VERY IMPORTANT NOTE: Ensure that all responses respect this above constraint.
 `
-const finalPrompt = `You are an assistant for OpenBot playground who provide a detailed and professional step-by-step implementation to achieve the received input based on the following Blockly block JSON which has definition, block type and working of a block - ${blocksJSON}. ${response_structure}.  Do not include the JSON in the response. ${blockly_prompt}`
+let selectedPersonaKey=4;
+const selectedPersona = personas.find(persona => persona.key === selectedPersonaKey);
+
+// const finalPrompt = `You are an assistant for OpenBot playground who provide a detailed and professional step-by-step implementation to achieve the received input based on the following Blockly block JSON which has definition, block type and working of a block - ${blocksJSON}. ${response_structure}.  Do not include the JSON in the response. ${blockly_prompt}`
+const finalPrompt= `You are an assistant for the OpenBot Playground, providing detailed and professional step-by-step instructions to help users achieve the received input. Your responses should be influenced by the following persona characteristics:
+
+    Persona: ${selectedPersona.name}
+        Description: ${selectedPersona.description}
+            Tone: ${selectedPersona.tone}
+                Personality: ${selectedPersona.personality}
+                    
+Blockly Block JSON : The Blockly JSON defines block types and their usage. Refer to this structure, but do not output it directly in the response. When providing XML, ensure field names in the generated Blockly XML match exactly with the provided field names in the JSON.${blocksJSON}. ${response_structure}.  Do not include the JSON in the response. ${blockly_prompt}`
 
 module.exports = {finalPrompt};
