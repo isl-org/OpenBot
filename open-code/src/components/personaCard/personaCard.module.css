@@ -12,44 +12,57 @@
     padding: 0.5rem;
     width: 90%;
     text-align: justify;
-    cursor: pointer;
+    cursor: pointer; /* Default cursor */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .personaCard:hover {
     transform: scale(1.05);
-    background-color: #0071C5;
+    background-color: #0071C5; /* Hover background color */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     color: #FFFFFF;
 }
-@media (max-width: 600px) {
-    .personaContainer {
-        padding: 0.5rem;
-    }
-    .personaCard {
-        width: 100%;
-    }
+
+/* Disable hover effect for non-selected items when one is selected */
+.personaCard:not(.selected):hover {
+    transform: none; /* No scaling on hover */
+    background-color:#0071C5 ; /* Keep the original background color */
+    box-shadow: none; /* No shadow effect */
 }
+
+/* Selected persona style */
+.selected {
+    background-color: #0071C5; /* Highlight color when selected */
+    color: #FFFFFF;
+    pointer-events: none; /* Prevent hover effects */
+}
+
 /* Dark Theme */
 .dark .personaContainer {
     background-color: #1e1e1e;
 }
 
 .dark .personaCard {
-    background-color: #2e2e2e;
+    background-color: #121212;
     border: 1px solid #444;
     color: #FFFFFF;
 }
 
 .dark .personaCard:hover {
-    background-color: #0071C5;
+    background-color: #0071C5; /* Hover effect for non-selected items */
 }
+
+.dark .selected {
+    background-color: #0071C5; /* Keep selected color */
+}
+
+/* Media queries for responsiveness */
 @media (max-width: 600px) {
-    .dark .personaContainer {
+    .personaContainer {
         padding: 0.5rem;
     }
-    .dark .personaCard {
-        width: 100%;
+    .personaCard {
+        width: 100%; /* Full width on smaller screens */
     }
 }
 .headingContainer {
