@@ -8,7 +8,7 @@ import {colors as Colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
 import {addBlocksToWorkspace} from "../blockly/imageConverter";
 import {getCurrentProject} from "../../services/workspace";
-import { handler} from "../../utils/handler";
+import {handler} from "../../utils/handler";
 import ChatBox from "../chatBox/messagebox";
 
 /**
@@ -112,7 +112,7 @@ const Chat = ({drawer}) => {
         };
 
         // To add the blocks to the current workspace
-        getAIMessage(userInput, persona , getCurrentProject().xmlValue, abortControllerRef.current.signal, onMessage).then((res) => {
+        getAIMessage(userInput, persona, getCurrentProject().xmlValue, abortControllerRef.current.signal, onMessage).then((res) => {
             if (res !== undefined) {
                 let finalMessage = handler(res);
                 if (finalMessage !== undefined) {
@@ -170,6 +170,24 @@ const Chat = ({drawer}) => {
             setAllChatMessages((prevMessages) => [...prevMessages, currentMessage]);
         }
     }, [currentMessage]);
+
+    //Effect for setting persona character message
+    useEffect(() => {
+
+        if (persona)
+            setAllChatMessages((prevMessages) => {
+                const updatedMessages = [...prevMessages];
+                updatedMessages.push({
+                    id: updatedMessages.length + 1,  // Starting with id 3 since id 2 is reserved for persona selection
+                    userMessage: "",
+                    AIMessage: ChatConstants.PersonaMessage,
+                    userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+                    AITimestamp: "",
+                    paused: false
+                })
+                return updatedMessages;
+            });
+    }, [persona])
 
 
     // Effect to scroll chat container to bottom when messages or AI message changes
