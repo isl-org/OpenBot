@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.6.21'
+    ext.kotlin_version = '1.8.0'
     ext.webrtc_version = '1.0.32006'
     ext.location_version = '19.0.1'
     ext.nearby_version = '18.0.2'
@@ -8,6 +8,7 @@ buildscript {
         google()
         mavenCentral()
         mavenLocal()
+        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.4.2'

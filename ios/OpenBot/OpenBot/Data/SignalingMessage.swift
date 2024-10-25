@@ -83,6 +83,10 @@ struct VehicleStatusEvent: Codable {
     }
 }
 
+struct FragmentStatus : Codable {
+    var FRAGMENT_TYPE: String
+}
+
 struct OfferEvent: Codable {
     var status: WebRTC
 
@@ -102,4 +106,8 @@ struct CandidateEvent: Codable {
     struct WebRTC: Codable {
         var WEB_RTC_EVENT: Candidate
     }
+}
+
+struct OpenBotSignal : Codable {
+    var openbot : Int
 }

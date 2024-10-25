@@ -98,11 +98,11 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
         view.addSubview(urlInputBox);
         urlInputBox.isHidden = true;
         urlInputBox.addTarget(self, action: #selector(nameDidChange(_:)), for: .editingChanged);
-        urlInputBox.frame = CGRect(x: 20, y: 150, width: width - 40, height: 50);
+        urlInputBox.frame = currentOrientation == .portrait ? CGRect(x: 70 + safeAreaLayoutValue.left, y: 100, width: width - 90, height: 50) :
+                CGRect(x: 70 + safeAreaLayoutValue.top, y: 100, width: height - 170, height: 50);
         urlInputBox.layer.borderColor = Colors.border?.cgColor
         urlInputBox.layer.borderWidth = 1;
         urlInputBox.layer.cornerRadius = 5;
-
     }
 
     /// Called when the view controller's view's size is changed by its parent (i.e. for the root view controller when its window rotates or is resized).
@@ -112,13 +112,14 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
             widthOfTable.constant = width;
             heightOfTable.constant = height / 2
             label.frame.origin = CGPoint(x: width / 2 - 50, y: 0)
-            urlInputBox.frame.size.width = width - 40;
+            urlInputBox.frame.size.width = width - 90;
+            urlInputBox.frame.origin.x = 70 + safeAreaLayoutValue.left
         } else {
             widthOfTable.constant = height;
             heightOfTable.constant = width / 2
             label.frame.origin = CGPoint(x: height / 2 - 50, y: 0)
-            urlInputBox.frame.size.width = height - 40;
-
+            urlInputBox.frame.size.width = height - 170;
+            urlInputBox.frame.origin.x = 70 + safeAreaLayoutValue.top
         }
     }
 
@@ -249,7 +250,6 @@ class BottomSheet: UIViewController, UITableViewDataSource, UITableViewDelegate,
         urlInputBox.resignFirstResponder()  //if desired
         return true
     }
-
 
 }
 

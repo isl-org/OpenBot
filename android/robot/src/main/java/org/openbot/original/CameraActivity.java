@@ -643,7 +643,7 @@ public abstract class CameraActivity extends AppCompatActivity
     if (modelAdapter != null && modelAdapter.getPosition(model) == -1) {
       modelAdapter.add(model);
       masterList.add(item);
-      FileUtils.updateModelConfig(this, masterList);
+      FileUtils.updateModelConfig(this, context,masterList, false);
     } else {
       if (model.equals(modelSpinner.getSelectedItem())) {
         setModel(item);
@@ -920,7 +920,11 @@ public abstract class CameraActivity extends AppCompatActivity
             PermissionUtils.requestControllerPermissions(this);
           } else connectPhoneController();
           break;
-        case WEBRTC:
+        case WEBSERVER:
+          handleControllerEvents();
+          if (!PermissionUtils.hasControllerPermissions(this)) {
+            PermissionUtils.requestControllerPermissions(this);
+          } else connectWebController();
           break;
         default:
           throw new IllegalStateException("Unexpected value: " + controlMode);
@@ -935,6 +939,15 @@ public abstract class CameraActivity extends AppCompatActivity
     DriveMode oldDriveMode = driveMode;
     // Currently only dual drive mode supported
     setDriveMode(DriveMode.DUAL);
+    driveModeSpinner.setAlpha(0.5f);
+    preferencesManager.setDriveMode(oldDriveMode.getValue());
+  }
+
+  private void connectWebController() {
+    phoneController.connectWebServer();
+    DriveMode oldDriveMode = driveMode;
+    // Currently only dual drive mode supported
+    setDriveMode(Enums.DriveMode.GAME);
     driveModeSpinner.setAlpha(0.5f);
     preferencesManager.setDriveMode(oldDriveMode.getValue());
   }

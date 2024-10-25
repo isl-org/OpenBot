@@ -1,1 +1,2 @@
 include ':robot', ':controller'
+include ':comlib'
