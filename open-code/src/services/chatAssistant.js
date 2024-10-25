@@ -1,14 +1,15 @@
-import {finalPrompt} from "../utils/prompt";
+import {blocklyFinalPrompt,personaFinalPrompt} from "../utils/prompt";
 
 /**
  * API to get the assistant response with streaming
  * @param userPrompt
+ * @param persona
  * @param currentXML
  * @param signal
  * @param onMessage
  * @returns {Promise<string>}
  */
-export const getAIMessage = async (userPrompt, currentXML, signal, onMessage) => {
+export const getAIMessage = async (userPrompt, persona, currentXML, signal, onMessage) => {
     const url = `https://api.openai.com/v1/chat/completions`;
 
     try {
@@ -21,7 +22,10 @@ export const getAIMessage = async (userPrompt, currentXML, signal, onMessage) =>
 
             body: JSON.stringify({
                 "messages": [
-                    {role: 'system', content: finalPrompt + "\nInput XML : " + currentXML},
+                    {
+                        role: 'system',
+                        content: persona ? personaFinalPrompt(persona) : blocklyFinalPrompt + "\nInput XML : " + currentXML
+                    },
                     {role: 'user', content: userPrompt}
                 ],
                 model: "gpt-4o-mini-2024-07-18",

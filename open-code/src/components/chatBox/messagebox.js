@@ -6,6 +6,7 @@ import {ChatConstants, Themes} from '../../utils/constants';
 import {colors as Colors} from '../../utils/color';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import PersonaCard from "../personaCard/peronaCard";
 
 /**
  * ChatBox component renders a chat bubble containing user and assistant messages.
@@ -23,7 +24,8 @@ const ChatBox = (props) => {
         allChatMessages,
         chatContainerRef,
         setCodeBufferLoader,
-        codeBufferLoader
+        codeBufferLoader,
+        setPersona,
     } = props;
     const theme = useContext(ThemeContext);
     return (
@@ -33,14 +35,6 @@ const ChatBox = (props) => {
                 color: theme.theme === Themes.dark ? Colors.whiteFont : '#FFFFFF',
             }}
         >
-            {!conversation.userMessage && (
-                <iframe
-                    height='250'
-                    style={{border: 'none'}}
-                    src={ChatConstants.videoURl}
-                    title="openBot"
-                ></iframe>
-            )}
             {conversation.userMessage && (
                 <UserMessage
                     timestamp={conversation.userTimestamp}
@@ -60,6 +54,7 @@ const ChatBox = (props) => {
                 setLoader={setLoader}
                 loader={loader}
                 chatContainerRef={chatContainerRef}
+                setPersona={setPersona}
             />
         </div>
     );
@@ -98,6 +93,7 @@ const AssistantResponse = (props) => {
         allChatMessages,
         id,
         chatContainerRef,
+        setPersona
     } = props;
     const [displayedMessage, setDisplayedMessage] = useState('');
     const theme = useContext(ThemeContext);
@@ -118,6 +114,9 @@ const AssistantResponse = (props) => {
         }
     }, [displayedMessage, chatContainerRef, loader, allChatMessages.length]);
 
+    function handlePersonas(e) {
+        setPersona(e);
+    }
 
     return (
         <div
@@ -170,6 +169,7 @@ const AssistantResponse = (props) => {
                     >
                         {displayedMessage}
                     </ReactMarkdown>
+                    {id === 2 && <PersonaCard handlePersonas={handlePersonas}/>}
                     {codeBufferLoader && allChatMessages.length === id && (
                         <div className={theme.theme === Themes.dark ? styles.loaderHeadingDark : styles.loaderHeading}
                              style={{marginTop: "20px"}}>Generating Code

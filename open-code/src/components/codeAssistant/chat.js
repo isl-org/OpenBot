@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import styles from "./chat.module.css";
-import ChatBox from '../chatBox/messagebox';
 import {getAIMessage} from "../../services/chatAssistant";
 import {Images} from "../../utils/images.js";
 import {Themes, Errors, ChatConstants} from '../../utils/constants.js';
@@ -9,7 +8,8 @@ import {colors as Colors} from "../../utils/color";
 import {StoreContext} from "../../context/context";
 import {addBlocksToWorkspace} from "../blockly/imageConverter";
 import {getCurrentProject} from "../../services/workspace";
-import {cleanAndFormatResponse, handler} from "../../utils/handler";
+import { handler} from "../../utils/handler";
+import ChatBox from "../chatBox/messagebox";
 
 /**
  * Chat component handles user interactions and displays chat interface.
@@ -28,29 +28,36 @@ const Chat = ({drawer}) => {
     const chatContainerRef = useRef(null);
     const [codeBufferLoader, setCodeBufferLoader] = useState(false);
     const [allChatMessages, setAllChatMessages] = useState([{
-        userMessage: "",
-        AIMessage: ChatConstants.Message,
         id: 1,
+        userMessage: "",
+        AIMessage: ChatConstants.Message, // Initial welcome message
         userTimestamp: "",
         AITimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
         paused: false
-    },]);
+    }, {
+        id: 2,
+        userMessage: "", // Message for choosing persona
+        AIMessage: " ",
+        userTimestamp: "",
+        AITimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+        paused: false
+    }]);
     const [currentMessage, setCurrentMessage] = useState({
+        id: 3,  // Starting with id 3 since id 2 is reserved for persona selection
         userMessage: "",
         AIMessage: "",
-        id: 2,
         userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
         AITimestamp: "",
         paused: false
     });
 
+    const [persona, setPersona] = useState("");
     //Handles user click on send button
     const handleSendClick = async () => {
         const userInput = inputValue.trim().toLowerCase();
         if (userInput === '') {
             return;
         }
-        const personaKey = 4;
         setIsTyping(true);
         setCurrentMessage((prevState) => ({
             ...prevState,
@@ -63,7 +70,6 @@ const Chat = ({drawer}) => {
         }));
         abortControllerRef.current = new AbortController();
         let messageBuffer = '';
-        const modifiedUserInput = `${userInput} {persona: ${personaKey}}`;
 
         //Handles incoming message chunks from the api on streaming.
         const onMessage = (chunk) => {
@@ -106,7 +112,7 @@ const Chat = ({drawer}) => {
         };
 
         // To add the blocks to the current workspace
-        getAIMessage(modifiedUserInput, getCurrentProject().xmlValue, abortControllerRef.current.signal, onMessage).then((res) => {
+        getAIMessage(userInput, persona , getCurrentProject().xmlValue, abortControllerRef.current.signal, onMessage).then((res) => {
             if (res !== undefined) {
                 let finalMessage = handler(res);
                 if (finalMessage !== undefined) {
@@ -213,7 +219,7 @@ const Chat = ({drawer}) => {
                 codeBufferLoader={codeBufferLoader}
                 loader={loader}
                 chatContainerRef={chatContainerRef}
-
+                setPersona={setPersona}
             />))}
         </div>
         {drawer ? <ChatBottomBar

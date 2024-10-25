@@ -1,0 +1,64 @@
+.personaContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.personaCard {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 0.5rem;
+    width: 90%;
+    text-align: justify;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.personaCard:hover {
+    transform: scale(1.05);
+    background-color: #0071C5;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    color: #FFFFFF;
+}
+@media (max-width: 600px) {
+    .personaContainer {
+        padding: 0.5rem;
+    }
+    .personaCard {
+        width: 100%;
+    }
+}
+/* Dark Theme */
+.dark .personaContainer {
+    background-color: #1e1e1e;
+}
+
+.dark .personaCard {
+    background-color: #2e2e2e;
+    border: 1px solid #444;
+    color: #FFFFFF;
+}
+
+.dark .personaCard:hover {
+    background-color: #0071C5;
+}
+@media (max-width: 600px) {
+    .dark .personaContainer {
+        padding: 0.5rem;
+    }
+    .dark .personaCard {
+        width: 100%;
+    }
+}
+.headingContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+}
