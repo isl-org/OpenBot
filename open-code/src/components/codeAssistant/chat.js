@@ -103,9 +103,7 @@ const Chat = ({drawer}) => {
                     setIsTyping(false);
                 } else {
                     setCurrentMessage((prevState) => ({
-                        ...prevState,
-                        AIMessage: prevState.AIMessage + formattedChunk,
-                        AITimestamp: timestamp,
+                        ...prevState, AIMessage: prevState.AIMessage + formattedChunk, AITimestamp: timestamp,
                     }));
                 }
             }
@@ -171,23 +169,48 @@ const Chat = ({drawer}) => {
         }
     }, [currentMessage]);
 
-    //Effect for setting persona character message
-    useEffect(() => {
+    // Function to apply typing effect to the latest message in allChatMessages
+    const applyTypingEffect = (fullText, typingSpeed = 20) => {
+        let currentIndex = 0;
 
-        if (persona)
+        const typeCharacter = () => {
             setAllChatMessages((prevMessages) => {
                 const updatedMessages = [...prevMessages];
-                updatedMessages.push({
-                    id: updatedMessages.length + 1,  // Starting with id 3 since id 2 is reserved for persona selection
-                    userMessage: "",
-                    AIMessage: ChatConstants.PersonaMessage,
-                    userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
-                    AITimestamp: "",
-                    paused: false
-                })
+                const latestMessage = updatedMessages[updatedMessages.length - 1];
+
+                // Update only the latest message
+                latestMessage.AIMessage = fullText.slice(0, currentIndex + 1);
+                updatedMessages[updatedMessages.length - 1] = latestMessage;
+
                 return updatedMessages;
             });
-    }, [persona])
+
+            currentIndex++;
+
+            if (currentIndex < fullText.length) {
+                setTimeout(typeCharacter, typingSpeed);
+            }
+        };
+
+        typeCharacter();
+    };
+
+    //Effect for setting persona character message
+    useEffect(() => {
+        if (persona) {
+            setAllChatMessages((prevMessages) => [...prevMessages, {
+                id: prevMessages.length + 1,
+                userMessage: "",
+                AIMessage: "",
+                userTimestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+                AITimestamp: "",
+                paused: false
+            }]);
+            setTimeout(() => {
+                applyTypingEffect(ChatConstants.PersonaMessage);
+            }, 80);
+        }
+    }, [persona]);
 
 
     // Effect to scroll chat container to bottom when messages or AI message changes
