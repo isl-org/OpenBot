@@ -1,6 +1,12 @@
 # OpenBot Controllers
 
-Last updated: Dec 20, 2021
+<p align="center">
+  <span>English</span> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
+</p>
 
 There are several ways for controlling the OpenBot robot.
 
@@ -19,3 +25,11 @@ Special thanks to Ivo Zivkov [izivkov@gmail.com](mailto:izivkov@gmail.com) for t
 This controller requires your phone and a computer (e.g. laptop, rasberry PI) to be connected to the same WiFi network. After successful connection you get a live RTSP video stream and can use your keyboard to control the robot from the terminal. You can use the Python script as a template to develop your own controller.
 
 Special thanks to Ivo Zivkov [izivkov@gmail.com](mailto:izivkov@gmail.com) for the development.
+
+## [Flutter Controller App](flutter)
+
+This controller app serves as a remote controller for the OpenBot vehicle similar as a BT controller (e.g. PS3/4 or Xbox). It runs on another Android/iOS device and supports live video/audio streaming in addition to control.
+
+## [Web Server Controller](web-server)
+
+This is a cloud server version of the local Node.js controller. It allows for remote teleoperation of the OpenBot robot via internet. 

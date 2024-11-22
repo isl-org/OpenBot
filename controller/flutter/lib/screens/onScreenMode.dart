@@ -113,15 +113,15 @@ class SquareSliderComponentShape extends SliderComponentShape {
   @override
   void paint(PaintingContext context, Offset center,
       {required Animation<double> activationAnimation,
-      required Animation<double> enableAnimation,
-      required bool isDiscrete,
-      required TextPainter labelPainter,
-      required RenderBox parentBox,
-      required SliderThemeData sliderTheme,
-      required TextDirection textDirection,
-      required double value,
-      required double textScaleFactor,
-      required Size sizeWithOverflow}) {
+        required Animation<double> enableAnimation,
+        required bool isDiscrete,
+        required TextPainter labelPainter,
+        required RenderBox parentBox,
+        required SliderThemeData sliderTheme,
+        required TextDirection textDirection,
+        required double value,
+        required double textScaleFactor,
+        required Size sizeWithOverflow}) {
     final Canvas canvas = context.canvas;
     canvas.drawRRect(
       RRect.fromRectAndRadius(
@@ -139,18 +139,18 @@ class MyRoundedRectSliderTrackShape extends SliderTrackShape
 
   @override
   void paint(
-    PaintingContext context,
-    Offset offset, {
-    required RenderBox parentBox,
-    required SliderThemeData sliderTheme,
-    required Animation<double> enableAnimation,
-    required TextDirection textDirection,
-    required Offset thumbCenter,
-    Offset? secondaryOffset,
-    bool isDiscrete = false,
-    bool isEnabled = false,
-    double additionalTrackHeight = 30,
-  }) {
+      PaintingContext context,
+      Offset offset, {
+        required RenderBox parentBox,
+        required SliderThemeData sliderTheme,
+        required Animation<double> enableAnimation,
+        required TextDirection textDirection,
+        required Offset thumbCenter,
+        Offset? secondaryOffset,
+        bool isDiscrete = false,
+        bool isEnabled = false,
+        double additionalTrackHeight = 30,
+      }) {
     if (sliderTheme.trackHeight == null) {
       return;
     }

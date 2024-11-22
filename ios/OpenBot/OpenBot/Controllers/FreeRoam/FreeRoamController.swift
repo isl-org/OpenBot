@@ -4,15 +4,17 @@
 
 import UIKit
 import AVFoundation
+import Network
+import FirebaseAuth
 
 /// Implementation of the FreeRoamController
 class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var sonarLabel = UILabel()
     var voltageLabel = UILabel()
     var outerSonar: UIView!
-    var selectedSpeedMode: SpeedMode = SpeedMode.NORMAL;
+    var selectedSpeedMode: SpeedMode = SpeedMode.SLOW;
     var selectedControlMode: ControlMode = ControlMode.GAMEPAD;
-    var selectedDriveMode: DriveMode = DriveMode.JOYSTICK;
+    var selectedDriveMode: DriveMode = DriveMode.DUAL;
     let bluetooth = bluetoothDataController.shared;
     var gameControllerObj: GameController?;
     var vehicleControl = Control();
@@ -22,11 +24,17 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     var gameController = GameController.shared
     var bluetoothIcon = UIImageView()
     var isClientConnected: Bool = false
+    var audioPlayer = AudioPlayer.shared
     private let mainView = UIView()
+    let mSocket = NativeWebSocket.shared;
+    let roomId: String = Auth.auth().currentUser?.email ?? ""
+    let webSocketMsgHandler = WebSocketMessageHandler();
+    let fragmentType = FragmentType.shared
 
     /// Called after the view controller has loaded.
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("navigationController is :", navigationController);
         setupNavigationBarItem()
         setupSpeedMode()
         applySafeAreaConstraints()
@@ -50,15 +58,75 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         if currentOrientation == UIInterfaceOrientation.landscapeRight || currentOrientation == UIInterfaceOrientation.landscapeLeft {
             applyLandScapeConstraint()
         }
+        if let value = preferencesManager.getControlMode() {
+            if let mode = ControlMode(rawValue: value){
+                if(mode == ControlMode.GAMEPAD){
+                    selectedControlMode = ControlMode.PHONE
+                }
+                else if(mode == ControlMode.PHONE){
+                    selectedControlMode = ControlMode.WEB
+                }
+                else{
+                    selectedControlMode = ControlMode.GAMEPAD
+                }
+                updateControlMode();
+            }
+        }
+        if let value = preferencesManager.getDriveMode() {
+            if let mode = DriveMode(rawValue: value){
+                if(mode == DriveMode.DUAL){
+                    selectedDriveMode = DriveMode.JOYSTICK
+                    gameController.selectedDriveMode = DriveMode.JOYSTICK
+                }
+                else if(mode == DriveMode.GAME){
+                    selectedDriveMode = DriveMode.DUAL
+                    gameController.selectedDriveMode = DriveMode.DUAL
+                }
+                else if(mode == DriveMode.JOYSTICK){
+                    selectedDriveMode = DriveMode.GAME
+                    gameController.selectedDriveMode = DriveMode.GAME
+                }
+                updateGameControllerModeType()
+            }
+        }
+        if let value = preferencesManager.getSpeedMode() {
+            if let mode = SpeedMode(rawValue: value) {
+                if(mode == SpeedMode.SLOW){
+                    selectedSpeedMode = SpeedMode.NORMAL;
+                    gameController.selectedSpeedMode = SpeedMode.NORMAL
+                }
+                else if(mode == SpeedMode.NORMAL){
+                    selectedSpeedMode = SpeedMode.FAST;
+                    gameController.selectedSpeedMode = SpeedMode.FAST
+                }
+                else if(mode == SpeedMode.FAST){
+                    selectedSpeedMode = SpeedMode.SLOW;
+                    gameController.selectedSpeedMode = SpeedMode.SLOW
+                }
+                updateSpeedModes()
+            }
+        }
+        
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothConnected, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnect), name: .bluetoothDisconnected, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(decreaseSpeedMode), name: .decreaseSpeedMode, object: nil);
         NotificationCenter.default.addObserver(self, selector: #selector(increaseSpeedMode), name: .increaseSpeedMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDriveMode), name: .updateDriveMode, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDataFromControllerApp), name: .updateStringFromControllerApp, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateLightsCommandFromControllerApp), name: .updateLightsCommandFromControllerApp, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientConnected), name: .clientConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(clientDisconnected), name: .clientDisConnected, object: nil)
         gameController.resetControl = false
+        fragmentType.currentFragment = "FreeRoam";
+        let msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: self.fragmentType.currentFragment));
+        client.send(message: msg);
+    }
+
+    /**
+     Removing all notifications
+     */
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     /// Called after the view was dismissed, covered or otherwise hidden.
@@ -341,8 +409,9 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     /// function to create the control type mode and update values
     func updateControlMode() {
-        let gamePadController = createMode(x: 35, y: 55, width: Int(width / 3), label: Strings.gamepad, icon: "gamepad", action: #selector(gamepadMode(_:)))
-        let phoneController = createMode(x: Int(width / 3) + 48, y: 55, width: Int(width / 3), label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
+        let gamePadController = createMode(x: 35, y: 55, width: Int(width / 4), label: Strings.gamepad, icon: "gamepad", action: #selector(gamepadMode(_:)))
+        let phoneController = createMode(x: 140, y: 55, width: Int(width / 4), label: Strings.phone, icon: "phone", action: #selector(phoneMode(_:)))
+        let webController = createMode(x: 245, y: 55, width: Int(width / 4), label: Strings.web, icon: "globe", action: #selector(webMode(_:)))
         if selectedControlMode == ControlMode.GAMEPAD {
             NotificationCenter.default.addObserver(self, selector: #selector(updateControllerValues), name: NSNotification.Name(rawValue: Strings.controllerConnected), object: nil);
             gameControllerObj = gameController
@@ -350,6 +419,9 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             gamePadController.backgroundColor = Colors.title
             let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
             client.send(message: msg);
+            if(webRTCClient != nil){
+                webRTCClient.disconnect();
+            }
         } else if selectedControlMode == ControlMode.PHONE {
             gameControllerObj = nil;
             gameController.selectedControlMode = ControlMode.PHONE
@@ -359,9 +431,23 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
             client.send(message: msg);
         }
+        else {
+            gameControllerObj = nil;
+            gameController.selectedControlMode = ControlMode.WEB
+            webController.backgroundColor = Colors.title
+            client.start();
+            let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
+            client.send(message: msg);
+            if(webRTCClient != nil){
+                webRTCClient.disconnect();
+            }
+            sendMessage();
+            _ = ServerWebrtcDelegate();
+        }
         updateGameControllerModeType()
         secondView.addSubview(gamePadController)
         secondView.addSubview(phoneController)
+        secondView.addSubview(webController)
     }
 
     /// function to create the game controller mode and update values
@@ -372,7 +458,12 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         if selectedControlMode == ControlMode.PHONE {
             selectedDriveMode = DriveMode.DUAL
             dual.backgroundColor = Colors.titleDeactivated
-        } else {
+        }
+        else if selectedControlMode == ControlMode.WEB{
+            selectedDriveMode = DriveMode.GAME
+            game.backgroundColor = Colors.titleDeactivated;
+        }
+        else {
             if selectedDriveMode == DriveMode.JOYSTICK {
                 joystick.backgroundColor = Colors.title
             } else if selectedDriveMode == DriveMode.GAME {
@@ -391,18 +482,21 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         selectedDriveMode = DriveMode.JOYSTICK
         gameController.selectedDriveMode = DriveMode.JOYSTICK
         updateGameControllerModeType()
+        preferencesManager.setDriveMode(value: DriveMode.DUAL.rawValue);
     }
 
     @objc func gameMode(_ sender: UIView) {
         selectedDriveMode = DriveMode.GAME
         gameController.selectedDriveMode = DriveMode.GAME
         updateGameControllerModeType()
+        preferencesManager.setDriveMode(value: DriveMode.JOYSTICK.rawValue);
     }
 
     @objc func dualMode(_ sender: UIView) {
         selectedDriveMode = DriveMode.DUAL
         gameController.selectedDriveMode = DriveMode.DUAL
         updateGameControllerModeType()
+        preferencesManager.setDriveMode(value: DriveMode.GAME.rawValue);
     }
 
     /// function to update the speed modes value and create UI
@@ -426,29 +520,41 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     @objc func phoneMode(_ sender: UIView) {
         selectedControlMode = ControlMode.PHONE
         updateControlMode()
+        preferencesManager.setControlMode(value: ControlMode.GAMEPAD.rawValue);
     }
 
     @objc func gamepadMode(_ sender: UIView) {
         selectedControlMode = ControlMode.GAMEPAD;
         updateControlMode()
+        preferencesManager.setControlMode(value: ControlMode.WEB.rawValue);
+    }
+    
+    @objc func webMode(_ sender: UIView){
+        selectedControlMode = ControlMode.WEB;
+        updateControlMode()
+        selectedDriveMode = DriveMode.GAME;
+        preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
     }
 
     @objc func slow(_ sender: UIView) {
         selectedSpeedMode = SpeedMode.SLOW
         gameController.selectedSpeedMode = SpeedMode.SLOW
         updateSpeedModes()
+        preferencesManager.setSpeedMode(value: SpeedMode.FAST.rawValue);
     }
 
     @objc func medium(_ sender: UIView) {
         selectedSpeedMode = SpeedMode.NORMAL
         gameController.selectedSpeedMode = SpeedMode.NORMAL
         updateSpeedModes()
+        preferencesManager.setSpeedMode(value: SpeedMode.SLOW.rawValue);
     }
 
     @objc func fast(_ sender: UIView) {
         selectedSpeedMode = SpeedMode.FAST
         gameController.selectedSpeedMode = SpeedMode.FAST
         updateSpeedModes()
+        preferencesManager.setSpeedMode(value: SpeedMode.NORMAL.rawValue);
     }
 
     /// UI function to create the mode
@@ -458,10 +564,13 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         let modeRectangleLabel = UILabel(frame: CGRect(x: 10, y: 4, width: 100, height: 50))
         modeRectangleLabel.text = label
         modeRectangleLabel.textColor = .white
-        modeRectangleLabel.font = modeRectangleLabel.font.withSize(15)
+        modeRectangleLabel.font = modeRectangleLabel.font.withSize(13)
         modeRectangle.addSubview(modeRectangleLabel)
         let modeIcon = UIImageView(frame: CGRect(x: modeRectangle.frame.width - 12.8 - modeRectangle.frame.width / 10, y: modeRectangle.frame.height / 3, width: 19, height: 19))
-        modeIcon.image = UIImage(named: icon)
+        if let image = UIImage(named: icon)?.withRenderingMode(.alwaysTemplate) {
+            modeIcon.image = image
+            modeIcon.tintColor = .white
+        }        
         let tapGesture = UITapGestureRecognizer(target: self, action: action)
         tapGesture.delegate = self
         modeRectangle.addGestureRecognizer(tapGesture)
@@ -501,8 +610,8 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
 
     /// update the speedometer value
     func updateSpeedometer() {
-        let oldTag = view.viewWithTag(100)
-        oldTag?.removeFromSuperview()
+        let oldTag = view.viewWithTag(100);
+        oldTag?.removeFromSuperview();
         let a = GaugeView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 256))
         a.tag = 100
         let speedometer = bluetooth.speedometer
@@ -552,6 +661,15 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         _ = navigationController?.popViewController(animated: true)
     }
 
+    override func beginAppearanceTransition(_ isAppearing: Bool, animated: Bool) {
+        super.beginAppearanceTransition(isAppearing, animated: animated)
+
+    }
+
+    override func endAppearanceTransition() {
+        super.endAppearanceTransition()
+    }
+
     /// open the bluetooth settings screen
     @objc func openBluetoothSettings(tapGestureRecognizer: UITapGestureRecognizer) {
         let nextViewController = (storyboard?.instantiateViewController(withIdentifier: Strings.bluetoothScreen))
@@ -579,6 +697,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             selectedSpeedMode = .NORMAL;
             break;
         }
+        audioPlayer.playSpeedMode(speedMode: selectedSpeedMode);
         updateSpeedModes()
     }
 
@@ -594,6 +713,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         case .FAST:
             return
         }
+        audioPlayer.playSpeedMode(speedMode: selectedSpeedMode);
         updateSpeedModes()
     }
 
@@ -615,6 +735,7 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
             }
         }
         updateGameControllerModeType()
+        audioPlayer.playDriveMode(driveMode: selectedDriveMode);
     }
 
     /// update screen data coming from application
@@ -625,10 +746,44 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
         if notification.object != nil {
             let command = notification.object as! String
             let rightSpeed = command.slice(from: "r:", to: ", ");
-            let leftSpeed = command.slice(from: "l:", to: "}}")
+            let leftSpeed = command.slice(from: "l:", to: "}}");
             gameController.sendControlFromPhoneController(control: Control(left: Float(Double(leftSpeed ?? "0.0") ?? 0.0), right: Float(Double(rightSpeed ?? "0.0") ?? 0.0)))
         }
+        
     }
+    
+    /// update screen command data coming from application
+    @objc func updateLightsCommandFromControllerApp(_ notification: Notification) {
+        if gameController.selectedControlMode == ControlMode.GAMEPAD {
+            return
+        }
+        if notification.object != nil {
+            let command = notification.object as! String
+            let controllerCommand = command.slice(from: "command: ", to: " }")
+            switch controllerCommand {
+            case "INDICATOR_LEFT":
+                self.webSocketMsgHandler.indicatorLeft()
+                break;
+            case "INDICATOR_RIGHT":
+                self.webSocketMsgHandler.indicatorRight();
+                break
+            case "INDICATOR_STOP":
+                self.webSocketMsgHandler.cancelIndicator();
+            case "SPEED_DOWN":
+                self.webSocketMsgHandler.speedDown();
+                break;
+            case "SPEED_UP":
+                self.webSocketMsgHandler.speedUp();
+                break;
+            case "DRIVE_MODE":
+                self.webSocketMsgHandler.driveMode()
+                break;
+            default:
+                break;
+            }
+        }
+    }
+    
 
     /// update when client connects
     @objc func clientConnected(_ notification: Notification) {
@@ -646,6 +801,26 @@ class FreeRoamController: CameraController, UIGestureRecognizerDelegate {
     func setupSpeedMode() {
         gameController.selectedSpeedMode = SpeedMode.NORMAL;
         gameController.selectedDriveMode = DriveMode.JOYSTICK;
+    }
+    
+    /// function to parse the message for the connection and send it.
+    func sendMessage() {
+        var msg = JSON.toString(ServerConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true"), roomId: roomId));
+        print(msg);
+        var data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoProtocolEvent(status: .init(VIDEO_PROTOCOL: "WEBRTC"), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoServerUrlEvent(status: .init(VIDEO_SERVER_URL: ""), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoCommandEvent(status: .init(VIDEO_COMMAND: "START"), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
     }
 
 }

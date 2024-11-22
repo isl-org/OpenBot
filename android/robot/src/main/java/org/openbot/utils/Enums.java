@@ -59,8 +59,7 @@ public class Enums {
   public enum ControlMode {
     GAMEPAD(0),
     PHONE(1),
-    WEBRTC(2);
-
+    WEBSERVER(2);
     private final int value;
 
     ControlMode(final int value) {
@@ -86,6 +85,8 @@ public class Enums {
       case GAMEPAD:
         return ControlMode.PHONE;
       case PHONE:
+        return ControlMode.WEBSERVER;
+      case WEBSERVER:
         return ControlMode.GAMEPAD;
     }
     return null;

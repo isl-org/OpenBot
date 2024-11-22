@@ -1,8 +1,16 @@
 # Robot App
 
+<p align="center">
+  <span>English</span> |
+  <a href="README.zh-CN.md">简体中文</a> |
+  <a href="README.de-DE.md">Deutsch</a> |
+  <a href="README.fr-FR.md">Français</a> |
+  <a href="README.es-ES.md">Español</a>
+</p>
+
 ## DISCLAIMERS
 
-1. **Safety:** Always make sure you operate in a safe environment. Keep in mind, that your phone could be damaged in a collision! Special care is neccessary when using automated control (e.g. person following or driving policy). Make sure you always have a game controller connected and are familiar with the key mapping so you can stop the vehicle at any time. Use at your own risk!
+1. **Safety:** Always make sure you operate in a safe environment. Keep in mind, that your phone could be damaged in a collision! Special care is necessary when using automated control (e.g. person following or driving policy). Make sure you always have a game controller connected and are familiar with the key mapping, so you can stop the vehicle at any time. Use at your own risk!
 2. **App under development:** The application is under development and may crash or exhibit unexpected behaviour depending on your phone model and version of the operating system. Make sure to test all functionalities with no wheels connected. Use at your own risk!
 
 ## App Screens
@@ -12,17 +20,17 @@
 The app starts with a menu screen that shows all available screens. The settings screen can be opened with a click on the icon at the top right corner. By clicking on the other icons the user can access various screens whose functionalities are explained in the following.
 
 <p align="left">
-<img style="padding-right: 2%;" src="../../docs/images/screen_main.png" alt="Main Menu" width="24.5%"/>
-<img src="../../docs/images/screen_settings.png" alt="Settings Menu" width="24.5%"/>
-<img src="../../docs/images/dialog_stream_mode.png" alt="Settings Menu" width="24.5%"/>
-<img src="../../docs/images/dialog_connectivity_mode.png" alt="Settings Menu" width="24.5%"/>
+<img src="../../docs/images/screen_main.jpg" alt="Main Menu" width="21.6%"/>
+<img src="../../docs/images/screen_settings.jpg" alt="Settings Menu" width="20%"/>
+<img src="../../docs/images/dialog_stream_mode.jpg" alt="Settings Menu" width="20%"/>
+<img src="../../docs/images/dialog_connectivity_mode.jpg" alt="Settings Menu" width="20%"/>
 </p>
 
 ### Settings Menu
 
 #### USB Connection
 
-Tap the USB icon to open the USB options. The drop-down menu is used to set the baud rate. The default is 115200 and you should not need to change this unless you mess with the Arduino firmware. The app will attempt to connect automatically, but in case you encounter issues you can use this switch to disconnect/connect.
+Tap the USB icon to open the USB options. The drop-down menu is used to set the baud rate. The default is 115200, and you should not need to change this unless you mess with the Arduino firmware. The app will attempt to connect automatically, but in case you encounter issues you can use this switch to disconnect/connect.
 
 <p align="left">
 <img src="../../docs/images/usb_disconnected.jpg" alt="Connecting device" width="25%"/>
@@ -125,7 +133,7 @@ Simple UI for tracking objects of 80 different classes. A short description of t
 </p>
 
 - **Dynamic Speed**: reduces the robot speed in "Auto Mode" if it gets closer to the tracked object.
-  The speed is scaled based on the area of the bouding box (works best in landscape orientation).
+  The speed is scaled based on the area of the bounding box (works best in landscape orientation).
 - **Model**: Choose an object detector based on your phone performance (see below for [benchmarking results](#benchmark)).
 - **Object**: Pick the object you want to track. The models can detect the 80 COCO [object classes](https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/).
 - **Confidence**: Confidence threshold to determine if detections are accepted. Increase if you get false detections, decrease if the object of interest it not detected.
@@ -136,7 +144,7 @@ Simple UI for tracking objects of 80 different classes. A short description of t
 
 ### Point Goal Navigation
 
-Note that this fragment requires ARCore and camera permission. If your device does not support ARCore and you continue anyways, the app will crash. In this screen you can specify a goal via a 2D vector with respect to the current position and orientation of the robot. The 2D vector contains the distance to the front and left of the robot in meters. Both values can also be negative and correspond to back and right of the robot in that case. After specifying the goal and pressing `Start` the robot will exectue an AI policy that attempts to reach the goal while avoiding obstacles.
+Note that this fragment requires ARCore and camera permission. If your device does not support ARCore and you continue anyway, the app will crash. In this screen you can specify a goal via a 2D vector with respect to the current position and orientation of the robot. The 2D vector contains the distance to the front and left of the robot in meters. Both values can also be negative and correspond to back and right of the robot in that case. After specifying the goal and pressing `Start` the robot will exectue an AI policy that attempts to reach the goal while avoiding obstacles.
 
 <p align="left">
 <img src="../../docs/images/screen_point_goal_nav.gif" alt="Alt text" width="50%" />
@@ -357,7 +365,7 @@ There are two models that come with the app:
 - **MobileNetV1-300**: This model is used for person following. It uses a SSD object detector with MobileNet V1 backbone. The model is quantized for better performance on embedded devices. It comes with the app.
 - **CIL-Mobile**: This model is used for autonomous navigation. It will predict controls directly from the camera input. Chances are that it will not work in your environment. You should follow our instructions to train your own [Driving Policy](../../policy) and replace it.
 
-Additonal models can be downloaded from the Model Management screen.
+Additional models can be downloaded from the Model Management screen.
 
 The switch on the right is used to turn the network on and off. When the network is running, it produces the controls for the robot and the game controller is disabled. However, you may still use the buttons on the game controller, for example to toggle this switch with the R1 trigger button to regain control of the robot.
 
@@ -370,6 +378,63 @@ Use the drop-down menu to select the device on which the neural network should b
 - **NNAPI**: This will use the [TensorFlow Lite NNAPI delegate](https://www.tensorflow.org/lite/performance/nnapi). Modern smartphones often come with dedicated AI accelerators. The [Neural Network API](https://developer.android.com/ndk/guides/neuralnetworks) (NNAPI) provides acceleration for TensorFlow Lite models on Android devices with Graphics Processing Unit (GPU), Digital Signal Processor (DSP) and Neural Processing Unit (NPU). Note that on some older phones this can be very slow!
 
 If a model is active, the inference speed in [ms] will be displayed next to the device which is running the model.
+
+### Projects Screen
+
+The Projects Screen displays a list of your OpenBot Playground projects if you are signed in with your Google account. You can execute these projects to connect with your OpenBot, or scan their QR codes by clicking the scanner icon in the top right corner. If you are not signed in, the screen will display a Google Sign-In button, but you can still scan your project's QR code without signing in. If you get the message `Oops, no project found` on the screen after signing in, make sure that the account has projects stored on Google Drive.
+
+If you don't see your latest projects in the project list, you can reload them by pulling down on the project screen.
+<p align="left">
+<img src="../../docs/images/projects_tab_screen.gif" alt="Project Screen" width="24.7%"/>
+<img src="../../docs/images/no_projects_found.jpg" alt="No project screen" width="25%"/>
+<img src="../../docs/images/reload_projects.gif" altq="Reload project screen" width="24.5%"/>
+</p>
+
+- **Google Drive projects**: To run a Google Drive project, tap on the project you want to execute and wait for the contents of the project file to be read. If the file is successfully retrieved without any errors, a pop-up will appear with two buttons: `Start` and `Cancel`. The pop-up will also display the name of the project you are about to run. To execute the project, click on the Start button. If you want to stop the activity, click on the Cancel button. If you receive a pop-up message stating `Something went wrong`, there may be an error with the Google Drive file. To resolve this issue, refresh the project screen by pulling down and then repeating the same process.
+
+
+- **Qr code scanner**: To scan the QR code of a Playground project, click on the QR code icon located in the top right corner of the screen. Grant camera access to the app so that it can scan the QR code. Once the code is scanned, wait for the contents of the file to be read. If the file is retrieved successfully without any errors, a pop-up will appear with two buttons: `Start` and `Cancel`. The pop-up will also display the name of the project you are about to run. To execute the project, click on the Start button. If you want to stop the activity, click on the Cancel button. If you receive a pop-up message stating `Something went wrong`, there may be an error with the Google Drive file. To resolve this issue, generate a new QR code in Playground and repeat the process.
+
+
+- **Executing Project**: If your OpenBot Playground project runs successfully, the screen will display the names of code blocks along with a stop button that can be used to stop the execution of playground block commands.
+
+
+- **Delete Project**: To delete a project, long-press on the project you wish to delete. This will bring up a popup screen asking to confirm the deletion. Tap on 'Yes' to delete the project.
+
+<p align="left">
+<img src="../../docs/images/android_google_drive_projects_execute.gif" alt="Google Drive project execute" width="25%"/>
+<img src="../../docs/images/android_qr_code_scanning.gif" alt="Qr code scanner project execute" width="25%"/>
+<img src="../../docs/images/android_delete_project.jpg" alt="Delete Project" width="24.7%"/>
+</p>
+
+### Profile Screen
+The Profile Screen in the app provides different options based on whether the user is signed in or not.
+If the user is not signed in, a `Google Sign-in` button will appear, prompting the user to sign in their Google account. Once signed in, the user will be able to access their profile and other features.
+If the user is signed in, two buttons will be listed in the  `Profile` tab: `Edit Profile` and `Logout`.
+
+<p align="left">
+<img src="../../docs/images/android_logged_out_profile_screen.jpg" alt="Logged out profile screen" width="25%"/>
+<img src="../../docs/images/android_logged_in_profile_screen.jpg" alt="Logged in profile screen" width="24.9%"/>
+</p>
+
+- **Edit Profile**: Tapping on this button will open a new screen where the user can update their profile information, such as their name and profile picture.
+
+
+- **Logout**: This button allows the user to log out of their account. Tapping on this button will log the user out and return them to the login screen.
+
+  <p align="left">
+  <img src="../../docs/images/android_edit_profile.jpg" alt="Edit profile screen" width="25%"/>
+  <img src="../../docs/images/android_logout_dialog_box.jpg" alt="Logout dialog box" width="24.4%"/>
+  </p>
+
+### OpenBot PlayGround Screen
+
+To access OpenBot Playground services, click on the OpenBot Playground icon located at the top of the screen in the toolbar options. If you want to learn more about OpenBot Playground, [click here](../../open-code/README.md).
+
+<p align="left">
+<img src="../../docs/images/android_playground_sign-in.gif" alt="openBot playground Sign-in" width="25%"/>
+<img src="../../docs/images/android_playground_services.gif" alt="openBot playground Services" width="25%"/>
+</p>
 
 ## Add your own fragment
 

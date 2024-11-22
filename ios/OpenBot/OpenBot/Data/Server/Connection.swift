@@ -21,6 +21,7 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
     // outgoing connection
     weak var msgDelegate: sendInitialMessageDelegate?
     weak var startStreamDelegate: startStreamDelegate?
+    let fragmentType = FragmentType.shared
 
     /// initializing function; endpoint
     init(endpoint: NWEndpoint) {
@@ -30,6 +31,7 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         tcpOptions.keepaliveIdle = 2
         let parameters = NWParameters(tls: nil, tcp: tcpOptions)
         parameters.includePeerToPeer = true
+        parameters.allowLocalEndpointReuse = true
         connection = NWConnection(to: endpoint, using: parameters)
         start()
         msgDelegate = self
@@ -59,9 +61,10 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         }
         connection.start(queue: .main)
     }
-
+    
     /// function to send data in utf8 format.
     func send(_ message: String) {
+        print("in the send function::::",message);
         connection.send(content: message.data(using: .utf8), contentContext: .defaultMessage, isComplete: true, completion: .contentProcessed({ error in
             print("Connection send error: \(String(describing: error))")
         }))
@@ -81,10 +84,20 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
                         NotificationCenter.default.post(name: .switchCamera, object: nil);
                     }
                     if command.contains("answer") {
-                        NotificationCenter.default.post(name: .updateDataFromControllerApp, object: command.data(using: .utf8));
+                        if(command.contains("{\"webrtc_event\":")){
+                            NotificationCenter.default.post(name: .updateDataFromControllerApp, object: command.data(using: .utf8));
+                        }
+                        else{
+                            let y = command.components(separatedBy: "{webrtc_event: ");
+                            let newCommand = "{\"webrtc_event\":" + y[1];
+                            NotificationCenter.default.post(name: .updateDataFromControllerApp, object: newCommand.data(using: .utf8));
+                        }
                     }
                     if command.contains("driveCmd") {
                         NotificationCenter.default.post(name: .updateStringFromControllerApp, object: message);
+                    }
+                    if command.contains("command"){
+                        NotificationCenter.default.post(name: .updateLightsCommandFromControllerApp, object: message);
                     }
                     print(command);
                 }
@@ -105,6 +118,8 @@ class Connection: sendInitialMessageDelegate, startStreamDelegate {
         client.send(message: msg);
         msg = JSON.toString(VehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true)));
         client.send(message: msg)
+        msg = JSON.toString(FragmentStatus(FRAGMENT_TYPE: fragmentType.currentFragment));
+        client.send(message: msg);
     }
 
     /// function to start the video streams

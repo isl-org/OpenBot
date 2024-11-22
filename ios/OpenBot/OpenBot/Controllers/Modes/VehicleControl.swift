@@ -4,22 +4,44 @@
 
 import Foundation
 import UIKit
+import FirebaseAuth
 
 class VehicleControl: UIView {
     var controlMode: ControlMode = ControlMode.PHONE;
-    var speedMode: SpeedMode = SpeedMode.SLOW;
-    var driveMode: DriveMode = DriveMode.DUAL;
+    var speedMode: SpeedMode = SpeedMode.FAST;
+    var driveMode: DriveMode = DriveMode.GAME;
     var speedLabel = UILabel()
     var speedInRpm = UILabel()
     var isButtonEnable: Bool = true
     let gameController = GameController.shared
     var downSwipe: Bool = false
+    let audioPlayer = AudioPlayer.shared;
+    let mSocket = NativeWebSocket.shared;
+    let roomId: String = Auth.auth().currentUser?.email ?? ""
+    var preferencesManager : SharedPreferencesManager = SharedPreferencesManager()
 
     /// initializing function
     override init(frame: CGRect) {
         super.init(frame: frame)
         DeviceCurrentOrientation.shared.findDeviceOrientation()
         setupVehicleControl();
+        if let value = preferencesManager.getControlMode() {
+            if let mode = ControlMode(rawValue: value){
+                controlMode = mode
+            }
+        }
+        
+        if let value = preferencesManager.getDriveMode() {
+            if let mode = DriveMode(rawValue: value){
+                driveMode = mode;
+            }
+        }
+        
+        if let value = preferencesManager.getSpeedMode() {
+            if let mode = SpeedMode(rawValue: value) {
+                speedMode = mode;
+            }
+        }
         updateControlMode(self)
         updateDriveMode(self)
         updateSpeedMode(self)
@@ -62,7 +84,8 @@ class VehicleControl: UIView {
             btn.backgroundColor = Colors.titleDeactivated
         }
         let modeIcon = UIImageView(frame: CGRect(x: 15, y: 15, width: 30, height: 30))
-        modeIcon.image = iconName;
+        modeIcon.image = iconName.withRenderingMode(.alwaysTemplate)
+        modeIcon.tintColor = .white
         if let action = action {
             btn.addTarget(self, action: action, for: .touchUpInside)
         }
@@ -83,40 +106,65 @@ class VehicleControl: UIView {
                 driveMode = DriveMode.DUAL;
                 createAndUpdateButton(iconName: Images.phoneIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
                 createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: false);
-
                 client.start();
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true")));
                 client.send(message: msg);
-
-            } else {
-                controlMode = ControlMode.GAMEPAD;
+                _ = WebRTCDelegates();
+            }
+            else if(controlMode == ControlMode.PHONE) {
+                controlMode = ControlMode.WEB;
                 driveMode = DriveMode.GAME;
+                createAndUpdateButton(iconName: Images.webIcon!.withTintColor(.white), leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
+                createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: false);
+                let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
+                client.send(message: msg);
+                if(webRTCClient != nil){
+                    webRTCClient.disconnect();
+                }
+                sendMessage();
+                _ = ServerWebrtcDelegate();
+            }
+            else{
+                controlMode = ControlMode.GAMEPAD;
                 createAndUpdateButton(iconName: Images.gamepadIcon!, leadingAnchor: width / 2 - 100, topAnchor: 0, action: #selector(updateControlMode(_:)), activated: true);
                 createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
                 let msg = JSON.toString(ConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "false")));
                 client.send(message: msg);
-
-
+                if(webRTCClient != nil){
+                    webRTCClient.disconnect();
+                }
             }
             gameController.selectedControlMode = controlMode
+            if(controlMode == ControlMode.GAMEPAD){
+                preferencesManager.setControlMode(value: ControlMode.WEB.rawValue);
+            }
+            else if(controlMode == ControlMode.PHONE){
+                preferencesManager.setControlMode(value: ControlMode.GAMEPAD.rawValue);
+            }
+            else{
+                preferencesManager.setControlMode(value: ControlMode.PHONE.rawValue);
+            }
         }
     }
 
     /// function to update the drive mode
     @objc func updateDriveMode(_ sender: UIView) {
-        if (controlMode == .GAMEPAD && isButtonEnable) {
+        if (controlMode == .GAMEPAD && isButtonEnable) {            
             switch (driveMode) {
             case .JOYSTICK:
                 driveMode = .GAME;
                 createAndUpdateButton(iconName: Images.gameDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
+                preferencesManager.setDriveMode(value: DriveMode.JOYSTICK.rawValue)
                 break;
             case .GAME:
                 driveMode = .DUAL;
                 createAndUpdateButton(iconName: Images.dualDriveIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
+                preferencesManager.setDriveMode(value: DriveMode.GAME.rawValue)
                 break;
             case .DUAL:
                 driveMode = .JOYSTICK;
                 createAndUpdateButton(iconName: Images.joystickIcon!, leadingAnchor: width / 2 - 30, topAnchor: 0, action: #selector(updateDriveMode(_:)), activated: true);
+                preferencesManager.setDriveMode(value: DriveMode.DUAL.rawValue)
                 break;
             }
             gameController.selectedDriveMode = driveMode
@@ -130,18 +178,20 @@ class VehicleControl: UIView {
             case .SLOW:
                 speedMode = .NORMAL;
                 createAndUpdateButton(iconName: Images.mediumIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)), activated: true);
+                preferencesManager.setSpeedMode(value: SpeedMode.SLOW.rawValue)
                 break;
             case .NORMAL:
                 speedMode = .FAST;
                 createAndUpdateButton(iconName: Images.fastIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)), activated: true);
+                preferencesManager.setSpeedMode(value: SpeedMode.NORMAL.rawValue)
                 break;
             case .FAST:
                 speedMode = .SLOW;
                 createAndUpdateButton(iconName: Images.slowIcon!, leadingAnchor: width / 2 + 40, topAnchor: 0, action: #selector(updateSpeedMode(_:)), activated: true);
+                preferencesManager.setSpeedMode(value: SpeedMode.FAST.rawValue)
                 break;
             }
             gameController.selectedSpeedMode = speedMode
-
         }
     }
 
@@ -210,6 +260,7 @@ class VehicleControl: UIView {
             break;
         }
         updateSpeedMode(self);
+        audioPlayer.playSpeedMode(speedMode: speedMode);
     }
 
     ///function to increase the speed modes.
@@ -223,10 +274,32 @@ class VehicleControl: UIView {
         case .FAST:
             return;
         }
+        audioPlayer.playSpeedMode(speedMode: speedMode);
     }
 
     /// function to update the drive modes.
     @objc func updateDrive(_ notification: Notification) {
         updateDriveMode(self)
+        audioPlayer.playDriveMode(driveMode: driveMode);
+    }
+
+    /// function to parse the message for the connection and send it.
+    func sendMessage() {
+        var msg = JSON.toString(ServerConnectionActiveEvent(status: .init(CONNECTION_ACTIVE: "true"), roomId: roomId));
+        print(msg);
+        var data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoProtocolEvent(status: .init(VIDEO_PROTOCOL: "WEBRTC"), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoServerUrlEvent(status: .init(VIDEO_SERVER_URL: ""), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVideoCommandEvent(status: .init(VIDEO_COMMAND: "START"), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
+        msg = JSON.toString(ServerVehicleStatusEvent(status: .init(LOGS: false, NOISE: false, NETWORK: false, DRIVE_MODE: "GAME", INDICATOR_LEFT: false, INDICATOR_RIGHT: false, INDICATOR_STOP: true), roomId: roomId));
+        data = msg.data(using: .utf8);
+        mSocket.send(data: data!);
     }
 }

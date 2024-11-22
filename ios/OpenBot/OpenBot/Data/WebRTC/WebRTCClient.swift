@@ -26,6 +26,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
     private var localView: UIView!
     private var remoteStream: RTCMediaStream?
     private var dataChannel: RTCDataChannel?
+    private var localDataChannel: RTCDataChannel?
     private var remoteDataChannel: RTCDataChannel?
     private var channels: (video: Bool, audio: Bool, datachannel: Bool) = (false, false, false)
     private var customFrameCapturer: Bool = true
@@ -40,6 +41,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 
     override init() {
         super.init()
+        peerConnection?.delegate = self
     }
 
     deinit {
@@ -53,7 +55,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
         channels.audio = audioTrack
         channels.datachannel = dataChannel
         self.customFrameCapturer = customFrameCapturer
-
         let videoEncoderFactory = RTCDefaultVideoEncoderFactory()
         let videoDecoderFactory = RTCDefaultVideoDecoderFactory()
         peerConnectionFactory = RTCPeerConnectionFactory(encoderFactory: videoEncoderFactory, decoderFactory: videoDecoderFactory)
@@ -83,6 +84,12 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
         if channels.audio {
             peerConnection!.add(localAudioTrack, streamIds: ["stream0"])
         }
+        if channels.datachannel {
+            dataChannel = setupDataChannel();
+            dataChannel?.delegate = self
+            localDataChannel = dataChannel;
+            print("data channel is ======>",dataChannel);
+        }
         makeOffer(onSuccess: onSuccess)
     }
 
@@ -106,7 +113,8 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
             }
             if channels.datachannel {
                 dataChannel = setupDataChannel()
-
+                dataChannel?.delegate = self
+                localDataChannel = dataChannel;
             }
 
         }
@@ -139,7 +147,11 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
     /// function to create the connection
     private func setupPeerConnection() -> RTCPeerConnection {
         let rtcConf = RTCConfiguration()
-        rtcConf.iceServers = [RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"])]
+        rtcConf.iceServers = [RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302",
+                                                        "stun:stun1.l.google.com:19302",
+                                                        "stun:stun2.l.google.com:19302",
+                                                        "stun:stun3.l.google.com:19302",
+                                                        "stun:stun4.l.google.com:19302"])]
         let mediaConstraints = RTCMediaConstraints.init(mandatoryConstraints: nil, optionalConstraints: nil)
         let pc = peerConnectionFactory.peerConnection(with: rtcConf, constraints: mediaConstraints, delegate: nil)
         return pc
@@ -185,8 +197,7 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
     /// MARK: - Signaling Offer/Answer
     private func makeOffer(onSuccess: @escaping (RTCSessionDescription) -> Void) {
         peerConnection?.offer(for: RTCMediaConstraints.init(mandatoryConstraints: nil, optionalConstraints: nil)) { (sdp, err) in
-            if let error = err {
-                print("error with make offer")
+            if let error = err {("error with make offer")
                 print(error)
                 return
             }
@@ -229,7 +240,6 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
     // MARK: - Connection Events
     private func onConnected() {
         isConnected = true
-
         DispatchQueue.main.async {
             self.delegate?.didConnectWebRTC()
         }
@@ -249,11 +259,9 @@ class WebRTCClient: NSObject, RTCPeerConnectionDelegate {
 // MARK: - PeerConnection Delegates
 extension WebRTCClient {
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
-        print("signaling state changed: ", stateChanged)
     }
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
-
         switch newState {
         case .connected, .completed:
             if !isConnected {
@@ -292,7 +300,11 @@ extension WebRTCClient {
     func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
         remoteDataChannel = dataChannel
         delegate?.didOpenDataChannel()
+        dataChannel.delegate = self
     }
+
+
+
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
     }
@@ -302,5 +314,31 @@ extension WebRTCClient {
 
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
     }
+
+    // Assume you have a function to send messages on the other end
+    func sendMessage(message: String) {
+        if let dataChannel = webRTCClient.remoteDataChannel {
+            let data = Data(message.utf8)
+            let buffer = RTCDataBuffer(data: data, isBinary: false)
+            dataChannel.sendData(buffer)
+        }
+    }
+
+}
+
+extension WebRTCClient : RTCDataChannelDelegate {
+    func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
+        debugPrint("dataChannel did change state: \(dataChannel.readyState)")
+    }
+
+    func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
+        delegate?.didReceiveData(data: buffer.data);
+    }
+
+     func dataChannel(_ dataChannel: RTCDataChannel, didChangeBufferedAmount amount: UInt64) {
+        print("did changed buffer amount");
+    }
+
+
 }
 
