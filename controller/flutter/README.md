@@ -120,9 +120,8 @@ Here is a picture of the `Controller Settings` screen:
  Server Connectivity
 
 - Server: Displays the current server status with a dropdown to select or change the server.
- Noise Toggle
-
-- Noise : Enable or disable noise simulation through the toggle switch.
+ 
+- Noise Toggle : Enable or disable noise simulation through the toggle switch.
 
 <p float="left">
   <img src="../../docs/images/flutter_controller_setting.jpg" width="50%" />
