@@ -112,4 +112,20 @@ Use the `accelerator` and `brake` buttons to move forward/backward.
   robot will come to a stop.
 - The robot is steered by tilting the controller phone left or right.
 
+### Controller Settings UI
+
+Here is a picture of the `Controller Settings` screen:
+
+- Controller Selection: Switch between different controller types (e.g., mobile, joystick) using the provided icons.
+ Server Connectivity
+
+- Server: Displays the current server status with a dropdown to select or change the server.
+ Noise Toggle
+
+- Noise : Enable or disable noise simulation through the toggle switch.
+
+<p float="left">
+  <img src="../../docs/images/flutter_controller_setting.jpg" width="50%" />
+</p>
+
 Here is a [Technical Overview](../../docs/technical/OpenBotController.pdf) of the controller app.
