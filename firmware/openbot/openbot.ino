@@ -54,7 +54,7 @@
 //------------------------------------------------------//
 
 // Setup the OpenBot version (DIY, PCB_V1, PCB_V2, RTR_TT, RC_CAR, LITE, RTR_TT2, RTR_520, DIY_ESP32)
-#define OPENBOT DIY
+#define OPENBOT DIY_ESP32
 
 //------------------------------------------------------//
 // SETTINGS - Global settings
@@ -592,7 +592,7 @@ class MyServerCallbacks : public BLEServerCallbacks {
 
 class MyCallbacks : public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic *pCharacteristic) {
-    std::string bleReceiver = pCharacteristic->getValue();
+    String bleReceiver = pCharacteristic->getValue();
     if (bleReceiver.length() > 0) {
       for (int i = 0; i < bleReceiver.length(); i++) {
         on_ble_rx(bleReceiver[i]);
